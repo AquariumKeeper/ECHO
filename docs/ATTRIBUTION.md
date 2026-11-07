@@ -40,7 +40,11 @@ registers any of it.
 
 ## Software
 
-The app's own code is under the MIT license (`LICENSE.txt` in a release). It is built
+The app's own code and documentation are under the MIT license (`LICENSE` in the source,
+`LICENSE.txt` in a release). That license doesn't cover third-party material: the Division 2
+Community Data Hub data compilation (CC BY 4.0), artwork and research data from other
+contributors, or game content, names and artwork owned by Ubisoft and Massive Entertainment.
+Each keeps its own terms, listed here and in the `licenses/` folder. The app is built
 with .NET and Avalonia and ships their runtime libraries; the licenses and notices of
 everything bundled are in the release's `licenses/` folder, listed in its README.
 
