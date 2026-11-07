@@ -1,0 +1,180 @@
+[
+  {
+    "kind": "name",
+    "text": "hard-wired-skills"
+  },
+  {
+    "kind": "equipment",
+    "slot": "primary_weapon",
+    "id": "primary_weapon_scorpio"
+  },
+  {
+    "kind": "attribute",
+    "slot": "primary_weapon",
+    "target": "minor_1",
+    "id": "damage_to_armor_weapon_minor"
+  },
+  {
+    "kind": "equipment",
+    "slot": "mask",
+    "id": "mask_hard_wired_mask"
+  },
+  {
+    "kind": "attribute",
+    "slot": "mask",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "mask",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "mod",
+    "slot": "mask",
+    "target": "mod_1",
+    "id": "critical_hit_chance_gear_mod"
+  },
+  {
+    "kind": "equipment",
+    "slot": "chest",
+    "id": "chest_hard_wired_chest"
+  },
+  {
+    "kind": "attribute",
+    "slot": "chest",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "chest",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "mod",
+    "slot": "chest",
+    "target": "mod_1",
+    "id": "critical_hit_chance_gear_mod"
+  },
+  {
+    "kind": "equipment",
+    "slot": "backpack",
+    "id": "backpack_hard_wired_backpack"
+  },
+  {
+    "kind": "attribute",
+    "slot": "backpack",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "backpack",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "mod",
+    "slot": "backpack",
+    "target": "mod_1",
+    "id": "critical_hit_chance_gear_mod"
+  },
+  {
+    "kind": "equipment",
+    "slot": "gloves",
+    "id": "gloves_hard_wired_gloves"
+  },
+  {
+    "kind": "attribute",
+    "slot": "gloves",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "gloves",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "equipment",
+    "slot": "holster",
+    "id": "holster_hard_wired_holster"
+  },
+  {
+    "kind": "attribute",
+    "slot": "holster",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "holster",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "equipment",
+    "slot": "knees",
+    "id": "knees_hard_wired_kneepads"
+  },
+  {
+    "kind": "attribute",
+    "slot": "knees",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "knees",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "active_skill",
+    "slot": "skill_slot_1",
+    "id": "skill_firestarter_chem_launcher"
+  },
+  {
+    "kind": "skill_upgrade",
+    "slot": "skill_slot_1",
+    "rank": 10
+  },
+  {
+    "kind": "active_skill",
+    "slot": "skill_slot_2",
+    "id": "skill_shock_trap"
+  },
+  {
+    "kind": "skill_upgrade",
+    "slot": "skill_slot_2",
+    "rank": 5
+  },
+  {
+    "kind": "specialization",
+    "id": "technician"
+  },
+  {
+    "kind": "specialization_node",
+    "id": "technician_this_is_my_rifle_tier_1",
+    "enabled": true
+  },
+  {
+    "kind": "specialization_node",
+    "id": "technician_depleted_rounds_tier_1",
+    "enabled": true
+  },
+  {
+    "kind": "specialization_node",
+    "id": "technician_e_m_i_tier_1",
+    "enabled": true
+  },
+  {
+    "kind": "level",
+    "value": 40
+  }
+]

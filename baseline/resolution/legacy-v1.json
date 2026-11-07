@@ -1,0 +1,2101 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "inputsSha256": "cc06169a612ca10f0f06f784193a3f2070ddef6e7392339d1a7c65f8964e12e5",
+    "packSha256": "7331a6a17b34a87ff3deec4ee6d3d52bd4ab205362a0246e45e3a8835faf37a1",
+    "args": [
+      "--json",
+      "--pack",
+      "pack.json",
+      "build",
+      "resolve",
+      "--input",
+      "-",
+      "--context",
+      "context.json"
+    ],
+    "inputEncoding": "utf-8"
+  },
+  "cases": [
+    {
+      "id": "new",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 1,
+          "allocations": {
+            "dexterity": 0,
+            "endurance": 0,
+            "faith": 0,
+            "intellect": 0,
+            "strength": 0,
+            "vigor": 0
+          },
+          "equipment": {
+            "amulet": "",
+            "chest": "",
+            "hands": "",
+            "head": "",
+            "legs": "",
+            "mainhand": "",
+            "offhand": "",
+            "ring": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {
+              "dexterity": 0,
+              "endurance": 0,
+              "faith": 0,
+              "intellect": 0,
+              "strength": 0,
+              "vigor": 0
+            },
+            "equipment": {
+              "amulet": "",
+              "chest": "",
+              "hands": "",
+              "head": "",
+              "legs": "",
+              "mainhand": "",
+              "offhand": "",
+              "ring": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 0,
+            "attack_power": 50.83333333333333,
+            "crit_chance": 0.07,
+            "crit_damage": 1.5,
+            "dexterity": 10,
+            "dps": 52.61249999999999,
+            "ehp": 380,
+            "endurance": 10,
+            "equip_load": 75,
+            "faith": 10,
+            "hp": 380,
+            "intellect": 10,
+            "magic_resist": 0,
+            "physical_resist": 0,
+            "spell_power": 43.33333333333333,
+            "stamina": 85,
+            "strength": 10,
+            "vigor": 10
+          },
+          "primary": {
+            "dexterity": 10,
+            "endurance": 10,
+            "faith": 10,
+            "intellect": 10,
+            "strength": 10,
+            "vigor": 10
+          },
+          "breakdowns": {
+            "armor": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "attack_power": {
+              "base": 50.83333333333333,
+              "final": 50.83333333333333,
+              "clamped": false,
+              "contributions": []
+            },
+            "crit_chance": {
+              "base": 0.07,
+              "final": 0.07,
+              "clamped": false,
+              "contributions": []
+            },
+            "crit_damage": {
+              "base": 1.5,
+              "final": 1.5,
+              "clamped": false,
+              "contributions": []
+            },
+            "dps": {
+              "base": 52.61249999999999,
+              "final": 52.61249999999999,
+              "clamped": false,
+              "contributions": []
+            },
+            "ehp": {
+              "base": 380,
+              "final": 380,
+              "clamped": false,
+              "contributions": []
+            },
+            "equip_load": {
+              "base": 75,
+              "final": 75,
+              "clamped": false,
+              "contributions": []
+            },
+            "hp": {
+              "base": 380,
+              "final": 380,
+              "clamped": false,
+              "contributions": []
+            },
+            "magic_resist": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "physical_resist": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "spell_power": {
+              "base": 43.33333333333333,
+              "final": 43.33333333333333,
+              "clamped": false,
+              "contributions": []
+            },
+            "stamina": {
+              "base": 85,
+              "final": 85,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "golden",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 50,
+          "allocations": {
+            "vigor": 30,
+            "endurance": 20,
+            "strength": 30,
+            "dexterity": 20
+          },
+          "equipment": {
+            "head": "ashen_helm",
+            "chest": "ashen_plate",
+            "hands": "ashen_gauntlets",
+            "legs": "ashen_greaves",
+            "mainhand": "ashen_blade",
+            "offhand": "iron_kiteshield",
+            "amulet": "hawkeye_amulet",
+            "ring": "ring_of_precision"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 50,
+            "allocations": {
+              "dexterity": 20,
+              "endurance": 20,
+              "strength": 30,
+              "vigor": 30
+            },
+            "equipment": {
+              "amulet": "hawkeye_amulet",
+              "chest": "ashen_plate",
+              "hands": "ashen_gauntlets",
+              "head": "ashen_helm",
+              "legs": "ashen_greaves",
+              "mainhand": "ashen_blade",
+              "offhand": "iron_kiteshield",
+              "ring": "ring_of_precision"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 178.20000000000002,
+            "attack_power": 296.24,
+            "crit_chance": 0.2,
+            "crit_damage": 1.5,
+            "dexterity": 30,
+            "dps": 325.86400000000003,
+            "ehp": 1581.1153290915895,
+            "endurance": 30,
+            "equip_load": 160,
+            "faith": 10,
+            "hp": 1140,
+            "intellect": 10,
+            "magic_resist": 0,
+            "physical_resist": 0.27898997686969934,
+            "spell_power": 43.33333333333333,
+            "stamina": 155,
+            "strength": 40,
+            "vigor": 40
+          },
+          "primary": {
+            "dexterity": 30,
+            "endurance": 30,
+            "faith": 10,
+            "intellect": 10,
+            "strength": 40,
+            "vigor": 40
+          },
+          "breakdowns": {
+            "armor": {
+              "base": 0,
+              "final": 178.20000000000002,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_helm",
+                    "name": "Ashen Helm"
+                  },
+                  "op": "flat",
+                  "value": 26
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_plate",
+                    "name": "Ashen Plate"
+                  },
+                  "op": "flat",
+                  "value": 52
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_gauntlets",
+                    "name": "Ashen Gauntlets"
+                  },
+                  "op": "flat",
+                  "value": 22
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_greaves",
+                    "name": "Ashen Greaves"
+                  },
+                  "op": "flat",
+                  "value": 34
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "iron_kiteshield",
+                    "name": "Iron Kiteshield"
+                  },
+                  "op": "flat",
+                  "value": 28
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "ashwalker",
+                    "name": "Ashwalker Regalia (2pc)"
+                  },
+                  "op": "inc",
+                  "value": 0.1
+                }
+              ]
+            },
+            "attack_power": {
+              "base": 187.5,
+              "final": 296.24,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_blade",
+                    "name": "Ashen Blade"
+                  },
+                  "op": "flat",
+                  "value": 77
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "ashwalker",
+                    "name": "Ashwalker Regalia (4pc)"
+                  },
+                  "op": "inc",
+                  "value": 0.12
+                }
+              ]
+            },
+            "crit_chance": {
+              "base": 0.11,
+              "final": 0.2,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "hawkeye_amulet",
+                    "name": "Hawkeye Amulet"
+                  },
+                  "op": "flat",
+                  "value": 0.05
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ring_of_precision",
+                    "name": "Ring of Precision"
+                  },
+                  "op": "flat",
+                  "value": 0.04
+                }
+              ]
+            },
+            "crit_damage": {
+              "base": 1.5,
+              "final": 1.5,
+              "clamped": false,
+              "contributions": []
+            },
+            "dps": {
+              "base": 325.86400000000003,
+              "final": 325.86400000000003,
+              "clamped": false,
+              "contributions": []
+            },
+            "ehp": {
+              "base": 1581.1153290915895,
+              "final": 1581.1153290915895,
+              "clamped": false,
+              "contributions": []
+            },
+            "equip_load": {
+              "base": 160,
+              "final": 160,
+              "clamped": false,
+              "contributions": []
+            },
+            "hp": {
+              "base": 1140,
+              "final": 1140,
+              "clamped": false,
+              "contributions": []
+            },
+            "magic_resist": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "physical_resist": {
+              "base": 0.22898997686969932,
+              "final": 0.27898997686969934,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "iron_kiteshield",
+                    "name": "Iron Kiteshield"
+                  },
+                  "op": "flat",
+                  "value": 0.05
+                }
+              ]
+            },
+            "spell_power": {
+              "base": 43.33333333333333,
+              "final": 43.33333333333333,
+              "clamped": false,
+              "contributions": []
+            },
+            "stamina": {
+              "base": 135,
+              "final": 155,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "ashwalker",
+                    "name": "Ashwalker Regalia (4pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "names": {
+            "ashen_blade": "Ashen Blade",
+            "ashen_gauntlets": "Ashen Gauntlets",
+            "ashen_greaves": "Ashen Greaves",
+            "ashen_helm": "Ashen Helm",
+            "ashen_plate": "Ashen Plate",
+            "ashwalker": "Ashwalker Regalia",
+            "hawkeye_amulet": "Hawkeye Amulet",
+            "iron_kiteshield": "Iron Kiteshield",
+            "ring_of_precision": "Ring of Precision"
+          },
+          "sets": [
+            {
+              "id": "ashwalker",
+              "name": "Ashwalker Regalia",
+              "pieces": 4,
+              "thresholds": [
+                2,
+                4
+              ],
+              "activeBonuses": [
+                2,
+                4
+              ]
+            }
+          ],
+          "points": {
+            "total": 147,
+            "spent": 100,
+            "remaining": 47
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "inactive-requirements",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 1,
+          "allocations": {
+            "dexterity": 0,
+            "endurance": 0,
+            "faith": 0,
+            "intellect": 0,
+            "strength": 0,
+            "vigor": 0
+          },
+          "equipment": {
+            "head": "ashen_helm",
+            "mainhand": "wyrmslayer_greatsword"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unmet-requirement",
+            "message": "Ashen Helm requires strength 10/16",
+            "subject": "head"
+          },
+          {
+            "severity": "error",
+            "code": "unmet-requirement",
+            "message": "Wyrmslayer Greatsword requires dexterity 10/16, strength 10/34",
+            "subject": "mainhand"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "inactive-slot-conflict",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 1,
+          "allocations": {
+            "dexterity": 0,
+            "endurance": 0,
+            "faith": 0,
+            "intellect": 0,
+            "strength": 0,
+            "vigor": 0
+          },
+          "equipment": {
+            "mainhand": "greataxe",
+            "offhand": "iron_kiteshield"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unmet-requirement",
+            "message": "Greataxe requires strength 10/30",
+            "subject": "mainhand"
+          },
+          {
+            "severity": "error",
+            "code": "slot-conflict",
+            "message": "Iron Kiteshield needs offhand, already taken by Greataxe",
+            "subject": "offhand"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "active-slot-conflict",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 40,
+          "allocations": {
+            "strength": 25
+          },
+          "equipment": {
+            "mainhand": "greataxe",
+            "offhand": "iron_kiteshield"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "slot-conflict",
+            "message": "Iron Kiteshield needs offhand, already taken by Greataxe",
+            "subject": "offhand"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-item",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 1,
+          "allocations": {
+            "dexterity": 0,
+            "endurance": 0,
+            "faith": 0,
+            "intellect": 0,
+            "strength": 0,
+            "vigor": 0
+          },
+          "equipment": {
+            "head": "missing_item"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-item",
+            "message": "Unknown item \"missing_item\"",
+            "subject": "head"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "wrong-slot",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 1,
+          "allocations": {
+            "dexterity": 0,
+            "endurance": 0,
+            "faith": 0,
+            "intellect": 0,
+            "strength": 0,
+            "vigor": 0
+          },
+          "equipment": {
+            "head": "ashen_blade"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "wrong-slot",
+            "message": "Ashen Blade cannot be equipped in Head",
+            "subject": "head"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "overspend-and-clamp",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 1,
+          "allocations": {
+            "strength": 150,
+            "dexterity": -20,
+            "unknown": 5
+          },
+          "equipment": {
+            "amulet": "",
+            "chest": "",
+            "hands": "",
+            "head": "",
+            "legs": "",
+            "mainhand": "",
+            "offhand": "",
+            "ring": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "overspend",
+            "message": "Spent 135 points but only 0 are available"
+          },
+          {
+            "severity": "error",
+            "code": "allocation-out-of-range",
+            "message": "Strength would be 160, outside [8, 99]",
+            "subject": "strength"
+          },
+          {
+            "severity": "error",
+            "code": "allocation-out-of-range",
+            "message": "Dexterity would be -10, outside [8, 99]",
+            "subject": "dexterity"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "above-max-level",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 80,
+          "allocations": {
+            "strength": 15
+          },
+          "equipment": {
+            "amulet": "",
+            "chest": "",
+            "hands": "",
+            "head": "",
+            "legs": "",
+            "mainhand": "",
+            "offhand": "",
+            "ring": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "level-out-of-range",
+            "message": "Level 80 is outside [1, 60]"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "scenario-tags",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 40,
+          "allocations": {
+            "strength": 25,
+            "dexterity": 10
+          },
+          "equipment": {
+            "mainhand": "ashen_blade"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {
+            "buffed": {},
+            "vs_boss": {}
+          },
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 40,
+            "allocations": {
+              "dexterity": 10,
+              "strength": 25
+            },
+            "equipment": {
+              "mainhand": "ashen_blade"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {
+              "buffed": {},
+              "vs_boss": {}
+            },
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 0,
+            "attack_power": 225.5,
+            "crit_chance": 0.09,
+            "crit_damage": 1.5,
+            "dexterity": 20,
+            "dps": 235.64749999999998,
+            "ehp": 380,
+            "endurance": 10,
+            "equip_load": 112.5,
+            "faith": 10,
+            "hp": 380,
+            "intellect": 10,
+            "magic_resist": 0,
+            "physical_resist": 0,
+            "spell_power": 43.33333333333333,
+            "stamina": 85,
+            "strength": 35,
+            "vigor": 10
+          },
+          "primary": {
+            "dexterity": 20,
+            "endurance": 10,
+            "faith": 10,
+            "intellect": 10,
+            "strength": 35,
+            "vigor": 10
+          },
+          "breakdowns": {
+            "armor": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "attack_power": {
+              "base": 152.5,
+              "final": 225.5,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_blade",
+                    "name": "Ashen Blade"
+                  },
+                  "op": "flat",
+                  "value": 73
+                }
+              ]
+            },
+            "crit_chance": {
+              "base": 0.09,
+              "final": 0.09,
+              "clamped": false,
+              "contributions": []
+            },
+            "crit_damage": {
+              "base": 1.5,
+              "final": 1.5,
+              "clamped": false,
+              "contributions": []
+            },
+            "dps": {
+              "base": 235.64749999999998,
+              "final": 235.64749999999998,
+              "clamped": false,
+              "contributions": []
+            },
+            "ehp": {
+              "base": 380,
+              "final": 380,
+              "clamped": false,
+              "contributions": []
+            },
+            "equip_load": {
+              "base": 112.5,
+              "final": 112.5,
+              "clamped": false,
+              "contributions": []
+            },
+            "hp": {
+              "base": 380,
+              "final": 380,
+              "clamped": false,
+              "contributions": []
+            },
+            "magic_resist": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "physical_resist": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "spell_power": {
+              "base": 43.33333333333333,
+              "final": 43.33333333333333,
+              "clamped": false,
+              "contributions": []
+            },
+            "stamina": {
+              "base": 85,
+              "final": 85,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "names": {
+            "ashen_blade": "Ashen Blade"
+          },
+          "points": {
+            "total": 117,
+            "spent": 35,
+            "remaining": 82
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "unknown-scenarios-and-skills",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 1,
+          "allocations": {
+            "dexterity": 0,
+            "endurance": 0,
+            "faith": 0,
+            "intellect": 0,
+            "strength": 0,
+            "vigor": 0
+          },
+          "equipment": {
+            "amulet": "",
+            "chest": "",
+            "hands": "",
+            "head": "",
+            "legs": "",
+            "mainhand": "",
+            "offhand": "",
+            "ring": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {
+            "z_missing": {},
+            "a_missing": {}
+          },
+          "allocatedSkills": {
+            "z_missing": {},
+            "a_missing": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-scenario",
+            "message": "Unknown scenario \"a_missing\"",
+            "subject": "a_missing"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-scenario",
+            "message": "Unknown scenario \"z_missing\"",
+            "subject": "z_missing"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-skill-node",
+            "message": "Unknown skill node \"a_missing\"",
+            "subject": "a_missing"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-skill-node",
+            "message": "Unknown skill node \"z_missing\"",
+            "subject": "z_missing"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "active-weapon",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 40,
+          "allocations": {
+            "strength": 25,
+            "dexterity": 10
+          },
+          "equipment": {
+            "mainhand": "ashen_blade"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 40,
+            "allocations": {
+              "dexterity": 10,
+              "strength": 25
+            },
+            "equipment": {
+              "mainhand": "ashen_blade"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 0,
+            "attack_power": 225.5,
+            "crit_chance": 0.09,
+            "crit_damage": 1.5,
+            "dexterity": 20,
+            "dps": 235.64749999999998,
+            "ehp": 380,
+            "endurance": 10,
+            "equip_load": 112.5,
+            "faith": 10,
+            "hp": 380,
+            "intellect": 10,
+            "magic_resist": 0,
+            "physical_resist": 0,
+            "spell_power": 43.33333333333333,
+            "stamina": 85,
+            "strength": 35,
+            "vigor": 10
+          },
+          "primary": {
+            "dexterity": 20,
+            "endurance": 10,
+            "faith": 10,
+            "intellect": 10,
+            "strength": 35,
+            "vigor": 10
+          },
+          "breakdowns": {
+            "armor": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "attack_power": {
+              "base": 152.5,
+              "final": 225.5,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_blade",
+                    "name": "Ashen Blade"
+                  },
+                  "op": "flat",
+                  "value": 73
+                }
+              ]
+            },
+            "crit_chance": {
+              "base": 0.09,
+              "final": 0.09,
+              "clamped": false,
+              "contributions": []
+            },
+            "crit_damage": {
+              "base": 1.5,
+              "final": 1.5,
+              "clamped": false,
+              "contributions": []
+            },
+            "dps": {
+              "base": 235.64749999999998,
+              "final": 235.64749999999998,
+              "clamped": false,
+              "contributions": []
+            },
+            "ehp": {
+              "base": 380,
+              "final": 380,
+              "clamped": false,
+              "contributions": []
+            },
+            "equip_load": {
+              "base": 112.5,
+              "final": 112.5,
+              "clamped": false,
+              "contributions": []
+            },
+            "hp": {
+              "base": 380,
+              "final": 380,
+              "clamped": false,
+              "contributions": []
+            },
+            "magic_resist": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "physical_resist": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "spell_power": {
+              "base": 43.33333333333333,
+              "final": 43.33333333333333,
+              "clamped": false,
+              "contributions": []
+            },
+            "stamina": {
+              "base": 85,
+              "final": 85,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "names": {
+            "ashen_blade": "Ashen Blade"
+          },
+          "points": {
+            "total": 117,
+            "spent": 35,
+            "remaining": 82
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "two-piece-set",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 40,
+          "allocations": {
+            "strength": 25
+          },
+          "equipment": {
+            "head": "ashen_helm",
+            "chest": "ashen_plate"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 40,
+            "allocations": {
+              "strength": 25
+            },
+            "equipment": {
+              "chest": "ashen_plate",
+              "head": "ashen_helm"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 85.80000000000001,
+            "attack_power": 121.66666666666666,
+            "crit_chance": 0.07,
+            "crit_damage": 1.5,
+            "dexterity": 10,
+            "dps": 125.92499999999998,
+            "ehp": 434.34,
+            "endurance": 10,
+            "equip_load": 112.5,
+            "faith": 10,
+            "hp": 380,
+            "intellect": 10,
+            "magic_resist": 0,
+            "physical_resist": 0.1251093613298338,
+            "spell_power": 43.33333333333333,
+            "stamina": 85,
+            "strength": 35,
+            "vigor": 10
+          },
+          "primary": {
+            "dexterity": 10,
+            "endurance": 10,
+            "faith": 10,
+            "intellect": 10,
+            "strength": 35,
+            "vigor": 10
+          },
+          "breakdowns": {
+            "armor": {
+              "base": 0,
+              "final": 85.80000000000001,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_helm",
+                    "name": "Ashen Helm"
+                  },
+                  "op": "flat",
+                  "value": 26
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_plate",
+                    "name": "Ashen Plate"
+                  },
+                  "op": "flat",
+                  "value": 52
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "ashwalker",
+                    "name": "Ashwalker Regalia (2pc)"
+                  },
+                  "op": "inc",
+                  "value": 0.1
+                }
+              ]
+            },
+            "attack_power": {
+              "base": 121.66666666666666,
+              "final": 121.66666666666666,
+              "clamped": false,
+              "contributions": []
+            },
+            "crit_chance": {
+              "base": 0.07,
+              "final": 0.07,
+              "clamped": false,
+              "contributions": []
+            },
+            "crit_damage": {
+              "base": 1.5,
+              "final": 1.5,
+              "clamped": false,
+              "contributions": []
+            },
+            "dps": {
+              "base": 125.92499999999998,
+              "final": 125.92499999999998,
+              "clamped": false,
+              "contributions": []
+            },
+            "ehp": {
+              "base": 434.34,
+              "final": 434.34,
+              "clamped": false,
+              "contributions": []
+            },
+            "equip_load": {
+              "base": 112.5,
+              "final": 112.5,
+              "clamped": false,
+              "contributions": []
+            },
+            "hp": {
+              "base": 380,
+              "final": 380,
+              "clamped": false,
+              "contributions": []
+            },
+            "magic_resist": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "physical_resist": {
+              "base": 0.1251093613298338,
+              "final": 0.1251093613298338,
+              "clamped": false,
+              "contributions": []
+            },
+            "spell_power": {
+              "base": 43.33333333333333,
+              "final": 43.33333333333333,
+              "clamped": false,
+              "contributions": []
+            },
+            "stamina": {
+              "base": 85,
+              "final": 85,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "names": {
+            "ashen_helm": "Ashen Helm",
+            "ashen_plate": "Ashen Plate",
+            "ashwalker": "Ashwalker Regalia"
+          },
+          "sets": [
+            {
+              "id": "ashwalker",
+              "name": "Ashwalker Regalia",
+              "pieces": 2,
+              "thresholds": [
+                2,
+                4
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "points": {
+            "total": 117,
+            "spent": 25,
+            "remaining": 92
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "four-piece-buffed",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "ashen_vale",
+          "packVersion": "0.1.0",
+          "level": 50,
+          "allocations": {
+            "strength": 30,
+            "vigor": 30,
+            "endurance": 20,
+            "dexterity": 20
+          },
+          "equipment": {
+            "head": "ashen_helm",
+            "chest": "ashen_plate",
+            "hands": "ashen_gauntlets",
+            "legs": "ashen_greaves"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {
+            "buffed": {}
+          },
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 50,
+            "allocations": {
+              "dexterity": 20,
+              "endurance": 20,
+              "strength": 30,
+              "vigor": 30
+            },
+            "equipment": {
+              "chest": "ashen_plate",
+              "hands": "ashen_gauntlets",
+              "head": "ashen_helm",
+              "legs": "ashen_greaves"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {
+              "buffed": {}
+            },
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 147.4,
+            "attack_power": 210.00000000000003,
+            "crit_chance": 0.11,
+            "crit_damage": 1.5,
+            "dexterity": 30,
+            "dps": 221.55,
+            "ehp": 1420.06,
+            "endurance": 30,
+            "equip_load": 160,
+            "faith": 10,
+            "hp": 1140,
+            "intellect": 10,
+            "magic_resist": 0,
+            "physical_resist": 0.19721701899919722,
+            "spell_power": 43.33333333333333,
+            "stamina": 155,
+            "strength": 40,
+            "vigor": 40
+          },
+          "primary": {
+            "dexterity": 30,
+            "endurance": 30,
+            "faith": 10,
+            "intellect": 10,
+            "strength": 40,
+            "vigor": 40
+          },
+          "breakdowns": {
+            "armor": {
+              "base": 0,
+              "final": 147.4,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_helm",
+                    "name": "Ashen Helm"
+                  },
+                  "op": "flat",
+                  "value": 26
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_plate",
+                    "name": "Ashen Plate"
+                  },
+                  "op": "flat",
+                  "value": 52
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_gauntlets",
+                    "name": "Ashen Gauntlets"
+                  },
+                  "op": "flat",
+                  "value": 22
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "ashen_greaves",
+                    "name": "Ashen Greaves"
+                  },
+                  "op": "flat",
+                  "value": 34
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "ashwalker",
+                    "name": "Ashwalker Regalia (2pc)"
+                  },
+                  "op": "inc",
+                  "value": 0.1
+                }
+              ]
+            },
+            "attack_power": {
+              "base": 187.5,
+              "final": 210.00000000000003,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "ashwalker",
+                    "name": "Ashwalker Regalia (4pc)"
+                  },
+                  "op": "inc",
+                  "value": 0.12
+                }
+              ]
+            },
+            "crit_chance": {
+              "base": 0.11,
+              "final": 0.11,
+              "clamped": false,
+              "contributions": []
+            },
+            "crit_damage": {
+              "base": 1.5,
+              "final": 1.5,
+              "clamped": false,
+              "contributions": []
+            },
+            "dps": {
+              "base": 221.55,
+              "final": 221.55,
+              "clamped": false,
+              "contributions": []
+            },
+            "ehp": {
+              "base": 1420.06,
+              "final": 1420.06,
+              "clamped": false,
+              "contributions": []
+            },
+            "equip_load": {
+              "base": 160,
+              "final": 160,
+              "clamped": false,
+              "contributions": []
+            },
+            "hp": {
+              "base": 1140,
+              "final": 1140,
+              "clamped": false,
+              "contributions": []
+            },
+            "magic_resist": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "physical_resist": {
+              "base": 0.19721701899919722,
+              "final": 0.19721701899919722,
+              "clamped": false,
+              "contributions": []
+            },
+            "spell_power": {
+              "base": 43.33333333333333,
+              "final": 43.33333333333333,
+              "clamped": false,
+              "contributions": []
+            },
+            "stamina": {
+              "base": 135,
+              "final": 155,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "ashwalker",
+                    "name": "Ashwalker Regalia (4pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "names": {
+            "ashen_gauntlets": "Ashen Gauntlets",
+            "ashen_greaves": "Ashen Greaves",
+            "ashen_helm": "Ashen Helm",
+            "ashen_plate": "Ashen Plate",
+            "ashwalker": "Ashwalker Regalia"
+          },
+          "sets": [
+            {
+              "id": "ashwalker",
+              "name": "Ashwalker Regalia",
+              "pieces": 4,
+              "thresholds": [
+                2,
+                4
+              ],
+              "activeBonuses": [
+                2,
+                4
+              ]
+            }
+          ],
+          "points": {
+            "total": 147,
+            "spent": 100,
+            "remaining": 47
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    }
+  ]
+}

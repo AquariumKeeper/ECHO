@@ -1,0 +1,71 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+             xmlns:views="using:CharacterPlanner.Desktop.Views"
+             x:Class="CharacterPlanner.Desktop.Views.SummaryView" x:DataType="vm:EditorViewModel">
+  <!-- The summary, as the Go app's left column: attribute counts, the weapon tabs, the stat groups (each row's
+       breakdown on its info button), and All stats. -->
+  <ScrollViewer Name="SummaryPanel">
+    <StackPanel Spacing="6" Margin="0,0,12,0">
+      <Grid ColumnDefinitions="*,60,80" IsVisible="{Binding HasAttributeCounts}">
+        <TextBlock Grid.Column="1" Text="Core" Classes="caption" HorizontalAlignment="Right" />
+        <TextBlock Grid.Column="2" Text="Attributes" Classes="caption" HorizontalAlignment="Right" />
+      </Grid>
+      <ItemsControl ItemsSource="{Binding AttributeCounts}" IsVisible="{Binding HasAttributeCounts}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:AttributeCountViewModel">
+            <Grid ColumnDefinitions="*,60,80" Margin="0,1">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Ellipse Width="12" Height="12" Fill="{Binding Color}" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+              </StackPanel>
+              <TextBlock Grid.Column="1" Text="{Binding Core}" HorizontalAlignment="Right" />
+              <TextBlock Grid.Column="2" Text="{Binding Other}" HorizontalAlignment="Right" />
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <Separator IsVisible="{Binding HasAttributeCounts}" />
+      <StackPanel Spacing="4" IsVisible="{Binding HasWeaponTabs}">
+        <TextBlock Text="Active weapon" Classes="caption" />
+        <ItemsControl Name="WeaponTabs" ItemsSource="{Binding WeaponTabs}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <UniformGrid Rows="1" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:WeaponTabViewModel">
+              <Button Content="{Binding Label}" Command="{Binding ToggleCommand}" Classes.accent="{Binding IsActive}"
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="2,0" AutomationProperties.Name="{Binding Label}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+      <Separator IsVisible="{Binding HasWeaponTabs}" />
+      <ItemsControl ItemsSource="{Binding Summary}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:StatGroupViewModel">
+            <StackPanel Margin="0,0,0,6" IsVisible="{Binding HasVisible}">
+              <Border Classes="sectionbar">
+                <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+              </Border>
+              <ItemsControl ItemsSource="{Binding Rows}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:StatRowViewModel">
+                    <Grid ColumnDefinitions="*,Auto,Auto" IsVisible="{Binding IsVisible}" Margin="4,0,0,0">
+                      <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" ToolTip.Tip="{Binding Name}" />
+                      <TextBlock Grid.Column="1" Text="{Binding Value}" Classes="value" Classes.up="{Binding IsUp}" Classes.down="{Binding IsDown}" VerticalAlignment="Center" Margin="8,0,0,0" />
+                      <ContentControl Grid.Column="2" Content="{Binding}" ContentTemplate="{StaticResource StatInfo}" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <Separator />
+      <Button Name="AllStatsButton" Content="All stats" Command="{Binding AllStatsCommand}" HorizontalAlignment="Left" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

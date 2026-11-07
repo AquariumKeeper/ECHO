@@ -1,0 +1,3268 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "inputsSha256": "9138729414c2619761a1dbf244c52b88b8dbe0ed5a405cb72bc46db375c17215",
+    "packSha256": "a7c5881703a607a2e653b299ef375faa6a3cb9412285965852c18dca42ce831f",
+    "args": [
+      "--json",
+      "--pack",
+      "pack.json",
+      "build",
+      "resolve",
+      "--input",
+      "-",
+      "--context",
+      "context.json"
+    ],
+    "inputEncoding": "utf-8"
+  },
+  "cases": [
+    {
+      "id": "configured-active",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "equipment_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {
+              "main": {
+                "core": {
+                  "attributeId": "damage_attr",
+                  "value": 4
+                }
+              }
+            },
+            "modSelections": {
+              "main": {
+                "socket": "ranged"
+              }
+            },
+            "modRolls": {
+              "main": {
+                "socket": 3
+              }
+            },
+            "talentSelections": {
+              "main": {
+                "talent": "talent"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "cores": 1,
+            "damage": 133,
+            "other": 0
+          },
+          "primary": {},
+          "breakdowns": {
+            "cores": {
+              "base": 0,
+              "final": 1,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "damage": {
+              "base": 100,
+              "final": 133,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 4
+                },
+                {
+                  "source": {
+                    "kind": "mod",
+                    "id": "ranged",
+                    "name": "Ranged mod"
+                  },
+                  "op": "flat",
+                  "value": 3
+                },
+                {
+                  "source": {
+                    "kind": "mod",
+                    "id": "ranged",
+                    "name": "Ranged mod"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "talent",
+                    "name": "Talent"
+                  },
+                  "op": "flat",
+                  "value": 3
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "talent",
+                  "name": "Talent",
+                  "slot": "main"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "damage_attr": "Damage roll",
+            "ranged": "Ranged mod",
+            "set": "Set",
+            "talent": "Talent",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "weapon_slot"
+            ],
+            "stats": {
+              "cores": 0,
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "configured-holstered",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "off",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "equipment_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {
+              "main": {
+                "core": {
+                  "attributeId": "damage_attr",
+                  "value": 4
+                }
+              }
+            },
+            "modSelections": {
+              "main": {
+                "socket": "ranged"
+              }
+            },
+            "modRolls": {
+              "main": {
+                "socket": 3
+              }
+            },
+            "talentSelections": {
+              "main": {
+                "talent": "talent"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "stacks": "2",
+          "weapon_slot": "off"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "cores": 0,
+            "damage": 127,
+            "other": 0
+          },
+          "primary": {},
+          "breakdowns": {
+            "cores": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "damage": {
+              "base": 100,
+              "final": 127,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "talent",
+                    "name": "Talent"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "talent",
+                  "name": "Talent",
+                  "slot": "main"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "off",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "damage_attr": "Damage roll",
+            "ranged": "Ranged mod",
+            "set": "Set",
+            "talent": "Talent",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "weapon_slot"
+            ],
+            "stats": {}
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "minimum-roll",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 2
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "equipment_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {
+              "main": {
+                "core": {
+                  "attributeId": "damage_attr",
+                  "value": 2
+                }
+              }
+            },
+            "modSelections": {
+              "main": {
+                "socket": "ranged"
+              }
+            },
+            "modRolls": {
+              "main": {
+                "socket": 3
+              }
+            },
+            "talentSelections": {
+              "main": {
+                "talent": "talent"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "cores": 1,
+            "damage": 131,
+            "other": 0
+          },
+          "primary": {},
+          "breakdowns": {
+            "cores": {
+              "base": 0,
+              "final": 1,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "damage": {
+              "base": 100,
+              "final": 131,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "mod",
+                    "id": "ranged",
+                    "name": "Ranged mod"
+                  },
+                  "op": "flat",
+                  "value": 3
+                },
+                {
+                  "source": {
+                    "kind": "mod",
+                    "id": "ranged",
+                    "name": "Ranged mod"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "talent",
+                    "name": "Talent"
+                  },
+                  "op": "flat",
+                  "value": 3
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "talent",
+                  "name": "Talent",
+                  "slot": "main"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "damage_attr": "Damage roll",
+            "ranged": "Ranged mod",
+            "set": "Set",
+            "talent": "Talent",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "cores": 0,
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "maximum-roll",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 8
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "equipment_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {
+              "main": {
+                "core": {
+                  "attributeId": "damage_attr",
+                  "value": 8
+                }
+              }
+            },
+            "modSelections": {
+              "main": {
+                "socket": "ranged"
+              }
+            },
+            "modRolls": {
+              "main": {
+                "socket": 3
+              }
+            },
+            "talentSelections": {
+              "main": {
+                "talent": "talent"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "cores": 1,
+            "damage": 137,
+            "other": 0
+          },
+          "primary": {},
+          "breakdowns": {
+            "cores": {
+              "base": 0,
+              "final": 1,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "damage": {
+              "base": 100,
+              "final": 137,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 8
+                },
+                {
+                  "source": {
+                    "kind": "mod",
+                    "id": "ranged",
+                    "name": "Ranged mod"
+                  },
+                  "op": "flat",
+                  "value": 3
+                },
+                {
+                  "source": {
+                    "kind": "mod",
+                    "id": "ranged",
+                    "name": "Ranged mod"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "talent",
+                    "name": "Talent"
+                  },
+                  "op": "flat",
+                  "value": 3
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "talent",
+                  "name": "Talent",
+                  "slot": "main"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "damage_attr": "Damage roll",
+            "ranged": "Ranged mod",
+            "set": "Set",
+            "talent": "Talent",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "cores": 0,
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "off-step-roll",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 3
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "attribute-roll-invalid",
+            "message": "Damage roll roll 3 is outside or off-step for [2, 8]",
+            "subject": "main",
+            "target": "core"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "attribute-out-of-range",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 10
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "attribute-roll-invalid",
+            "message": "Damage roll roll 10 is outside or off-step for [2, 8]",
+            "subject": "main",
+            "target": "core"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-attribute",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "missing",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-attribute",
+            "message": "Unknown attribute \"missing\"",
+            "subject": "main",
+            "target": "core"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "attribute-not-allowed",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "other_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "attribute-not-allowed",
+            "message": "Other roll is not allowed in Core",
+            "subject": "main",
+            "target": "core"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "attribute-unconfigured",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "equipment_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {
+              "main": {
+                "socket": "ranged"
+              }
+            },
+            "modRolls": {
+              "main": {
+                "socket": 3
+              }
+            },
+            "talentSelections": {
+              "main": {
+                "talent": "talent"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "attribute-unconfigured",
+            "message": "Core on Weapon has no selected attribute roll",
+            "subject": "main",
+            "target": "core"
+          }
+        ],
+        "result": {
+          "stats": {
+            "cores": 0,
+            "damage": 129,
+            "other": 0
+          },
+          "primary": {},
+          "breakdowns": {
+            "cores": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            },
+            "damage": {
+              "base": 100,
+              "final": 129,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "mod",
+                    "id": "ranged",
+                    "name": "Ranged mod"
+                  },
+                  "op": "flat",
+                  "value": 3
+                },
+                {
+                  "source": {
+                    "kind": "mod",
+                    "id": "ranged",
+                    "name": "Ranged mod"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "talent",
+                    "name": "Talent"
+                  },
+                  "op": "flat",
+                  "value": 3
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "talent",
+                  "name": "Talent",
+                  "slot": "main"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "ranged": "Ranged mod",
+            "set": "Set",
+            "talent": "Talent",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "mod-unconfigured",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "equipment_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {
+              "main": {
+                "core": {
+                  "attributeId": "damage_attr",
+                  "value": 4
+                }
+              }
+            },
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "main": {
+                "talent": "talent"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "mod-unconfigured",
+            "message": "Socket on Weapon has no selected mod",
+            "subject": "main",
+            "target": "socket"
+          }
+        ],
+        "result": {
+          "stats": {
+            "cores": 1,
+            "damage": 128,
+            "other": 0
+          },
+          "primary": {},
+          "breakdowns": {
+            "cores": {
+              "base": 0,
+              "final": 1,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "damage": {
+              "base": 100,
+              "final": 128,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 4
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "talent",
+                    "name": "Talent"
+                  },
+                  "op": "flat",
+                  "value": 3
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "talent",
+                  "name": "Talent",
+                  "slot": "main"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "damage_attr": "Damage roll",
+            "set": "Set",
+            "talent": "Talent",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "cores": 0,
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "mod-roll-unconfigured",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "equipment_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {
+              "main": {
+                "core": {
+                  "attributeId": "damage_attr",
+                  "value": 4
+                }
+              }
+            },
+            "modSelections": {
+              "main": {
+                "socket": "ranged"
+              }
+            },
+            "modRolls": {},
+            "talentSelections": {
+              "main": {
+                "talent": "talent"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "mod-roll-unconfigured",
+            "message": "Ranged mod in Socket has no configured roll",
+            "subject": "main",
+            "target": "socket"
+          }
+        ],
+        "result": {
+          "stats": {
+            "cores": 1,
+            "damage": 130,
+            "other": 0
+          },
+          "primary": {},
+          "breakdowns": {
+            "cores": {
+              "base": 0,
+              "final": 1,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "damage": {
+              "base": 100,
+              "final": 130,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 4
+                },
+                {
+                  "source": {
+                    "kind": "mod",
+                    "id": "ranged",
+                    "name": "Ranged mod"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "talent",
+                    "name": "Talent"
+                  },
+                  "op": "flat",
+                  "value": 3
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "talent",
+                  "name": "Talent",
+                  "slot": "main"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "damage_attr": "Damage roll",
+            "ranged": "Ranged mod",
+            "set": "Set",
+            "talent": "Talent",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "cores": 0,
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "mod-roll-invalid",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 11
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "mod-roll-invalid",
+            "message": "Ranged mod roll 11 is outside or off-step for [1, 10]",
+            "subject": "main",
+            "target": "socket"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "mod-roll-without-mod",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {},
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "mod-roll-without-mod",
+            "message": "Socket has a roll but no selected mod",
+            "subject": "main",
+            "target": "socket"
+          },
+          {
+            "severity": "warning",
+            "code": "mod-unconfigured",
+            "message": "Socket on Weapon has no selected mod",
+            "subject": "main",
+            "target": "socket"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "fixed-mod-with-roll",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "fixed"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "mod-roll-not-allowed",
+            "message": "Fixed mod does not accept a configured roll",
+            "subject": "main",
+            "target": "socket"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-mod",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "missing"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-mod",
+            "message": "Unknown mod \"missing\"",
+            "subject": "main",
+            "target": "socket"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "mod-not-allowed",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "forbidden_mod"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "mod-not-allowed",
+            "message": "Forbidden mod is not allowed in Socket",
+            "subject": "main",
+            "target": "socket"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "talent-unconfigured",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "equipment_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {
+              "main": {
+                "core": {
+                  "attributeId": "damage_attr",
+                  "value": 4
+                }
+              }
+            },
+            "modSelections": {
+              "main": {
+                "socket": "ranged"
+              }
+            },
+            "modRolls": {
+              "main": {
+                "socket": 3
+              }
+            },
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "talent-unconfigured",
+            "message": "Talent on Weapon has no selected talent",
+            "subject": "main",
+            "target": "talent"
+          }
+        ],
+        "result": {
+          "stats": {
+            "cores": 1,
+            "damage": 110,
+            "other": 0
+          },
+          "primary": {},
+          "breakdowns": {
+            "cores": {
+              "base": 0,
+              "final": 1,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "damage": {
+              "base": 100,
+              "final": 110,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 4
+                },
+                {
+                  "source": {
+                    "kind": "mod",
+                    "id": "ranged",
+                    "name": "Ranged mod"
+                  },
+                  "op": "flat",
+                  "value": 3
+                },
+                {
+                  "source": {
+                    "kind": "mod",
+                    "id": "ranged",
+                    "name": "Ranged mod"
+                  },
+                  "op": "flat",
+                  "value": 2
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "damage_attr": "Damage roll",
+            "ranged": "Ranged mod",
+            "weapon": "Weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "cores": 0,
+              "damage": 100
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "unknown-talent",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "missing"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-talent",
+            "message": "Unknown talent \"missing\"",
+            "subject": "main",
+            "target": "talent"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "talent-not-allowed",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "forbidden_talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "talent-not-allowed",
+            "message": "Forbidden talent is not allowed in Talent",
+            "subject": "main",
+            "target": "talent"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-slots",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "z": {
+                "attributeId": "damage_attr",
+                "value": 4
+              },
+              "a": {
+                "attributeId": "damage_attr",
+                "value": 4
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "z": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "a": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "z": "talent",
+              "a": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-attribute-slot",
+            "message": "Weapon has no attribute slot \"a\"",
+            "subject": "main",
+            "target": "a"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-attribute-slot",
+            "message": "Weapon has no attribute slot \"z\"",
+            "subject": "main",
+            "target": "z"
+          },
+          {
+            "severity": "warning",
+            "code": "attribute-unconfigured",
+            "message": "Core on Weapon has no selected attribute roll",
+            "subject": "main",
+            "target": "core"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-mod-slot",
+            "message": "Weapon has no mod slot \"a\"",
+            "subject": "main",
+            "target": "a"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-mod-slot",
+            "message": "Weapon has no mod slot \"z\"",
+            "subject": "main",
+            "target": "z"
+          },
+          {
+            "severity": "warning",
+            "code": "mod-unconfigured",
+            "message": "Socket on Weapon has no selected mod",
+            "subject": "main",
+            "target": "socket"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-talent-slot",
+            "message": "Weapon has no talent slot \"a\"",
+            "subject": "main",
+            "target": "a"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-talent-slot",
+            "message": "Weapon has no talent slot \"z\"",
+            "subject": "main",
+            "target": "z"
+          },
+          {
+            "severity": "warning",
+            "code": "talent-unconfigured",
+            "message": "Talent on Weapon has no selected talent",
+            "subject": "main",
+            "target": "talent"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "holstered-invalid-configuration",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "equipment_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "damage_attr",
+                "value": 3
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "ranged"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 11
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "off"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "equipment_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "off"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "attribute-roll-invalid",
+            "message": "Damage roll roll 3 is outside or off-step for [2, 8]",
+            "subject": "main",
+            "target": "core"
+          },
+          {
+            "severity": "error",
+            "code": "mod-roll-invalid",
+            "message": "Ranged mod roll 11 is outside or off-step for [1, 10]",
+            "subject": "main",
+            "target": "socket"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CharacterPlanner.Desktop.ViewModels" xmlns:art="using:CharacterPlanner.Application.Artwork"
+        xmlns:views="using:CharacterPlanner.Desktop.Views"
+        x:Class="CharacterPlanner.Desktop.Views.ArtworkWindow" x:DataType="vm:ArtworkManagerViewModel"
+        Title="Artwork" Width="900" Height="740" MinWidth="640" MinHeight="520" WindowStartupLocation="CenterOwner">
+  <Grid Margin="16" RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="10">
+    <StackPanel Spacing="4">
+      <TextBlock Text="Artwork" FontSize="24" FontWeight="SemiBold" />
+      <TextBlock Text="{Binding Current}" FontWeight="SemiBold" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+      <TextBlock Text="Install a prepared artwork ZIP to customize images on this computer. Missing images use bundled artwork or built-in symbols." TextWrapping="Wrap" />
+      <TextBlock Text="{Binding SelectionProblem}" Classes="error" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+    </StackPanel>
+    <WrapPanel Grid.Row="1" ItemSpacing="8" LineSpacing="8">
+      <Button Name="InstallArtworkButton" Content="Install artwork ZIP…" Click="OnInstall" IsEnabled="{Binding !IsBusy}" />
+      <Button Name="UseArtworkButton" Content="Use this pack" Command="{Binding UseCommand}" />
+      <Button Name="BundledArtworkButton" Content="Use bundled" Command="{Binding BundledCommand}" />
+      <Button Name="RemoveArtworkButton" Content="{Binding RemoveLabel}" Command="{Binding RemoveCommand}" />
+      <Button Content="Refresh" Command="{Binding RefreshCommand}" />
+      <Button Content="Reset invalid artwork settings" Command="{Binding RecoverCommand}" IsVisible="{Binding NeedsRecovery}" />
+    </WrapPanel>
+    <StackPanel Grid.Row="2" Spacing="4">
+      <TextBlock Text="{Binding Problem}" Classes="error" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+      <TextBlock Text="{Binding Status}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+      <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" Height="4" />
+    </StackPanel>
+    <Grid Grid.Row="3" ColumnDefinitions="*,*" ColumnSpacing="14">
+      <Panel>
+      <ListBox Name="ArtworkPacks" ItemsSource="{Binding Rows}" SelectedItem="{Binding Selected}" AutomationProperties.Name="Installed artwork packs">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:ArtworkPackRow">
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding Coverage}" Classes="caption" TextWrapping="Wrap" />
+            </StackPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <TextBlock Text="No user artwork packs installed. Choose Install artwork ZIP to add one." IsVisible="{Binding HasNoPacks}" TextWrapping="Wrap" Margin="20" VerticalAlignment="Center" />
+      </Panel>
+      <ScrollViewer Grid.Column="1">
+        <StackPanel Spacing="10">
+          <TextBlock Text="Preview (up to six images)" FontWeight="SemiBold" />
+          <ProgressBar IsVisible="{Binding IsPreviewLoading}" IsIndeterminate="True" Height="4" />
+          <ItemsControl ItemsSource="{Binding Previews}">
+            <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="8" LineSpacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ArtworkPreview">
+                <StackPanel Width="110" Spacing="4">
+                  <views:IconView Source="{Binding Path}" Glyph="item" Width="96" Height="96" />
+                  <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Classes="caption" />
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <TextBlock Text="Credits and license" FontWeight="SemiBold" />
+          <ComboBox ItemsSource="{Binding Credits}" SelectedItem="{Binding SelectedCredit}" HorizontalAlignment="Stretch" AutomationProperties.Name="Artwork credit">
+            <ComboBox.ItemTemplate><DataTemplate x:DataType="art:ArtworkCredit"><StackPanel><TextBlock Text="{Binding Author}" TextWrapping="Wrap" MaxWidth="360" /><TextBlock Text="{Binding License}" TextWrapping="Wrap" MaxWidth="360" Classes="caption" /></StackPanel></DataTemplate></ComboBox.ItemTemplate>
+          </ComboBox>
+          <TextBox Text="{Binding LicenseText, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="100" MaxHeight="240" AutomationProperties.Name="Artwork license notice" />
+          <Expander Header="Details"><TextBlock Text="{Binding Details}" TextWrapping="Wrap" /></Expander>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+    <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+      <Button Content="Cancel operation" Command="{Binding CancelCommand}" />
+      <Button Content="Close" Click="OnClose" IsDefault="True" />
+    </StackPanel>
+  </Grid>
+</Window>

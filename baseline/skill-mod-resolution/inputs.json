@@ -1,0 +1,26 @@
+{
+  "version":1,
+  "defaults":{"level":5,"activeSkillSelections":{"one":"modded","two":"other"},"skillMods":{"one":{"skillId":"modded","mods":{"a":{"modId":"damage_mod","value":0.2},"b":{"modId":"damage_mod_b","value":0.3},"c":{"modId":"shield_mod","value":4}}}}},
+  "cases":[
+    {"id":"combined-inputs"},
+    {"id":"grade-and-mods","skillUpgrades":{"one":{"skillId":"modded","rank":2}}},
+    {"id":"no-mods","skillMods":{}},
+    {"id":"empty-mod-selection","skillMods":{"one":{"skillId":"modded","mods":{}}}},
+    {"id":"zero-roll","skillMods":{"one":{"skillId":"modded","mods":{"a":{"modId":"damage_mod","value":0}}}}},
+    {"id":"maximum-roll","skillMods":{"one":{"skillId":"modded","mods":{"a":{"modId":"damage_mod","value":1}}}}},
+    {"id":"stale-variant","skillMods":{"one":{"skillId":"other","mods":{"a":{"modId":"damage_mod","value":0.2}}}}},
+    {"id":"unknown-mod-slot","skillMods":{"one":{"skillId":"modded","mods":{"z":{"modId":"damage_mod","value":0.2},"a_unknown":{"modId":"damage_mod","value":0.2}}}}},
+    {"id":"incompatible-choice","skillMods":{"one":{"skillId":"modded","mods":{"a":{"modId":"damage_mod_b","value":0.2}}}}},
+    {"id":"unknown-choice","skillMods":{"one":{"skillId":"modded","mods":{"a":{"modId":"missing","value":0.2}}}}},
+    {"id":"negative-roll","skillMods":{"one":{"skillId":"modded","mods":{"a":{"modId":"damage_mod","value":-0.1}}}}},
+    {"id":"excess-roll","skillMods":{"one":{"skillId":"modded","mods":{"a":{"modId":"damage_mod","value":1.1}}}}},
+    {"id":"off-step-roll","skillMods":{"one":{"skillId":"modded","mods":{"a":{"modId":"damage_mod","value":0.25}}}}},
+    {"id":"unsupported-skill","activeSkillSelections":{"one":"plain","two":"other"},"skillMods":{"one":{"skillId":"plain","mods":{"a":{"modId":"damage_mod","value":0.2}}}}},
+    {"id":"unknown-loadout-slots","skillMods":{"z":{"skillId":"modded","mods":{}},"a":{"skillId":"modded","mods":{}}}},
+    {"id":"rejected-family","activeSkillSelections":{"one":"modded","two":"modded"},"skillMods":{"two":{"skillId":"modded","mods":{"a":{"modId":"damage_mod","value":0.2}}}}},
+    {"id":"grade-errors-before-mod-errors","skillUpgrades":{"one":{"skillId":"modded","rank":4}},"skillMods":{"one":{"skillId":"modded","mods":{"a":{"modId":"damage_mod","value":1.1}}}}},
+    {"id":"per-skill-input-isolation","skillMods":{"one":{"skillId":"modded","mods":{"a":{"modId":"damage_mod","value":0.2}}},"two":{"skillId":"other","mods":{"a":{"modId":"other_mod","value":0.7}}}}},
+    {"id":"overflow-withholds-input","activeSkillSelections":{"one":"overflow","two":"other"},"skillMods":{"one":{"skillId":"overflow","mods":{"a":{"modId":"large","value":1e308},"b":{"modId":"large","value":1e308},"c":{"modId":"large","value":-1e308}}}}},
+    {"id":"large-finite-input","activeSkillSelections":{"one":"overflow","two":"other"},"skillMods":{"one":{"skillId":"overflow","mods":{"a":{"modId":"large","value":1e308}}}}}
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "args": [
+    "catalog",
+    "show",
+    "upgrades",
+    "shd_level"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog show",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": {
+      "id": "shd_level",
+      "name": "SHD Level",
+      "description": "Automatic health: 30 per SHD level, capped at level 2,000 (+60,000). Independent of Watch upgrade ranks. Flat health is applied before Health (%) bonuses; live-game verification remains required.",
+      "maxRank": 2147483647,
+      "effectCap": 2000,
+      "modifiersPerRank": [
+        {
+          "stat": "health",
+          "op": "flat",
+          "value": 30
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Reads Go-era formats (pack v1, build document v1) for one-way import and conversion only. -->
+  <ItemGroup>
+    <ProjectReference Include="../CharacterPlanner.Core/CharacterPlanner.Core.csproj" />
+  </ItemGroup>
+</Project>

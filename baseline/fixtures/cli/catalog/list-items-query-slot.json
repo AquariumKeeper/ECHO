@@ -1,0 +1,40 @@
+{
+  "args": [
+    "catalog",
+    "list",
+    "items",
+    "--query",
+    "striker",
+    "--slot",
+    "chest"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog list",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": [
+      {
+        "id": "chest_striker_s_battlegear_chest",
+        "name": "Striker's Battlegear Chest",
+        "tags": [
+          "gear",
+          "armor",
+          "gear_set_striker_s_battlegear"
+        ],
+        "occupies": [
+          "chest"
+        ],
+        "sets": [
+          "gear_set_striker_s_battlegear"
+        ]
+      }
+    ]
+  }
+}

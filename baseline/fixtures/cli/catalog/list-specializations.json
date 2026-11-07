@@ -1,0 +1,51 @@
+{
+  "args": [
+    "catalog",
+    "list",
+    "specializations"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog list",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": [
+      {
+        "id": "demolitionist",
+        "name": "Demolitionist",
+        "description": "Weapon-type damage tiers affect the selected weapon preview. Permanent stat bonuses affect totals; recovery and signature-weapon bonuses are rates only. Conditional effects are descriptive. Parent unlock tiers need live-game verification."
+      },
+      {
+        "id": "firewall",
+        "name": "Firewall",
+        "description": "Weapon-type damage tiers affect the selected weapon preview. Permanent stat bonuses affect totals; recovery and signature-weapon bonuses are rates only. Conditional effects are descriptive. Parent unlock tiers need live-game verification."
+      },
+      {
+        "id": "gunner",
+        "name": "Gunner",
+        "description": "Weapon-type damage tiers affect the selected weapon preview. Permanent stat bonuses affect totals; recovery and signature-weapon bonuses are rates only. Conditional effects are descriptive. Parent unlock tiers need live-game verification."
+      },
+      {
+        "id": "sharpshooter",
+        "name": "Sharpshooter",
+        "description": "Weapon-type damage tiers affect the selected weapon preview. Permanent stat bonuses affect totals; recovery and signature-weapon bonuses are rates only. Conditional effects are descriptive. Parent unlock tiers need live-game verification."
+      },
+      {
+        "id": "survivalist",
+        "name": "Survivalist",
+        "description": "Weapon-type damage tiers affect the selected weapon preview. Permanent stat bonuses affect totals; recovery and signature-weapon bonuses are rates only. Conditional effects are descriptive. Parent unlock tiers need live-game verification."
+      },
+      {
+        "id": "technician",
+        "name": "Technician",
+        "description": "Weapon-type damage tiers affect the selected weapon preview. Permanent stat bonuses affect totals; recovery and signature-weapon bonuses are rates only. Conditional effects are descriptive. Parent unlock tiers need live-game verification."
+      }
+    ]
+  }
+}

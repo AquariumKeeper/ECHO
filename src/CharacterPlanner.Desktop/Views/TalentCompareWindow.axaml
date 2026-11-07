@@ -1,0 +1,44 @@
+<Window Icon="/Assets/application.ico" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+        xmlns:views="using:CharacterPlanner.Desktop.Views"
+        x:Class="CharacterPlanner.Desktop.Views.TalentCompareWindow" x:DataType="vm:TalentCompareViewModel"
+        Title="{Binding Title}" Width="620" Height="720" WindowStartupLocation="CenterOwner">
+  <!-- Compare talents (G356), as the Go app's: the search, Affects, the changed-only check with the count, then each talent. -->
+  <DockPanel Margin="16">
+    <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+      <TextBox Name="TalentSearch" Text="{Binding Search}" PlaceholderText="Search talents" AutomationProperties.Name="Search talents" />
+      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+        <TextBlock Text="Affects" VerticalAlignment="Center" />
+        <ComboBox Grid.Column="1" ItemsSource="{Binding Affects}" SelectedItem="{Binding Affected}" HorizontalAlignment="Stretch" AutomationProperties.Name="Affects" />
+      </Grid>
+      <DockPanel>
+        <TextBlock DockPanel.Dock="Right" Text="{Binding Shown}" AutomationProperties.LiveSetting="Polite" VerticalAlignment="Center" />
+        <CheckBox Content="Only talents that change stats" IsChecked="{Binding ChangedOnly}" />
+      </DockPanel>
+      <TextBlock Text="Comparing…" Classes="label" IsVisible="{Binding IsComparing}" />
+      <Expander Header="Model coverage">
+        <TextBlock Text="{Binding CoverageNote}" TextWrapping="Wrap" />
+      </Expander>
+      <TextBlock Text="{Binding Problem}" Classes="error" TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive" />
+    </StackPanel>
+    <Button DockPanel.Dock="Bottom" Content="Close" IsCancel="True" HorizontalAlignment="Right" Margin="0,8,0,0" Click="OnClose" />
+    <ScrollViewer>
+      <ItemsControl Name="TalentRows" ItemsSource="{Binding Rows}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:TalentChoiceViewModel">
+            <Grid ColumnDefinitions="48,*" ColumnSpacing="10" Margin="0,4,12,8">
+              <views:IconView Source="{Binding Icon}" Glyph="{x:Static vm:ArtGlyphs.Talent}" Width="48" Height="48" VerticalAlignment="Top" />
+              <StackPanel Grid.Column="1" Spacing="2">
+                <TextBlock Text="{Binding Name}" FontWeight="Bold" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Effect}" Foreground="{DynamicResource DivisionAccent}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Coverage}" Classes="caption" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" IsVisible="{Binding HasDescription}" />
+                <Button Content="{Binding ChooseText}" Command="{Binding ChooseCommand}" Margin="0,4,0,0" />
+              </StackPanel>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </DockPanel>
+</Window>

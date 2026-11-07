@@ -1,0 +1,26 @@
+{
+  "args": [
+    "catalog",
+    "show",
+    "mods",
+    "armor_on_kill_gear_mod"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog show",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": {
+      "id": "armor_on_kill_gear_mod",
+      "name": "Armor on Kill Mod",
+      "modifiers": [],
+      "rollAttributeId": "armor_on_kill_gear_mod_roll"
+    }
+  }
+}

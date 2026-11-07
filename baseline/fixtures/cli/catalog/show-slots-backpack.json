@@ -1,0 +1,28 @@
+{
+  "args": [
+    "catalog",
+    "show",
+    "slots",
+    "backpack"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog show",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": {
+      "id": "backpack",
+      "name": "Backpack",
+      "accepts": [
+        "gear"
+      ],
+      "icon": "slot_backpack"
+    }
+  }
+}

@@ -1,0 +1,805 @@
+{
+  "args": [
+    "catalog",
+    "list",
+    "attributes"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog list",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": [
+      {
+        "id": "accuracy_spot_on",
+        "name": "Accuracy (Skill)",
+        "stat": "accuracy",
+        "op": "flat",
+        "min": 0.38,
+        "max": 0.38
+      },
+      {
+        "id": "accuracy_weapon_minor",
+        "name": "Accuracy (Skill)",
+        "stat": "accuracy",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.12
+      },
+      {
+        "id": "ammo_capacity_ammo_dump",
+        "name": "Ammo Capacity (Offensive)",
+        "stat": "ammo_capacity",
+        "op": "flat",
+        "min": 0.1,
+        "max": 0.1
+      },
+      {
+        "id": "armor_gear_core",
+        "name": "Armor (Defensive)",
+        "stat": "armor",
+        "op": "flat",
+        "min": 16594,
+        "max": 170000
+      },
+      {
+        "id": "armor_on_kill_deathgrips",
+        "name": "Armor on Kill (Defensive)",
+        "stat": "armor_on_kill_percent",
+        "op": "flat",
+        "min": 0.1,
+        "max": 0.1
+      },
+      {
+        "id": "armor_on_kill_gear_mod_roll",
+        "name": "Armor on Kill",
+        "stat": "armor_on_kill",
+        "op": "flat",
+        "min": 0,
+        "max": 18935
+      },
+      {
+        "id": "armor_on_kill_the_mop",
+        "name": "Armor on Kill (Defensive)",
+        "stat": "armor_on_kill_percent",
+        "op": "flat",
+        "min": 0.1,
+        "max": 0.1
+      },
+      {
+        "id": "armor_regeneration_emperors_guard",
+        "name": "Armor Regeneration (Defensive)",
+        "stat": "armor_regeneration_percent",
+        "op": "flat",
+        "min": 0.01,
+        "max": 0.01
+      },
+      {
+        "id": "armor_regeneration_gear_minor",
+        "name": "Armor Regeneration (Defensive)",
+        "stat": "armor_regeneration",
+        "op": "flat",
+        "min": 1689,
+        "max": 4925
+      },
+      {
+        "id": "assault_rifle_damage_weapon_core",
+        "name": "Assault Rifle Damage (Offensive)",
+        "stat": "assault_rifle_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.15
+      },
+      {
+        "id": "bleed_resistance_gear_mod_roll",
+        "name": "Bleed Resistance",
+        "stat": "bleed_resistance",
+        "op": "flat",
+        "min": 0,
+        "max": 0.1
+      },
+      {
+        "id": "blind_deaf_resistance_gear_mod_roll",
+        "name": "Blind/Deaf Resistance",
+        "stat": "blind_deaf_resistance",
+        "op": "flat",
+        "min": 0.05,
+        "max": 0.1
+      },
+      {
+        "id": "burn_resistance_gear_mod_roll",
+        "name": "Burn Resistance",
+        "stat": "burn_resistance",
+        "op": "flat",
+        "min": 0,
+        "max": 0.1
+      },
+      {
+        "id": "critical_hit_chance_gear_minor",
+        "name": "Critical Hit Chance (Offensive)",
+        "stat": "critical_hit_chance",
+        "op": "flat",
+        "min": 0.012,
+        "max": 0.06
+      },
+      {
+        "id": "critical_hit_chance_gear_mod_roll",
+        "name": "Critical Hit Chance",
+        "stat": "critical_hit_chance",
+        "op": "flat",
+        "min": 0.012,
+        "max": 0.06
+      },
+      {
+        "id": "critical_hit_chance_turmoil",
+        "name": "Critical Hit Chance (Offensive)",
+        "stat": "critical_hit_chance",
+        "op": "flat",
+        "min": 0.06,
+        "max": 0.06
+      },
+      {
+        "id": "critical_hit_chance_weapon_core",
+        "name": "Critical Hit Chance (Offensive)",
+        "stat": "critical_hit_chance",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.21
+      },
+      {
+        "id": "critical_hit_chance_weapon_minor",
+        "name": "Critical Hit Chance (Offensive)",
+        "stat": "critical_hit_chance",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.095
+      },
+      {
+        "id": "critical_hit_damage_gear_minor",
+        "name": "Critical Hit Damage (Offensive)",
+        "stat": "critical_hit_damage",
+        "op": "flat",
+        "min": 0.06,
+        "max": 0.12
+      },
+      {
+        "id": "critical_hit_damage_gear_mod_roll",
+        "name": "Critical Hit Damage",
+        "stat": "critical_hit_damage",
+        "op": "flat",
+        "min": 0.06,
+        "max": 0.12
+      },
+      {
+        "id": "critical_hit_damage_turmoil",
+        "name": "Critical Hit Damage (Offensive)",
+        "stat": "critical_hit_damage",
+        "op": "flat",
+        "min": 0.12,
+        "max": 0.12
+      },
+      {
+        "id": "critical_hit_damage_weapon_core",
+        "name": "Critical Hit Damage (Offensive)",
+        "stat": "critical_hit_damage",
+        "op": "flat",
+        "min": 0.01,
+        "max": 0.34
+      },
+      {
+        "id": "critical_hit_damage_weapon_minor",
+        "name": "Critical Hit Damage (Offensive)",
+        "stat": "critical_hit_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.1
+      },
+      {
+        "id": "damage_to_armor_contractors_gloves",
+        "name": "Damage to Armor (Offensive)",
+        "stat": "damage_to_armor",
+        "op": "flat",
+        "min": 0.08,
+        "max": 0.08
+      },
+      {
+        "id": "damage_to_armor_p320_xcompact",
+        "name": "Damage to Armor (Offensive)",
+        "stat": "damage_to_armor",
+        "op": "flat",
+        "min": 0.05,
+        "max": 0.05
+      },
+      {
+        "id": "damage_to_armor_weapon_core",
+        "name": "Damage to Armor (Offensive)",
+        "stat": "damage_to_armor",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.12
+      },
+      {
+        "id": "damage_to_armor_weapon_minor",
+        "name": "Damage to Armor (Offensive)",
+        "stat": "damage_to_armor",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.06
+      },
+      {
+        "id": "disorient_resistance_gear_mod_roll",
+        "name": "Disorient Resistance",
+        "stat": "disorient_resistance",
+        "op": "flat",
+        "min": 0,
+        "max": 0.1
+      },
+      {
+        "id": "disrupt_resistance_gear_mod_roll",
+        "name": "Disrupt Resistance",
+        "stat": "disrupt_resistance",
+        "op": "flat",
+        "min": 0,
+        "max": 0.1
+      },
+      {
+        "id": "dtoc_foxs_prayer",
+        "name": "DTOC (Offensive)",
+        "stat": "dtoc",
+        "op": "flat",
+        "min": 0.08,
+        "max": 0.08
+      },
+      {
+        "id": "dtoc_survivalist_d50",
+        "name": "DTOC (Offensive)",
+        "stat": "dtoc",
+        "op": "flat",
+        "min": 0.08,
+        "max": 0.08
+      },
+      {
+        "id": "dtoc_weapon_core",
+        "name": "DTOC (Offensive)",
+        "stat": "dtoc",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.12
+      },
+      {
+        "id": "dtoc_weapon_minor",
+        "name": "DTOC (Offensive)",
+        "stat": "dtoc",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.1
+      },
+      {
+        "id": "ensnare_resistance_gear_mod_roll",
+        "name": "Ensnare Resistance",
+        "stat": "ensnare_resistance",
+        "op": "flat",
+        "min": 0,
+        "max": 0.1
+      },
+      {
+        "id": "explosive_resistance_gear_minor",
+        "name": "Explosive Resistance (Defensive)",
+        "stat": "explosive_resistance",
+        "op": "flat",
+        "min": 0.01,
+        "max": 0.1
+      },
+      {
+        "id": "hazard_protection_gear_minor",
+        "name": "Hazard Protection (Defensive)",
+        "stat": "hazard_protection",
+        "op": "flat",
+        "min": 0.05,
+        "max": 0.1
+      },
+      {
+        "id": "headshot_damage_gear_minor",
+        "name": "Headshot Damage (Offensive)",
+        "stat": "headshot_damage",
+        "op": "flat",
+        "min": 0.013000000000000001,
+        "max": 0.1
+      },
+      {
+        "id": "headshot_damage_gear_mod_roll",
+        "name": "Headshot Damage",
+        "stat": "headshot_damage",
+        "op": "flat",
+        "min": 0.013,
+        "max": 0.1
+      },
+      {
+        "id": "headshot_damage_maxim_9",
+        "name": "Headshot Damage (Offensive)",
+        "stat": "headshot_damage",
+        "op": "flat",
+        "min": 0.09,
+        "max": 0.09
+      },
+      {
+        "id": "headshot_damage_oh_carol",
+        "name": "Headshot Damage (Offensive)",
+        "stat": "headshot_damage",
+        "op": "flat",
+        "min": 1.37,
+        "max": 1.37
+      },
+      {
+        "id": "headshot_damage_punch_drunk",
+        "name": "Headshot Damage (Offensive)",
+        "stat": "headshot_damage",
+        "op": "flat",
+        "min": 0.2,
+        "max": 0.2
+      },
+      {
+        "id": "headshot_damage_the_white_death",
+        "name": "Headshot Damage (Offensive)",
+        "stat": "headshot_damage",
+        "op": "flat",
+        "min": 1.37,
+        "max": 1.37
+      },
+      {
+        "id": "headshot_damage_weapon_core",
+        "name": "Headshot Damage (Offensive)",
+        "stat": "headshot_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 1.11
+      },
+      {
+        "id": "headshot_damage_weapon_minor",
+        "name": "Headshot Damage (Offensive)",
+        "stat": "headshot_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.1
+      },
+      {
+        "id": "health_damage_firestarter",
+        "name": "Health Damage (Offensive)",
+        "stat": "health_damage",
+        "op": "flat",
+        "min": 0.075,
+        "max": 0.075
+      },
+      {
+        "id": "health_damage_the_hollow_man",
+        "name": "Health Damage (Offensive)",
+        "stat": "health_damage",
+        "op": "flat",
+        "min": 0.14,
+        "max": 0.14
+      },
+      {
+        "id": "health_damage_weapon_core",
+        "name": "Health Damage (Offensive)",
+        "stat": "health_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.21
+      },
+      {
+        "id": "health_damage_weapon_minor",
+        "name": "Health Damage (Offensive)",
+        "stat": "health_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.1
+      },
+      {
+        "id": "health_gear_minor",
+        "name": "Health (Defensive)",
+        "stat": "health",
+        "op": "flat",
+        "min": 8405,
+        "max": 18935
+      },
+      {
+        "id": "incoming_repairs_gear_minor",
+        "name": "Incoming Repairs (Defensive)",
+        "stat": "incoming_repairs",
+        "op": "flat",
+        "min": 0.078,
+        "max": 0.2
+      },
+      {
+        "id": "incoming_repairs_gear_mod_roll",
+        "name": "Incoming Repairs",
+        "stat": "incoming_repairs",
+        "op": "flat",
+        "min": 0,
+        "max": 0.2
+      },
+      {
+        "id": "lmg_damage_weapon_core",
+        "name": "LMG Damage (Offensive)",
+        "stat": "lmg_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.15
+      },
+      {
+        "id": "magazine_size_weapon_minor",
+        "name": "Magazine Size (Offensive)",
+        "stat": "magazine_size_percent",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.125
+      },
+      {
+        "id": "marksman_rifle_damage_weapon_core",
+        "name": "Marksman Rifle Damage (Offensive)",
+        "stat": "marksman_rifle_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.15
+      },
+      {
+        "id": "melee_damage_claws_out",
+        "name": "Melee Damage (Offensive)",
+        "stat": "melee_damage",
+        "op": "flat",
+        "min": 5,
+        "max": 5
+      },
+      {
+        "id": "optimal_range_visionario",
+        "name": "Optimal Range (Skill)",
+        "stat": "optimal_range",
+        "op": "flat",
+        "min": 0.5,
+        "max": 0.5
+      },
+      {
+        "id": "optimal_range_weapon_minor",
+        "name": "Optimal Range (Skill)",
+        "stat": "optimal_range",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.24
+      },
+      {
+        "id": "pistol_damage_claws_out",
+        "name": "Pistol Damage (Offensive)",
+        "stat": "pistol_damage",
+        "op": "flat",
+        "min": 0.1,
+        "max": 0.1
+      },
+      {
+        "id": "pistol_damage_maxim_9",
+        "name": "Pistol Damage (Offensive)",
+        "stat": "pistol_damage",
+        "op": "flat",
+        "min": 0.11599999999999999,
+        "max": 0.11599999999999999
+      },
+      {
+        "id": "pistol_damage_p320_xcompact",
+        "name": "Pistol Damage (Offensive)",
+        "stat": "pistol_damage",
+        "op": "flat",
+        "min": 0.11599999999999999,
+        "max": 0.11599999999999999
+      },
+      {
+        "id": "pistol_damage_sharpshooters_93r",
+        "name": "Pistol Damage (Offensive)",
+        "stat": "pistol_damage",
+        "op": "flat",
+        "min": 0.11599999999999999,
+        "max": 0.11599999999999999
+      },
+      {
+        "id": "pistol_damage_survivalist_d50",
+        "name": "Pistol Damage (Offensive)",
+        "stat": "pistol_damage",
+        "op": "flat",
+        "min": 0.11599999999999999,
+        "max": 0.11599999999999999
+      },
+      {
+        "id": "pistol_damage_weapon_core",
+        "name": "Pistol Damage (Offensive)",
+        "stat": "pistol_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.15
+      },
+      {
+        "id": "protection_from_elites_gear_mod_roll",
+        "name": "Protection from Elites",
+        "stat": "protection_from_elites",
+        "op": "flat",
+        "min": 0,
+        "max": 0.13
+      },
+      {
+        "id": "pulse_resistance_gear_mod_roll",
+        "name": "Pulse Resistance",
+        "stat": "pulse_resistance",
+        "op": "flat",
+        "min": 0,
+        "max": 0.1
+      },
+      {
+        "id": "rate_of_fire_salvo",
+        "name": "Rate of Fire (Skill)",
+        "stat": "rate_of_fire",
+        "op": "flat",
+        "min": 0.05,
+        "max": 0.05
+      },
+      {
+        "id": "rate_of_fire_weapon_minor",
+        "name": "Rate of Fire (Skill)",
+        "stat": "rate_of_fire",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.05
+      },
+      {
+        "id": "reduced_threat_cloak",
+        "name": "Reduced Threat (Defensive)",
+        "stat": "reduced_threat",
+        "op": "flat",
+        "min": 0.5,
+        "max": 0.5
+      },
+      {
+        "id": "reload_speed_sharpshooters_93r",
+        "name": "Reload Speed (Skill)",
+        "stat": "reload_speed",
+        "op": "flat",
+        "min": 0.09300000000000001,
+        "max": 0.09300000000000001
+      },
+      {
+        "id": "reload_speed_weapon_minor",
+        "name": "Reload Speed (Skill)",
+        "stat": "reload_speed",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.12
+      },
+      {
+        "id": "repair_skills_gear_minor",
+        "name": "Repair Skills (Skill)",
+        "stat": "repair_skills",
+        "op": "flat",
+        "min": 0.078,
+        "max": 0.2
+      },
+      {
+        "id": "repair_skills_gear_mod_roll",
+        "name": "Repair Skills",
+        "stat": "repair_skills",
+        "op": "flat",
+        "min": 0,
+        "max": 0.2
+      },
+      {
+        "id": "rifle_damage_weapon_core",
+        "name": "Rifle Damage (Offensive)",
+        "stat": "rifle_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.15
+      },
+      {
+        "id": "scanner_pulse_haste_nightwatcher",
+        "name": "Scanner Pulse Haste (Skill)",
+        "stat": "scanner_pulse_haste",
+        "op": "flat",
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "shield_health_forge",
+        "name": "Shield Health (Skill)",
+        "stat": "shield_health",
+        "op": "flat",
+        "min": 0.5,
+        "max": 0.5
+      },
+      {
+        "id": "shock_resistance_gear_mod_roll",
+        "name": "Shock Resistance",
+        "stat": "shock_resistance",
+        "op": "flat",
+        "min": 0,
+        "max": 0.1
+      },
+      {
+        "id": "shotgun_damage_backup_boomstick",
+        "name": "Shotgun Damage (Offensive)",
+        "stat": "shotgun_damage",
+        "op": "flat",
+        "min": 0.17,
+        "max": 0.17
+      },
+      {
+        "id": "shotgun_damage_firestarter",
+        "name": "Shotgun Damage (Offensive)",
+        "stat": "shotgun_damage",
+        "op": "flat",
+        "min": 0.11599999999999999,
+        "max": 0.11599999999999999
+      },
+      {
+        "id": "shotgun_damage_weapon_core",
+        "name": "Shotgun Damage (Offensive)",
+        "stat": "shotgun_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.15
+      },
+      {
+        "id": "skill_damage_gear_minor",
+        "name": "Skill Damage (Skill)",
+        "stat": "skill_damage",
+        "op": "flat",
+        "min": 0.013000000000000001,
+        "max": 0.1
+      },
+      {
+        "id": "skill_duration_gear_mod_roll",
+        "name": "Skill Duration",
+        "stat": "skill_duration",
+        "op": "flat",
+        "min": 0,
+        "max": 0.1
+      },
+      {
+        "id": "skill_haste_gear_minor",
+        "name": "Skill Haste (Skill)",
+        "stat": "skill_haste",
+        "op": "flat",
+        "min": 0.06,
+        "max": 0.12
+      },
+      {
+        "id": "skill_haste_gear_mod_roll",
+        "name": "Skill Haste",
+        "stat": "skill_haste",
+        "op": "flat",
+        "min": 0.06,
+        "max": 0.12
+      },
+      {
+        "id": "skill_health_motherly_love",
+        "name": "Skill Health (Skill)",
+        "stat": "skill_health",
+        "op": "flat",
+        "min": 0.25,
+        "max": 0.25
+      },
+      {
+        "id": "skill_tier_gear_core",
+        "name": "Skill Tier (Skill)",
+        "stat": "skill_tier",
+        "op": "flat",
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "skill_tier_tdi_kard_custom",
+        "name": "Skill Tier (Skill)",
+        "stat": "skill_tier",
+        "op": "flat",
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "smg_damage_weapon_core",
+        "name": "SMG Damage (Offensive)",
+        "stat": "smg_damage",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.15
+      },
+      {
+        "id": "stability_weapon_minor",
+        "name": "Stability (Skill)",
+        "stat": "stability",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.12
+      },
+      {
+        "id": "status_effects_firm_handshake",
+        "name": "Status Effects (Skill)",
+        "stat": "status_effects",
+        "op": "flat",
+        "min": 0.16,
+        "max": 0.16
+      },
+      {
+        "id": "status_effects_gear_minor",
+        "name": "Status Effects (Skill)",
+        "stat": "status_effects",
+        "op": "flat",
+        "min": 0.05,
+        "max": 0.1
+      },
+      {
+        "id": "status_effects_grease",
+        "name": "Status Effects (Skill)",
+        "stat": "status_effects",
+        "op": "flat",
+        "min": 0.16,
+        "max": 0.16
+      },
+      {
+        "id": "swap_speed_weapon_minor",
+        "name": "Swap Speed (Offensive)",
+        "stat": "swap_speed",
+        "op": "flat",
+        "min": 0.005,
+        "max": 0.15
+      },
+      {
+        "id": "weapon_damage_cloak",
+        "name": "Weapon Damage (Offensive)",
+        "stat": "weapon_damage",
+        "op": "flat",
+        "min": 0.15,
+        "max": 0.15
+      },
+      {
+        "id": "weapon_damage_gear_core",
+        "name": "Weapon Damage (Offensive)",
+        "stat": "weapon_damage",
+        "op": "flat",
+        "min": 0.015,
+        "max": 0.15
+      },
+      {
+        "id": "weapon_damage_picaros_holster",
+        "name": "Weapon Damage (Offensive)",
+        "stat": "weapon_damage",
+        "op": "flat",
+        "min": 0.1,
+        "max": 0.1
+      },
+      {
+        "id": "weapon_damage_turmoil",
+        "name": "Weapon Damage (Offensive)",
+        "stat": "weapon_damage",
+        "op": "flat",
+        "min": 0.15,
+        "max": 0.15
+      },
+      {
+        "id": "weapon_handling_eagles_grasp",
+        "name": "Weapon Handling (Offensive)",
+        "stat": "weapon_handling",
+        "op": "flat",
+        "min": 0.15,
+        "max": 0.15
+      },
+      {
+        "id": "weapon_handling_gear_minor",
+        "name": "Weapon Handling (Offensive)",
+        "stat": "weapon_handling",
+        "op": "flat",
+        "min": 0.01,
+        "max": 0.08
+      }
+    ]
+  }
+}

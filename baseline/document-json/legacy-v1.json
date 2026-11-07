@@ -1,0 +1,3436 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "inputsSha256": "53b7fb7dc037e71fdd9bde191973860febb681b12fd01174564e673a27c473df",
+    "packSha256": "7331a6a17b34a87ff3deec4ee6d3d52bd4ab205362a0246e45e3a8835faf37a1",
+    "args": [
+      "--json",
+      "--pack",
+      "pack.json",
+      "build",
+      "export",
+      "--input",
+      "-"
+    ],
+    "inputEncoding": "utf-8"
+  },
+  "cases": [
+    {
+      "id": "minimal",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-root",
+      "input": "null",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document must be a JSON object"
+        }
+      }
+    },
+    {
+      "id": "array-root",
+      "input": "[]",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document must be a JSON object"
+        }
+      }
+    },
+    {
+      "id": "number-root",
+      "input": "1",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document must be a JSON object"
+        }
+      }
+    },
+    {
+      "id": "string-root",
+      "input": "\"x\"",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document must be a JSON object"
+        }
+      }
+    },
+    {
+      "id": "root-schemaVersion-2",
+      "input": "{\"schemaVersion\":2,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "unsupported build document schemaVersion 2"
+        }
+      }
+    },
+    {
+      "id": "root-schemaVersion-None",
+      "input": "{\"schemaVersion\":null,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "unsupported build document schemaVersion 0"
+        }
+      }
+    },
+    {
+      "id": "root-schemaVersion-1",
+      "input": "{\"schemaVersion\":\"1\",\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal string into Go struct field Document.schemaVersion of type int"
+        }
+      }
+    },
+    {
+      "id": "root-build-None",
+      "input": "{\"schemaVersion\":1,\"build\":null}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document requires a non-null build object"
+        }
+      }
+    },
+    {
+      "id": "root-build-[]",
+      "input": "{\"schemaVersion\":1,\"build\":[]}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document requires a non-null build object"
+        }
+      }
+    },
+    {
+      "id": "missing-schemaVersion",
+      "input": "{\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "unsupported build document schemaVersion 0"
+        }
+      }
+    },
+    {
+      "id": "missing-build",
+      "input": "{\"schemaVersion\":1}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document requires a non-null build object"
+        }
+      }
+    },
+    {
+      "id": "missing-packId",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document requires non-empty build.packId and build.packVersion"
+        }
+      }
+    },
+    {
+      "id": "packId-None",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":null,\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document requires non-empty build.packId and build.packVersion"
+        }
+      }
+    },
+    {
+      "id": "packId-",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"\",\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document requires non-empty build.packId and build.packVersion"
+        }
+      }
+    },
+    {
+      "id": "packId-True",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":true,\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal bool into Go struct field Document.build.packId of type string"
+        }
+      }
+    },
+    {
+      "id": "packId-[]",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":[],\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal array into Go struct field Document.build.packId of type string"
+        }
+      }
+    },
+    {
+      "id": "packId-{}",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":{},\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal object into Go struct field Document.build.packId of type string"
+        }
+      }
+    },
+    {
+      "id": "missing-packVersion",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document requires non-empty build.packId and build.packVersion"
+        }
+      }
+    },
+    {
+      "id": "packVersion-None",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":null,\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document requires non-empty build.packId and build.packVersion"
+        }
+      }
+    },
+    {
+      "id": "packVersion-",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document requires non-empty build.packId and build.packVersion"
+        }
+      }
+    },
+    {
+      "id": "packVersion-True",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":true,\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal bool into Go struct field Document.build.packVersion of type string"
+        }
+      }
+    },
+    {
+      "id": "packVersion-[]",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":[],\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal array into Go struct field Document.build.packVersion of type string"
+        }
+      }
+    },
+    {
+      "id": "packVersion-{}",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":{},\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal object into Go struct field Document.build.packVersion of type string"
+        }
+      }
+    },
+    {
+      "id": "missing-level",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\"}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document requires build.level"
+        }
+      }
+    },
+    {
+      "id": "level-None",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":null}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document requires build.level"
+        }
+      }
+    },
+    {
+      "id": "level-",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":\"\"}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal string into Go struct field Document.build.level of type int"
+        }
+      }
+    },
+    {
+      "id": "level-True",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":true}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal bool into Go struct field Document.build.level of type int"
+        }
+      }
+    },
+    {
+      "id": "level-[]",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":[]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal array into Go struct field Document.build.level of type int"
+        }
+      }
+    },
+    {
+      "id": "level-{}",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":{}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal object into Go struct field Document.build.level of type int"
+        }
+      }
+    },
+    {
+      "id": "level-1.5",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1.5}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number 1.5 into Go struct field Document.build.level of type int"
+        }
+      }
+    },
+    {
+      "id": "level-1e+30",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1e+30}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number 1e+30 into Go struct field Document.build.level of type int"
+        }
+      }
+    },
+    {
+      "id": "level-int64-max",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":9223372036854775807}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "level-out-of-range",
+            "message": "Level 9223372036854775807 is outside [1, 60]"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "level-int64-min",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":-9223372036854775808}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "level-out-of-range",
+            "message": "Level -9223372036854775808 is outside [1, 60]"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "level-int64-overflow",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":9223372036854775808}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number 9223372036854775808 into Go struct field Document.build.level of type int"
+        }
+      }
+    },
+    {
+      "id": "retained-level-0",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":0}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "level-out-of-range",
+            "message": "Level 0 is outside [1, 60]"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "retained-level--1",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":-1}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "level-out-of-range",
+            "message": "Level -1 is outside [1, 60]"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-root",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1},\"extra\":1}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document: unknown or incorrectly cased field \"extra\""
+        }
+      }
+    },
+    {
+      "id": "unknown-build",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"Level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document build: unknown or incorrectly cased field \"Level\""
+        }
+      }
+    },
+    {
+      "id": "unknown-meta",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":{\"Name\":\"x\"}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build document build.meta: unknown or incorrectly cased field \"Name\""
+        }
+      }
+    },
+    {
+      "id": "null-allocations",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocations\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-equipment",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipment\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-attributeRolls",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"attributeRolls\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-modSelections",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modSelections\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-modRolls",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modRolls\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-talentSelections",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"talentSelections\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-activeSkillSelections",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"activeSkillSelections\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-skillUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-skillMods",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-accountUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"accountUpgrades\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-equipmentUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-prototypes",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-activeScenarios",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"activeScenarios\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-allocatedSkills",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocatedSkills\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-specializationNodeSelections",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"specializationNodeSelections\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-party",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-meta",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":null}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-meta-values",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":{\"name\":null,\"notes\":null}}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-string-values",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipment\":{\"unknown\":null}}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "unknown": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-number-values",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocations\":{\"unknown\":null}}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {
+              "unknown": 0
+            },
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-set-values",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"activeScenarios\":{\"unknown\":null}}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-scenario",
+            "message": "Unknown scenario \"unknown\"",
+            "subject": "unknown"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-set-record-field",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"activeScenarios\":{\"unknown\":{\"x\":1}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: unknown field \"x\""
+        }
+      }
+    },
+    {
+      "id": "invalid-set-value",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"activeScenarios\":{\"unknown\":true}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal bool into Go struct field Document.build.activeScenarios.unknown of type struct {}"
+        }
+      }
+    },
+    {
+      "id": "null-nested-mod-map",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modSelections\":{\"unknown\":null}}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {
+              "unknown": {}
+            },
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "null-nested-attribute-map",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"attributeRolls\":{\"unknown\":null}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.attributeRolls.unknown: must be a JSON object"
+        }
+      }
+    },
+    {
+      "id": "null-attribute-record",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"attributeRolls\":{\"unknown\":{\"core\":null}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.attributeRolls.unknown.core must be a non-null object"
+        }
+      }
+    },
+    {
+      "id": "record-skillUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":{\"skillId\":\"s\",\"rank\":0}}}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-upgrade",
+            "message": "Skill upgrade in \"unknown\" requires an accepted matching skill and a supported integer rank",
+            "subject": "unknown"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "null-record-skillUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":null}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.skillUpgrades.unknown must be a non-null object"
+        }
+      }
+    },
+    {
+      "id": "null-required-skillUpgrades-skillId",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":{\"skillId\":null,\"rank\":0}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.skillUpgrades.unknown.skillId is required"
+        }
+      }
+    },
+    {
+      "id": "null-required-skillUpgrades-rank",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":{\"skillId\":\"s\",\"rank\":null}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.skillUpgrades.unknown.rank is required"
+        }
+      }
+    },
+    {
+      "id": "unknown-record-skillUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":{\"skillId\":\"s\",\"rank\":0,\"extra\":0}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.skillUpgrades.unknown: unknown or incorrectly cased field \"extra\""
+        }
+      }
+    },
+    {
+      "id": "record-equipmentUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":{\"itemId\":\"i\",\"rank\":0}}}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Unknown equipment slot \"unknown\"",
+            "subject": "unknown"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "null-record-equipmentUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":null}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.equipmentUpgrades.unknown must be a non-null object"
+        }
+      }
+    },
+    {
+      "id": "null-required-equipmentUpgrades-itemId",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":{\"itemId\":null,\"rank\":0}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.equipmentUpgrades.unknown.itemId is required"
+        }
+      }
+    },
+    {
+      "id": "null-required-equipmentUpgrades-rank",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":{\"itemId\":\"i\",\"rank\":null}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.equipmentUpgrades.unknown.rank is required"
+        }
+      }
+    },
+    {
+      "id": "unknown-record-equipmentUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":{\"itemId\":\"i\",\"rank\":0,\"extra\":0}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.equipmentUpgrades.unknown: unknown or incorrectly cased field \"extra\""
+        }
+      }
+    },
+    {
+      "id": "record-prototypes",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":\"i\",\"augment\":\"\",\"level\":0}}}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "prototype-invalid",
+            "message": "Prototype in unknown is not bound to its equipped item",
+            "subject": "unknown"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "null-record-prototypes",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":null}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.prototypes.unknown must be a non-null object"
+        }
+      }
+    },
+    {
+      "id": "null-required-prototypes-itemId",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":null,\"augment\":\"\",\"level\":0}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.prototypes.unknown.itemId is required"
+        }
+      }
+    },
+    {
+      "id": "null-required-prototypes-augment",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":\"i\",\"augment\":null,\"level\":0}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.prototypes.unknown.augment is required"
+        }
+      }
+    },
+    {
+      "id": "null-required-prototypes-level",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":\"i\",\"augment\":\"\",\"level\":null}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.prototypes.unknown.level is required"
+        }
+      }
+    },
+    {
+      "id": "unknown-record-prototypes",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":\"i\",\"augment\":\"\",\"level\":0,\"extra\":0}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.prototypes.unknown: unknown or incorrectly cased field \"extra\""
+        }
+      }
+    },
+    {
+      "id": "record-skillMods",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":{}}}}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mods require an accepted matching variant with supported mod slots",
+            "subject": "unknown"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "null-record-skillMods",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":null}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.skillMods.unknown must be a non-null object"
+        }
+      }
+    },
+    {
+      "id": "null-required-skillMods-skillId",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":null,\"mods\":{}}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.skillMods.unknown.skillId is required"
+        }
+      }
+    },
+    {
+      "id": "null-required-skillMods-mods",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":null}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.skillMods.unknown.mods is required"
+        }
+      }
+    },
+    {
+      "id": "unknown-record-skillMods",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":{},\"extra\":0}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.skillMods.unknown: unknown or incorrectly cased field \"extra\""
+        }
+      }
+    },
+    {
+      "id": "skill-mod-roll",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":{\"socket\":{\"modId\":\"m\",\"value\":0}}}}}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mods require an accepted matching variant with supported mod slots",
+            "subject": "unknown"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "null-skill-mod-roll",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":{\"socket\":null}}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.skillMods.unknown.mods.socket must be a non-null object"
+        }
+      }
+    },
+    {
+      "id": "null-mod-roll-value",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":{\"socket\":{\"modId\":\"m\",\"value\":null}}}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.skillMods.unknown.mods.socket.value is required"
+        }
+      }
+    },
+    {
+      "id": "large-account-rank",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"accountUpgrades\":{\"unknown\":1099511627776}}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-account-upgrade",
+            "message": "Unknown account upgrade \"unknown\"",
+            "subject": "unknown"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "large-item-rank",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":{\"itemId\":\"i\",\"rank\":1099511627776}}}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Unknown equipment slot \"unknown\"",
+            "subject": "unknown"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "large-skill-rank",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":{\"skillId\":\"s\",\"rank\":1099511627776}}}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-upgrade",
+            "message": "Skill upgrade in \"unknown\" requires an accepted matching skill and a supported integer rank",
+            "subject": "unknown"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "large-prototype-level",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":\"i\",\"augment\":\"\",\"level\":1099511627776}}}}",
+      "decodeAccepted": true,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "prototype-invalid",
+            "message": "Prototype in unknown is not bound to its equipped item",
+            "subject": "unknown"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "party-valid",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"effects\":[{\"id\":\"missing\",\"values\":{\"damage\":1},\"active\":true}]}]}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "Ally",
+                "effects": [
+                  {
+                    "id": "missing",
+                    "values": {
+                      "damage": 1
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "party-null-member",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[null]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.party.0 must be a non-null object"
+        }
+      }
+    },
+    {
+      "id": "party-missing-effects",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\"}]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.party.0.effects is required"
+        }
+      }
+    },
+    {
+      "id": "party-null-effects",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"effects\":null}]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.party.0.effects is required"
+        }
+      }
+    },
+    {
+      "id": "party-blank-name",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"  \",\"effects\":[]}]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "party member names must not be blank"
+        }
+      }
+    },
+    {
+      "id": "party-duplicate-names",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\" Ally \",\"effects\":[]},{\"name\":\"ALLY\",\"effects\":[]}]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "party member \"ALLY\" is listed twice"
+        }
+      }
+    },
+    {
+      "id": "party-negative-armor",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"armor\":-1,\"effects\":[]}]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "party member \"Ally\" armor must be a finite, non-negative number"
+        }
+      }
+    },
+    {
+      "id": "party-duplicate-effects",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"effects\":[{\"id\":\"x\",\"values\":{},\"active\":true},{\"id\":\"x\",\"values\":{},\"active\":false}]}]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "party member \"Ally\" lists effect \"x\" twice"
+        }
+      }
+    },
+    {
+      "id": "party-four-members",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"0\",\"effects\":[]},{\"name\":\"1\",\"effects\":[]},{\"name\":\"2\",\"effects\":[]},{\"name\":\"3\",\"effects\":[]}]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "a party has at most 3 other members"
+        }
+      }
+    },
+    {
+      "id": "unicode-notes",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":{\"name\":\"Name\",\"notes\":\"Unicode \\ud83d\\ude00 <&> \\u2028\"}}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "Name",
+              "notes": "Unicode 😀 <&>  "
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "duplicate-root",
+      "input": "{\"schemaVersion\":1,\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "duplicate JSON key \"schemaVersion\""
+        }
+      }
+    },
+    {
+      "id": "duplicate-escaped",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"\\u006cevel\":1}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "duplicate JSON key \"level\""
+        }
+      }
+    },
+    {
+      "id": "duplicate-unknown",
+      "input": "{\"extra\":{\"x\":1,\"x\":2}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "duplicate JSON key \"x\""
+        }
+      }
+    },
+    {
+      "id": "trailing",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}} {}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "trailing JSON value"
+        }
+      }
+    },
+    {
+      "id": "empty",
+      "input": "",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "EOF"
+        }
+      }
+    },
+    {
+      "id": "malformed",
+      "input": "{\"schemaVersion\":!}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "invalid character '!' looking for beginning of value"
+        }
+      }
+    },
+    {
+      "id": "truncated",
+      "input": "{\"schemaVersion\":1",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "unexpected end of JSON input"
+        }
+      }
+    },
+    {
+      "id": "unpaired-surrogate",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":{\"notes\":\"\\ud800\"}}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": "�"
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "unpaired-map-key",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocations\":{\"\\ud800\":0}}}",
+      "decodeAccepted": true,
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": true,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "ashen_vale",
+            "packVersion": "0.1.0",
+            "level": 1,
+            "allocations": {
+              "�": 0
+            },
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "alloc-number-string",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocations\":{\"x\":\"bad\"}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal string into Go struct field Document.build.allocations.x of type float64"
+        }
+      }
+    },
+    {
+      "id": "equipment-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipment\":{\"x\":2}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number into Go struct field Document.build.equipment.x of type string"
+        }
+      }
+    },
+    {
+      "id": "allocation-overflow",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocations\":{\"x\":1e999}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number 1e999 into Go struct field Document.build.allocations.x of type float64"
+        }
+      }
+    },
+    {
+      "id": "attribute-string-id",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"attributeRolls\":{\"slot\":{\"core\":{\"attributeId\":2,\"value\":1}}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number into Go struct field Document.build.attributeRolls.slot.core.attributeId of type string"
+        }
+      }
+    },
+    {
+      "id": "attribute-string-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"attributeRolls\":{\"slot\":{\"core\":{\"attributeId\":\"a\",\"value\":\"bad\"}}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal string into Go struct field Document.build.attributeRolls.slot.core.value of type float64"
+        }
+      }
+    },
+    {
+      "id": "skill-rank-string",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"slot\":{\"skillId\":\"s\",\"rank\":\"bad\"}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal string into Go struct field Document.build.skillUpgrades.slot.rank of type int"
+        }
+      }
+    },
+    {
+      "id": "skill-id-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"slot\":{\"skillId\":2,\"rank\":1}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number into Go struct field Document.build.skillUpgrades.slot.skillId of type string"
+        }
+      }
+    },
+    {
+      "id": "mod-roll-string",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modRolls\":{\"slot\":{\"socket\":\"bad\"}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal string into Go struct field Document.build.modRolls.slot.socket of type float64"
+        }
+      }
+    },
+    {
+      "id": "mod-string-id",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modSelections\":{\"slot\":{\"socket\":2}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number into Go struct field Document.build.modSelections.slot.socket of type string"
+        }
+      }
+    },
+    {
+      "id": "nested-mod-map-array",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modSelections\":{\"slot\":[]}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal array into Go struct field Document.build.modSelections.slot of type map[string]string"
+        }
+      }
+    },
+    {
+      "id": "skill-mod-string-value",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"slot\":{\"skillId\":\"s\",\"mods\":{\"socket\":{\"modId\":\"m\",\"value\":\"bad\"}}}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal string into Go struct field .value of type float64"
+        }
+      }
+    },
+    {
+      "id": "skill-mod-map-array",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"slot\":{\"skillId\":\"s\",\"mods\":[]}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "build.skillMods.slot.mods is required: build.skillMods.slot.mods: json: cannot unmarshal array into Go value of type map[string]jsontext.Value"
+        }
+      }
+    },
+    {
+      "id": "specialization-array-element",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"specializationNodeSelections\":[2]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number into Document.build.specializationNodeSelections.0 of type string"
+        }
+      }
+    },
+    {
+      "id": "party-name-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":2,\"effects\":[]}]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number into Go struct field Document.build.party.0.name of type string"
+        }
+      }
+    },
+    {
+      "id": "party-armor-string",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"armor\":\"bad\",\"effects\":[]}]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal string into Go struct field Document.build.party.0.armor of type float64"
+        }
+      }
+    },
+    {
+      "id": "party-value-string",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"effects\":[{\"id\":\"x\",\"values\":{\"stat\":\"bad\"},\"active\":true}]}]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal string into Go struct field Document.build.party.0.effects.0.values.stat of type float64"
+        }
+      }
+    },
+    {
+      "id": "party-active-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"effects\":[{\"id\":\"x\",\"values\":{},\"active\":2}]}]}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number into Go struct field Document.build.party.0.effects.0.active of type bool"
+        }
+      }
+    },
+    {
+      "id": "meta-name-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":{\"name\":2}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number into Go struct field Document.build.meta.name of type string"
+        }
+      }
+    },
+    {
+      "id": "exponent-integer",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"slot\":{\"skillId\":\"s\",\"rank\":1e1}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: json: cannot unmarshal number 1e1 into Go struct field Document.build.skillUpgrades.slot.rank of type int"
+        }
+      }
+    },
+    {
+      "id": "empty-skill-id",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"slot\":{\"skillId\":\"\",\"mods\":{}}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: invalid skill mod selection"
+        }
+      }
+    },
+    {
+      "id": "empty-mod-id",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"slot\":{\"skillId\":\"s\",\"mods\":{\"a\":{\"modId\":\"\",\"value\":0}}}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: invalid skill mod roll"
+        }
+      }
+    },
+    {
+      "id": "empty-mod-slot",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"slot\":{\"skillId\":\"s\",\"mods\":{\"\":{\"modId\":\"m\",\"value\":0}}}}}}",
+      "decodeAccepted": false,
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build export",
+        "ok": false,
+        "pack": {
+          "id": "ashen_vale",
+          "version": "0.1.0"
+        },
+        "diagnostics": [],
+        "error": {
+          "code": "invalid-build",
+          "message": "decode build document: invalid skill mod slot"
+        }
+      }
+    }
+  ]
+}

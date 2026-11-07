@@ -1,0 +1,17 @@
+{
+  "args": [
+    "frobnicate"
+  ],
+  "stdin": null,
+  "exitCode": 2,
+  "response": {
+    "apiVersion": 1,
+    "command": "frobnicate",
+    "ok": false,
+    "diagnostics": [],
+    "error": {
+      "code": "invalid-command",
+      "message": "expected catalog, build, library or session command"
+    }
+  }
+}

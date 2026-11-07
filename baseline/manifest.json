@@ -1,0 +1,78 @@
+{
+  "tag": "go-final-0.1.0-beta.6",
+  "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+  "tagObject": "284a2637083c53cc5ec45a0ca875e391849634ff",
+  "releaseVersion": "0.1.0-beta.6",
+  "zip": {
+    "name": "character-planner-windows-amd64.zip",
+    "sha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "bytes": 38340858
+  },
+  "pack": {
+    "id": "division_2",
+    "version": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+    "schemaVersion": 1,
+    "counts": {
+      "stats": 291,
+      "talents": 373,
+      "items": 1022,
+      "sets": 65,
+      "activeSkills": 43,
+      "simTriggers": 111,
+      "simSkills": 17,
+      "numericContextInputs": 91,
+      "buildOutputs": 3
+    }
+  },
+  "hashes": {
+    "pack": {
+      "path": "data/packs/division-2.json",
+      "files": 1,
+      "bytes": 7353818,
+      "sha256": "9a78ce0cc038df2f3088798e83103eac358e279c3fd27a1387d6b3d49df1e52e"
+    },
+    "provenance": {
+      "path": "data/packs/division-2.provenance.md",
+      "files": 1,
+      "bytes": 143395,
+      "sha256": "16ec3af99f33d15f887c390bbe351ac57890ef595b41791ef600fa3abfb485c6"
+    },
+    "ashenValeFixturePack": {
+      "path": "data/packs/ashen-vale.json",
+      "files": 1,
+      "bytes": 21074,
+      "sha256": "7331a6a17b34a87ff3deec4ee6d3d52bd4ab205362a0246e45e3a8835faf37a1"
+    },
+    "artwork": {
+      "path": "data/packs/assets/division-2",
+      "files": 580,
+      "bytes": 24800161,
+      "sha256": "402ff3b7c4c1fc3b18c58446b0c903e61b7d6e7f0daaea5dd1e3ba3202c56444"
+    },
+    "sourceCaches": {
+      "path": "data/sources",
+      "files": 135,
+      "bytes": 14295961,
+      "sha256": "c78060eca5dbdee770e864d6acaa214c051b05d4d3076228a1c611bc6c06ec57"
+    },
+    "sharedFixtures": {
+      "path": "tests/fixtures",
+      "files": 5,
+      "bytes": 4247,
+      "sha256": "674c9f5d437bbcb37d4cf53fa58d2fc27927ae62dd38c0816f8c05152fdfb14b"
+    },
+    "reviewedCorrections": {
+      "path": "data/sources/division-2-reviewed-corrections.json",
+      "files": 1,
+      "bytes": 64593,
+      "sha256": "bfe040ba7a458b17fb6884752bfabcd873cbabd8f5a960df4f40606819a8f697"
+    },
+    "communityCatalog": {
+      "path": "resources/division2-game-data-main",
+      "files": 36,
+      "bytes": 299308,
+      "sha256": "6ba5724411d7786ed14c5ae2cea583e016f33b23678c8182350533659c2899c8"
+    }
+  },
+  "codecVersion": 12
+}

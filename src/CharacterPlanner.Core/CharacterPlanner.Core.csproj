@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <InternalsVisibleTo Include="CharacterPlanner.Legacy" />
+    <InternalsVisibleTo Include="CharacterPlanner.Core.Tests" />
+    <InternalsVisibleTo Include="CharacterPlanner.Legacy.Tests" />
+  </ItemGroup>
+</Project>

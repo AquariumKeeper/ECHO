@@ -1,0 +1,13 @@
+{
+  "id":"party_contract","name":"Party contract","schemaVersion":1,"version":"1",
+  "progression":{"startingLevel":1,"maxLevel":10,"startingPoints":0,"pointsPerLevel":0},
+  "stats":[{"id":"damage","name":"Damage","kind":"derived","formula":"100"},{"id":"armor","name":"Armor","kind":"derived","formula":"1000"}],
+  "slots":[{"id":"chest","name":"Chest","acceptTags":["gear"]}],
+  "items":[{"id":"giver_gear","name":"Giver gear","tags":["gear"],"occupies":["chest"],"talentSlots":[{"id":"talent","name":"Talent","choices":["grant"]}]}],
+  "talents":[{"id":"grant","name":"Grant","modifiers":[{"stat":"armor","op":"flat","value":500}],"allyEffects":[
+    {"id":"alpha","name":"Alpha","stack":"shared","modifiers":[{"stat":"damage","op":"flat","value":3},{"stat":"armor","op":"flat","value":"armor * 0.1"}]},
+    {"id":"beta","name":"Beta","stack":"shared","modifiers":[{"stat":"damage","op":"flat","value":100},{"stat":"armor","op":"flat","value":2}]},
+    {"id":"gamma","name":"Gamma","stack":"a_first","modifiers":[{"stat":"damage","op":"flat","value":5}]},
+    {"id":"delta","name":"Delta","stack":"z_last","modifiers":[{"stat":"damage","op":"flat","value":7}]}
+  ]}]
+}

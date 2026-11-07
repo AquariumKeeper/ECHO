@@ -1,0 +1,2504 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "inputsSha256": "33cfd1acb2f7aa860472006c474ad7721fa3a02289b624d653430954ebed6b82",
+    "packSha256": "c3a18bd9d3870a49b04c80f99ea2b22ca7c5c9b25df7350e10a19c661e967bf8",
+    "args": [
+      "--json",
+      "--pack",
+      "pack.json",
+      "build",
+      "resolve",
+      "--input",
+      "-",
+      "--context",
+      "context.json"
+    ],
+    "inputEncoding": "utf-8"
+  },
+  "cases": [
+    {
+      "id": "base-specialization",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "specialization_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "tree",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 112,
+            "ehp": 224,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 112,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (1pc)"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "specialization",
+                    "id": "tree",
+                    "name": "Tree"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "skill",
+                    "id": "passive",
+                    "name": "Passive"
+                  },
+                  "op": "flat",
+                  "value": 4
+                }
+              ]
+            },
+            "ehp": {
+              "base": 224,
+              "final": 224,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "specialization",
+                  "id": "tree",
+                  "name": "Tree"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "set": "Set",
+            "tree": "Tree",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 1,
+              "thresholds": [
+                1
+              ],
+              "activeBonuses": [
+                1
+              ]
+            }
+          ],
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "unconfigured-specialization",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "specialization_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "stats": {
+            "damage": 107,
+            "ehp": 214,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 107,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (1pc)"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "skill",
+                    "id": "passive",
+                    "name": "Passive"
+                  },
+                  "op": "flat",
+                  "value": 4
+                }
+              ]
+            },
+            "ehp": {
+              "base": 214,
+              "final": 214,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "names": {
+            "set": "Set",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 1,
+              "thresholds": [
+                1
+              ],
+              "activeBonuses": [
+                1
+              ]
+            }
+          ],
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "nodes-without-specialization",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [
+            "root"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          },
+          {
+            "severity": "error",
+            "code": "specialization-node-without-specialization",
+            "message": "Specialization nodes are selected without a specialization"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-specialization",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "missing",
+          "specializationNodeSelections": [
+            "missing_node"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-specialization",
+            "message": "Unknown specialization \"missing\""
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "root-node",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "root"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "specialization_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "tree",
+            "specializationNodeSelections": [
+              "root"
+            ],
+            "activeScenarios": {},
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 122,
+            "ehp": 244,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 122,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (1pc)"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "specialization",
+                    "id": "tree",
+                    "name": "Tree"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "root",
+                    "name": "Root"
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "skill",
+                    "id": "passive",
+                    "name": "Passive"
+                  },
+                  "op": "flat",
+                  "value": 4
+                }
+              ]
+            },
+            "ehp": {
+              "base": 244,
+              "final": 244,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "specialization",
+                  "id": "tree",
+                  "name": "Tree"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "root": "Root",
+            "set": "Set",
+            "tree": "Tree",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 1,
+              "thresholds": [
+                1
+              ],
+              "activeBonuses": [
+                1
+              ]
+            }
+          ],
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "root-and-child",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "root",
+            "child"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "specialization_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "tree",
+            "specializationNodeSelections": [
+              "root",
+              "child"
+            ],
+            "activeScenarios": {},
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 142,
+            "ehp": 298.2,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 142,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (1pc)"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "specialization",
+                    "id": "tree",
+                    "name": "Tree"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "child",
+                    "name": "Child"
+                  },
+                  "op": "flat",
+                  "value": 20
+                },
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "root",
+                    "name": "Root"
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "skill",
+                    "id": "passive",
+                    "name": "Passive"
+                  },
+                  "op": "flat",
+                  "value": 4
+                }
+              ]
+            },
+            "ehp": {
+              "base": 284,
+              "final": 298.2,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "child",
+                    "name": "Child"
+                  },
+                  "op": "flat",
+                  "value": 14.200000000000001
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "specialization",
+                  "id": "tree",
+                  "name": "Tree"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "child": "Child",
+            "root": "Root",
+            "set": "Set",
+            "tree": "Tree",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 1,
+              "thresholds": [
+                1
+              ],
+              "activeBonuses": [
+                1
+              ]
+            }
+          ],
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "child-without-root",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "child"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unmet-specialization-prerequisite",
+            "message": "Child has an unselected or inactive prerequisite",
+            "subject": "child"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "grandchild-without-prerequisites",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "grandchild"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "specialization-budget-exceeded",
+            "message": "Branch spends 4 points but allows 2",
+            "subject": "branch"
+          },
+          {
+            "severity": "error",
+            "code": "unmet-specialization-prerequisite",
+            "message": "Grandchild has an unselected or inactive prerequisite",
+            "subject": "grandchild"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "transitive-missing-root",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "grandchild",
+            "child"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "specialization-budget-exceeded",
+            "message": "Overall spends 6 points but allows 4",
+            "subject": "overall"
+          },
+          {
+            "severity": "error",
+            "code": "specialization-budget-exceeded",
+            "message": "Branch spends 6 points but allows 2",
+            "subject": "branch"
+          },
+          {
+            "severity": "error",
+            "code": "unmet-specialization-prerequisite",
+            "message": "Grandchild has an unselected or inactive prerequisite",
+            "subject": "grandchild"
+          },
+          {
+            "severity": "error",
+            "code": "unmet-specialization-prerequisite",
+            "message": "Child has an unselected or inactive prerequisite",
+            "subject": "child"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "all-active-overspent",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "root",
+            "child",
+            "grandchild"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "specialization-budget-exceeded",
+            "message": "Overall spends 7 points but allows 4",
+            "subject": "overall"
+          },
+          {
+            "severity": "error",
+            "code": "specialization-budget-exceeded",
+            "message": "Branch spends 6 points but allows 2",
+            "subject": "branch"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "free-node-no-tier-gate",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "free"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "specialization_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "tree",
+            "specializationNodeSelections": [
+              "free"
+            ],
+            "activeScenarios": {},
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 113,
+            "ehp": 226,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 113,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (1pc)"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "specialization",
+                    "id": "tree",
+                    "name": "Tree"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "free",
+                    "name": "Free"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "skill",
+                    "id": "passive",
+                    "name": "Passive"
+                  },
+                  "op": "flat",
+                  "value": 4
+                }
+              ]
+            },
+            "ehp": {
+              "base": 226,
+              "final": 226,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "specialization",
+                  "id": "tree",
+                  "name": "Tree"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "free": "Free",
+            "set": "Set",
+            "tree": "Tree",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 1,
+              "thresholds": [
+                1
+              ],
+              "activeBonuses": [
+                1
+              ]
+            }
+          ],
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "free-with-other-nodes",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "free",
+            "root",
+            "child"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "specialization_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "tree",
+            "specializationNodeSelections": [
+              "free",
+              "root",
+              "child"
+            ],
+            "activeScenarios": {},
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 143,
+            "ehp": 300.3,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 143,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (1pc)"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "specialization",
+                    "id": "tree",
+                    "name": "Tree"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "child",
+                    "name": "Child"
+                  },
+                  "op": "flat",
+                  "value": 20
+                },
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "root",
+                    "name": "Root"
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "free",
+                    "name": "Free"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "skill",
+                    "id": "passive",
+                    "name": "Passive"
+                  },
+                  "op": "flat",
+                  "value": 4
+                }
+              ]
+            },
+            "ehp": {
+              "base": 286,
+              "final": 300.3,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "child",
+                    "name": "Child"
+                  },
+                  "op": "flat",
+                  "value": 14.3
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "specialization",
+                  "id": "tree",
+                  "name": "Tree"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "child": "Child",
+            "free": "Free",
+            "root": "Root",
+            "set": "Set",
+            "tree": "Tree",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 1,
+              "thresholds": [
+                1
+              ],
+              "activeBonuses": [
+                1
+              ]
+            }
+          ],
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "duplicate-known-nodes",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "root",
+            "root",
+            "child",
+            "child"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "specialization_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "tree",
+            "specializationNodeSelections": [
+              "root",
+              "root",
+              "child",
+              "child"
+            ],
+            "activeScenarios": {},
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 142,
+            "ehp": 298.2,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 142,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (1pc)"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "specialization",
+                    "id": "tree",
+                    "name": "Tree"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "child",
+                    "name": "Child"
+                  },
+                  "op": "flat",
+                  "value": 20
+                },
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "root",
+                    "name": "Root"
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "skill",
+                    "id": "passive",
+                    "name": "Passive"
+                  },
+                  "op": "flat",
+                  "value": 4
+                }
+              ]
+            },
+            "ehp": {
+              "base": 284,
+              "final": 298.2,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "child",
+                    "name": "Child"
+                  },
+                  "op": "flat",
+                  "value": 14.200000000000001
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "specialization",
+                  "id": "tree",
+                  "name": "Tree"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "child": "Child",
+            "root": "Root",
+            "set": "Set",
+            "tree": "Tree",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 1,
+              "thresholds": [
+                1
+              ],
+              "activeBonuses": [
+                1
+              ]
+            }
+          ],
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "unknown-nodes-sorted",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "z_missing",
+            "root",
+            "a_missing",
+            "a_missing"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-specialization-node",
+            "message": "Unknown specialization node \"a_missing\"",
+            "subject": "a_missing"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-specialization-node",
+            "message": "Unknown specialization node \"z_missing\"",
+            "subject": "z_missing"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "other-specialization",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "other_tree",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "specialization_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "other_tree",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 114,
+            "ehp": 228,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 114,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (1pc)"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "specialization",
+                    "id": "other_tree",
+                    "name": "Other tree"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "skill",
+                    "id": "passive",
+                    "name": "Passive"
+                  },
+                  "op": "flat",
+                  "value": 4
+                }
+              ]
+            },
+            "ehp": {
+              "base": 228,
+              "final": 228,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "names": {
+            "other_tree": "Other tree",
+            "set": "Set",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 1,
+              "thresholds": [
+                1
+              ],
+              "activeBonuses": [
+                1
+              ]
+            }
+          ],
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "nodes-from-other-tree",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "other_tree",
+          "specializationNodeSelections": [
+            "root",
+            "child"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-specialization-node",
+            "message": "Unknown specialization node \"child\"",
+            "subject": "child"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-specialization-node",
+            "message": "Unknown specialization node \"root\"",
+            "subject": "root"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "formula-assumption",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "root",
+            "child"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "stacks": "5"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "specialization_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "tree",
+            "specializationNodeSelections": [
+              "root",
+              "child"
+            ],
+            "activeScenarios": {},
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "stacks": "5"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 145,
+            "ehp": 304.5,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 145,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (1pc)"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "specialization",
+                    "id": "tree",
+                    "name": "Tree"
+                  },
+                  "op": "flat",
+                  "value": 8
+                },
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "child",
+                    "name": "Child"
+                  },
+                  "op": "flat",
+                  "value": 20
+                },
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "root",
+                    "name": "Root"
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "skill",
+                    "id": "passive",
+                    "name": "Passive"
+                  },
+                  "op": "flat",
+                  "value": 4
+                }
+              ]
+            },
+            "ehp": {
+              "base": 290,
+              "final": 304.5,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "specialization-node",
+                    "id": "child",
+                    "name": "Child"
+                  },
+                  "op": "flat",
+                  "value": 14.5
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "5",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "specialization",
+                  "id": "tree",
+                  "name": "Tree"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "child": "Child",
+            "root": "Root",
+            "set": "Set",
+            "tree": "Tree",
+            "weapon": "Weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 1,
+              "thresholds": [
+                1
+              ],
+              "activeBonuses": [
+                1
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks"
+            ],
+            "stats": {
+              "damage": 142,
+              "ehp": 298.2
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "earlier-diagnostics-first",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "specialization_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "tree",
+          "specializationNodeSelections": [
+            "z_missing",
+            "child"
+          ],
+          "activeScenarios": {
+            "missing": {}
+          },
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "specialization_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-scenario",
+            "message": "Unknown scenario \"missing\"",
+            "subject": "missing"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-specialization-node",
+            "message": "Unknown specialization node \"z_missing\"",
+            "subject": "z_missing"
+          },
+          {
+            "severity": "error",
+            "code": "unmet-specialization-prerequisite",
+            "message": "Child has an unselected or inactive prerequisite",
+            "subject": "child"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,224 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Styles.Resources>
+    <!-- The pack theme's colours (presentation.json theme), with Division 2's as defaults; PackTheme applies the loaded pack's. -->
+    <SolidColorBrush x:Key="DivisionBackground">#050505</SolidColorBrush>
+    <SolidColorBrush x:Key="DivisionSurface">#141414</SolidColorBrush>
+    <SolidColorBrush x:Key="DivisionRaised">#1F1F1F</SolidColorBrush>
+    <SolidColorBrush x:Key="DivisionBorder">#414040</SolidColorBrush>
+    <SolidColorBrush x:Key="DivisionHeader">#414040</SolidColorBrush>
+    <SolidColorBrush x:Key="DivisionAccent">#FF7F00</SolidColorBrush>
+    <SolidColorBrush x:Key="DivisionText">#FFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="DivisionMuted">#8A8A8A</SolidColorBrush>
+    <SolidColorBrush x:Key="DivisionPlaceholder">#A0A0A0</SolidColorBrush>
+    <SolidColorBrush x:Key="DivisionValue">#FFDD32</SolidColorBrush>
+    <SolidColorBrush x:Key="DivisionError">#E5484D</SolidColorBrush>
+    <SolidColorBrush x:Key="DivisionGain">#4FC27A</SolidColorBrush>
+    <Thickness x:Key="PanelPadding">16</Thickness>
+    <CornerRadius x:Key="PanelRadius">8</CornerRadius>
+  </Styles.Resources>
+  <Style Selector="Window">
+    <Setter Property="Background" Value="{DynamicResource DivisionBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource DivisionText}" />
+    <Setter Property="FontFamily" Value="avares://Avalonia.Fonts.Inter/Assets#Inter" />
+    <Setter Property="FontSize" Value="14" />
+  </Style>
+  <!-- Panels: the surfaces the editor groups its content on. -->
+  <Style Selector="Border.panel">
+    <Setter Property="Background" Value="{DynamicResource DivisionSurface}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource PanelRadius}" />
+    <Setter Property="Padding" Value="{DynamicResource PanelPadding}" />
+  </Style>
+  <Style Selector="Border.slot">
+    <Setter Property="Background" Value="{DynamicResource DivisionRaised}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource DivisionBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Padding" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.heading">
+    <Setter Property="AutomationProperties.HeadingLevel" Value="2" />
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.label">
+    <Setter Property="Foreground" Value="{DynamicResource DivisionMuted}" />
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.error">
+    <Setter Property="Foreground" Value="{DynamicResource DivisionError}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+  <!-- An allocated specialization node. -->
+  <Style Selector="Border.slot.allocated">
+    <Setter Property="BorderBrush" Value="{DynamicResource DivisionAccent}" />
+  </Style>
+  <!-- A compared stat that equipping an item raises or lowers. -->
+  <Style Selector="TextBlock.up">
+    <Setter Property="Foreground" Value="{DynamicResource DivisionGain}" />
+  </Style>
+  <Style Selector="TextBlock.down">
+    <Setter Property="Foreground" Value="{DynamicResource DivisionError}" />
+  </Style>
+  <!-- A headline box, framed as the Go app's: a faint outline. -->
+  <Style Selector="Border.figure">
+    <Setter Property="BorderBrush" Value="#55DAD6D0" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="10,6" />
+    <Setter Property="MinWidth" Value="140" />
+  </Style>
+  <!-- A headline value: large gold numbers; a status in its place is smaller. -->
+  <Style Selector="TextBlock.figure">
+    <Setter Property="FontSize" Value="26" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource DivisionValue}" />
+  </Style>
+  <Style Selector="TextBlock.figure.message">
+    <Setter Property="FontSize" Value="15" />
+  </Style>
+  <Style Selector="TextBlock.caption">
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.warning">
+    <Setter Property="Foreground" Value="{DynamicResource DivisionValue}" />
+  </Style>
+  <!-- A loadout tile, as the Go app's SlotTile: a dark cell with a rarity accent and tint, yellow when selected. -->
+  <Style Selector="Button.tile">
+    <Setter Property="Background" Value="{DynamicResource DivisionSurface}" />
+    <Setter Property="BorderBrush" Value="#55DAD6D0" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+  </Style>
+  <Style Selector="Button.tile:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource DivisionRaised}" />
+    <Setter Property="BorderBrush" Value="#99DAD6D0" />
+  </Style>
+  <Style Selector="Button.tile Border.accent">
+    <Setter Property="Width" Value="5" />
+    <Setter Property="Background" Value="{DynamicResource DivisionMuted}" />
+  </Style>
+  <Style Selector="Button.tile Border.tint">
+    <Setter Property="Opacity" Value="0.69" />
+    <Setter Property="IsHitTestVisible" Value="False" />
+    <Setter Property="OpacityMask">
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Color="White" Offset="0" />
+        <GradientStop Color="Transparent" Offset="1" />
+      </LinearGradientBrush>
+    </Setter>
+  </Style>
+  <Style Selector="Button.tile Border.selection">
+    <Setter Property="IsHitTestVisible" Value="False" />
+    <Setter Property="Background">
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Color="#00FFED43" Offset="0" />
+        <GradientStop Color="#FFFFED43" Offset="1" />
+      </LinearGradientBrush>
+    </Setter>
+  </Style>
+  <Style Selector="TextBlock.tilecaption">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Foreground" Value="{DynamicResource DivisionPlaceholder}" />
+  </Style>
+  <Style Selector="TextBlock.tiletitle">
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+  <Style Selector="TextBlock.tiletitle.muted">
+    <Setter Property="Foreground" Value="{DynamicResource DivisionMuted}" />
+  </Style>
+  <!-- Selected, the tile's text turns dark over the yellow, as Go's selection theme did. -->
+  <Style Selector="Button.tile.selected TextBlock">
+    <Setter Property="Foreground" Value="Black" />
+  </Style>
+  <Style Selector="Button.tile.selected TextBlock.muted">
+    <Setter Property="Foreground" Value="#4A4530" />
+  </Style>
+  <!-- The summary's section bars, values in gold, and the small info buttons, as Go's. -->
+  <Style Selector="Border.sectionbar > TextBlock">
+    <Setter Property="AutomationProperties.HeadingLevel" Value="3" />
+  </Style>
+  <Style Selector="Border.sectionbar">
+    <Setter Property="Background" Value="{DynamicResource DivisionHeader}" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="Padding" Value="8,3" />
+    <Setter Property="Margin" Value="0,4,0,2" />
+  </Style>
+  <Style Selector="TextBlock.value">
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Foreground" Value="{DynamicResource DivisionValue}" />
+  </Style>
+  <Style Selector="Button.info">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Padding" Value="6,0" />
+    <Setter Property="Margin" Value="2,0,0,0" />
+    <Setter Property="Foreground" Value="{DynamicResource DivisionMuted}" />
+  </Style>
+  <!-- An assumption card, as the Go app's 320-wide grid cells. -->
+  <Style Selector="Border.card">
+    <Setter Property="Width" Value="308" />
+    <Setter Property="Margin" Value="0,0,12,12" />
+    <Setter Property="Padding" Value="10,8" />
+    <Setter Property="Background" Value="{DynamicResource DivisionRaised}" />
+    <Setter Property="CornerRadius" Value="4" />
+  </Style>
+  <!-- A roll's bar on an item card, as Go's RollBar: a thin track filled to where the roll sits in its range. -->
+  <Style Selector="ProgressBar.rollbar">
+    <Setter Property="Height" Value="4" />
+    <Setter Property="MinHeight" Value="4" />
+    <Setter Property="MinWidth" Value="40" />
+    <Setter Property="Background" Value="{DynamicResource DivisionBorder}" />
+  </Style>
+  <!-- A tile's talent badge: the talent's icon, which opens Compare talents. -->
+  <Style Selector="Button.badge">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+  </Style>
+  <!-- Tabs read as a row of labels, not Fluent's large headers. -->
+  <Style Selector="TabItem">
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="MinHeight" Value="36" />
+    <Setter Property="Padding" Value="12,0" />
+  </Style>
+  <!-- An item's attribute dots: a row of small coloured circles, one per attribute. -->
+  <Style Selector="ItemsControl.dots">
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <StackPanel Orientation="Horizontal" Spacing="3" />
+      </ItemsPanelTemplate>
+    </Setter>
+    <Setter Property="ItemTemplate">
+      <DataTemplate x:DataType="x:String">
+        <Ellipse Width="10" Height="10" Fill="{Binding}" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <!-- A list of plain lines (bonuses, a breakdown), each wrapping. -->
+  <Style Selector="ItemsControl.lines">
+    <Setter Property="ItemTemplate">
+      <DataTemplate x:DataType="x:String">
+        <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+      </DataTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Separator.vertical">
+    <Setter Property="Width" Value="1" />
+    <Setter Property="Height" Value="24" />
+    <Setter Property="Margin" Value="4,0" />
+    <Setter Property="Background" Value="{DynamicResource DivisionBorder}" />
+  </Style>
+  <!-- While previewing a picker candidate, a figure or value that rises or falls, as Go's success and error colours.
+       Last, as the later of two matching styles wins: after the gold of TextBlock.figure and TextBlock.value. -->
+  <Style Selector="TextBlock.figure.up, TextBlock.value.up">
+    <Setter Property="Foreground" Value="{DynamicResource DivisionGain}" />
+  </Style>
+  <Style Selector="TextBlock.figure.down, TextBlock.value.down">
+    <Setter Property="Foreground" Value="{DynamicResource DivisionError}" />
+  </Style>
+</Styles>

@@ -1,0 +1,15 @@
+{
+  "legacyOrder": {
+    "slots": [
+      "mask",
+      "chest",
+      "backpack",
+      "gloves",
+      "holster",
+      "knees",
+      "primary_weapon",
+      "secondary_weapon",
+      "sidearm"
+    ]
+  }
+}

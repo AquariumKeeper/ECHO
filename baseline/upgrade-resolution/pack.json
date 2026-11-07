@@ -1,0 +1,18 @@
+{
+  "id":"upgrade_contract","name":"Upgrade contract","schemaVersion":1,"version":"1",
+  "progression":{"startingLevel":1,"maxLevel":10,"startingPoints":0,"pointsPerLevel":0},
+  "stats":[{"id":"power","name":"Power","kind":"primary","base":10,"min":0,"max":99},{"id":"damage","name":"Damage","kind":"derived","formula":"100"}],
+  "accountUpgrades":[
+    {"id":"watch","name":"Watch","maxRank":10,"effectCap":4,"modifiersPerRank":[{"stat":"damage","op":"flat","value":5}]},
+    {"id":"bonus","name":"Bonus","maxRank":3,"modifiersPerRank":[{"stat":"damage","op":"inc","value":0.1}]}
+  ],
+  "slots":[{"id":"main","name":"Main","acceptTags":["weapon"]},{"id":"off","name":"Off","acceptTags":["weapon"]}],
+  "items":[
+    {"id":"weapon","name":"Weapon","occupies":["main"],"tags":["weapon"],"effectsRequireContext":{"weapon_slot":"main"},
+     "modifiers":[{"stat":"damage","op":"flat","value":1}],
+     "upgrade":{"name":"Plating","maxRank":3,"modifiersPerRank":[{"stat":"damage","op":"flat","value":3}]}},
+    {"id":"shield","name":"Shield","occupies":["off"],"tags":["weapon"],"effectsRequireContext":{"weapon_slot":"off"}},
+    {"id":"blocked","name":"Blocked weapon","occupies":["main","off"],"tags":["weapon"],"requirements":{"power":20},
+     "upgrade":{"name":"Blocked plating","maxRank":3,"modifiersPerRank":[{"stat":"damage","op":"flat","value":3}]}}
+  ]
+}

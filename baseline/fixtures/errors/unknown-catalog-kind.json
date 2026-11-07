@@ -1,0 +1,19 @@
+{
+  "args": [
+    "catalog",
+    "list",
+    "weapons"
+  ],
+  "stdin": null,
+  "exitCode": 2,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog list",
+    "ok": false,
+    "diagnostics": [],
+    "error": {
+      "code": "invalid-command",
+      "message": "expected catalog list/show with a supported kind"
+    }
+  }
+}

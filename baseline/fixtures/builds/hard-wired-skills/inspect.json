@@ -1,0 +1,184 @@
+{
+  "args": [
+    "build",
+    "inspect",
+    "--input",
+    "hard-wired-skills.json"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "build inspect",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "document": {
+      "schemaVersion": 1,
+      "build": {
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "level": 40,
+        "allocations": {},
+        "equipment": {
+          "backpack": "backpack_hard_wired_backpack",
+          "chest": "chest_hard_wired_chest",
+          "gloves": "gloves_hard_wired_gloves",
+          "holster": "holster_hard_wired_holster",
+          "knees": "knees_hard_wired_kneepads",
+          "mask": "mask_hard_wired_mask",
+          "primary_weapon": "primary_weapon_scorpio",
+          "secondary_weapon": "",
+          "sidearm": ""
+        },
+        "attributeRolls": {
+          "backpack": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "chest": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "gloves": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "holster": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "knees": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "mask": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "primary_weapon": {
+            "core_1": {
+              "attributeId": "shotgun_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "damage_to_armor_weapon_core",
+              "value": 0.12
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          }
+        },
+        "modSelections": {
+          "backpack": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "chest": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "mask": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "primary_weapon": {
+            "magazine": "weapon_mod_magazine_venom_glands",
+            "muzzle": "weapon_mod_muzzle_aculeus",
+            "optics": "weapon_mod_optics_starlight_receptors",
+            "underbarrel": "weapon_mod_underbarrel_chelae_grip"
+          }
+        },
+        "modRolls": {
+          "backpack": {
+            "mod_1": 0.06
+          },
+          "chest": {
+            "mod_1": 0.06
+          },
+          "mask": {
+            "mod_1": 0.06
+          }
+        },
+        "talentSelections": {
+          "backpack": {
+            "talent": "gear_talent_short_circuit"
+          },
+          "chest": {
+            "talent": "gear_talent_positive_reinforcement"
+          },
+          "primary_weapon": {
+            "talent": "weapon_talent_septic_shock"
+          }
+        },
+        "activeSkillSelections": {
+          "skill_slot_1": "skill_firestarter_chem_launcher",
+          "skill_slot_2": "skill_shock_trap"
+        },
+        "skillUpgrades": {
+          "skill_slot_1": {
+            "skillId": "skill_firestarter_chem_launcher",
+            "rank": 10
+          },
+          "skill_slot_2": {
+            "skillId": "skill_shock_trap",
+            "rank": 5
+          }
+        },
+        "skillMods": {},
+        "specializationId": "technician",
+        "specializationNodeSelections": [
+          "technician_depleted_rounds_tier_1",
+          "technician_e_m_i_tier_1",
+          "technician_this_is_my_rifle_tier_1"
+        ],
+        "activeScenarios": {},
+        "allocatedSkills": {},
+        "accountUpgrades": {},
+        "equipmentUpgrades": {},
+        "meta": {
+          "name": "hard-wired-skills",
+          "notes": ""
+        }
+      }
+    },
+    "diagnostics": []
+  }
+}

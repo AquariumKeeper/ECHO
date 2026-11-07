@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+             x:Class="CharacterPlanner.Desktop.Views.NotesTabView" x:DataType="vm:EditorViewModel">
+  <!-- The Notes tab (F47), as the Go app's notes.go: the hint over a wrapped, multi-line box filling the tab. -->
+  <DockPanel DataContext="{Binding Notes}">
+    <TextBlock DockPanel.Dock="Top" x:DataType="vm:NotesViewModel" Text="{x:Static vm:NotesViewModel.Hint}" Classes="label" Margin="0,0,0,8" />
+    <TextBox Name="NotesBox" x:DataType="vm:NotesViewModel" Text="{Binding Text}" PlaceholderText="{x:Static vm:NotesViewModel.Placeholder}"
+             AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" AutomationProperties.Name="Notes" />
+  </DockPanel>
+</UserControl>

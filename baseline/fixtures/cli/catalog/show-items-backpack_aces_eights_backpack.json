@@ -1,0 +1,148 @@
+{
+  "args": [
+    "catalog",
+    "show",
+    "items",
+    "backpack_aces_eights_backpack"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog show",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": {
+      "id": "backpack_aces_eights_backpack",
+      "name": "Aces & Eights Backpack",
+      "tags": [
+        "gear",
+        "armor",
+        "gear_set_aces_eights"
+      ],
+      "occupies": [
+        "backpack"
+      ],
+      "requirements": {},
+      "modifiers": [
+        {
+          "stat": "gear_base_armor",
+          "op": "flat",
+          "value": 131000
+        }
+      ],
+      "attributeSlots": [
+        {
+          "id": "core_1",
+          "name": "Core 1",
+          "choices": [
+            {
+              "attributeId": "armor_gear_core"
+            },
+            {
+              "attributeId": "weapon_damage_gear_core"
+            },
+            {
+              "attributeId": "skill_tier_gear_core"
+            }
+          ]
+        },
+        {
+          "id": "minor_1",
+          "name": "Minor 1",
+          "choices": [
+            {
+              "attributeId": "weapon_handling_gear_minor"
+            },
+            {
+              "attributeId": "critical_hit_chance_gear_minor"
+            },
+            {
+              "attributeId": "critical_hit_damage_gear_minor"
+            },
+            {
+              "attributeId": "headshot_damage_gear_minor"
+            },
+            {
+              "attributeId": "armor_regeneration_gear_minor"
+            },
+            {
+              "attributeId": "hazard_protection_gear_minor"
+            },
+            {
+              "attributeId": "health_gear_minor"
+            },
+            {
+              "attributeId": "explosive_resistance_gear_minor"
+            },
+            {
+              "attributeId": "skill_haste_gear_minor"
+            },
+            {
+              "attributeId": "skill_damage_gear_minor"
+            },
+            {
+              "attributeId": "repair_skills_gear_minor"
+            },
+            {
+              "attributeId": "status_effects_gear_minor"
+            }
+          ]
+        }
+      ],
+      "modSlots": [
+        {
+          "id": "mod_1",
+          "name": "Mod 1",
+          "choices": [
+            "critical_hit_chance_gear_mod",
+            "critical_hit_damage_gear_mod",
+            "headshot_damage_gear_mod",
+            "protection_from_elites_gear_mod",
+            "armor_on_kill_gear_mod",
+            "burn_resistance_gear_mod",
+            "bleed_resistance_gear_mod",
+            "shock_resistance_gear_mod",
+            "disrupt_resistance_gear_mod",
+            "blind_deaf_resistance_gear_mod",
+            "disorient_resistance_gear_mod",
+            "ensnare_resistance_gear_mod",
+            "pulse_resistance_gear_mod",
+            "incoming_repairs_gear_mod",
+            "skill_haste_gear_mod",
+            "skill_duration_gear_mod",
+            "repair_skills_gear_mod"
+          ]
+        }
+      ],
+      "talentSlots": [
+        {
+          "id": "talent",
+          "name": "Talent",
+          "choices": [
+            "gear_talent_ace_in_the_sleeve"
+          ]
+        }
+      ],
+      "upgrade": {
+        "name": "Expertise",
+        "description": "Enter this item's installed upgrade grade (0–30 supported). Each grade adds 1% of base damage or base armor. Proficiency, account Expertise level, costs, and skill upgrades are not simulated. Changing equipment clears the grade.",
+        "maxRank": 30,
+        "modifiersPerRank": [
+          {
+            "stat": "gear_base_armor",
+            "op": "flat",
+            "value": 1310
+          }
+        ]
+      },
+      "artwork": {
+        "icon": "gear_set_aces_eights"
+      }
+    }
+  }
+}

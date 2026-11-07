@@ -1,0 +1,3385 @@
+{
+  "args": [
+    "build",
+    "resolve",
+    "--input",
+    "prototype-gear.json"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "build resolve",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "document": {
+      "schemaVersion": 1,
+      "build": {
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "level": 40,
+        "allocations": {},
+        "equipment": {
+          "backpack": "backpack_providence_defense_backpack",
+          "chest": "chest_providence_defense_chest",
+          "gloves": "gloves_providence_defense_gloves",
+          "holster": "holster_providence_defense_holster",
+          "knees": "knees_providence_defense_kneepads",
+          "mask": "mask_providence_defense_mask",
+          "primary_weapon": "primary_weapon_police_m4",
+          "secondary_weapon": "",
+          "sidearm": ""
+        },
+        "attributeRolls": {
+          "backpack": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "chest": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "gloves": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "holster": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "knees": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "mask": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "primary_weapon": {
+            "core_1": {
+              "attributeId": "assault_rifle_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "health_damage_weapon_core",
+              "value": 0.21
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          }
+        },
+        "modSelections": {
+          "backpack": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "chest": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "mask": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "primary_weapon": {
+            "magazine": "weapon_mod_magazine_tactical_5_56_mag",
+            "muzzle": "weapon_mod_muzzle_large_suppressor_5_56",
+            "optics": "weapon_mod_optics_acog_scope_4x",
+            "underbarrel": "weapon_mod_underbarrel_short_grip"
+          }
+        },
+        "modRolls": {
+          "backpack": {
+            "mod_1": 0.06
+          },
+          "chest": {
+            "mod_1": 0.06
+          },
+          "mask": {
+            "mod_1": 0.06
+          }
+        },
+        "talentSelections": {
+          "backpack": {
+            "talent": "gear_talent_combined_arms"
+          },
+          "chest": {
+            "talent": "gear_talent_explosive_delivery"
+          },
+          "primary_weapon": {
+            "talent": "weapon_talent_breadbasket"
+          }
+        },
+        "activeSkillSelections": {
+          "skill_slot_1": "skill_artillery_turret"
+        },
+        "skillUpgrades": {},
+        "skillMods": {},
+        "specializationId": "",
+        "specializationNodeSelections": [],
+        "activeScenarios": {},
+        "allocatedSkills": {},
+        "accountUpgrades": {},
+        "equipmentUpgrades": {},
+        "prototypes": {
+          "backpack": {
+            "itemId": "backpack_providence_defense_backpack",
+            "augment": "augment_entropy",
+            "level": 5
+          },
+          "chest": {
+            "itemId": "chest_providence_defense_chest",
+            "augment": "augment_echo",
+            "level": 10
+          },
+          "primary_weapon": {
+            "itemId": "primary_weapon_police_m4",
+            "augment": "",
+            "level": 0
+          }
+        },
+        "meta": {
+          "name": "prototype-gear",
+          "notes": ""
+        }
+      }
+    },
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "code": "active-skill-unconfigured",
+        "message": "Skill 2 has no selected active skill",
+        "subject": "skill_slot_2"
+      },
+      {
+        "severity": "warning",
+        "code": "specialization-unconfigured",
+        "message": "No specialization is selected"
+      }
+    ],
+    "result": {
+      "stats": {
+        "accuracy": 0,
+        "aces_eights_aces_hand_shots": 0,
+        "aces_eights_four_kind_shots": 0,
+        "aces_eights_full_house_shots": 0,
+        "aggressive_recon_ammo_interval": 0,
+        "ammo_capacity": 0,
+        "apex_predator_disorient_radius": 0,
+        "apex_predator_stack_duration": 0,
+        "armor": 1020000,
+        "armor_core_count": 6,
+        "armor_on_kill": 0,
+        "armor_on_kill_percent": 0,
+        "armor_regeneration": 0,
+        "armor_regeneration_percent": 0,
+        "armor_repair_on_depletion_percent": 0,
+        "armor_repair_on_headshot_percent": 0,
+        "armor_repair_on_kill_over_time_percent": 0,
+        "armor_repair_per_cover_move_percent": 0,
+        "armor_repair_per_kill_percent": 0,
+        "assault_rifle_damage": 0,
+        "augment_amalgam": 0,
+        "augment_anomaly": 0,
+        "augment_atomize": 0,
+        "augment_echo": 0.030000000000000002,
+        "augment_entropy": 0.09,
+        "augment_paradox": 0,
+        "augment_quantum": 0,
+        "augment_synesthesia": 0,
+        "augment_trapper": 0,
+        "base_magazine_size_percent": 0,
+        "bleed_resistance": 0,
+        "blind_deaf_resistance": 0,
+        "bonus_armor_percent": 0,
+        "burn_damage": 0,
+        "burn_duration": 0,
+        "burn_resistance": 0,
+        "camaraderie_mark_limit": 0,
+        "character_armor": 1680000,
+        "character_base_health": 270000,
+        "character_health": 421200,
+        "charged_share_duration": 0,
+        "charging_assumed_skill_protection": 0,
+        "charging_full_charge_time": 0,
+        "charging_protection_cap": 0,
+        "charging_protection_gain": 0,
+        "charging_skill_damage_factor": 1,
+        "clutch_post_kill_window": 0,
+        "combustion_burn_chance": 0,
+        "combustion_burn_damage_bonus": 0,
+        "combustion_burn_damage_factor": 1,
+        "combustion_debuff_duration_bonus": 0,
+        "core_exercise_conversion_share": 0,
+        "core_exercise_skill_tier_basis": 0,
+        "critical_hit_chance": 0.26,
+        "critical_hit_damage": 0.13,
+        "crowd_control_mark_limit": 0,
+        "crowd_control_transfer_percent": 0,
+        "damage_resistance": 0,
+        "damage_to_armor": 0,
+        "disorient_resistance": 0,
+        "disrupt_resistance": 0,
+        "dtoc": 0,
+        "effective_accuracy": 0.9599999999999999,
+        "effective_critical_hit_chance": 0.26,
+        "effective_damage_taken": 1,
+        "effective_hp": 2101200,
+        "effective_hp_vs_elites": 2101200,
+        "effective_hp_vs_explosives": 2101200,
+        "effective_reload_speed": 0.9599999999999999,
+        "effective_repair_skills": 0,
+        "effective_skill_damage": 0,
+        "effective_skill_duration": 0,
+        "effective_skill_haste": 0,
+        "effective_skill_health": 0,
+        "effective_stability": 0.9599999999999999,
+        "effective_status_effects": 0,
+        "effective_swap_speed": 0.9599999999999999,
+        "electronic_damage": 0,
+        "enemy_damage_taken_factor": 1,
+        "enemy_target_armor": 21202739.804217014,
+        "enemy_target_armor_multiplier": 5889.649945615837,
+        "enemy_target_health": 8481095.921686806,
+        "enemy_target_health_multiplier": 2355.859978246335,
+        "enemy_target_hit_damage": 71467,
+        "enemy_target_incoming_dps": 193556.45833333337,
+        "enemy_target_role_index": 3,
+        "enemy_target_scenario_index": 13,
+        "enemy_target_weapon_multiplier": 1588.169370738406,
+        "ensnare_resistance": 0,
+        "equipped_weapon_average_bodyshot_damage": 0,
+        "equipped_weapon_bodyshot_dps": 0,
+        "equipped_weapon_critical_damage": 0,
+        "equipped_weapon_critical_headshot_damage": 0,
+        "equipped_weapon_damage": 0,
+        "equipped_weapon_firing_duration": 0,
+        "equipped_weapon_headshot_damage": 0,
+        "equipped_weapon_long_range": 0,
+        "equipped_weapon_magazine_damage": 0,
+        "equipped_weapon_magazine_size": 0,
+        "equipped_weapon_max_range": 0,
+        "equipped_weapon_optimal_range": 0,
+        "equipped_weapon_pellets": 1,
+        "equipped_weapon_practical_firing_dps": 0,
+        "equipped_weapon_practical_reload_cycle_dps": 0,
+        "equipped_weapon_practical_shot_damage": 0,
+        "equipped_weapon_reload_cycle_dps": 0,
+        "equipped_weapon_reload_time": 0,
+        "equipped_weapon_rpm": 0,
+        "equipped_weapon_tactical_reload_time": 0,
+        "equipped_weapon_target_bodyshots": 0,
+        "equipped_weapon_target_magazines": 0,
+        "equipped_weapon_target_time_to_kill": 0,
+        "estimated_armor_on_kill": 0,
+        "estimated_armor_regeneration": 0,
+        "estimated_armor_repair_on_crit": 0,
+        "estimated_armor_repair_on_depletion": 0,
+        "estimated_armor_repair_on_headshot": 0,
+        "estimated_armor_repair_on_kill_over_time": 0,
+        "estimated_armor_repair_per_cover_move": 0,
+        "estimated_armor_repair_per_kill": 0,
+        "estimated_bonus_armor": 0,
+        "estimated_crit_repair_per_second": 0,
+        "estimated_health_on_kill": 0,
+        "estimated_kill_repair_per_second": 0,
+        "estimated_shield_repair_per_second": 0,
+        "estimated_true_patriot_white_repair": 0,
+        "explosive_damage": 0,
+        "explosive_resistance": 0,
+        "exuro_chain_ignite_radius": 0,
+        "exuro_disabled_explosion": 0,
+        "exuro_heatstroke_range_bonus": 0,
+        "exuro_heatstroke_weapon_bonus": 0,
+        "exuro_own_fire_immunity": 0,
+        "exuro_turret_rotation": 0,
+        "feedback_loop_cooldown": 0,
+        "gear_base_armor": 660000,
+        "grenade_capacity": 0,
+        "grenade_damage": 0,
+        "grenade_radius": 0,
+        "ground_control_proximity_repair_budget": 0,
+        "ground_control_proximity_repair_percent": 0,
+        "hackstep_armor_repair_share": 0,
+        "hackstep_available_armor_repair": 0,
+        "hackstep_available_bonus_armor": 0,
+        "hackstep_bonus_armor_duration": 0,
+        "hackstep_bonus_armor_grant": 0,
+        "hackstep_cooldown": 0,
+        "hackstep_damage_cap": 0,
+        "hackstep_damage_per_interval": 0,
+        "hackstep_nameplate_duration": 0,
+        "hazard_protection": 0,
+        "headache_armor_repair_share": 0,
+        "headache_available_armor_repair": 0,
+        "headache_bonus_armor_cap": 0,
+        "headache_bonus_armor_capacity": 0,
+        "headache_miss_allowance": 0,
+        "headache_next_headshot_bonus": 0,
+        "headshot_damage": 0.13,
+        "headshot_damage_multiplier": 1,
+        "health": 0,
+        "health_damage": 0,
+        "health_on_kill": 0,
+        "health_percent": 0,
+        "hive_skill_haste": 0,
+        "huddle_destruction_base_cooldown": 0,
+        "huddle_overcharge_cooldown": 0,
+        "huddle_overcharge_duration": 0,
+        "huddle_overcharge_trigger_time": 0,
+        "incoming_damage_multiplier": 1,
+        "incoming_repairs": 0,
+        "increased_threat": 0,
+        "indirect_transmission_radius": 0,
+        "indirect_transmission_refresh": 0,
+        "lmg_damage": 0,
+        "magazine_size": 0,
+        "magazine_size_percent": 0,
+        "makeshift_repair_average_rate": 0,
+        "makeshift_repair_budget": 0,
+        "makeshift_repairs_duration": 0,
+        "makeshift_repairs_share": 0,
+        "marksman_rifle_damage": 0,
+        "melee_damage": 0,
+        "missing_armor_repair_on_crit_percent": 0,
+        "movement_speed": 0,
+        "nanite_ally_buff_duration": 0,
+        "nanite_ally_cooldown": 0,
+        "nanite_ally_hazard_protection": 0,
+        "nanite_duration_reduction": 0,
+        "nanite_healing_efficiency": 0,
+        "nanite_range_reduction": 0,
+        "on_point_buff_duration": 0,
+        "optimal_range": 0,
+        "out_of_cover_damage_factor": 1,
+        "outgoing_healing": 0,
+        "party_bonus_armor": 0,
+        "pistol_damage": 0,
+        "practical_base_shot_damage": 0,
+        "practical_headshot_fraction": 0.25,
+        "practical_hit_fraction": 0.7,
+        "practical_kills_per_shot": 0,
+        "practical_magazine_bonus_damage": 0,
+        "practical_rounds_returned_per_shot": 0,
+        "practical_shot_bonus_damage": 0,
+        "practical_shot_damage_bonus": 0,
+        "practical_shots_to_kill": 0,
+        "protection_from_elites": 0,
+        "prototype_items": 2,
+        "pulse_resistance": 0,
+        "rate_of_fire": 0,
+        "reduced_threat": 0,
+        "reload_speed": 0,
+        "repair_skills": 0,
+        "return_to_sender_ally_budget": 0,
+        "return_to_sender_ally_share": 0,
+        "return_to_sender_bonus_armor_cap": 0,
+        "return_to_sender_bonus_armor_capacity": 0,
+        "return_to_sender_self_budget": 0,
+        "return_to_sender_self_share": 0,
+        "rifle_damage": 0,
+        "rigger_buff_duration": 0,
+        "rigger_cancel_reset_available": 0,
+        "scanner_pulse_haste": 0,
+        "shield_health": 0,
+        "shield_repair_damage_share": 0,
+        "shock_resistance": 0,
+        "shotgun_damage": 0,
+        "signature_weapon_damage": 0,
+        "skill_core_count": 0,
+        "skill_damage": 0,
+        "skill_damage_multiplier": 1,
+        "skill_duration": 0,
+        "skill_efficiency": 0,
+        "skill_haste": 0,
+        "skill_health": 0,
+        "skill_tier": 0,
+        "smg_damage": 0,
+        "stability": 0,
+        "status_effect_duration": 0,
+        "status_effects": 0,
+        "stoic_assumed_resistance": 0,
+        "stoic_decoy_target_eligibility": 0,
+        "stoic_resistance_per_enemy": 0,
+        "swap_speed": 0,
+        "symphony_trigger_stacks": 0,
+        "symptom_aggravator_damage_bonus": 0,
+        "time_to_armor_break": 8.679638047038384,
+        "time_to_down": 10.85574730026015,
+        "total_armor": 0,
+        "total_skill_damage": 0,
+        "total_skill_repair": 0,
+        "total_weapon_damage": 0,
+        "trauma_bleed_damage_bonus": 0,
+        "trauma_bleed_duration_bonus": 0,
+        "true_patriot_blue_enemy_damage_factor": 1,
+        "true_patriot_blue_reduction": 0,
+        "true_patriot_rotation_interval": 0,
+        "true_patriot_white_repair_percent": 0,
+        "umbra_light_normal_decay": 0,
+        "umbra_light_sprint_decay": 0,
+        "umbra_light_stack_consumption": 0,
+        "umbra_light_stack_gain": 0,
+        "umbra_light_stack_limit": 0,
+        "umbra_shadow_available_repair_per_stack": 0,
+        "umbra_shadow_average_repair_rate": 0,
+        "umbra_shadow_delivery_time": 0,
+        "umbra_shadow_full_stack_repair_capacity": 0,
+        "umbra_shadow_repair_budget": 0,
+        "umbra_shadow_repair_per_stack": 0,
+        "umbra_shadow_stack_consumption": 0,
+        "umbra_shadow_stack_gain": 0,
+        "umbra_shadow_stack_limit": 0,
+        "weapon_base_damage": 0,
+        "weapon_base_headshot_damage": 0,
+        "weapon_core_count": 0,
+        "weapon_crit_repair_share": 0,
+        "weapon_damage": 0,
+        "weapon_damage_multiplier": 1,
+        "weapon_handling": 0.9599999999999999,
+        "weapon_long_range": 0,
+        "weapon_magazine_size": 0,
+        "weapon_max_range": 0,
+        "weapon_no_reload": 0,
+        "weapon_optimal_range": 0,
+        "weapon_reload_first_shell": 0,
+        "weapon_reload_per_shell": 0,
+        "weapon_reload_time": 0,
+        "weapon_rpm": 0,
+        "weapon_switch_speed_multiplier": 0,
+        "weapon_tactical_reload_time": 0,
+        "weapon_total_critical_hit_damage": 0.38,
+        "weapon_total_headshot_damage": 0.13
+      },
+      "primary": {},
+      "breakdowns": {
+        "accuracy": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "aces_eights_aces_hand_shots": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "aces_eights_four_kind_shots": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "aces_eights_full_house_shots": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "aggressive_recon_ammo_interval": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "ammo_capacity": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "apex_predator_disorient_radius": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "apex_predator_stack_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "armor": {
+          "base": 0,
+          "final": 1020000,
+          "clamped": false,
+          "contributions": [
+            {
+              "source": {
+                "kind": "item",
+                "id": "mask_providence_defense_mask",
+                "name": "Providence Defense Mask"
+              },
+              "op": "flat",
+              "value": 170000
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "chest_providence_defense_chest",
+                "name": "Providence Defense Chest"
+              },
+              "op": "flat",
+              "value": 170000
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "backpack_providence_defense_backpack",
+                "name": "Providence Defense Backpack"
+              },
+              "op": "flat",
+              "value": 170000
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "gloves_providence_defense_gloves",
+                "name": "Providence Defense Gloves"
+              },
+              "op": "flat",
+              "value": 170000
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "holster_providence_defense_holster",
+                "name": "Providence Defense Holster"
+              },
+              "op": "flat",
+              "value": 170000
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "knees_providence_defense_kneepads",
+                "name": "Providence Defense Kneepads"
+              },
+              "op": "flat",
+              "value": 170000
+            }
+          ]
+        },
+        "armor_core_count": {
+          "base": 0,
+          "final": 6,
+          "clamped": false,
+          "contributions": [
+            {
+              "source": {
+                "kind": "item",
+                "id": "mask_providence_defense_mask",
+                "name": "Providence Defense Mask"
+              },
+              "op": "flat",
+              "value": 1
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "chest_providence_defense_chest",
+                "name": "Providence Defense Chest"
+              },
+              "op": "flat",
+              "value": 1
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "backpack_providence_defense_backpack",
+                "name": "Providence Defense Backpack"
+              },
+              "op": "flat",
+              "value": 1
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "gloves_providence_defense_gloves",
+                "name": "Providence Defense Gloves"
+              },
+              "op": "flat",
+              "value": 1
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "holster_providence_defense_holster",
+                "name": "Providence Defense Holster"
+              },
+              "op": "flat",
+              "value": 1
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "knees_providence_defense_kneepads",
+                "name": "Providence Defense Kneepads"
+              },
+              "op": "flat",
+              "value": 1
+            }
+          ]
+        },
+        "armor_on_kill": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "armor_on_kill_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "armor_regeneration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "armor_regeneration_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "armor_repair_on_depletion_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "armor_repair_on_headshot_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "armor_repair_on_kill_over_time_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "armor_repair_per_cover_move_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "armor_repair_per_kill_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "assault_rifle_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "augment_amalgam": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "augment_anomaly": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "augment_atomize": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "augment_echo": {
+          "base": 0,
+          "final": 0.030000000000000002,
+          "clamped": false,
+          "contributions": [
+            {
+              "source": {
+                "kind": "prototype",
+                "id": "augment_echo",
+                "name": "Providence Defense Chest: Echo (level 10)",
+                "rank": 10,
+                "slotId": "chest"
+              },
+              "op": "flat",
+              "value": 0.030000000000000002
+            }
+          ]
+        },
+        "augment_entropy": {
+          "base": 0,
+          "final": 0.09,
+          "clamped": false,
+          "contributions": [
+            {
+              "source": {
+                "kind": "prototype",
+                "id": "augment_entropy",
+                "name": "Providence Defense Backpack: Entropy (level 5)",
+                "rank": 5,
+                "slotId": "backpack"
+              },
+              "op": "flat",
+              "value": 0.09
+            }
+          ]
+        },
+        "augment_paradox": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "augment_quantum": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "augment_synesthesia": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "augment_trapper": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "base_magazine_size_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "bleed_resistance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "blind_deaf_resistance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "bonus_armor_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "burn_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "burn_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "burn_resistance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "camaraderie_mark_limit": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "character_armor": {
+          "base": 1680000,
+          "final": 1680000,
+          "clamped": false,
+          "contributions": []
+        },
+        "character_base_health": {
+          "base": 270000,
+          "final": 270000,
+          "clamped": false,
+          "contributions": []
+        },
+        "character_health": {
+          "base": 421200,
+          "final": 421200,
+          "clamped": false,
+          "contributions": []
+        },
+        "charged_share_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "charging_assumed_skill_protection": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "charging_full_charge_time": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "charging_protection_cap": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "charging_protection_gain": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "charging_skill_damage_factor": {
+          "base": 1,
+          "final": 1,
+          "clamped": false,
+          "contributions": []
+        },
+        "clutch_post_kill_window": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "combustion_burn_chance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "combustion_burn_damage_bonus": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "combustion_burn_damage_factor": {
+          "base": 1,
+          "final": 1,
+          "clamped": false,
+          "contributions": []
+        },
+        "combustion_debuff_duration_bonus": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "core_exercise_conversion_share": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "core_exercise_skill_tier_basis": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "critical_hit_chance": {
+          "base": 0,
+          "final": 0.26,
+          "clamped": false,
+          "contributions": [
+            {
+              "source": {
+                "kind": "mod",
+                "id": "critical_hit_chance_gear_mod",
+                "name": "Critical Hit Chance Mod"
+              },
+              "op": "flat",
+              "value": 0.06
+            },
+            {
+              "source": {
+                "kind": "mod",
+                "id": "critical_hit_chance_gear_mod",
+                "name": "Critical Hit Chance Mod"
+              },
+              "op": "flat",
+              "value": 0.06
+            },
+            {
+              "source": {
+                "kind": "mod",
+                "id": "critical_hit_chance_gear_mod",
+                "name": "Critical Hit Chance Mod"
+              },
+              "op": "flat",
+              "value": 0.06
+            },
+            {
+              "source": {
+                "kind": "set",
+                "id": "brand_providence_defense",
+                "name": "Providence Defense (2pc)"
+              },
+              "op": "flat",
+              "value": 0.08
+            }
+          ]
+        },
+        "critical_hit_damage": {
+          "base": 0,
+          "final": 0.13,
+          "clamped": false,
+          "contributions": [
+            {
+              "source": {
+                "kind": "set",
+                "id": "brand_providence_defense",
+                "name": "Providence Defense (3pc)"
+              },
+              "op": "flat",
+              "value": 0.13
+            }
+          ]
+        },
+        "crowd_control_mark_limit": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "crowd_control_transfer_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "damage_resistance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "damage_to_armor": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "disorient_resistance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "disrupt_resistance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "dtoc": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_accuracy": {
+          "base": 0.9599999999999999,
+          "final": 0.9599999999999999,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_critical_hit_chance": {
+          "base": 0.26,
+          "final": 0.26,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_damage_taken": {
+          "base": 1,
+          "final": 1,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_hp": {
+          "base": 2101200,
+          "final": 2101200,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_hp_vs_elites": {
+          "base": 2101200,
+          "final": 2101200,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_hp_vs_explosives": {
+          "base": 2101200,
+          "final": 2101200,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_reload_speed": {
+          "base": 0.9599999999999999,
+          "final": 0.9599999999999999,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_repair_skills": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_skill_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_skill_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_skill_haste": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_skill_health": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_stability": {
+          "base": 0.9599999999999999,
+          "final": 0.9599999999999999,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_status_effects": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "effective_swap_speed": {
+          "base": 0.9599999999999999,
+          "final": 0.9599999999999999,
+          "clamped": false,
+          "contributions": []
+        },
+        "electronic_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "enemy_damage_taken_factor": {
+          "base": 1,
+          "final": 1,
+          "clamped": false,
+          "contributions": []
+        },
+        "enemy_target_armor": {
+          "base": 21202739.804217014,
+          "final": 21202739.804217014,
+          "clamped": false,
+          "contributions": []
+        },
+        "enemy_target_armor_multiplier": {
+          "base": 5889.649945615837,
+          "final": 5889.649945615837,
+          "clamped": false,
+          "contributions": []
+        },
+        "enemy_target_health": {
+          "base": 8481095.921686806,
+          "final": 8481095.921686806,
+          "clamped": false,
+          "contributions": []
+        },
+        "enemy_target_health_multiplier": {
+          "base": 2355.859978246335,
+          "final": 2355.859978246335,
+          "clamped": false,
+          "contributions": []
+        },
+        "enemy_target_hit_damage": {
+          "base": 71467,
+          "final": 71467,
+          "clamped": false,
+          "contributions": []
+        },
+        "enemy_target_incoming_dps": {
+          "base": 193556.45833333337,
+          "final": 193556.45833333337,
+          "clamped": false,
+          "contributions": []
+        },
+        "enemy_target_role_index": {
+          "base": 3,
+          "final": 3,
+          "clamped": false,
+          "contributions": []
+        },
+        "enemy_target_scenario_index": {
+          "base": 13,
+          "final": 13,
+          "clamped": false,
+          "contributions": []
+        },
+        "enemy_target_weapon_multiplier": {
+          "base": 1588.169370738406,
+          "final": 1588.169370738406,
+          "clamped": false,
+          "contributions": []
+        },
+        "ensnare_resistance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_average_bodyshot_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_bodyshot_dps": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_critical_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_critical_headshot_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_firing_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_headshot_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_long_range": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_magazine_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_magazine_size": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_max_range": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_optimal_range": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_pellets": {
+          "base": 1,
+          "final": 1,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_practical_firing_dps": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_practical_reload_cycle_dps": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_practical_shot_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_reload_cycle_dps": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_reload_time": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_rpm": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_tactical_reload_time": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_target_bodyshots": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_target_magazines": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "equipped_weapon_target_time_to_kill": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_armor_on_kill": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_armor_regeneration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_armor_repair_on_crit": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_armor_repair_on_depletion": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_armor_repair_on_headshot": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_armor_repair_on_kill_over_time": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_armor_repair_per_cover_move": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_armor_repair_per_kill": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_bonus_armor": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_crit_repair_per_second": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_health_on_kill": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_kill_repair_per_second": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_shield_repair_per_second": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "estimated_true_patriot_white_repair": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "explosive_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "explosive_resistance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "exuro_chain_ignite_radius": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "exuro_disabled_explosion": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "exuro_heatstroke_range_bonus": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "exuro_heatstroke_weapon_bonus": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "exuro_own_fire_immunity": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "exuro_turret_rotation": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "feedback_loop_cooldown": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "gear_base_armor": {
+          "base": 0,
+          "final": 660000,
+          "clamped": false,
+          "contributions": [
+            {
+              "source": {
+                "kind": "item",
+                "id": "mask_providence_defense_mask",
+                "name": "Providence Defense Mask"
+              },
+              "op": "flat",
+              "value": 80000
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "chest_providence_defense_chest",
+                "name": "Providence Defense Chest"
+              },
+              "op": "flat",
+              "value": 158000
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "backpack_providence_defense_backpack",
+                "name": "Providence Defense Backpack"
+              },
+              "op": "flat",
+              "value": 131000
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "gloves_providence_defense_gloves",
+                "name": "Providence Defense Gloves"
+              },
+              "op": "flat",
+              "value": 80000
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "holster_providence_defense_holster",
+                "name": "Providence Defense Holster"
+              },
+              "op": "flat",
+              "value": 112000
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "knees_providence_defense_kneepads",
+                "name": "Providence Defense Kneepads"
+              },
+              "op": "flat",
+              "value": 99000
+            }
+          ]
+        },
+        "grenade_capacity": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "grenade_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "grenade_radius": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "ground_control_proximity_repair_budget": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "ground_control_proximity_repair_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "hackstep_armor_repair_share": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "hackstep_available_armor_repair": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "hackstep_available_bonus_armor": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "hackstep_bonus_armor_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "hackstep_bonus_armor_grant": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "hackstep_cooldown": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "hackstep_damage_cap": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "hackstep_damage_per_interval": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "hackstep_nameplate_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "hazard_protection": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "headache_armor_repair_share": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "headache_available_armor_repair": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "headache_bonus_armor_cap": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "headache_bonus_armor_capacity": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "headache_miss_allowance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "headache_next_headshot_bonus": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "headshot_damage": {
+          "base": 0,
+          "final": 0.13,
+          "clamped": false,
+          "contributions": [
+            {
+              "source": {
+                "kind": "set",
+                "id": "brand_providence_defense",
+                "name": "Providence Defense (1pc)"
+              },
+              "op": "flat",
+              "value": 0.13
+            }
+          ]
+        },
+        "headshot_damage_multiplier": {
+          "base": 1,
+          "final": 1,
+          "clamped": false,
+          "contributions": []
+        },
+        "health": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "health_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "health_on_kill": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "health_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "hive_skill_haste": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "huddle_destruction_base_cooldown": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "huddle_overcharge_cooldown": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "huddle_overcharge_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "huddle_overcharge_trigger_time": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "incoming_damage_multiplier": {
+          "base": 1,
+          "final": 1,
+          "clamped": false,
+          "contributions": []
+        },
+        "incoming_repairs": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "increased_threat": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "indirect_transmission_radius": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "indirect_transmission_refresh": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "lmg_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "magazine_size": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "magazine_size_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "makeshift_repair_average_rate": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "makeshift_repair_budget": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "makeshift_repairs_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "makeshift_repairs_share": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "marksman_rifle_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "melee_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "missing_armor_repair_on_crit_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "movement_speed": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "nanite_ally_buff_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "nanite_ally_cooldown": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "nanite_ally_hazard_protection": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "nanite_duration_reduction": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "nanite_healing_efficiency": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "nanite_range_reduction": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "on_point_buff_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "optimal_range": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "out_of_cover_damage_factor": {
+          "base": 1,
+          "final": 1,
+          "clamped": false,
+          "contributions": []
+        },
+        "outgoing_healing": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "party_bonus_armor": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "pistol_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "practical_base_shot_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "practical_headshot_fraction": {
+          "base": 0.25,
+          "final": 0.25,
+          "clamped": false,
+          "contributions": []
+        },
+        "practical_hit_fraction": {
+          "base": 0.7,
+          "final": 0.7,
+          "clamped": false,
+          "contributions": []
+        },
+        "practical_kills_per_shot": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "practical_magazine_bonus_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "practical_rounds_returned_per_shot": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "practical_shot_bonus_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "practical_shot_damage_bonus": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "practical_shots_to_kill": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "protection_from_elites": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "prototype_items": {
+          "base": 0,
+          "final": 2,
+          "clamped": false,
+          "contributions": [
+            {
+              "source": {
+                "kind": "prototype",
+                "id": "backpack_providence_defense_backpack",
+                "name": "Providence Defense Backpack: Prototype",
+                "slotId": "backpack"
+              },
+              "op": "flat",
+              "value": 1
+            },
+            {
+              "source": {
+                "kind": "prototype",
+                "id": "chest_providence_defense_chest",
+                "name": "Providence Defense Chest: Prototype",
+                "slotId": "chest"
+              },
+              "op": "flat",
+              "value": 1
+            }
+          ]
+        },
+        "pulse_resistance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "rate_of_fire": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "reduced_threat": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "reload_speed": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "repair_skills": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "return_to_sender_ally_budget": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "return_to_sender_ally_share": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "return_to_sender_bonus_armor_cap": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "return_to_sender_bonus_armor_capacity": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "return_to_sender_self_budget": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "return_to_sender_self_share": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "rifle_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "rigger_buff_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "rigger_cancel_reset_available": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "scanner_pulse_haste": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "shield_health": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "shield_repair_damage_share": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "shock_resistance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "shotgun_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "signature_weapon_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "skill_core_count": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "skill_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "skill_damage_multiplier": {
+          "base": 1,
+          "final": 1,
+          "clamped": false,
+          "contributions": []
+        },
+        "skill_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "skill_efficiency": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "skill_haste": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "skill_health": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "skill_tier": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "smg_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "stability": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "status_effect_duration": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "status_effects": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "stoic_assumed_resistance": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "stoic_decoy_target_eligibility": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "stoic_resistance_per_enemy": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "swap_speed": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "symphony_trigger_stacks": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "symptom_aggravator_damage_bonus": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "time_to_armor_break": {
+          "base": 8.679638047038384,
+          "final": 8.679638047038384,
+          "clamped": false,
+          "contributions": []
+        },
+        "time_to_down": {
+          "base": 10.85574730026015,
+          "final": 10.85574730026015,
+          "clamped": false,
+          "contributions": []
+        },
+        "total_armor": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "total_skill_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "total_skill_repair": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "total_weapon_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "trauma_bleed_damage_bonus": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "trauma_bleed_duration_bonus": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "true_patriot_blue_enemy_damage_factor": {
+          "base": 1,
+          "final": 1,
+          "clamped": false,
+          "contributions": []
+        },
+        "true_patriot_blue_reduction": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "true_patriot_rotation_interval": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "true_patriot_white_repair_percent": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_light_normal_decay": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_light_sprint_decay": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_light_stack_consumption": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_light_stack_gain": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_light_stack_limit": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_shadow_available_repair_per_stack": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_shadow_average_repair_rate": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_shadow_delivery_time": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_shadow_full_stack_repair_capacity": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_shadow_repair_budget": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_shadow_repair_per_stack": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_shadow_stack_consumption": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_shadow_stack_gain": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "umbra_shadow_stack_limit": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_base_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_base_headshot_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_core_count": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_crit_repair_share": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_damage": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_damage_multiplier": {
+          "base": 1,
+          "final": 1,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_handling": {
+          "base": 0,
+          "final": 0.9599999999999999,
+          "clamped": false,
+          "contributions": [
+            {
+              "source": {
+                "kind": "item",
+                "id": "mask_providence_defense_mask",
+                "name": "Providence Defense Mask"
+              },
+              "op": "flat",
+              "value": 0.08
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "mask_providence_defense_mask",
+                "name": "Providence Defense Mask"
+              },
+              "op": "flat",
+              "value": 0.08
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "chest_providence_defense_chest",
+                "name": "Providence Defense Chest"
+              },
+              "op": "flat",
+              "value": 0.08
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "chest_providence_defense_chest",
+                "name": "Providence Defense Chest"
+              },
+              "op": "flat",
+              "value": 0.08
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "backpack_providence_defense_backpack",
+                "name": "Providence Defense Backpack"
+              },
+              "op": "flat",
+              "value": 0.08
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "backpack_providence_defense_backpack",
+                "name": "Providence Defense Backpack"
+              },
+              "op": "flat",
+              "value": 0.08
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "gloves_providence_defense_gloves",
+                "name": "Providence Defense Gloves"
+              },
+              "op": "flat",
+              "value": 0.08
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "gloves_providence_defense_gloves",
+                "name": "Providence Defense Gloves"
+              },
+              "op": "flat",
+              "value": 0.08
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "holster_providence_defense_holster",
+                "name": "Providence Defense Holster"
+              },
+              "op": "flat",
+              "value": 0.08
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "holster_providence_defense_holster",
+                "name": "Providence Defense Holster"
+              },
+              "op": "flat",
+              "value": 0.08
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "knees_providence_defense_kneepads",
+                "name": "Providence Defense Kneepads"
+              },
+              "op": "flat",
+              "value": 0.08
+            },
+            {
+              "source": {
+                "kind": "item",
+                "id": "knees_providence_defense_kneepads",
+                "name": "Providence Defense Kneepads"
+              },
+              "op": "flat",
+              "value": 0.08
+            }
+          ]
+        },
+        "weapon_long_range": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_magazine_size": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_max_range": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_no_reload": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_optimal_range": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_reload_first_shell": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_reload_per_shell": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_reload_time": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_rpm": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_switch_speed_multiplier": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_tactical_reload_time": {
+          "base": 0,
+          "final": 0,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_total_critical_hit_damage": {
+          "base": 0.38,
+          "final": 0.38,
+          "clamped": false,
+          "contributions": []
+        },
+        "weapon_total_headshot_damage": {
+          "base": 0.13,
+          "final": 0.13,
+          "clamped": false,
+          "contributions": []
+        }
+      },
+      "activeSkillPreviews": {
+        "skill_slot_1": {
+          "skillId": "skill_artillery_turret",
+          "outputs": [
+            {
+              "id": "effective_skill_tier",
+              "name": "Effective Skill Tier",
+              "description": "Modeled tier capped at 6; Overcharge excluded.",
+              "format": "integer",
+              "value": 0,
+              "formula": "min(6, max(0, floor(skill_tier)))",
+              "inputs": {
+                "skill_tier": 0
+              }
+            },
+            {
+              "id": "cooldown_factor",
+              "name": "Cooldown factor (× base)",
+              "description": "Relative cooldown factor from Skill Haste plus Skill Efficiency, counted once each. Uses the inverse-speed estimate: 100% combined haste halves cooldown. A nonpositive speed factor yields zero. No base cooldown is applied; excludes skill-specific tier cooldown scaling, mods, Expertise, timing, resets and overcharge.",
+              "format": "decimal",
+              "value": 1,
+              "formula": "1 + effective_skill_haste > 0 ? 1 / (1 + effective_skill_haste) : 0",
+              "inputs": {
+                "effective_skill_haste": 0
+              }
+            },
+            {
+              "id": "damage",
+              "name": "Estimated Damage",
+              "description": "Community level-40 PvE estimate from Skill List!C110:J110 (TU27 workbook). Base 729,985; uses the selected tier curve, modeled bonuses and skill amplification. Source values and stacking need live-game verification. Excludes skill mods, Overcharge, target armor/health/out-of-cover bonuses, resistances, DPS and unmodeled procs. Existing current-buff assumptions apply to both skill previews. Installed Expertise adds 1 percentage point per grade to the tier damage pool, separately from global Skill Damage. Effect source: Skill Info!R18:R19. This aggregation is a community-based inference requiring live-game verification. Generic damage upgrades do not change separate Burn/Bleed channels; the explicitly sourced Burn Sticky upgrade changes Burn only.",
+              "format": "integer",
+              "value": 729985,
+              "formula": "729985 * (1 + curve('skill_artillery_turret_damage_tiers', min(6, max(0, floor(skill_tier)))) + skill_upgrade_rank * 0.01) * max(0, 1 + effective_skill_damage) * max(0, 1 + total_skill_damage) * skill_damage_multiplier * max(0, 1 + explosive_damage)",
+              "inputs": {
+                "effective_skill_damage": 0,
+                "explosive_damage": 0,
+                "skill_damage_multiplier": 1,
+                "skill_tier": 0,
+                "skill_upgrade_rank": 0,
+                "total_skill_damage": 0
+              },
+              "kind": "damage"
+            },
+            {
+              "id": "bleed_damage",
+              "name": "Estimated Bleed Damage",
+              "description": "Community level-40 PvE estimate from Skill List!C113:J113 (TU27 workbook). Base 29,863; uses the selected tier curve, modeled bonuses and skill amplification. Status damage is separate from the initial hit; no tick rate, duration or total damage over time is inferred. Burn assumes additive Skill Damage and Status Effects; bleed uses Status Effects only. Selected Trauma Specialist at the Ongoing Directive four-piece threshold automatically applies an estimated separate bleed-only factor. Source values and stacking need live-game verification. Excludes skill mods, skill Expertise, Overcharge, target armor/health/out-of-cover bonuses, resistances, DPS and unmodeled procs. Existing current-buff assumptions apply to both skill previews.",
+              "format": "integer",
+              "value": 29863,
+              "formula": "29863 * (1 + curve('skill_artillery_turret_bleed_damage_tiers', min(6, max(0, floor(skill_tier))))) * max(0, 1 + effective_status_effects) * max(0, 1 + total_skill_damage) * skill_damage_multiplier * max(0, 1 + trauma_bleed_damage_bonus)",
+              "inputs": {
+                "effective_status_effects": 0,
+                "skill_damage_multiplier": 1,
+                "skill_tier": 0,
+                "total_skill_damage": 0,
+                "trauma_bleed_damage_bonus": 0
+              },
+              "kind": "damage"
+            },
+            {
+              "id": "cooldown_seconds",
+              "name": "Estimated Ordinary Cooldown (s)",
+              "description": "Community level-40 ordinary PvE cooldown reference from Skill List!C107:J107 (TU27 workbook). Base 20s, divided by one plus Skill Haste and Skill Efficiency counted once. Only explicitly reviewed tier Skill Haste enters the additive haste pool; dashed entries contribute zero. Nonpositive speed yields zero as an invalid-boundary estimate, not readiness. Excludes charge refill, skill mods, skill Expertise, Overcharge, timers, use/cancellation/destruction, deployment delays and actual resets. Existing conditional reset capability remains separate. Source baselines and stacking require live verification.",
+              "format": "decimal",
+              "value": 20,
+              "formula": "1 + effective_skill_haste > 0 ? 20 / (1 + effective_skill_haste) : 0",
+              "inputs": {
+                "effective_skill_haste": 0
+              }
+            },
+            {
+              "id": "skill_health",
+              "name": "Estimated Skill Health",
+              "description": "Community level-40 PvE skill-health reference from Skill List!C109:J109 (TU27 workbook). Tier curve follows the retained source cells; Skill Health plus Skill Efficiency adds once, independently of damage, repair and player armor/health. Armor cores and shield-specific Health do not scale this variant. This is capacity, not current health, mitigation, regeneration or destruction prediction. No skill mods, skill Expertise, Overcharge or combat events. Source values and bonus stacking need live verification.",
+              "format": "integer",
+              "value": 1061796,
+              "formula": "1061796 * max(0, (1 + curve('skill_artillery_turret_skill_health_tiers', min(6, max(0, floor(skill_tier)))))) * max(0, 1 + effective_skill_health)",
+              "inputs": {
+                "effective_skill_health": 0,
+                "skill_tier": 0
+              }
+            },
+            {
+              "id": "charge_capacity",
+              "name": "Estimated Charges / Ammo Capacity",
+              "description": "Community level-40 PvE charge/ammunition capacity from Skill List!C111:J111 (TU27 workbook). Integral base plus the reviewed additive tier table, tier floored/clamped to 0-6. Capacity is not current remaining ammo or an assertion of readiness. Player Ammo Capacity, Magazine Size, Skill Efficiency, damage, repair, duration and haste do not scale this quantity. No charge consumption, refill, skill mods, skill Expertise or Overcharge. Source values require live verification.",
+              "format": "integer",
+              "value": 3,
+              "formula": "max(0, floor(3 + curve('skill_artillery_turret_charge_capacity_tiers', min(6, max(0, floor(skill_tier))))))",
+              "inputs": {
+                "skill_tier": 0
+              }
+            },
+            {
+              "id": "radius_meters",
+              "name": "Estimated Radius Reference (m)",
+              "description": "Community level-40 PvE Blast Radius reference from Skill List!C112:J112 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. This is a radius reference, not area, targets hit, range detection, damage falloff or uptime. Healing ranges, unreviewed overrides, skill mods, skill Expertise and Overcharge are excluded. Source values require live verification.",
+              "format": "decimal",
+              "value": 4.5,
+              "formula": "4.5 * (1 + curve('skill_artillery_turret_radius_meters_tiers', min(6, max(0, floor(skill_tier)))))",
+              "inputs": {
+                "skill_tier": 0
+              }
+            },
+            {
+              "id": "bleed_duration_seconds",
+              "name": "Estimated Bleed Duration Reference (s)",
+              "description": "Community unresisted PvE Bleed duration reference from Skill List!C114:J114; tier curve and Combined Status Effects. Firewall Burn Duration joins the additive burn-duration pool; legal Trauma Specialist multiplies bleed duration separately. These stacking interpretations need live verification. Generic Skill Duration, Skill Damage, repair, Nanite and White Hot's separate Burn Damage debuff duration do not scale this reference. No ticks, lifetime damage, actual application, resistance or PvP. No mods, Expertise or Overcharge.",
+              "format": "decimal",
+              "value": 7,
+              "formula": "7 * 1 * max(0, 1 + effective_status_effects + status_effect_duration) * max(0, 1 + trauma_bleed_duration_bonus)",
+              "inputs": {
+                "effective_status_effects": 0,
+                "status_effect_duration": 0,
+                "trauma_bleed_duration_bonus": 0
+              }
+            },
+            {
+              "id": "assumed_ticking_dps",
+              "name": "Assumed Bleed Ticking DPS",
+              "description": "Existing damage per tick divided by your tick interval, while the target takes ticks. Excludes initial impacts, Overcharge, application counts, overlapping effects and deployment time.",
+              "format": "decimal",
+              "value": 59726,
+              "formula": "(29863 * (1 + curve('skill_artillery_turret_bleed_damage_tiers', min(6, max(0, floor(skill_tier))))) * max(0, 1 + effective_status_effects) * max(0, 1 + total_skill_damage) * skill_damage_multiplier * max(0, 1 + trauma_bleed_damage_bonus)) / context_value('tick_dps_interval_seconds')",
+              "inputs": {
+                "effective_status_effects": 0,
+                "skill_damage_multiplier": 1,
+                "skill_tier": 0,
+                "total_skill_damage": 0,
+                "trauma_bleed_damage_bonus": 0
+              },
+              "kind": "rate"
+            },
+            {
+              "id": "assumed_cycle_dps",
+              "name": "Average DPS over Its Cooldown",
+              "description": "Damage per use averaged over the skill's cooldown cycle: impact damage plus its rate for its window, divided by the time between uses (the cooldown, or the window plus the cooldown when it starts at the end). One target; excludes Overcharge, deployment time and charges. Every shell of a deployment fires (G417), a ceiling: the time between shells is not modeled, and the bleed runs from the last.",
+              "format": "decimal",
+              "value": 130401.85,
+              "formula": "(1 + effective_skill_haste > 0 ? 20 / (1 + effective_skill_haste) : 0) > 0 ? ((729985 * (1 + curve('skill_artillery_turret_damage_tiers', min(6, max(0, floor(skill_tier)))) + skill_upgrade_rank * 0.01) * max(0, 1 + effective_skill_damage) * max(0, 1 + total_skill_damage) * skill_damage_multiplier * max(0, 1 + explosive_damage)) * (max(0, floor(3 + curve('skill_artillery_turret_charge_capacity_tiers', min(6, max(0, floor(skill_tier))))))) + ((29863 * (1 + curve('skill_artillery_turret_bleed_damage_tiers', min(6, max(0, floor(skill_tier))))) * max(0, 1 + effective_status_effects) * max(0, 1 + total_skill_damage) * skill_damage_multiplier * max(0, 1 + trauma_bleed_damage_bonus)) / context_value('tick_dps_interval_seconds')) * min((7 * 1 * max(0, 1 + effective_status_effects + status_effect_duration) * max(0, 1 + trauma_bleed_duration_bonus)), (1 + effective_skill_haste > 0 ? 20 / (1 + effective_skill_haste) : 0))) / (1 + effective_skill_haste > 0 ? 20 / (1 + effective_skill_haste) : 0) : ((29863 * (1 + curve('skill_artillery_turret_bleed_damage_tiers', min(6, max(0, floor(skill_tier))))) * max(0, 1 + effective_status_effects) * max(0, 1 + total_skill_damage) * skill_damage_multiplier * max(0, 1 + trauma_bleed_damage_bonus)) / context_value('tick_dps_interval_seconds'))",
+              "inputs": {
+                "effective_skill_damage": 0,
+                "effective_skill_haste": 0,
+                "effective_status_effects": 0,
+                "explosive_damage": 0,
+                "skill_damage_multiplier": 1,
+                "skill_tier": 0,
+                "skill_upgrade_rank": 0,
+                "status_effect_duration": 0,
+                "total_skill_damage": 0,
+                "trauma_bleed_damage_bonus": 0,
+                "trauma_bleed_duration_bonus": 0
+              },
+              "kind": "rate"
+            }
+          ]
+        }
+      },
+      "buildOutputs": [
+        {
+          "id": "shield_effective_hp",
+          "name": "Effective HP with Shield",
+          "description": "Effective HP + shield health",
+          "format": "integer",
+          "value": 0
+        },
+        {
+          "id": "build_dps",
+          "name": "Build DPS",
+          "description": "Practical weapon + skills",
+          "format": "decimal",
+          "value": 130401.85
+        },
+        {
+          "id": "build_time_to_kill",
+          "name": "Build Time to Kill (s)",
+          "description": "Weapon and skills together",
+          "format": "decimal",
+          "value": 227.6335475754663
+        }
+      ],
+      "assumptions": [
+        {
+          "id": "prototype_activity",
+          "kind": "numeric",
+          "name": "Activity",
+          "description": "Where the build is played. Raids, the Incursion and the Toxic Dark Zone normalize Prototype items: their attributes count at the bottom of the Prototype range and augments are disabled. The Blackout Dark Zone's PvP augment values are not modeled.",
+          "default": 0,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "options": [
+            {
+              "value": 0,
+              "label": "Open world"
+            },
+            {
+              "value": 1,
+              "label": "Raid, Incursion or Toxic Dark Zone"
+            }
+          ],
+          "section": "Talents and gear",
+          "sources": [
+            {
+              "kind": "item",
+              "id": "chest_providence_defense_chest",
+              "name": "Providence Defense Chest",
+              "slot": "chest"
+            },
+            {
+              "kind": "item",
+              "id": "backpack_providence_defense_backpack",
+              "name": "Providence Defense Backpack",
+              "slot": "backpack"
+            },
+            {
+              "kind": "item",
+              "id": "primary_weapon_police_m4",
+              "name": "Police M4",
+              "slot": "primary_weapon"
+            }
+          ]
+        },
+        {
+          "id": "enemy_out_of_cover",
+          "kind": "numeric",
+          "name": "Target Out of Cover",
+          "description": "Whether the selected enemy is out of cover, so Damage to Targets Out of Cover applies to weapon damage in the target estimates. Off by default.",
+          "default": 0,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "options": [
+            {
+              "value": 0,
+              "label": "In cover or not assumed"
+            },
+            {
+              "value": 1,
+              "label": "Out of cover"
+            }
+          ],
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "practical_hit_rate",
+          "kind": "numeric",
+          "name": "Practical Hit Rate (%)",
+          "description": "Share of shots that hit, for practical weapon DPS. Starts at 70%; an editable reference, not a measured accuracy.",
+          "default": 70,
+          "min": 0,
+          "max": 100,
+          "step": 0.1,
+          "section": "Weapon",
+          "global": true
+        },
+        {
+          "id": "practical_headshot_share",
+          "kind": "numeric",
+          "name": "Headshots among Hits (%)",
+          "description": "Share of the hits that land on the head, for practical weapon DPS. Starts at 25%.",
+          "default": 25,
+          "min": 0,
+          "max": 100,
+          "step": 0.1,
+          "section": "Weapon",
+          "global": true
+        },
+        {
+          "id": "breadbasket_stacks",
+          "kind": "numeric",
+          "name": "Breadbasket Stacks",
+          "description": "Assumed current bonus stacks for the next headshot (0-3; Perfect Breadbasket caps at 2). Body-shot stack generation, next-headshot consumption, and the 10s timer are not simulated. This adds only the Headshot Damage stat bonus; it is not applied to the regular weapon-card preview.",
+          "default": 0,
+          "min": 0,
+          "max": 3,
+          "step": 1,
+          "section": "Talents and gear",
+          "sources": [
+            {
+              "kind": "talent",
+              "id": "weapon_talent_breadbasket",
+              "name": "Breadbasket",
+              "slot": "primary_weapon"
+            }
+          ]
+        },
+        {
+          "id": "overcharge_damage_preview",
+          "kind": "numeric",
+          "name": "Overcharge Damage Comparison",
+          "description": "0 hides the comparison; 1 shows hypothetical Overcharge damage for selected damaging skills. Does not activate Overcharge or change ordinary previews. Utility, healing, cooldowns, timers, proc eligibility and DPS are excluded. View setting only; not saved or shared.",
+          "default": 0,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "section": "Skill comparisons",
+          "sources": [
+            {
+              "kind": "skill",
+              "id": "skill_artillery_turret",
+              "name": "Artillery Turret",
+              "slot": "skill_slot_1"
+            }
+          ]
+        },
+        {
+          "id": "overcharge_geometry_preview",
+          "kind": "numeric",
+          "name": "Overcharge Geometry Comparison",
+          "description": "0 hides the comparison; 1 shows hypothetical Overcharge radius, range and cone-angle references for selected reviewed variants. Does not activate Overcharge or change ordinary outputs. Source geometry only; no area, detection, targets hit, recipients or amplification. View setting only; not saved or shared.",
+          "default": 0,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "section": "Skill comparisons",
+          "sources": [
+            {
+              "kind": "skill",
+              "id": "skill_artillery_turret",
+              "name": "Artillery Turret",
+              "slot": "skill_slot_1"
+            }
+          ]
+        },
+        {
+          "id": "overcharge_capacity_preview",
+          "kind": "numeric",
+          "name": "Overcharge Capacity Comparison",
+          "description": "0 hides the comparison; 1 shows hypothetical Overcharge maximum charges, ammo, deployables, zones or targets for selected reviewed variants. Maximum counts only; no remaining charges, refill time, self-revive consumption, targets hit or activation. View setting only; not saved or shared.",
+          "default": 0,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "section": "Skill comparisons",
+          "sources": [
+            {
+              "kind": "skill",
+              "id": "skill_artillery_turret",
+              "name": "Artillery Turret",
+              "slot": "skill_slot_1"
+            }
+          ]
+        },
+        {
+          "id": "overcharge_status_preview",
+          "kind": "numeric",
+          "name": "Overcharge Status Duration Comparison",
+          "description": "0 hides the comparison; 1 shows hypothetical unresisted Overcharge status-duration references for selected reviewed variants. Separate from deployment lifetime; no application, recipient resistance, immunity, ticks, remaining timers or activation. View setting only; not saved or shared.",
+          "default": 0,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "section": "Skill comparisons",
+          "sources": [
+            {
+              "kind": "skill",
+              "id": "skill_artillery_turret",
+              "name": "Artillery Turret",
+              "slot": "skill_slot_1"
+            }
+          ]
+        },
+        {
+          "id": "overcharge_health_preview",
+          "kind": "numeric",
+          "name": "Overcharge Health Comparison",
+          "description": "0 hides the comparison; 1 shows hypothetical Overcharge device, shield, zone or foam health capacity for selected reviewed variants. No current health, survival, damage taken or shield invulnerability. View setting only; not saved or shared.",
+          "default": 0,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "section": "Skill comparisons",
+          "sources": [
+            {
+              "kind": "skill",
+              "id": "skill_artillery_turret",
+              "name": "Artillery Turret",
+              "slot": "skill_slot_1"
+            }
+          ]
+        },
+        {
+          "id": "overcharge_recovery_preview",
+          "kind": "numeric",
+          "name": "Overcharge Recovery Comparison",
+          "description": "0 hides the comparison; 1 shows hypothetical Overcharge ordinary cooldown or single-ammo recovery estimates for selected reviewed variants. No Hive refill, charge speed, current timer, full refill, actual readiness or activation. View setting only; not saved or shared.",
+          "default": 0,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "section": "Skill comparisons",
+          "sources": [
+            {
+              "kind": "skill",
+              "id": "skill_artillery_turret",
+              "name": "Artillery Turret",
+              "slot": "skill_slot_1"
+            }
+          ]
+        },
+        {
+          "id": "tick_dps_interval_seconds",
+          "kind": "numeric",
+          "name": "Assumed Tick Interval (s)",
+          "description": "Seconds between damage ticks. Starts at 0.5 seconds. Shared by burn, bleed and Oxidizer previews; does not model duration, refresh or overlapping applications.",
+          "default": 0.5,
+          "min": 0.1,
+          "max": 10,
+          "step": 0.1,
+          "section": "Skills",
+          "sources": [
+            {
+              "kind": "skill",
+              "id": "skill_artillery_turret",
+              "name": "Artillery Turret",
+              "slot": "skill_slot_1"
+            }
+          ]
+        },
+        {
+          "id": "enemy_target",
+          "kind": "numeric",
+          "name": "Enemy Target Profile",
+          "description": "Enemy for target estimates. Profiles group game-file NPC declarations by role, health base and armor base, labelled with the factions that use them most. Named entries are a sample of named bosses, one per main faction, with the mission whose scripts reference them; whether they spawn there with these values, and with which role override, is not established.",
+          "default": 6,
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "options": [
+            {
+              "value": 0,
+              "label": "No target"
+            },
+            {
+              "value": 1,
+              "label": "Normal · 800 health / no armor · Militia, Endgame"
+            },
+            {
+              "value": 2,
+              "label": "Normal · 1,000 health / 1,000 armor · Endgame, Cleaners"
+            },
+            {
+              "value": 3,
+              "label": "Normal · 1,200 health / no armor · Militia, RandomHostile"
+            },
+            {
+              "value": 4,
+              "label": "Veteran · 1,200 health / 1,200 armor · Rikers, Cleaners"
+            },
+            {
+              "value": 5,
+              "label": "Elite · 2,400 health / 1,200 armor · Endgame, Rikers"
+            },
+            {
+              "value": 6,
+              "label": "Elite · 3,600 health / 3,600 armor · Hunters"
+            },
+            {
+              "value": 7,
+              "label": "Named · 800 health / 400 armor · Rikers, Endgame"
+            },
+            {
+              "value": 8,
+              "label": "Named · 800 health / 800 armor · Endgame, Cultists"
+            },
+            {
+              "value": 9,
+              "label": "Named · 1,200 health / 1,200 armor · Endgame, Blackbloc"
+            },
+            {
+              "value": 10,
+              "label": "Named · 1,800 health / 1,800 armor · Militia, Cultists"
+            },
+            {
+              "value": 11,
+              "label": "Named · 2,000 health / 2,300 armor · RogueAgents, RogueAgents-AnimRiker"
+            },
+            {
+              "value": 12,
+              "label": "Named · 2,100 health / 1,200 armor · Cultists, Underground"
+            },
+            {
+              "value": 13,
+              "label": "Named · 2,400 health / 1,200 armor · Endgame, Blackbloc"
+            },
+            {
+              "value": 14,
+              "label": "Named · Aaron Keener · Liberty Island +1"
+            },
+            {
+              "value": 15,
+              "label": "Named · Jasinski · H5 Refinery"
+            },
+            {
+              "value": 16,
+              "label": "Named · Keiko Nakama · Potomac Event Center"
+            },
+            {
+              "value": 17,
+              "label": "Named · Lieutenant Colonel Tom Sergeant · Tidal Basin"
+            },
+            {
+              "value": 18,
+              "label": "Named · Marguerite Steel · Broken Rain"
+            },
+            {
+              "value": 19,
+              "label": "Named · Mayhem · Tidal Basin +1"
+            },
+            {
+              "value": 20,
+              "label": "Named · The Crooked Man · The Georgetown Dead Zone"
+            }
+          ],
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "enemy_difficulty",
+          "kind": "numeric",
+          "name": "Enemy Difficulty",
+          "description": "Mission difficulty for target estimates.",
+          "default": 4,
+          "min": 1,
+          "max": 6,
+          "step": 1,
+          "options": [
+            {
+              "value": 1,
+              "label": "Normal"
+            },
+            {
+              "value": 2,
+              "label": "Hard"
+            },
+            {
+              "value": 3,
+              "label": "Challenging"
+            },
+            {
+              "value": 4,
+              "label": "Heroic"
+            },
+            {
+              "value": 5,
+              "label": "Legendary"
+            },
+            {
+              "value": 6,
+              "label": "Master"
+            }
+          ],
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "enemy_players",
+          "kind": "numeric",
+          "name": "Enemy Group Size",
+          "description": "Number of players the enemy is scaled for.",
+          "default": 1,
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "options": [
+            {
+              "value": 1,
+              "label": "1 player"
+            },
+            {
+              "value": 2,
+              "label": "2 players"
+            },
+            {
+              "value": 3,
+              "label": "3 players"
+            },
+            {
+              "value": 4,
+              "label": "4 players"
+            }
+          ],
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "enemy_hit_rate",
+          "kind": "numeric",
+          "name": "Enemy Hit Rate (%)",
+          "description": "Share of the enemy's shots that hit you, for time to armor break. Starts at a flat 50%; Shade-Tech in-game counts found about 70% within 15 m and 30% beyond for a normal enemy.",
+          "default": 50,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "enemy_attackers",
+          "kind": "numeric",
+          "name": "Enemies Attacking",
+          "description": "Enemies of the selected target firing at you at once.",
+          "default": 1,
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "enemy_firing_share",
+          "kind": "numeric",
+          "name": "Enemy Firing Time (%)",
+          "description": "Share of the time the enemy spends firing. Enemies fire in bursts, move and reload, with pauses that the game data does not yet describe; testers judge they fire under half the time, so it starts at 50% (G428). 100% is continuous fire.",
+          "default": 50,
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "combined_arms_active",
+          "kind": "condition",
+          "values": [
+            "true"
+          ],
+          "section": "Talents and gear",
+          "sources": [
+            {
+              "kind": "talent",
+              "id": "gear_talent_combined_arms",
+              "name": "Combined Arms",
+              "slot": "backpack"
+            }
+          ]
+        },
+        {
+          "id": "weapon_slot",
+          "kind": "condition",
+          "values": [
+            "primary_weapon",
+            "secondary_weapon",
+            "sidearm"
+          ],
+          "section": "Talents and gear",
+          "sources": [
+            {
+              "kind": "item",
+              "id": "primary_weapon_police_m4",
+              "name": "Police M4",
+              "slot": "primary_weapon"
+            }
+          ]
+        }
+      ],
+      "names": {
+        "armor_gear_core": "Armor (Defensive)",
+        "assault_rifle_damage_weapon_core": "Assault Rifle Damage (Offensive)",
+        "backpack_providence_defense_backpack": "Providence Defense Backpack",
+        "brand_providence_defense": "Providence Defense",
+        "chest_providence_defense_chest": "Providence Defense Chest",
+        "critical_hit_chance_gear_mod": "Critical Hit Chance Mod",
+        "damage_to_armor_weapon_minor": "Damage to Armor (Offensive)",
+        "gear_talent_combined_arms": "Combined Arms",
+        "gear_talent_explosive_delivery": "Explosive Delivery",
+        "gloves_providence_defense_gloves": "Providence Defense Gloves",
+        "health_damage_weapon_core": "Health Damage (Offensive)",
+        "holster_providence_defense_holster": "Providence Defense Holster",
+        "knees_providence_defense_kneepads": "Providence Defense Kneepads",
+        "mask_providence_defense_mask": "Providence Defense Mask",
+        "primary_weapon_police_m4": "Police M4",
+        "skill_artillery_turret": "Artillery Turret",
+        "weapon_handling_gear_minor": "Weapon Handling (Offensive)",
+        "weapon_mod_magazine_tactical_5_56_mag": "Tactical 5.56 Mag",
+        "weapon_mod_muzzle_large_suppressor_5_56": "Large Suppressor 5.56",
+        "weapon_mod_optics_acog_scope_4x": "Acog Scope (4x)",
+        "weapon_mod_underbarrel_short_grip": "Short Grip",
+        "weapon_talent_breadbasket": "Breadbasket"
+      },
+      "sets": [
+        {
+          "id": "brand_providence_defense",
+          "name": "Providence Defense",
+          "pieces": 6,
+          "thresholds": [
+            1,
+            2,
+            3
+          ],
+          "activeBonuses": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "weapons": [
+        {
+          "slot": "primary_weapon",
+          "itemId": "primary_weapon_police_m4",
+          "name": "Police M4",
+          "active": false,
+          "stats": {
+            "equipped_weapon_average_bodyshot_damage": 62091.55785,
+            "equipped_weapon_bodyshot_dps": 879630.402875,
+            "equipped_weapon_critical_damage": 85249.09749999999,
+            "equipped_weapon_critical_headshot_damage": 121938.58249999999,
+            "equipped_weapon_damage": 53955.12499999999,
+            "equipped_weapon_firing_duration": 2.1176470588235294,
+            "equipped_weapon_headshot_damage": 90644.61,
+            "equipped_weapon_long_range": 105,
+            "equipped_weapon_magazine_damage": 1862746.7355,
+            "equipped_weapon_magazine_size": 30,
+            "equipped_weapon_max_range": 100,
+            "equipped_weapon_optimal_range": 46.5,
+            "equipped_weapon_pellets": 1,
+            "equipped_weapon_practical_firing_dps": 727901.6491489167,
+            "equipped_weapon_practical_reload_cycle_dps": 472760.8649111521,
+            "equipped_weapon_practical_shot_damage": 51381.2928811,
+            "equipped_weapon_reload_cycle_dps": 571306.3441353092,
+            "equipped_weapon_reload_time": 1.142857142857143,
+            "equipped_weapon_rpm": 850,
+            "equipped_weapon_tactical_reload_time": 0.9897959183673469,
+            "equipped_weapon_target_bodyshots": 436,
+            "equipped_weapon_target_magazines": 14.533333333333333,
+            "equipped_weapon_target_time_to_kill": 46.70588235294118
+          }
+        }
+      ],
+      "points": {
+        "total": 0,
+        "spent": 0,
+        "remaining": 0
+      },
+      "skillPoints": {
+        "total": 0,
+        "spent": 0,
+        "remaining": 0
+      }
+    }
+  }
+}

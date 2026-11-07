@@ -1,0 +1,16 @@
+{
+  "args": [
+    "version"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "version",
+    "ok": true,
+    "diagnostics": [],
+    "result": {
+      "version": "0.1.0-beta.6"
+    }
+  }
+}

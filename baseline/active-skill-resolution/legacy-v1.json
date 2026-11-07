@@ -1,0 +1,2067 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "inputsSha256": "f98d12f9acea8a779fcdde8d9c8c03267342eac3a54942abddc9f129a95dd8e2",
+    "packSha256": "13c606fa65868a7a024191a76d4dce4253707a2c129e02b87c141082763f1ca8",
+    "args": [
+      "--json",
+      "--pack",
+      "pack.json",
+      "build",
+      "resolve",
+      "--input",
+      "-",
+      "--context",
+      "context.json"
+    ],
+    "inputEncoding": "utf-8"
+  },
+  "cases": [
+    {
+      "id": "two-skills",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "active_skill_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "turret",
+              "two": "drone"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 115,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 115,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "turret",
+                    "name": "Turret"
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "drone",
+                    "name": "Drone"
+                  },
+                  "op": "flat",
+                  "value": 5
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "turret",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "description": "Rate preview",
+                  "format": "decimal",
+                  "value": 577,
+                  "formula": "damage * level * (1 + skill_upgrade_rank * 0.1) + context_value('stacks')",
+                  "inputs": {
+                    "damage": 115,
+                    "skill_upgrade_rank": 0
+                  },
+                  "kind": "rate"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "drone",
+              "outputs": [
+                {
+                  "id": "damage",
+                  "name": "Damage",
+                  "format": "decimal",
+                  "value": 120,
+                  "formula": "damage + level",
+                  "inputs": {
+                    "damage": 115
+                  }
+                }
+              ]
+            }
+          },
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "skill",
+                  "id": "turret",
+                  "name": "Turret",
+                  "slot": "one"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "drone": "Drone",
+            "turret": "Turret"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "ranked-preview",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "turret",
+              "rank": 2
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "active_skill_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "turret",
+              "two": "drone"
+            },
+            "skillUpgrades": {
+              "one": {
+                "skillId": "turret",
+                "rank": 2
+              }
+            },
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 115,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 115,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "turret",
+                    "name": "Turret"
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "drone",
+                    "name": "Drone"
+                  },
+                  "op": "flat",
+                  "value": 5
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "turret",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "description": "Rate preview",
+                  "format": "decimal",
+                  "value": 692,
+                  "formula": "damage * level * (1 + skill_upgrade_rank * 0.1) + context_value('stacks')",
+                  "inputs": {
+                    "damage": 115,
+                    "skill_upgrade_rank": 2
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "when": "power >= 10 && skill_upgrade_rank > 0",
+                  "id": "conditional",
+                  "name": "Conditional",
+                  "format": "integer",
+                  "value": 12,
+                  "formula": "power + skill_upgrade_rank",
+                  "inputs": {
+                    "power": 10,
+                    "skill_upgrade_rank": 2
+                  }
+                }
+              ]
+            },
+            "two": {
+              "skillId": "drone",
+              "outputs": [
+                {
+                  "id": "damage",
+                  "name": "Damage",
+                  "format": "decimal",
+                  "value": 120,
+                  "formula": "damage + level",
+                  "inputs": {
+                    "damage": 115
+                  }
+                }
+              ]
+            }
+          },
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "skill",
+                  "id": "turret",
+                  "name": "Turret",
+                  "slot": "one"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "drone": "Drone",
+            "turret": "Turret"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "zero-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "turret",
+              "rank": 0
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "active_skill_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "turret",
+              "two": "drone"
+            },
+            "skillUpgrades": {
+              "one": {
+                "skillId": "turret",
+                "rank": 0
+              }
+            },
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 115,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 115,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "turret",
+                    "name": "Turret"
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "drone",
+                    "name": "Drone"
+                  },
+                  "op": "flat",
+                  "value": 5
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "turret",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "description": "Rate preview",
+                  "format": "decimal",
+                  "value": 577,
+                  "formula": "damage * level * (1 + skill_upgrade_rank * 0.1) + context_value('stacks')",
+                  "inputs": {
+                    "damage": 115,
+                    "skill_upgrade_rank": 0
+                  },
+                  "kind": "rate"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "drone",
+              "outputs": [
+                {
+                  "id": "damage",
+                  "name": "Damage",
+                  "format": "decimal",
+                  "value": 120,
+                  "formula": "damage + level",
+                  "inputs": {
+                    "damage": 115
+                  }
+                }
+              ]
+            }
+          },
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "skill",
+                  "id": "turret",
+                  "name": "Turret",
+                  "slot": "one"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "drone": "Drone",
+            "turret": "Turret"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "max-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "turret",
+              "rank": 3
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "active_skill_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "turret",
+              "two": "drone"
+            },
+            "skillUpgrades": {
+              "one": {
+                "skillId": "turret",
+                "rank": 3
+              }
+            },
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 115,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 115,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "turret",
+                    "name": "Turret"
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "drone",
+                    "name": "Drone"
+                  },
+                  "op": "flat",
+                  "value": 5
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "turret",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "description": "Rate preview",
+                  "format": "decimal",
+                  "value": 749.5,
+                  "formula": "damage * level * (1 + skill_upgrade_rank * 0.1) + context_value('stacks')",
+                  "inputs": {
+                    "damage": 115,
+                    "skill_upgrade_rank": 3
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "when": "power >= 10 && skill_upgrade_rank > 0",
+                  "id": "conditional",
+                  "name": "Conditional",
+                  "format": "integer",
+                  "value": 13,
+                  "formula": "power + skill_upgrade_rank",
+                  "inputs": {
+                    "power": 10,
+                    "skill_upgrade_rank": 3
+                  }
+                }
+              ]
+            },
+            "two": {
+              "skillId": "drone",
+              "outputs": [
+                {
+                  "id": "damage",
+                  "name": "Damage",
+                  "format": "decimal",
+                  "value": 120,
+                  "formula": "damage + level",
+                  "inputs": {
+                    "damage": 115
+                  }
+                }
+              ]
+            }
+          },
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "skill",
+                  "id": "turret",
+                  "name": "Turret",
+                  "slot": "one"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "drone": "Drone",
+            "turret": "Turret"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "negative-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "turret",
+              "rank": -1
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-upgrade",
+            "message": "Skill upgrade in \"one\" requires an accepted matching skill and a supported integer rank",
+            "subject": "one"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "excess-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "turret",
+              "rank": 4
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-upgrade",
+            "message": "Skill upgrade in \"one\" requires an accepted matching skill and a supported integer rank",
+            "subject": "one"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "stale-upgrade",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "drone",
+              "rank": 2
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-upgrade",
+            "message": "Skill upgrade in \"one\" requires an accepted matching skill and a supported integer rank",
+            "subject": "one"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unsupported-upgrade",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone"
+          },
+          "skillUpgrades": {
+            "two": {
+              "skillId": "drone",
+              "rank": 1
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-upgrade",
+            "message": "Skill upgrade in \"two\" requires an accepted matching skill and a supported integer rank",
+            "subject": "two"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-upgrade-slots",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone"
+          },
+          "skillUpgrades": {
+            "z": {
+              "skillId": "turret",
+              "rank": 1
+            },
+            "a": {
+              "skillId": "turret",
+              "rank": 1
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-upgrade",
+            "message": "Skill upgrade in \"a\" requires an accepted matching skill and a supported integer rank",
+            "subject": "a"
+          },
+          {
+            "severity": "error",
+            "code": "invalid-skill-upgrade",
+            "message": "Skill upgrade in \"z\" requires an accepted matching skill and a supported integer rank",
+            "subject": "z"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "duplicate-family",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "turret_variant"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "duplicate-active-skill-family",
+            "message": "Turret variant can't be equipped alongside Turret: both are turret variants",
+            "subject": "two"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "upgrade-on-rejected-family",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "turret_variant"
+          },
+          "skillUpgrades": {
+            "two": {
+              "skillId": "turret_variant",
+              "rank": 0
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "duplicate-active-skill-family",
+            "message": "Turret variant can't be equipped alongside Turret: both are turret variants",
+            "subject": "two"
+          },
+          {
+            "severity": "error",
+            "code": "invalid-skill-upgrade",
+            "message": "Skill upgrade in \"two\" requires an accepted matching skill and a supported integer rank",
+            "subject": "two"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unconfigured",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "active_skill_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "Two has no selected active skill",
+            "subject": "two"
+          }
+        ],
+        "result": {
+          "stats": {
+            "damage": 100,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "unknown-skill",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "missing",
+            "two": "drone"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-active-skill",
+            "message": "Unknown active skill \"missing\"",
+            "subject": "one"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "not-allowed",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "forbidden",
+            "two": "drone"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "active-skill-not-allowed",
+            "message": "Forbidden is not allowed in One",
+            "subject": "one"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-slots",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone",
+            "z": "missing",
+            "a": "missing"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-active-skill-slot",
+            "message": "Unknown active skill slot \"a\"",
+            "subject": "a"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-active-skill-slot",
+            "message": "Unknown active skill slot \"z\"",
+            "subject": "z"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "empty-family-repeated",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "plain",
+            "two": "plain"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "active_skill_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "plain",
+              "two": "plain"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 100,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "plain",
+              "outputs": []
+            },
+            "two": {
+              "skillId": "plain",
+              "outputs": []
+            }
+          },
+          "names": {
+            "plain": "Plain"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "bad-formula",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "bad_formula",
+            "two": "drone"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "active-skill-preview-eval",
+            "message": "Could not evaluate Bad formula Infinite: formula returned a non-finite value",
+            "subject": "one.infinite"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "bad-condition",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "bad_condition",
+            "two": "drone"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "active-skill-preview-eval",
+            "message": "Could not evaluate Bad condition Conditional: condition returned a non-finite value",
+            "subject": "one.conditional"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "clamped-preview-level",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 20,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "level-out-of-range",
+            "message": "Level 20 is outside [1, 10]"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "formula-assumption",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "active_skill_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "turret",
+            "two": "drone"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "turret",
+              "rank": 1
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "stacks": "8"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "active_skill_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "active_skill_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "turret",
+              "two": "drone"
+            },
+            "skillUpgrades": {
+              "one": {
+                "skillId": "turret",
+                "rank": 1
+              }
+            },
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "stacks": "8"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 115,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 115,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "turret",
+                    "name": "Turret"
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "drone",
+                    "name": "Drone"
+                  },
+                  "op": "flat",
+                  "value": 5
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "turret",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "description": "Rate preview",
+                  "format": "decimal",
+                  "value": 640.5,
+                  "formula": "damage * level * (1 + skill_upgrade_rank * 0.1) + context_value('stacks')",
+                  "inputs": {
+                    "damage": 115,
+                    "skill_upgrade_rank": 1
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "when": "power >= 10 && skill_upgrade_rank > 0",
+                  "id": "conditional",
+                  "name": "Conditional",
+                  "format": "integer",
+                  "value": 11,
+                  "formula": "power + skill_upgrade_rank",
+                  "inputs": {
+                    "power": 10,
+                    "skill_upgrade_rank": 1
+                  }
+                }
+              ]
+            },
+            "two": {
+              "skillId": "drone",
+              "outputs": [
+                {
+                  "id": "damage",
+                  "name": "Damage",
+                  "format": "decimal",
+                  "value": 120,
+                  "formula": "damage + level",
+                  "inputs": {
+                    "damage": 115
+                  }
+                }
+              ]
+            }
+          },
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "8",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "skill",
+                  "id": "turret",
+                  "name": "Turret",
+                  "slot": "one"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "drone": "Drone",
+            "turret": "Turret"
+          },
+          "unconditional": {
+            "reset": [
+              "stacks"
+            ],
+            "stats": {}
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    }
+  ]
+}

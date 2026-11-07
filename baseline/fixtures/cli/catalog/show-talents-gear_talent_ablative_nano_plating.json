@@ -1,0 +1,43 @@
+{
+  "args": [
+    "catalog",
+    "show",
+    "talents",
+    "gear_talent_ablative_nano_plating"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog show",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": {
+      "id": "gear_talent_ablative_nano_plating",
+      "name": "Ablative Nano-Plating",
+      "icon": "icon_gear_talent_ablative_nano_plating",
+      "description": "Whenever you or any ally's armor breaks, they gain 80% of your armor as bonus armor for 10s. Cooldown per ally: 45s. Killing an enemy with your specialization weapon removes this cooldown for all allies.",
+      "modifiers": [],
+      "modeledBySets": [],
+      "allyEffects": [
+        {
+          "id": "ablative_nano_plating",
+          "stack": "ablative_nano_plating",
+          "name": "Ablative Nano-Plating",
+          "description": "For 10s after the ally's armor breaks, once per 45s per ally. Bonus armor is 80% of the giver's armor.",
+          "modifiers": [
+            {
+              "stat": "party_bonus_armor",
+              "op": "flat",
+              "value": "0.8 * max(0, character_armor)"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

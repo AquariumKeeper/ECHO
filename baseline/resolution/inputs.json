@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "pack": "ashen-vale.json",
+  "cases": [
+    {"id": "new", "level": 1},
+    {"id": "golden", "level": 50, "allocations": {"vigor":30,"endurance":20,"strength":30,"dexterity":20}, "equipment":{"head":"ashen_helm","chest":"ashen_plate","hands":"ashen_gauntlets","legs":"ashen_greaves","mainhand":"ashen_blade","offhand":"iron_kiteshield","amulet":"hawkeye_amulet","ring":"ring_of_precision"}},
+    {"id": "inactive-requirements", "level": 1, "equipment":{"head":"ashen_helm","mainhand":"wyrmslayer_greatsword"}},
+    {"id": "inactive-slot-conflict", "level": 1, "equipment":{"mainhand":"greataxe","offhand":"iron_kiteshield"}},
+    {"id": "active-slot-conflict", "level": 40, "allocations":{"strength":25}, "equipment":{"mainhand":"greataxe","offhand":"iron_kiteshield"}},
+    {"id": "unknown-item", "level": 1, "equipment":{"head":"missing_item"}},
+    {"id": "wrong-slot", "level": 1, "equipment":{"head":"ashen_blade"}},
+    {"id": "overspend-and-clamp", "level": 1, "allocations":{"strength":150,"dexterity":-20,"unknown":5}},
+    {"id": "above-max-level", "level": 80, "allocations":{"strength":15}},
+    {"id": "scenario-tags", "level": 40, "allocations":{"strength":25,"dexterity":10}, "equipment":{"mainhand":"ashen_blade"}, "activeScenarios":{"buffed":{},"vs_boss":{}}},
+    {"id": "unknown-scenarios-and-skills", "level": 1, "activeScenarios":{"z_missing":{},"a_missing":{}}, "allocatedSkills":{"z_missing":{},"a_missing":{}}},
+    {"id": "active-weapon", "level": 40, "allocations":{"strength":25,"dexterity":10}, "equipment":{"mainhand":"ashen_blade"}},
+    {"id": "two-piece-set", "level": 40, "allocations":{"strength":25}, "equipment":{"head":"ashen_helm","chest":"ashen_plate"}},
+    {"id": "four-piece-buffed", "level": 50, "allocations":{"strength":30,"vigor":30,"endurance":20,"dexterity":20}, "equipment":{"head":"ashen_helm","chest":"ashen_plate","hands":"ashen_gauntlets","legs":"ashen_greaves"}, "activeScenarios":{"buffed":{}}}
+  ]
+}

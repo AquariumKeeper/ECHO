@@ -1,0 +1,102 @@
+{
+  "format": "shade-tech.planner-talent-rule-overlay",
+  "version": 2,
+  "provenance_heading": "R73: Future Perfect's shared Overcharge cooldown",
+  "base_manifest_sha256": "fc3e3cb0fe4e13a5b8128d3a027031197a068a1b5f6d2376f6eef7ec5077f0ab",
+  "evidence_packet": {
+    "path": "packet.json",
+    "sha256": "39cc370ee5567e39413c6d0cbcafd198a49381e9aec3ad963fc236e6a2963231"
+  },
+  "changes": [
+    {
+      "document": "simulation.json",
+      "collection": "triggers",
+      "op": "replace",
+      "match": {
+        "talent": "weapon_talent_future_perfect",
+        "key": "future_perfect_overcharge_active"
+      },
+      "before": {
+        "talent": "weapon_talent_future_perfect",
+        "key": "future_perfect_overcharge_active",
+        "on": "kill",
+        "kind": "buff",
+        "duration": 15,
+        "every": 90,
+        "whileStatAtLeast": {
+          "stat": "overcharged_skill_tier",
+          "value": 6
+        }
+      },
+      "after": {
+        "talent": "weapon_talent_future_perfect",
+        "key": "future_perfect_overcharge_active",
+        "on": "kill",
+        "kind": "buff",
+        "duration": 15,
+        "every": 90,
+        "everyGroup": "future_perfect_overcharge",
+        "whileStatAtLeast": {
+          "stat": "overcharged_skill_tier",
+          "value": 6
+        }
+      },
+      "evidence_paths": [
+        "sources/warlock_talent_weapon_kills_grant_skill_tier.mtalent",
+        "sources/warlock_talent_weapon_kills_grant_skill_tier_perfect.mtalent",
+        "sources/warlock_talentrule_weapon_kills_grant_skill_tier.mtalentrules",
+        "sources/warlock_talentrule_weapon_kills_grant_skill_tier_overcharge.mtalentrules",
+        "sources/talent.fruit",
+        "docs/R73_SOURCE_REVIEW.md"
+      ],
+      "rationale": "Both talents add one sub-rule to the player, so their 90 s is one cooldown (R72, R73)."
+    },
+    {
+      "document": "simulation.json",
+      "collection": "triggers",
+      "op": "replace",
+      "match": {
+        "talent": "weapon_talent_future_perfection",
+        "key": "future_perfect_overcharge_active"
+      },
+      "before": {
+        "talent": "weapon_talent_future_perfection",
+        "key": "future_perfect_overcharge_active",
+        "on": "kill",
+        "kind": "buff",
+        "duration": 15,
+        "every": 90,
+        "whileStatAtLeast": {
+          "stat": "overcharged_skill_tier",
+          "value": 6
+        }
+      },
+      "after": {
+        "talent": "weapon_talent_future_perfection",
+        "key": "future_perfect_overcharge_active",
+        "on": "kill",
+        "kind": "buff",
+        "duration": 15,
+        "every": 90,
+        "everyGroup": "future_perfect_overcharge",
+        "whileStatAtLeast": {
+          "stat": "overcharged_skill_tier",
+          "value": 6
+        }
+      },
+      "evidence_paths": [
+        "sources/warlock_talent_weapon_kills_grant_skill_tier.mtalent",
+        "sources/warlock_talent_weapon_kills_grant_skill_tier_perfect.mtalent",
+        "sources/warlock_talentrule_weapon_kills_grant_skill_tier.mtalentrules",
+        "sources/warlock_talentrule_weapon_kills_grant_skill_tier_overcharge.mtalentrules",
+        "sources/talent.fruit",
+        "docs/R73_SOURCE_REVIEW.md"
+      ],
+      "rationale": "Both talents add one sub-rule to the player, so their 90 s is one cooldown (R72, R73)."
+    }
+  ],
+  "exclusions": [
+    "How two bonuses on one attribute combine is not established; the two talents are never active together.",
+    "Whether the Overcharge sub-rule stays on the player after a weapon swap is not established."
+  ]
+}

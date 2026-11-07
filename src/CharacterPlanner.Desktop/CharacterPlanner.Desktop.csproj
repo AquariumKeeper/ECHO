@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <!-- The planner's own mark (Assets/application-icon/README.md), for the executable; the window loads the same file. -->
+    <ApplicationIcon>Assets/application.ico</ApplicationIcon>
+    <!-- Precompiled, so a release does not JIT everything at each start. -->
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <!-- Avalonia's XAML compiler writes each view's absolute path into the debug record, past PathMap, so a release of this assembly carries none. -->
+    <DebugType Condition="'$(ReleasePackage)' == 'true'">none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="CharacterPlanner.Desktop.Tests" />
+    <AvaloniaResource Include="Assets/application.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <ProjectReference Include="../CharacterPlanner.Application/CharacterPlanner.Application.csproj" />
+    <ProjectReference Include="../CharacterPlanner.Infrastructure/CharacterPlanner.Infrastructure.csproj" />
+    <!-- Go-era share codes are read for party members and Import only; composition (MainViewModel) wires the reader. -->
+    <ProjectReference Include="../CharacterPlanner.Legacy/CharacterPlanner.Legacy.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- The Division 2 pack ships beside the app (AppPaths.Pack), with its only artwork: ShadeTech's original slot
+         images (MIT). Other art isn't delivered, so the app draws its own symbols (Views/Glyphs). -->
+    <None Include="../../data/packs/division-2/**" LinkBase="packs/division-2" CopyToOutputDirectory="IfDifferent" CopyToPublishDirectory="IfDifferent" />
+  </ItemGroup>
+</Project>

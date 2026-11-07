@@ -1,0 +1,324 @@
+{
+  "args": [
+    "describe"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "describe",
+    "ok": true,
+    "diagnostics": [],
+    "result": {
+      "apiVersion": 1,
+      "version": "0.1.0-beta.6",
+      "usage": [
+        "version",
+        "describe",
+        "catalog list KIND [--query TEXT] [--slot ID] [--hosts ID]",
+        "catalog show KIND ID",
+        "build new [--name NAME] [--output PATH] [--force]",
+        "build inspect|validate|resolve|share|export --input PATH|- [--context PATH]",
+        "build import --share CODE [--output PATH] [--force]",
+        "build apply --input PATH|- --operations PATH [--context PATH] [--output PATH] [--force]",
+        "build compare --left PATH|- --right PATH|- [--context PATH|-]",
+        "build rank --input PATH|- --slot ID --stat ID [--context PATH]",
+        "build simulate --input PATH|- [--duration S] [--iterations N] [--seed N] [--average] [--retarget-delay S]",
+        "[--swap none|empty|kill] [--swap-time S] [--incoming] [--distance M] [--context PATH]",
+        "library list --library PATH",
+        "library load --library PATH --id ID [--output PATH] [--force]",
+        "library save --library PATH --id ID (--input PATH|- | --share CODE) [--replace]",
+        "library delete --library PATH --id ID",
+        "session list [--session-dir PATH]",
+        "session inspect|resolve|history [--session ID] [--session-dir PATH]",
+        "session inspect --wait DURATION [--since-revision N] [--session ID]",
+        "session apply [--session ID] --expected-revision N --operations PATH|-",
+        "session undo|redo [--session ID] --expected-revision N"
+      ],
+      "sessionCommands": [
+        "inspect",
+        "resolve",
+        "apply",
+        "undo",
+        "redo",
+        "history"
+      ],
+      "operations": [
+        {
+          "kind": "equipment",
+          "fields": [
+            "slot",
+            "id"
+          ],
+          "clearable": true,
+          "clearFields": [
+            "slot"
+          ],
+          "description": "Equip item id in equipment slot; fixed choices are filled in."
+        },
+        {
+          "kind": "attribute",
+          "fields": [
+            "slot",
+            "target",
+            "id"
+          ],
+          "optional": [
+            "value"
+          ],
+          "clearable": true,
+          "clearFields": [
+            "slot",
+            "target"
+          ],
+          "description": "Roll attribute id at value in the equipped item's attribute slot target; omit value for the highest legal roll."
+        },
+        {
+          "kind": "mod",
+          "fields": [
+            "slot",
+            "target",
+            "id"
+          ],
+          "clearable": true,
+          "clearFields": [
+            "slot",
+            "target"
+          ],
+          "description": "Select mod id in the equipped item's mod slot target."
+        },
+        {
+          "kind": "mod_roll",
+          "fields": [
+            "slot",
+            "target"
+          ],
+          "optional": [
+            "value"
+          ],
+          "clearable": true,
+          "clearFields": [
+            "slot",
+            "target"
+          ],
+          "description": "Set the selected mod's roll in mod slot target; omit value for the highest legal roll."
+        },
+        {
+          "kind": "talent",
+          "fields": [
+            "slot",
+            "target",
+            "id"
+          ],
+          "clearable": true,
+          "clearFields": [
+            "slot",
+            "target"
+          ],
+          "description": "Select talent id in the equipped item's talent slot target."
+        },
+        {
+          "kind": "active_skill",
+          "fields": [
+            "slot",
+            "id"
+          ],
+          "clearable": true,
+          "clearFields": [
+            "slot"
+          ],
+          "description": "Select active skill id in skill slot."
+        },
+        {
+          "kind": "skill_upgrade",
+          "fields": [
+            "slot",
+            "rank"
+          ],
+          "clearable": true,
+          "clearFields": [
+            "slot"
+          ],
+          "description": "Set the selected skill's Expertise rank."
+        },
+        {
+          "kind": "skill_mod",
+          "fields": [
+            "slot",
+            "target",
+            "id"
+          ],
+          "optional": [
+            "value"
+          ],
+          "clearable": true,
+          "clearFields": [
+            "slot",
+            "target"
+          ],
+          "description": "Select skill mod id rolled at value in the skill's mod slot target; omit value for the highest legal roll."
+        },
+        {
+          "kind": "specialization",
+          "fields": [
+            "id"
+          ],
+          "clearable": true,
+          "description": "Select specialization id."
+        },
+        {
+          "kind": "specialization_node",
+          "fields": [
+            "id",
+            "enabled"
+          ],
+          "clearable": false,
+          "description": "Enable or disable a specialization node."
+        },
+        {
+          "kind": "skill_node",
+          "fields": [
+            "id",
+            "enabled"
+          ],
+          "clearable": false,
+          "description": "Allocate or remove a reference-pack passive node."
+        },
+        {
+          "kind": "scenario",
+          "fields": [
+            "id",
+            "enabled"
+          ],
+          "clearable": false,
+          "description": "Enable or disable a reference-pack scenario."
+        },
+        {
+          "kind": "account_upgrade",
+          "fields": [
+            "id",
+            "rank"
+          ],
+          "clearable": false,
+          "description": "Set an account upgrade (SHD Watch) rank; zero clears."
+        },
+        {
+          "kind": "equipment_upgrade",
+          "fields": [
+            "slot",
+            "id",
+            "rank"
+          ],
+          "clearable": false,
+          "description": "Set the Expertise rank of item id equipped in slot; zero clears."
+        },
+        {
+          "kind": "prototype",
+          "fields": [
+            "slot"
+          ],
+          "optional": [
+            "id",
+            "value"
+          ],
+          "clearable": true,
+          "clearFields": [
+            "slot"
+          ],
+          "description": "Make the item equipped in slot Prototype quality (G392), with augment id at level value (1-10; omit value for 10, omit id for no augment); clear returns it to normal quality. Rolls move into the new range."
+        },
+        {
+          "kind": "allocation",
+          "fields": [
+            "id",
+            "value"
+          ],
+          "clearable": false,
+          "description": "Allocate points to a primary stat."
+        },
+        {
+          "kind": "level",
+          "fields": [
+            "value"
+          ],
+          "clearable": false,
+          "description": "Set the character level."
+        },
+        {
+          "kind": "name",
+          "fields": [
+            "text"
+          ],
+          "clearable": false,
+          "description": "Set the build name."
+        },
+        {
+          "kind": "notes",
+          "fields": [
+            "text"
+          ],
+          "clearable": false,
+          "description": "Set the build notes."
+        },
+        {
+          "kind": "context",
+          "fields": [
+            "id"
+          ],
+          "oneOf": [
+            "value",
+            "text"
+          ],
+          "clearable": true,
+          "clearFields": [
+            "id"
+          ],
+          "description": "Set a view assumption: value for a numeric input, text for a condition; clear restores its default."
+        },
+        {
+          "kind": "party_member",
+          "fields": [
+            "target"
+          ],
+          "optional": [
+            "text",
+            "value"
+          ],
+          "clearable": true,
+          "clearFields": [
+            "target"
+          ],
+          "description": "Add party member target (G395) from share code text, or by hand with giver armor value (default 0); with neither on an existing member, re-read it against the current pack. Value on an existing hand-entered member sets its armor. Clear removes the member. Buffs start off."
+        },
+        {
+          "kind": "party_buff",
+          "fields": [
+            "target",
+            "id",
+            "enabled"
+          ],
+          "clearable": false,
+          "description": "Tick party member target's ally effect id on or off; a hand-entered member gains or loses the effect."
+        }
+      ],
+      "catalogKinds": [
+        "items",
+        "slots",
+        "attributes",
+        "mods",
+        "talents",
+        "skills",
+        "specializations",
+        "upgrades"
+      ],
+      "exitCodes": {
+        "0": "success; warning diagnostics may be present",
+        "2": "invalid command, flags, catalog kind or catalog ID",
+        "3": "invalid pack, build, context, share code or edit operations",
+        "4": "unavailable input or output, failed persistence, or no available session",
+        "5": "internal invariant or serialization failure",
+        "6": "stale live-session revision; the result may include the current snapshot"
+      }
+    }
+  }
+}

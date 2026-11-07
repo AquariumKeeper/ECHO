@@ -1,0 +1,345 @@
+{
+  "args": [
+    "session",
+    "inspect",
+    "--session-dir",
+    "sessions"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "session inspect",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "document": {
+      "schemaVersion": 1,
+      "build": {
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "level": 40,
+        "allocations": {},
+        "equipment": {
+          "backpack": "",
+          "chest": "",
+          "gloves": "",
+          "holster": "",
+          "knees": "",
+          "mask": "",
+          "primary_weapon": "",
+          "secondary_weapon": "",
+          "sidearm": ""
+        },
+        "attributeRolls": {},
+        "modSelections": {},
+        "modRolls": {},
+        "talentSelections": {},
+        "activeSkillSelections": {},
+        "skillUpgrades": {},
+        "skillMods": {},
+        "specializationId": "",
+        "specializationNodeSelections": [],
+        "activeScenarios": {},
+        "allocatedSkills": {},
+        "accountUpgrades": {},
+        "equipmentUpgrades": {},
+        "meta": {
+          "name": "New Build",
+          "notes": ""
+        }
+      }
+    },
+    "context": {
+      "weapon_slot": "primary_weapon"
+    },
+    "revision": 0,
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "code": "active-skill-unconfigured",
+        "message": "Skill 1 has no selected active skill",
+        "subject": "skill_slot_1"
+      },
+      {
+        "severity": "warning",
+        "code": "active-skill-unconfigured",
+        "message": "Skill 2 has no selected active skill",
+        "subject": "skill_slot_2"
+      },
+      {
+        "severity": "warning",
+        "code": "specialization-unconfigured",
+        "message": "No specialization is selected"
+      }
+    ],
+    "result": {
+      "assumptions": [
+        {
+          "id": "enemy_out_of_cover",
+          "kind": "numeric",
+          "name": "Target Out of Cover",
+          "description": "Whether the selected enemy is out of cover, so Damage to Targets Out of Cover applies to weapon damage in the target estimates. Off by default.",
+          "default": 0,
+          "min": 0,
+          "max": 1,
+          "step": 1,
+          "options": [
+            {
+              "value": 0,
+              "label": "In cover or not assumed"
+            },
+            {
+              "value": 1,
+              "label": "Out of cover"
+            }
+          ],
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "practical_hit_rate",
+          "kind": "numeric",
+          "name": "Practical Hit Rate (%)",
+          "description": "Share of shots that hit, for practical weapon DPS. Starts at 70%; an editable reference, not a measured accuracy.",
+          "default": 70,
+          "min": 0,
+          "max": 100,
+          "step": 0.1,
+          "section": "Weapon",
+          "global": true
+        },
+        {
+          "id": "practical_headshot_share",
+          "kind": "numeric",
+          "name": "Headshots among Hits (%)",
+          "description": "Share of the hits that land on the head, for practical weapon DPS. Starts at 25%.",
+          "default": 25,
+          "min": 0,
+          "max": 100,
+          "step": 0.1,
+          "section": "Weapon",
+          "global": true
+        },
+        {
+          "id": "enemy_target",
+          "kind": "numeric",
+          "name": "Enemy Target Profile",
+          "description": "Enemy for target estimates. Profiles group game-file NPC declarations by role, health base and armor base, labelled with the factions that use them most. Named entries are a sample of named bosses, one per main faction, with the mission whose scripts reference them; whether they spawn there with these values, and with which role override, is not established.",
+          "default": 6,
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "options": [
+            {
+              "value": 0,
+              "label": "No target"
+            },
+            {
+              "value": 1,
+              "label": "Normal · 800 health / no armor · Militia, Endgame"
+            },
+            {
+              "value": 2,
+              "label": "Normal · 1,000 health / 1,000 armor · Endgame, Cleaners"
+            },
+            {
+              "value": 3,
+              "label": "Normal · 1,200 health / no armor · Militia, RandomHostile"
+            },
+            {
+              "value": 4,
+              "label": "Veteran · 1,200 health / 1,200 armor · Rikers, Cleaners"
+            },
+            {
+              "value": 5,
+              "label": "Elite · 2,400 health / 1,200 armor · Endgame, Rikers"
+            },
+            {
+              "value": 6,
+              "label": "Elite · 3,600 health / 3,600 armor · Hunters"
+            },
+            {
+              "value": 7,
+              "label": "Named · 800 health / 400 armor · Rikers, Endgame"
+            },
+            {
+              "value": 8,
+              "label": "Named · 800 health / 800 armor · Endgame, Cultists"
+            },
+            {
+              "value": 9,
+              "label": "Named · 1,200 health / 1,200 armor · Endgame, Blackbloc"
+            },
+            {
+              "value": 10,
+              "label": "Named · 1,800 health / 1,800 armor · Militia, Cultists"
+            },
+            {
+              "value": 11,
+              "label": "Named · 2,000 health / 2,300 armor · RogueAgents, RogueAgents-AnimRiker"
+            },
+            {
+              "value": 12,
+              "label": "Named · 2,100 health / 1,200 armor · Cultists, Underground"
+            },
+            {
+              "value": 13,
+              "label": "Named · 2,400 health / 1,200 armor · Endgame, Blackbloc"
+            },
+            {
+              "value": 14,
+              "label": "Named · Aaron Keener · Liberty Island +1"
+            },
+            {
+              "value": 15,
+              "label": "Named · Jasinski · H5 Refinery"
+            },
+            {
+              "value": 16,
+              "label": "Named · Keiko Nakama · Potomac Event Center"
+            },
+            {
+              "value": 17,
+              "label": "Named · Lieutenant Colonel Tom Sergeant · Tidal Basin"
+            },
+            {
+              "value": 18,
+              "label": "Named · Marguerite Steel · Broken Rain"
+            },
+            {
+              "value": 19,
+              "label": "Named · Mayhem · Tidal Basin +1"
+            },
+            {
+              "value": 20,
+              "label": "Named · The Crooked Man · The Georgetown Dead Zone"
+            }
+          ],
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "enemy_difficulty",
+          "kind": "numeric",
+          "name": "Enemy Difficulty",
+          "description": "Mission difficulty for target estimates.",
+          "default": 4,
+          "min": 1,
+          "max": 6,
+          "step": 1,
+          "options": [
+            {
+              "value": 1,
+              "label": "Normal"
+            },
+            {
+              "value": 2,
+              "label": "Hard"
+            },
+            {
+              "value": 3,
+              "label": "Challenging"
+            },
+            {
+              "value": 4,
+              "label": "Heroic"
+            },
+            {
+              "value": 5,
+              "label": "Legendary"
+            },
+            {
+              "value": 6,
+              "label": "Master"
+            }
+          ],
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "enemy_players",
+          "kind": "numeric",
+          "name": "Enemy Group Size",
+          "description": "Number of players the enemy is scaled for.",
+          "default": 1,
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "options": [
+            {
+              "value": 1,
+              "label": "1 player"
+            },
+            {
+              "value": 2,
+              "label": "2 players"
+            },
+            {
+              "value": 3,
+              "label": "3 players"
+            },
+            {
+              "value": 4,
+              "label": "4 players"
+            }
+          ],
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "enemy_hit_rate",
+          "kind": "numeric",
+          "name": "Enemy Hit Rate (%)",
+          "description": "Share of the enemy's shots that hit you, for time to armor break. Starts at a flat 50%; Shade-Tech in-game counts found about 70% within 15 m and 30% beyond for a normal enemy.",
+          "default": 50,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "enemy_attackers",
+          "kind": "numeric",
+          "name": "Enemies Attacking",
+          "description": "Enemies of the selected target firing at you at once.",
+          "default": 1,
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "enemy_firing_share",
+          "kind": "numeric",
+          "name": "Enemy Firing Time (%)",
+          "description": "Share of the time the enemy spends firing. Enemies fire in bursts, move and reload, with pauses that the game data does not yet describe; testers judge they fire under half the time, so it starts at 50% (G428). 100% is continuous fire.",
+          "default": 50,
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "section": "Enemy target",
+          "global": true
+        },
+        {
+          "id": "weapon_slot",
+          "kind": "condition",
+          "value": "primary_weapon",
+          "values": [
+            "primary_weapon",
+            "secondary_weapon",
+            "sidearm"
+          ],
+          "section": "Talents and gear"
+        }
+      ],
+      "canRedo": false,
+      "canUndo": false,
+      "sessionId": "00000000000000000000000000000000"
+    }
+  }
+}

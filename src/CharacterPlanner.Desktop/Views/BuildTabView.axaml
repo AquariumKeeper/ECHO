@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+             xmlns:views="using:CharacterPlanner.Desktop.Views"
+             x:Class="CharacterPlanner.Desktop.Views.BuildTabView" x:DataType="vm:EditorViewModel">
+  <!-- The Go app's Build tab: the summary, the loadout tiles (or the item picker docked over them) and the inspector. -->
+  <Grid ColumnDefinitions="340,*,380" ColumnSpacing="12">
+    <views:SummaryView />
+    <Panel Grid.Column="1">
+      <views:LoadoutView />
+      <views:ItemPickerView />
+    </Panel>
+    <views:InspectorView Grid.Column="2" />
+  </Grid>
+</UserControl>

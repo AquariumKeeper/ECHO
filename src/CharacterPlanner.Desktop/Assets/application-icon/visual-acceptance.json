@@ -1,0 +1,62 @@
+{
+  "format": "shade-tech.application-icon-visual-acceptance",
+  "version": 1,
+  "date": "2026-10-30",
+  "reviewer": "Project owner via chat",
+  "user_reply": "looks good",
+  "target": "character-planner",
+  "status": "accepted",
+  "scope": "Presented orange-and-charcoal stacked-card application mark and its supplied PNG master/ICO derivatives",
+  "export": {
+    "path": "exports/v1/export.json",
+    "sha256": "6443bbd90352b6d50be952e8bbe79ba738a18320589d5b379215c5d048fb1c06"
+  },
+  "record_sha256": "35726b4096788f46c33329b36126b12214d84f95b1644f619a68d236e733eb17",
+  "images": [
+    {
+      "path": "exports/v1/master.png",
+      "sha256": "a8b1de38347bba41ee24e91acb6c679db32d6b45a46ce713a0a21f7d9b74ff2f",
+      "bytes": 7680
+    },
+    {
+      "path": "exports/v1/application.ico",
+      "sha256": "6e040e548e6de7c9fe4924c0b17f49f1fa731f8f2082e5a31c43d11afe1d57b7",
+      "bytes": 7353
+    },
+    {
+      "path": "exports/v1/previews/icon-16.png",
+      "sha256": "5388b12217216c4b78fc0cfd926ea9a8daea3f349122439ab7c9d1140a0df505",
+      "bytes": 592
+    },
+    {
+      "path": "exports/v1/previews/icon-24.png",
+      "sha256": "14b3bf252643be2fa79bed1440d01fd5bec75e00f57d325b844d61d7d7f0f166",
+      "bytes": 833
+    },
+    {
+      "path": "exports/v1/previews/icon-32.png",
+      "sha256": "60c7e3768878fcc35bbf37a4837eadf8f5f51a1e23f875230cfa999cb3b6515c",
+      "bytes": 887
+    },
+    {
+      "path": "exports/v1/previews/icon-48.png",
+      "sha256": "9d56560a9e59eae8597490d4d9d0349b4be4db6aa642c099edab7e146e333646",
+      "bytes": 1225
+    },
+    {
+      "path": "exports/v1/previews/icon-64.png",
+      "sha256": "a441e70b4c466853daac99552b6d07261210377b1d1a839302ac1376c8ff2cff",
+      "bytes": 1243
+    },
+    {
+      "path": "exports/v1/previews/icon-256.png",
+      "sha256": "cde7806f7da6bbb1312d878697d9e3a6b64b8189453730356b51da5a809d32e9",
+      "bytes": 2471
+    }
+  ],
+  "notes": [
+    "Captured production record and technical receipts retain their historical pending review status; this receipt records the later owner decision."
+  ],
+  "planner_integrated": false,
+  "consumer_adopted": false
+}

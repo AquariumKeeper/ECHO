@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 2,
+  "id": "division_2",
+  "name": "The Division 2",
+  "version": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+  "gameVersion": "Year 8 Season 3 · Title Update Y8S3.2 (PvE)",
+  "description": "Plan a level-40 PvE build for The Division 2. Configure gear, weapons, skills, specialization, SHD Watch and item Expertise to preview armor, health, weapon damage, DPS, skill damage and recovery estimates. Modeled permanent bonuses apply automatically; use Assumptions for conditional effects. Assumptions are view settings and are not saved or shared. Estimates use community references and need live-game verification. Some talents and skill outputs remain unmodeled; combat events, ammunition, Overcharge and PvP normalization are not simulated.",
+  "capabilities": [
+    "weapons",
+    "prototype",
+    "skill-mods",
+    "party",
+    "talent-copy",
+    "simulation"
+  ],
+  "files": {
+    "presentation.json": {
+      "sha256": "991df35e5b67bd75a2c6a03cc5ed68e65f3c69a05951c075f594ca2750a6d418",
+      "bytes": 563020
+    },
+    "provenance.md": {
+      "sha256": "16ec3af99f33d15f887c390bbe351ac57890ef595b41791ef600fa3abfb485c6",
+      "bytes": 143395
+    },
+    "rules.json": {
+      "sha256": "1f9bd0f78b35e67290ecaa00e57ffdd1efcf525397d62bbbbbaa72e288a19cda",
+      "bytes": 2210850
+    },
+    "share-codes.json": {
+      "sha256": "7ad28718e2f57edbee9512fcbe778df324b3a931ccccf976efaeeb7fa02c4087",
+      "bytes": 209
+    },
+    "simulation.json": {
+      "sha256": "67433e1207d7ea7725d9c11098a85de00adb89121ae1e149c900fe8e6c59965d",
+      "bytes": 24494
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "version":1,
+  "defaults":{"equipment":{"main":"weapon"},"accountUpgrades":{"watch":10},"equipmentUpgrades":{"main":{"itemId":"weapon","rank":2}}},
+  "cases":[
+    {"id":"capped-account-and-item","context":{"weapon_slot":"main"}},
+    {"id":"account-at-cap","accountUpgrades":{"watch":4},"context":{"weapon_slot":"main"}},
+    {"id":"account-below-cap","accountUpgrades":{"watch":2},"context":{"weapon_slot":"main"}},
+    {"id":"zero-account-rank","accountUpgrades":{"bonus":0},"context":{"weapon_slot":"main"}},
+    {"id":"account-increased-bonus","accountUpgrades":{"bonus":2},"context":{"weapon_slot":"main"}},
+    {"id":"negative-account-rank","accountUpgrades":{"watch":-1},"context":{"weapon_slot":"main"}},
+    {"id":"excess-account-rank","accountUpgrades":{"watch":11},"context":{"weapon_slot":"main"}},
+    {"id":"unknown-account-ids","accountUpgrades":{"z_missing":0,"a_missing":2},"context":{"weapon_slot":"main"}},
+    {"id":"zero-item-rank","equipmentUpgrades":{"main":{"itemId":"weapon","rank":0}},"context":{"weapon_slot":"main"}},
+    {"id":"max-item-rank","equipmentUpgrades":{"main":{"itemId":"weapon","rank":3}},"context":{"weapon_slot":"main"}},
+    {"id":"negative-item-rank","equipmentUpgrades":{"main":{"itemId":"weapon","rank":-1}},"context":{"weapon_slot":"main"}},
+    {"id":"excess-item-rank","equipmentUpgrades":{"main":{"itemId":"weapon","rank":4}},"context":{"weapon_slot":"main"}},
+    {"id":"stale-item-binding","equipmentUpgrades":{"main":{"itemId":"shield","rank":2}},"context":{"weapon_slot":"main"}},
+    {"id":"empty-item-binding","equipment":{},"context":{"weapon_slot":"main"}},
+    {"id":"unknown-slot","equipmentUpgrades":{"z_missing":{"itemId":"weapon","rank":0},"a_missing":{"itemId":"weapon","rank":2}},"context":{"weapon_slot":"main"}},
+    {"id":"unknown-bound-item","equipment":{"main":"missing"},"equipmentUpgrades":{"main":{"itemId":"missing","rank":2}},"context":{"weapon_slot":"main"}},
+    {"id":"wrong-primary-slot","equipment":{"main":"shield"},"equipmentUpgrades":{"main":{"itemId":"shield","rank":2}},"context":{"weapon_slot":"main"}},
+    {"id":"no-upgrade-definition","equipment":{"off":"shield"},"equipmentUpgrades":{"off":{"itemId":"shield","rank":2}},"context":{"weapon_slot":"off"}},
+    {"id":"inactive-item","equipment":{"main":"blocked"},"equipmentUpgrades":{"main":{"itemId":"blocked","rank":2}},"context":{"weapon_slot":"main"}},
+    {"id":"inactive-invalid-rank","equipment":{"main":"blocked"},"equipmentUpgrades":{"main":{"itemId":"blocked","rank":4}},"context":{"weapon_slot":"main"}},
+    {"id":"gated-item","context":{"weapon_slot":"off"}}
+  ]
+}

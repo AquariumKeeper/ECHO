@@ -1,0 +1,24 @@
+{
+  "args": [
+    "build",
+    "import",
+    "--share",
+    "not-a-share-code"
+  ],
+  "stdin": null,
+  "exitCode": 3,
+  "response": {
+    "apiVersion": 1,
+    "command": "build import",
+    "ok": false,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "error": {
+      "code": "invalid-build",
+      "message": "flate: corrupt input before offset 1"
+    }
+  }
+}

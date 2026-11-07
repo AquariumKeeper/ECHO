@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><IsPackable>false</IsPackable><IsTestProject>true</IsTestProject></PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+    <ProjectReference Include="../../src/CharacterPlanner.Legacy/CharacterPlanner.Legacy.csproj" />
+    <Using Include="Xunit" />
+    <None Include="../../data/packs/*.json;../../data/packs/*.md" Link="packs/%(Filename)%(Extension)" CopyToOutputDirectory="IfDifferent" />
+    <None Include="../../data/packs/division-2/*" Link="packs/division-2/%(Filename)%(Extension)" CopyToOutputDirectory="IfDifferent" />
+    <None Include="../../baseline/manifest.json" Link="pack-validation/manifest.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/resolution/*.json" Link="resolution/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/equipment-resolution/*.json" Link="equipment-resolution/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/upgrade-resolution/*.json" Link="upgrade-resolution/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/prototype-resolution/*.json" Link="prototype-resolution/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/talent-copy-resolution/*.json" Link="talent-copy-resolution/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/specialization-resolution/*.json" Link="specialization-resolution/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/active-skill-resolution/*.json" Link="active-skill-resolution/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/skill-mod-resolution/*.json" Link="skill-mod-resolution/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/build-output-resolution/*.json" Link="build-output-resolution/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/party-resolution/*.json" Link="party-resolution/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/document-json/*.json" Link="document-json/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/fixtures/**" LinkBase="baseline-fixtures" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/share-encoding/*.json" Link="share-encoding/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/fixtures/errors/invalid-share-code.json" Link="share-encoding/invalid-share-code.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/fixtures/builds/**/resolve*.json" Link="c0-builds/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/fixtures/builds/**/document.json" Link="c0-builds/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../baseline/fixtures/contexts/context.json" Link="c0-builds/context.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../data/references/division-2-v1-conversion/*" Link="packs/conversion-reference/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

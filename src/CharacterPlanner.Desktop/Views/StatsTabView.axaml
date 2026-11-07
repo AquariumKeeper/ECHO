@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+             x:Class="CharacterPlanner.Desktop.Views.StatsTabView" x:DataType="vm:EditorViewModel">
+  <!-- The Stats tab (F37), as the Go app's stats page: the filter and the applicability check over the summary's
+       groups and Other stats, full names, gold values and each row's breakdown; no wider than 760 and centred. -->
+  <DockPanel Name="StatsPage" MaxWidth="760" DataContext="{Binding Stats}" x:DataType="vm:StatsPageViewModel">
+    <StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,0,6">
+      <TextBox Name="StatsFilterBox" Text="{Binding Filter}" PlaceholderText="{x:Static vm:StatsPageViewModel.FilterPlaceholder}"
+               AutomationProperties.Name="{x:Static vm:StatsPageViewModel.FilterPlaceholder}" />
+      <CheckBox Name="StatsApplicableCheck" IsChecked="{Binding OnlyApplicable}" Content="{x:Static vm:StatsPageViewModel.ApplicableLabel}" />
+      <Separator />
+    </StackPanel>
+    <ScrollViewer Name="StatsPanel">
+      <StackPanel Margin="0,0,12,0">
+        <TextBlock Name="StatsEmptyText" Text="{x:Static vm:StatsPageViewModel.NoMatch}" IsVisible="{Binding IsEmpty}" />
+        <ItemsControl ItemsSource="{Binding Groups}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:StatsPageGroupViewModel">
+              <StackPanel Margin="0,0,0,6" IsVisible="{Binding HasVisible}">
+                <Border Classes="sectionbar">
+                  <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                </Border>
+                <ItemsControl ItemsSource="{Binding Rows}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:StatsPageRowViewModel">
+                      <Panel IsVisible="{Binding IsShown}">
+                        <Grid ColumnDefinitions="*,Auto,Auto" Margin="4,1,0,1" DataContext="{Binding Row}" x:DataType="vm:StatRowViewModel">
+                          <TextBlock Text="{Binding Name}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                          <TextBlock Grid.Column="1" Text="{Binding Value}" Classes="value" VerticalAlignment="Center" Margin="8,0,0,0" />
+                          <ContentControl Grid.Column="2" Content="{Binding}" ContentTemplate="{StaticResource StatInfo}" />
+                        </Grid>
+                      </Panel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

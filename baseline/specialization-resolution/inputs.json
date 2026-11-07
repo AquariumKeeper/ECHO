@@ -1,0 +1,24 @@
+{
+  "version":1,
+  "defaults":{"equipment":{"main":"weapon"},"allocatedSkills":{"passive":{}},"specializationId":"tree"},
+  "cases":[
+    {"id":"base-specialization"},
+    {"id":"unconfigured-specialization","specializationId":""},
+    {"id":"nodes-without-specialization","specializationId":"","specializationNodeSelections":["root"]},
+    {"id":"unknown-specialization","specializationId":"missing","specializationNodeSelections":["missing_node"]},
+    {"id":"root-node","specializationNodeSelections":["root"]},
+    {"id":"root-and-child","specializationNodeSelections":["root","child"]},
+    {"id":"child-without-root","specializationNodeSelections":["child"]},
+    {"id":"grandchild-without-prerequisites","specializationNodeSelections":["grandchild"]},
+    {"id":"transitive-missing-root","specializationNodeSelections":["grandchild","child"]},
+    {"id":"all-active-overspent","specializationNodeSelections":["root","child","grandchild"]},
+    {"id":"free-node-no-tier-gate","specializationNodeSelections":["free"]},
+    {"id":"free-with-other-nodes","specializationNodeSelections":["free","root","child"]},
+    {"id":"duplicate-known-nodes","specializationNodeSelections":["root","root","child","child"]},
+    {"id":"unknown-nodes-sorted","specializationNodeSelections":["z_missing","root","a_missing","a_missing"]},
+    {"id":"other-specialization","specializationId":"other_tree"},
+    {"id":"nodes-from-other-tree","specializationId":"other_tree","specializationNodeSelections":["root","child"]},
+    {"id":"formula-assumption","specializationNodeSelections":["root","child"],"context":{"stacks":"5"}},
+    {"id":"earlier-diagnostics-first","activeScenarios":{"missing":{}},"specializationNodeSelections":["z_missing","child"]}
+  ]
+}

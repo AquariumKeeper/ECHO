@@ -1,0 +1,2251 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "inputsSha256": "9260b8ef9da6d523b617a36fc7ab2226e3252cf235672af026de7460867695ae",
+    "packSha256": "82159c8eade4da76c9356721b2729f28053dcb6267236cdeb7bc254165814238",
+    "args": [
+      "--json",
+      "--pack",
+      "pack.json",
+      "build",
+      "resolve",
+      "--input",
+      "-",
+      "--context",
+      "context.json"
+    ],
+    "inputEncoding": "utf-8"
+  },
+  "cases": [
+    {
+      "id": "combined-inputs",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": 0.2
+                },
+                "b": {
+                  "modId": "damage_mod_b",
+                  "value": 0.3
+                },
+                "c": {
+                  "modId": "shield_mod",
+                  "value": 4
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "skill_mod_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "modded",
+              "two": "other"
+            },
+            "skillUpgrades": {},
+            "skillMods": {
+              "one": {
+                "skillId": "modded",
+                "mods": {
+                  "a": {
+                    "modId": "damage_mod",
+                    "value": 0.2
+                  },
+                  "b": {
+                    "modId": "damage_mod_b",
+                    "value": 0.3
+                  },
+                  "c": {
+                    "modId": "shield_mod",
+                    "value": 4
+                  }
+                }
+              }
+            },
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "modded",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 150,
+                  "formula": "damage * (1 + skill_mod_damage) * (1 + skill_upgrade_rank * 0.1)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0.5,
+                    "skill_upgrade_rank": 0
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "id": "shield",
+                  "name": "Shield",
+                  "format": "decimal",
+                  "value": 4,
+                  "formula": "skill_mod_shield",
+                  "inputs": {
+                    "skill_mod_shield": 4
+                  },
+                  "kind": "shield"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 100,
+                  "formula": "damage * (1 + skill_mod_damage)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0
+                  },
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "names": {
+            "damage_mod": "Damage mod",
+            "damage_mod_b": "Damage mod B",
+            "modded": "Modded",
+            "other": "Other",
+            "shield_mod": "Shield mod"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "grade-and-mods",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "modded",
+              "rank": 2
+            }
+          },
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": 0.2
+                },
+                "b": {
+                  "modId": "damage_mod_b",
+                  "value": 0.3
+                },
+                "c": {
+                  "modId": "shield_mod",
+                  "value": 4
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "skill_mod_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "modded",
+              "two": "other"
+            },
+            "skillUpgrades": {
+              "one": {
+                "skillId": "modded",
+                "rank": 2
+              }
+            },
+            "skillMods": {
+              "one": {
+                "skillId": "modded",
+                "mods": {
+                  "a": {
+                    "modId": "damage_mod",
+                    "value": 0.2
+                  },
+                  "b": {
+                    "modId": "damage_mod_b",
+                    "value": 0.3
+                  },
+                  "c": {
+                    "modId": "shield_mod",
+                    "value": 4
+                  }
+                }
+              }
+            },
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "modded",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 180,
+                  "formula": "damage * (1 + skill_mod_damage) * (1 + skill_upgrade_rank * 0.1)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0.5,
+                    "skill_upgrade_rank": 2
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "id": "shield",
+                  "name": "Shield",
+                  "format": "decimal",
+                  "value": 4,
+                  "formula": "skill_mod_shield",
+                  "inputs": {
+                    "skill_mod_shield": 4
+                  },
+                  "kind": "shield"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 100,
+                  "formula": "damage * (1 + skill_mod_damage)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0
+                  },
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "names": {
+            "damage_mod": "Damage mod",
+            "damage_mod_b": "Damage mod B",
+            "modded": "Modded",
+            "other": "Other",
+            "shield_mod": "Shield mod"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "no-mods",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "skill_mod_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "modded",
+              "two": "other"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "modded",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 100,
+                  "formula": "damage * (1 + skill_mod_damage) * (1 + skill_upgrade_rank * 0.1)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0,
+                    "skill_upgrade_rank": 0
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "id": "shield",
+                  "name": "Shield",
+                  "format": "decimal",
+                  "value": 0,
+                  "formula": "skill_mod_shield",
+                  "inputs": {
+                    "skill_mod_shield": 0
+                  },
+                  "kind": "shield"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 100,
+                  "formula": "damage * (1 + skill_mod_damage)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0
+                  },
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "names": {
+            "modded": "Modded",
+            "other": "Other"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "empty-mod-selection",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {}
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "skill_mod_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "modded",
+              "two": "other"
+            },
+            "skillUpgrades": {},
+            "skillMods": {
+              "one": {
+                "skillId": "modded",
+                "mods": {}
+              }
+            },
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "modded",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 100,
+                  "formula": "damage * (1 + skill_mod_damage) * (1 + skill_upgrade_rank * 0.1)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0,
+                    "skill_upgrade_rank": 0
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "id": "shield",
+                  "name": "Shield",
+                  "format": "decimal",
+                  "value": 0,
+                  "formula": "skill_mod_shield",
+                  "inputs": {
+                    "skill_mod_shield": 0
+                  },
+                  "kind": "shield"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 100,
+                  "formula": "damage * (1 + skill_mod_damage)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0
+                  },
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "names": {
+            "modded": "Modded",
+            "other": "Other"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "zero-roll",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": 0
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "skill_mod_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "modded",
+              "two": "other"
+            },
+            "skillUpgrades": {},
+            "skillMods": {
+              "one": {
+                "skillId": "modded",
+                "mods": {
+                  "a": {
+                    "modId": "damage_mod",
+                    "value": 0
+                  }
+                }
+              }
+            },
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "modded",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 100,
+                  "formula": "damage * (1 + skill_mod_damage) * (1 + skill_upgrade_rank * 0.1)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0,
+                    "skill_upgrade_rank": 0
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "id": "shield",
+                  "name": "Shield",
+                  "format": "decimal",
+                  "value": 0,
+                  "formula": "skill_mod_shield",
+                  "inputs": {
+                    "skill_mod_shield": 0
+                  },
+                  "kind": "shield"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 100,
+                  "formula": "damage * (1 + skill_mod_damage)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0
+                  },
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "names": {
+            "damage_mod": "Damage mod",
+            "modded": "Modded",
+            "other": "Other"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "maximum-roll",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": 1
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "skill_mod_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "modded",
+              "two": "other"
+            },
+            "skillUpgrades": {},
+            "skillMods": {
+              "one": {
+                "skillId": "modded",
+                "mods": {
+                  "a": {
+                    "modId": "damage_mod",
+                    "value": 1
+                  }
+                }
+              }
+            },
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "modded",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 200,
+                  "formula": "damage * (1 + skill_mod_damage) * (1 + skill_upgrade_rank * 0.1)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 1,
+                    "skill_upgrade_rank": 0
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "id": "shield",
+                  "name": "Shield",
+                  "format": "decimal",
+                  "value": 0,
+                  "formula": "skill_mod_shield",
+                  "inputs": {
+                    "skill_mod_shield": 0
+                  },
+                  "kind": "shield"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 100,
+                  "formula": "damage * (1 + skill_mod_damage)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0
+                  },
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "names": {
+            "damage_mod": "Damage mod",
+            "modded": "Modded",
+            "other": "Other"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "stale-variant",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "other",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": 0.2
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mods require an accepted matching variant with supported mod slots",
+            "subject": "one"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-mod-slot",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "z": {
+                  "modId": "damage_mod",
+                  "value": 0.2
+                },
+                "a_unknown": {
+                  "modId": "damage_mod",
+                  "value": 0.2
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mod requires a compatible choice and a finite in-range, on-step roll",
+            "subject": "one.a_unknown"
+          },
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mod requires a compatible choice and a finite in-range, on-step roll",
+            "subject": "one.z"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "incompatible-choice",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod_b",
+                  "value": 0.2
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mod requires a compatible choice and a finite in-range, on-step roll",
+            "subject": "one.a"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-choice",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "missing",
+                  "value": 0.2
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mod requires a compatible choice and a finite in-range, on-step roll",
+            "subject": "one.a"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "negative-roll",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": -0.1
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mod requires a compatible choice and a finite in-range, on-step roll",
+            "subject": "one.a"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "excess-roll",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": 1.1
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mod requires a compatible choice and a finite in-range, on-step roll",
+            "subject": "one.a"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "off-step-roll",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": 0.25
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mod requires a compatible choice and a finite in-range, on-step roll",
+            "subject": "one.a"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unsupported-skill",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "plain",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "plain",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": 0.2
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mods require an accepted matching variant with supported mod slots",
+            "subject": "one"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-loadout-slots",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "z": {
+              "skillId": "modded",
+              "mods": {}
+            },
+            "a": {
+              "skillId": "modded",
+              "mods": {}
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mods require an accepted matching variant with supported mod slots",
+            "subject": "a"
+          },
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mods require an accepted matching variant with supported mod slots",
+            "subject": "z"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "rejected-family",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "modded"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "two": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": 0.2
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "duplicate-active-skill-family",
+            "message": "Modded can't be equipped alongside Modded: both are turret variants",
+            "subject": "two"
+          },
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mods require an accepted matching variant with supported mod slots",
+            "subject": "two"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "grade-errors-before-mod-errors",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "modded",
+              "rank": 4
+            }
+          },
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": 1.1
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-upgrade",
+            "message": "Skill upgrade in \"one\" requires an accepted matching skill and a supported integer rank",
+            "subject": "one"
+          },
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Skill mod requires a compatible choice and a finite in-range, on-step roll",
+            "subject": "one.a"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "per-skill-input-isolation",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "modded",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "modded",
+              "mods": {
+                "a": {
+                  "modId": "damage_mod",
+                  "value": 0.2
+                }
+              }
+            },
+            "two": {
+              "skillId": "other",
+              "mods": {
+                "a": {
+                  "modId": "other_mod",
+                  "value": 0.7
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "skill_mod_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "modded",
+              "two": "other"
+            },
+            "skillUpgrades": {},
+            "skillMods": {
+              "one": {
+                "skillId": "modded",
+                "mods": {
+                  "a": {
+                    "modId": "damage_mod",
+                    "value": 0.2
+                  }
+                }
+              },
+              "two": {
+                "skillId": "other",
+                "mods": {
+                  "a": {
+                    "modId": "other_mod",
+                    "value": 0.7
+                  }
+                }
+              }
+            },
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "modded",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 120,
+                  "formula": "damage * (1 + skill_mod_damage) * (1 + skill_upgrade_rank * 0.1)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0.2,
+                    "skill_upgrade_rank": 0
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "id": "shield",
+                  "name": "Shield",
+                  "format": "decimal",
+                  "value": 0,
+                  "formula": "skill_mod_shield",
+                  "inputs": {
+                    "skill_mod_shield": 0
+                  },
+                  "kind": "shield"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 170,
+                  "formula": "damage * (1 + skill_mod_damage)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0.7
+                  },
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "names": {
+            "damage_mod": "Damage mod",
+            "modded": "Modded",
+            "other": "Other",
+            "other_mod": "Other mod"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "overflow-withholds-input",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "overflow",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "overflow",
+              "mods": {
+                "a": {
+                  "modId": "large",
+                  "value": 1e+308
+                },
+                "b": {
+                  "modId": "large",
+                  "value": 1e+308
+                },
+                "c": {
+                  "modId": "large",
+                  "value": -1e+308
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "invalid-skill-mod",
+            "message": "Combined skill mod input is non-finite; the entire input is withheld",
+            "subject": "one.b"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "large-finite-input",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "skill_mod_contract",
+          "packVersion": "1",
+          "level": 5,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "overflow",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "overflow",
+              "mods": {
+                "a": {
+                  "modId": "large",
+                  "value": 1e+308
+                }
+              }
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "skill_mod_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "skill_mod_contract",
+            "packVersion": "1",
+            "level": 5,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "overflow",
+              "two": "other"
+            },
+            "skillUpgrades": {},
+            "skillMods": {
+              "one": {
+                "skillId": "overflow",
+                "mods": {
+                  "a": {
+                    "modId": "large",
+                    "value": 1e+308
+                  }
+                }
+              }
+            },
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "overflow",
+              "outputs": [
+                {
+                  "id": "value",
+                  "name": "Value",
+                  "format": "decimal",
+                  "value": 1e+308,
+                  "formula": "skill_mod_damage",
+                  "inputs": {
+                    "skill_mod_damage": 1e+308
+                  }
+                }
+              ]
+            },
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 100,
+                  "formula": "damage * (1 + skill_mod_damage)",
+                  "inputs": {
+                    "damage": 100,
+                    "skill_mod_damage": 0
+                  },
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "names": {
+            "large": "Large",
+            "other": "Other",
+            "overflow": "Overflow"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- Precompiled, so a release does not JIT everything at each start. -->
+    <PublishReadyToRun>true</PublishReadyToRun>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../CharacterPlanner.Application/CharacterPlanner.Application.csproj" />
+    <ProjectReference Include="../CharacterPlanner.Infrastructure/CharacterPlanner.Infrastructure.csproj" />
+    <ProjectReference Include="../CharacterPlanner.Legacy/CharacterPlanner.Legacy.csproj" />
+    <InternalsVisibleTo Include="CharacterPlanner.Cli.Tests" />
+  </ItemGroup>
+</Project>

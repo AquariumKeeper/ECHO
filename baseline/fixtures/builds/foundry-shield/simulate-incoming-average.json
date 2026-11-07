@@ -1,0 +1,445 @@
+{
+  "args": [
+    "build",
+    "simulate",
+    "--input",
+    "foundry-shield.json",
+    "--incoming",
+    "--average"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "build simulate",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "document": {
+      "schemaVersion": 1,
+      "build": {
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "level": 40,
+        "allocations": {},
+        "equipment": {
+          "backpack": "backpack_foundry_bulwark_backpack",
+          "chest": "chest_foundry_bulwark_chest",
+          "gloves": "gloves_foundry_bulwark_gloves",
+          "holster": "holster_foundry_bulwark_holster",
+          "knees": "knees_fox_s_prayer",
+          "mask": "mask_catharsis",
+          "primary_weapon": "primary_weapon_fafnir",
+          "secondary_weapon": "secondary_weapon_ekim_s_long_stick",
+          "sidearm": "sidearm_backup_boomstick"
+        },
+        "attributeRolls": {
+          "backpack": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "chest": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "gloves": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "holster": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "knees": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "dtoc_foxs_prayer",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "mask": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "incoming_repairs_gear_minor",
+              "value": 0.2
+            },
+            "minor_2": {
+              "attributeId": "armor_regeneration_gear_minor",
+              "value": 4925
+            }
+          },
+          "primary_weapon": {
+            "core_1": {
+              "attributeId": "shotgun_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "damage_to_armor_weapon_core",
+              "value": 0.12
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          },
+          "secondary_weapon": {
+            "core_1": {
+              "attributeId": "marksman_rifle_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "headshot_damage_weapon_core",
+              "value": 1.11
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          },
+          "sidearm": {
+            "core_1": {
+              "attributeId": "shotgun_damage_backup_boomstick",
+              "value": 0.17
+            },
+            "core_2": {
+              "attributeId": "damage_to_armor_weapon_core",
+              "value": 0.12
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          }
+        },
+        "modSelections": {
+          "backpack": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "chest": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "mask": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "primary_weapon": {
+            "magazine": "weapon_mod_magazine_fafnir_magazine",
+            "optics": "weapon_mod_optics_fafnir_optics",
+            "underbarrel": "weapon_mod_underbarrel_fafnir_underbarrel"
+          },
+          "secondary_weapon": {
+            "magazine": "weapon_mod_magazine_underbalanced_integrated_spring",
+            "muzzle": "weapon_mod_muzzle_large_suppressor_7_62",
+            "optics": "weapon_mod_optics_acog_scope_4x"
+          }
+        },
+        "modRolls": {
+          "backpack": {
+            "mod_1": 0.06
+          },
+          "chest": {
+            "mod_1": 0.06
+          },
+          "mask": {
+            "mod_1": 0.06
+          }
+        },
+        "talentSelections": {
+          "backpack": {
+            "talent": "gear_talent_process_refinery"
+          },
+          "chest": {
+            "talent": "gear_talent_improved_materials"
+          },
+          "mask": {
+            "talent": "gear_talent_vicious_cycle"
+          },
+          "primary_weapon": {
+            "talent": "weapon_talent_dragon_s_breath"
+          },
+          "secondary_weapon": {
+            "talent": "weapon_talent_perfect_ranger"
+          },
+          "sidearm": {
+            "talent": "weapon_talent_brazen"
+          }
+        },
+        "activeSkillSelections": {
+          "skill_slot_1": "skill_striker_shield",
+          "skill_slot_2": "skill_assault_turret"
+        },
+        "skillUpgrades": {},
+        "skillMods": {
+          "skill_slot_2": {
+            "skillId": "skill_assault_turret",
+            "mods": {
+              "firing_mechanism": {
+                "modId": "magnetic_rail",
+                "value": 0.05
+              },
+              "housing": {
+                "modId": "ammo_box",
+                "value": 0.1
+              },
+              "targeting": {
+                "modId": "multi_tool",
+                "value": 0.075
+              }
+            }
+          }
+        },
+        "specializationId": "firewall",
+        "specializationNodeSelections": [
+          "firewall_depleted_rounds_tier_1",
+          "firewall_e_m_i_tier_1",
+          "firewall_this_is_my_rifle_tier_1"
+        ],
+        "activeScenarios": {},
+        "allocatedSkills": {},
+        "accountUpgrades": {},
+        "equipmentUpgrades": {},
+        "meta": {
+          "name": "foundry-shield",
+          "notes": ""
+        }
+      }
+    },
+    "context": {
+      "weapon_slot": "primary_weapon"
+    },
+    "diagnostics": [],
+    "result": {
+      "mode": "average",
+      "iterations": 1,
+      "duration": 60,
+      "retargetDelay": 1,
+      "target": true,
+      "dps": {
+        "mean": 723593.3302375637,
+        "stdDev": 0,
+        "min": 723593.3302375637,
+        "p5": 723593.3302375637,
+        "p50": 723593.3302375637,
+        "p95": 723593.3302375637,
+        "max": 723593.3302375637
+      },
+      "weaponDps": {
+        "mean": 632234.2885708971,
+        "stdDev": 0,
+        "min": 632234.2885708971,
+        "p5": 632234.2885708971,
+        "p50": 632234.2885708971,
+        "p95": 632234.2885708971,
+        "max": 632234.2885708971
+      },
+      "skillDps": {
+        "mean": 91359.04166666667,
+        "stdDev": 0,
+        "min": 91359.04166666667,
+        "p5": 91359.04166666667,
+        "p50": 91359.04166666667,
+        "p95": 91359.04166666667,
+        "max": 91359.04166666667
+      },
+      "kills": {
+        "mean": 1,
+        "stdDev": 0,
+        "min": 1,
+        "p5": 1,
+        "p50": 1,
+        "p95": 1,
+        "max": 1
+      },
+      "timeToKill": {
+        "mean": 40.016,
+        "stdDev": 0,
+        "min": 40.016,
+        "p5": 40.016,
+        "p50": 40.016,
+        "p95": 40.016,
+        "max": 40.016
+      },
+      "shotsFired": 50,
+      "reloads": 5,
+      "incoming": {
+        "timeToArmorBreak": {
+          "mean": 0,
+          "stdDev": 0,
+          "min": 0,
+          "p5": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0
+        },
+        "armorBreaks": 0,
+        "downed": 0,
+        "timeToDown": {
+          "mean": 0,
+          "stdDev": 0,
+          "min": 0,
+          "p5": 0,
+          "p50": 0,
+          "p95": 0,
+          "max": 0
+        },
+        "damageTaken": 0,
+        "repaired": 0,
+        "shieldAbsorbed": 11577654,
+        "expectedTimeToArmorBreak": 9.547601851742224
+      },
+      "swaps": 0,
+      "timeline": [
+        1602816.0919499998,
+        856813.8231999999,
+        922462.0228499998,
+        976174.1861999999,
+        1602816.0919499998,
+        856813.8231999999,
+        922462.0228499998,
+        976174.1861999998,
+        92907.5,
+        92907.5,
+        92907.5,
+        92907.5,
+        803101.6598499998,
+        1656528.2552999998,
+        922462.0228499998,
+        976174.1861999998,
+        803101.6598499998,
+        1686368.3460499998,
+        892621.9321,
+        976174.1861999998,
+        92907.5,
+        92907.5,
+        92907.5,
+        92907.5,
+        803101.6598499998,
+        922462.0228499998,
+        1627560.7105924268,
+        841438.59,
+        669478.7449999999,
+        795919.8074999999,
+        1443298.0474999999,
+        841438.5899999999,
+        92907.5,
+        92907.5,
+        92907.5,
+        92907.5,
+        694766.9574999999,
+        795919.8074999999,
+        714997.5275,
+        795919.8074999999,
+        189578.95581140078,
+        1609429.3076999998,
+        826973.7324499999,
+        922462.0228499998,
+        976174.1861999998,
+        92907.5,
+        92907.5,
+        92907.5,
+        92907.5,
+        803101.6598499998,
+        1686368.3460499998,
+        922462.0228499998,
+        976174.1861999999,
+        773261.5690999998,
+        1686368.3460499998,
+        922462.0228499998,
+        976174.1861999998,
+        92907.5,
+        92907.5,
+        92907.5
+      ],
+      "triggers": [
+        {
+          "key": "brazen_next_shot_active",
+          "kind": "pellets",
+          "talents": [
+            "weapon_talent_brazen"
+          ],
+          "mean": 0,
+          "unit": "share",
+          "triggered": 0
+        },
+        {
+          "key": "brazen_previous_shot_pellets",
+          "kind": "pellets",
+          "talents": [
+            "weapon_talent_brazen"
+          ],
+          "mean": 0,
+          "unit": "pellets",
+          "triggered": 0
+        },
+        {
+          "key": "vicious_cycle_stacks",
+          "kind": "stacks",
+          "talents": [
+            "gear_talent_vicious_cycle"
+          ],
+          "mean": 0,
+          "unit": "stacks",
+          "triggered": 0
+        }
+      ],
+      "skills": [
+        {
+          "slot": "skill_slot_1",
+          "skill": "skill_striker_shield",
+          "perUse": false,
+          "uses": 0,
+          "dps": 0
+        },
+        {
+          "slot": "skill_slot_2",
+          "skill": "skill_assault_turret",
+          "perUse": true,
+          "uses": 1,
+          "dps": 91359.04166666667
+        }
+      ],
+      "states": 1,
+      "expected": {
+        "practicalReloadCycleDps": 551592.9532268578,
+        "skillDps": 82277.35125858124,
+        "buildDps": 633870.3044854391,
+        "practicalShotsToKill": 39.07362738038331
+      }
+    }
+  }
+}

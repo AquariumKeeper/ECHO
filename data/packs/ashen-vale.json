@@ -1,0 +1,428 @@
+{
+  "id": "ashen_vale",
+  "name": "Ashen Vale",
+  "schemaVersion": 1,
+  "version": "0.1.0",
+  "description": "An original ARPG-flavoured system used as the reference pack. Exercises every engine feature: curve-based soft caps, multi-level derived stats, two-handed weapons, conditional modifiers, and set bonuses.",
+
+  "scenarios": [
+    { "id": "buffed", "name": "Buffed", "tag": "buffed" },
+    { "id": "vs_boss", "name": "Against a Boss", "tag": "vs_boss" }
+  ],
+
+  "theme": { "primary": "#b5652d", "background": "#1b1712" },
+
+  "layout": {
+    "slotGroups": [
+      { "name": "Weapons", "slots": ["mainhand", "offhand"], "compareStats": ["dps", "attack_power", "spell_power"] },
+      { "name": "Armor", "slots": ["head", "chest", "hands", "legs"], "columns": 2, "compareStats": ["ehp", "armor", "equip_load"] },
+      { "name": "Accessories", "slots": ["amulet", "ring"], "compareStats": ["hp", "attack_power", "crit_chance"] }
+    ],
+    "summary": [
+      { "name": "Offense", "stats": ["dps", "attack_power", "spell_power", "crit_chance", "crit_damage"] },
+      { "name": "Defense", "stats": ["hp", "ehp", "armor", "physical_resist", "magic_resist"] },
+      { "name": "Load", "stats": ["stamina", "equip_load"] }
+    ]
+  },
+
+  "progression": {
+    "startingLevel": 1,
+    "maxLevel": 60,
+    "pointsPerLevel": 3,
+    "startingPoints": 0
+  },
+
+  "stats": [
+    { "id": "vigor", "name": "Vigor", "kind": "primary", "base": 10, "min": 8, "max": 99, "description": "Raises health." },
+    { "id": "endurance", "name": "Endurance", "kind": "primary", "base": 10, "min": 8, "max": 99, "description": "Raises stamina and equip load." },
+    { "id": "strength", "name": "Strength", "kind": "primary", "base": 10, "min": 8, "max": 99, "description": "Scales heavy weapons." },
+    { "id": "dexterity", "name": "Dexterity", "kind": "primary", "base": 10, "min": 8, "max": 99, "description": "Scales fast weapons and critical chance." },
+    { "id": "intellect", "name": "Intellect", "kind": "primary", "base": 10, "min": 8, "max": 99, "description": "Scales sorceries." },
+    { "id": "faith", "name": "Faith", "kind": "primary", "base": 10, "min": 8, "max": 99, "description": "Scales incantations." },
+
+    {
+      "id": "hp",
+      "name": "Health",
+      "shortName": "HP",
+      "kind": "derived",
+      "formula": "curve('hp_from_vigor', vigor) + endurance * 3",
+      "format": "integer",
+      "min": 1
+    },
+    {
+      "id": "stamina",
+      "name": "Stamina",
+      "kind": "derived",
+      "formula": "curve('stamina_from_endurance', endurance)",
+      "format": "integer",
+      "min": 0
+    },
+    {
+      "id": "equip_load",
+      "name": "Equip Load",
+      "shortName": "Load",
+      "kind": "derived",
+      "formula": "40 + strength * 1.5 + endurance * 2",
+      "format": "decimal",
+      "min": 0
+    },
+    {
+      "id": "attack_power",
+      "name": "Attack Power",
+      "shortName": "ATK",
+      "kind": "derived",
+      "formula": "curve('attack_from_strength', strength) + curve('attack_from_dexterity', dexterity)",
+      "format": "integer",
+      "min": 0
+    },
+    {
+      "id": "spell_power",
+      "name": "Spell Power",
+      "shortName": "SPL",
+      "kind": "derived",
+      "formula": "curve('spell_from_intellect', intellect) + curve('spell_from_faith', faith)",
+      "format": "integer",
+      "min": 0
+    },
+    {
+      "id": "armor",
+      "name": "Armor",
+      "shortName": "Armor",
+      "kind": "derived",
+      "formula": "0",
+      "format": "integer",
+      "min": 0
+    },
+    {
+      "id": "crit_chance",
+      "name": "Critical Chance",
+      "shortName": "Crit",
+      "kind": "derived",
+      "formula": "0.05 + dexterity * 0.002",
+      "format": "percent",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "crit_damage",
+      "name": "Critical Damage",
+      "kind": "derived",
+      "formula": "1.5",
+      "format": "decimal",
+      "min": 1
+    },
+    {
+      "id": "physical_resist",
+      "name": "Physical Resistance",
+      "kind": "derived",
+      "formula": "clamp(armor / (armor + 600), 0, 0.75)",
+      "format": "percent",
+      "min": 0,
+      "max": 0.75
+    },
+    {
+      "id": "magic_resist",
+      "name": "Magic Resistance",
+      "kind": "derived",
+      "formula": "0",
+      "format": "percent",
+      "min": 0,
+      "max": 0.75
+    },
+    {
+      "id": "ehp",
+      "name": "Effective Health",
+      "shortName": "EHP",
+      "kind": "derived",
+      "formula": "hp / (1 - physical_resist)",
+      "format": "integer",
+      "min": 1,
+      "description": "Health scaled by physical mitigation."
+    },
+    {
+      "id": "dps",
+      "name": "Damage per Second",
+      "shortName": "DPS",
+      "kind": "derived",
+      "formula": "attack_power * (1 + crit_chance * (crit_damage - 1))",
+      "format": "decimal",
+      "min": 0
+    }
+  ],
+
+  "curves": {
+    "hp_from_vigor": [[8, 300], [20, 600], [30, 850], [40, 1050], [60, 1200], [99, 1300]],
+    "stamina_from_endurance": [[8, 80], [20, 110], [30, 135], [40, 150], [60, 160], [99, 170]],
+    "attack_from_strength": [[8, 20], [20, 60], [40, 110], [60, 135], [99, 150]],
+    "attack_from_dexterity": [[8, 18], [20, 55], [40, 100], [60, 125], [99, 140]],
+    "spell_from_intellect": [[8, 15], [20, 55], [40, 105], [60, 130], [99, 145]],
+    "spell_from_faith": [[8, 15], [20, 55], [40, 105], [60, 130], [99, 145]]
+  },
+
+  "slots": [
+    { "id": "head", "name": "Head", "accepts": ["helm"] },
+    { "id": "chest", "name": "Chest", "accepts": ["body"] },
+    { "id": "hands", "name": "Hands", "accepts": ["gloves"] },
+    { "id": "legs", "name": "Legs", "accepts": ["greaves"] },
+    { "id": "mainhand", "name": "Main Hand", "accepts": ["weapon", "catalyst"] },
+    { "id": "offhand", "name": "Off Hand", "accepts": ["weapon", "shield", "catalyst"] },
+    { "id": "amulet", "name": "Amulet", "accepts": ["amulet"] },
+    { "id": "ring", "name": "Ring", "accepts": ["ring"] }
+  ],
+
+  "items": [
+    { "id": "leather_hood", "name": "Leather Hood", "tier": 1, "tags": ["helm", "light_armor"], "occupies": ["head"],
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 8 }] },
+    { "id": "iron_helm", "name": "Iron Helm", "tier": 1, "tags": ["helm"], "occupies": ["head"],
+      "requirements": { "strength": 12 },
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 18 }] },
+    { "id": "ashen_helm", "name": "Ashen Helm", "tier": 2, "tags": ["helm"], "occupies": ["head"],
+      "requirements": { "strength": 16 },
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 26 }] },
+    { "id": "scholars_circlet", "name": "Scholar's Circlet", "tier": 2, "tags": ["helm", "light_armor"], "occupies": ["head"],
+      "requirements": { "intellect": 18 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 10 },
+        { "stat": "spell_power", "op": "flat", "value": 15 }
+      ] },
+    { "id": "wyrmscale_helm", "name": "Wyrmscale Helm", "tier": 3, "tags": ["helm"], "occupies": ["head"],
+      "requirements": { "strength": 22 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 34 },
+        { "stat": "magic_resist", "op": "flat", "value": 0.04 }
+      ] },
+    { "id": "bloodwrought_crown", "name": "Bloodwrought Crown", "tier": 3, "tags": ["helm"], "occupies": ["head"],
+      "requirements": { "dexterity": 24 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 20 },
+        { "stat": "crit_chance", "op": "flat", "value": 0.04 }
+      ] },
+
+    { "id": "padded_tunic", "name": "Padded Tunic", "tier": 1, "tags": ["body", "light_armor"], "occupies": ["chest"],
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 14 }] },
+    { "id": "iron_cuirass", "name": "Iron Cuirass", "tier": 1, "tags": ["body"], "occupies": ["chest"],
+      "requirements": { "strength": 16 },
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 38 }] },
+    { "id": "ashen_plate", "name": "Ashen Plate", "tier": 2, "tags": ["body"], "occupies": ["chest"],
+      "requirements": { "strength": 22 },
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 52 }] },
+    { "id": "scholars_robe", "name": "Scholar's Robe", "tier": 2, "tags": ["body", "light_armor"], "occupies": ["chest"],
+      "requirements": { "intellect": 20 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 16 },
+        { "stat": "spell_power", "op": "flat", "value": 25 }
+      ] },
+    { "id": "wyrmscale_hauberk", "name": "Wyrmscale Hauberk", "tier": 3, "tags": ["body"], "occupies": ["chest"],
+      "requirements": { "strength": 28 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 66 },
+        { "stat": "magic_resist", "op": "flat", "value": 0.06 }
+      ] },
+    { "id": "bloodwrought_mail", "name": "Bloodwrought Mail", "tier": 3, "tags": ["body"], "occupies": ["chest"],
+      "requirements": { "dexterity": 26 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 44 },
+        { "stat": "crit_damage", "op": "flat", "value": 0.15 }
+      ] },
+
+    { "id": "leather_gloves", "name": "Leather Gloves", "tier": 1, "tags": ["gloves", "light_armor"], "occupies": ["hands"],
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 6 }] },
+    { "id": "iron_gauntlets", "name": "Iron Gauntlets", "tier": 1, "tags": ["gloves"], "occupies": ["hands"],
+      "requirements": { "strength": 12 },
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 15 }] },
+    { "id": "ashen_gauntlets", "name": "Ashen Gauntlets", "tier": 2, "tags": ["gloves"], "occupies": ["hands"],
+      "requirements": { "strength": 18 },
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 22 }] },
+    { "id": "scholars_gloves", "name": "Scholar's Gloves", "tier": 2, "tags": ["gloves", "light_armor"], "occupies": ["hands"],
+      "requirements": { "intellect": 16 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 7 },
+        { "stat": "spell_power", "op": "flat", "value": 12 }
+      ] },
+    { "id": "wyrmscale_gauntlets", "name": "Wyrmscale Gauntlets", "tier": 3, "tags": ["gloves"], "occupies": ["hands"],
+      "requirements": { "strength": 24 },
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 29 }] },
+    { "id": "bloodwrought_grips", "name": "Bloodwrought Grips", "tier": 3, "tags": ["gloves"], "occupies": ["hands"],
+      "requirements": { "dexterity": 22 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 18 },
+        { "stat": "crit_chance", "op": "flat", "value": 0.03 }
+      ] },
+
+    { "id": "leather_leggings", "name": "Leather Leggings", "tier": 1, "tags": ["greaves", "light_armor"], "occupies": ["legs"],
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 10 }] },
+    { "id": "iron_greaves", "name": "Iron Greaves", "tier": 1, "tags": ["greaves"], "occupies": ["legs"],
+      "requirements": { "strength": 14 },
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 24 }] },
+    { "id": "ashen_greaves", "name": "Ashen Greaves", "tier": 2, "tags": ["greaves"], "occupies": ["legs"],
+      "requirements": { "strength": 20 },
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 34 }] },
+    { "id": "scholars_trousers", "name": "Scholar's Trousers", "tier": 2, "tags": ["greaves", "light_armor"], "occupies": ["legs"],
+      "requirements": { "intellect": 16 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 11 },
+        { "stat": "spell_power", "op": "flat", "value": 14 }
+      ] },
+    { "id": "wyrmscale_greaves", "name": "Wyrmscale Greaves", "tier": 3, "tags": ["greaves"], "occupies": ["legs"],
+      "requirements": { "strength": 26 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 44 },
+        { "stat": "magic_resist", "op": "flat", "value": 0.03 }
+      ] },
+    { "id": "bloodwrought_legguards", "name": "Bloodwrought Legguards", "tier": 3, "tags": ["greaves"], "occupies": ["legs"],
+      "requirements": { "dexterity": 24 },
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 28 }] },
+
+    { "id": "iron_sword", "name": "Iron Sword", "tier": 1, "tags": ["weapon", "sword"], "occupies": ["mainhand"],
+      "requirements": { "strength": 12, "dexterity": 10 },
+      "modifiers": [{ "stat": "attack_power", "op": "flat", "value": "20 + strength * 0.4" }] },
+    { "id": "iron_dagger", "name": "Iron Dagger", "tier": 1, "tags": ["weapon", "dagger"], "occupies": ["mainhand"],
+      "requirements": { "dexterity": 12 },
+      "modifiers": [
+        { "stat": "attack_power", "op": "flat", "value": "12 + dexterity * 0.5" },
+        { "stat": "crit_chance", "op": "flat", "value": 0.05 }
+      ] },
+    { "id": "ashen_blade", "name": "Ashen Blade", "tier": 2, "tags": ["weapon", "sword"], "occupies": ["mainhand"],
+      "requirements": { "strength": 22, "dexterity": 14 },
+      "description": "Cuts faster in the hands of the lightly armoured.",
+      "modifiers": [
+        { "stat": "attack_power", "op": "flat", "value": "45 + strength * 0.8" },
+        { "stat": "crit_chance", "op": "inc", "value": 0.15, "when": "has_tag('light_armor')" }
+      ] },
+    { "id": "greataxe", "name": "Greataxe", "tier": 2, "tags": ["weapon", "axe", "two_handed"], "occupies": ["mainhand", "offhand"],
+      "requirements": { "strength": 30 },
+      "modifiers": [{ "stat": "attack_power", "op": "flat", "value": "70 + strength * 1.2" }] },
+    { "id": "wyrmslayer_greatsword", "name": "Wyrmslayer Greatsword", "tier": 3, "tags": ["weapon", "greatsword", "two_handed"], "occupies": ["mainhand", "offhand"],
+      "requirements": { "strength": 34, "dexterity": 16 },
+      "modifiers": [{ "stat": "attack_power", "op": "flat", "value": "95 + strength * 1.4" }] },
+    { "id": "viper_fang", "name": "Viper Fang", "tier": 3, "tags": ["weapon", "dagger"], "occupies": ["mainhand"],
+      "requirements": { "dexterity": 30 },
+      "modifiers": [
+        { "stat": "attack_power", "op": "flat", "value": "30 + dexterity * 0.9" },
+        { "stat": "crit_chance", "op": "flat", "value": 0.08 },
+        { "stat": "crit_damage", "op": "flat", "value": 0.2 }
+      ] },
+    { "id": "emberwood_staff", "name": "Emberwood Staff", "tier": 2, "tags": ["catalyst"], "occupies": ["mainhand"],
+      "requirements": { "intellect": 22 },
+      "modifiers": [{ "stat": "spell_power", "op": "flat", "value": "40 + intellect * 0.9" }] },
+    { "id": "sanctified_mace", "name": "Sanctified Mace", "tier": 2, "tags": ["weapon", "mace"], "occupies": ["mainhand"],
+      "requirements": { "strength": 18, "faith": 18 },
+      "modifiers": [
+        { "stat": "attack_power", "op": "flat", "value": "38 + strength * 0.5" },
+        { "stat": "spell_power", "op": "flat", "value": "20 + faith * 0.6" }
+      ] },
+    { "id": "duskfang", "name": "Duskfang", "tier": 3, "tags": ["weapon", "sword"], "occupies": ["mainhand"],
+      "requirements": { "dexterity": 28 },
+      "modifiers": [{ "stat": "attack_power", "op": "flat", "value": "60 + dexterity * 1.0" }] },
+    { "id": "ashen_cleaver", "name": "Ashen Cleaver", "tier": 3, "tags": ["weapon", "axe"], "occupies": ["mainhand"],
+      "requirements": { "strength": 26 },
+      "modifiers": [{ "stat": "attack_power", "op": "flat", "value": "55 + strength * 1.0" }] },
+
+    { "id": "wooden_buckler", "name": "Wooden Buckler", "tier": 1, "tags": ["shield"], "occupies": ["offhand"],
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 10 },
+        { "stat": "physical_resist", "op": "flat", "value": 0.02 }
+      ] },
+    { "id": "iron_kiteshield", "name": "Iron Kiteshield", "tier": 2, "tags": ["shield"], "occupies": ["offhand"],
+      "requirements": { "strength": 18 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 28 },
+        { "stat": "physical_resist", "op": "flat", "value": 0.05 }
+      ] },
+    { "id": "wyrmscale_bulwark", "name": "Wyrmscale Bulwark", "tier": 3, "tags": ["shield"], "occupies": ["offhand"],
+      "requirements": { "strength": 28 },
+      "modifiers": [
+        { "stat": "armor", "op": "flat", "value": 42 },
+        { "stat": "physical_resist", "op": "flat", "value": 0.07 },
+        { "stat": "magic_resist", "op": "flat", "value": 0.05 }
+      ] },
+    { "id": "warding_talisman", "name": "Warding Talisman", "tier": 2, "tags": ["catalyst"], "occupies": ["offhand"],
+      "requirements": { "faith": 18 },
+      "modifiers": [
+        { "stat": "spell_power", "op": "flat", "value": "25 + faith * 0.5" },
+        { "stat": "magic_resist", "op": "flat", "value": 0.04 }
+      ] },
+    { "id": "parrying_blade", "name": "Parrying Blade", "tier": 2, "tags": ["weapon", "sword"], "occupies": ["offhand"],
+      "requirements": { "dexterity": 16 },
+      "modifiers": [{ "stat": "attack_power", "op": "flat", "value": "22 + dexterity * 0.3" }] },
+    { "id": "scholars_tome", "name": "Scholar's Tome", "tier": 3, "tags": ["catalyst"], "occupies": ["offhand"],
+      "requirements": { "intellect": 28 },
+      "modifiers": [{ "stat": "spell_power", "op": "flat", "value": "50 + intellect * 0.7" }] },
+
+    { "id": "copper_pendant", "name": "Copper Pendant", "tier": 1, "tags": ["amulet"], "occupies": ["amulet"],
+      "modifiers": [{ "stat": "hp", "op": "flat", "value": 40 }] },
+    { "id": "bear_charm", "name": "Bear Charm", "tier": 1, "tags": ["amulet"], "occupies": ["amulet"],
+      "modifiers": [
+        { "stat": "hp", "op": "inc", "value": 0.05 },
+        { "stat": "hp", "op": "flat", "value": 25, "when": "has_tag('buffed')" }
+      ] },
+    { "id": "hawkeye_amulet", "name": "Hawkeye Amulet", "tier": 2, "tags": ["amulet"], "occupies": ["amulet"],
+      "modifiers": [{ "stat": "crit_chance", "op": "flat", "value": 0.05 }] },
+    { "id": "wardstone_pendant", "name": "Wardstone Pendant", "tier": 2, "tags": ["amulet"], "occupies": ["amulet"],
+      "modifiers": [{ "stat": "magic_resist", "op": "flat", "value": 0.06 }] },
+    { "id": "berserkers_torc", "name": "Berserker's Torc", "tier": 3, "tags": ["amulet"], "occupies": ["amulet"],
+      "description": "Power bought with blood.",
+      "modifiers": [
+        { "stat": "attack_power", "op": "inc", "value": 0.1 },
+        { "stat": "hp", "op": "inc", "value": -0.1 }
+      ] },
+    { "id": "archmage_locket", "name": "Archmage Locket", "tier": 3, "tags": ["amulet"], "occupies": ["amulet"],
+      "requirements": { "intellect": 30 },
+      "modifiers": [{ "stat": "spell_power", "op": "inc", "value": 0.15 }] },
+
+    { "id": "iron_band", "name": "Iron Band", "tier": 1, "tags": ["ring"], "occupies": ["ring"],
+      "modifiers": [{ "stat": "armor", "op": "flat", "value": 6 }] },
+    { "id": "ring_of_vigor", "name": "Ring of Vigor", "tier": 1, "tags": ["ring"], "occupies": ["ring"],
+      "modifiers": [{ "stat": "hp", "op": "flat", "value": 60 }] },
+    { "id": "ring_of_precision", "name": "Ring of Precision", "tier": 2, "tags": ["ring"], "occupies": ["ring"],
+      "modifiers": [{ "stat": "crit_chance", "op": "flat", "value": 0.04 }] },
+    { "id": "ring_of_savagery", "name": "Ring of Savagery", "tier": 2, "tags": ["ring"], "occupies": ["ring"],
+      "modifiers": [{ "stat": "crit_damage", "op": "flat", "value": 0.25 }] },
+    { "id": "ring_of_the_wyrm", "name": "Ring of the Wyrm", "tier": 3, "tags": ["ring"], "occupies": ["ring"],
+      "modifiers": [
+        { "stat": "magic_resist", "op": "flat", "value": 0.05 },
+        { "stat": "hp", "op": "flat", "value": 80 }
+      ] },
+    { "id": "bloodwrought_signet", "name": "Bloodwrought Signet", "tier": 3, "tags": ["ring"], "occupies": ["ring"],
+      "modifiers": [
+        { "stat": "attack_power", "op": "inc", "value": 0.08 },
+        { "stat": "crit_chance", "op": "flat", "value": 0.02 }
+      ] }
+  ],
+
+  "sets": [
+    {
+      "id": "ashwalker",
+      "name": "Ashwalker Regalia",
+      "items": ["ashen_helm", "ashen_plate", "ashen_gauntlets", "ashen_greaves"],
+      "bonuses": [
+        { "pieces": 2, "modifiers": [{ "stat": "armor", "op": "inc", "value": 0.1 }] },
+        { "pieces": 4, "modifiers": [
+          { "stat": "attack_power", "op": "inc", "value": 0.12 },
+          { "stat": "stamina", "op": "flat", "value": 20 }
+        ] }
+      ]
+    },
+    {
+      "id": "bloodwrought",
+      "name": "Bloodwrought Panoply",
+      "items": ["bloodwrought_crown", "bloodwrought_mail", "bloodwrought_grips", "bloodwrought_legguards", "bloodwrought_signet"],
+      "bonuses": [
+        { "pieces": 2, "modifiers": [{ "stat": "crit_chance", "op": "flat", "value": 0.05 }] },
+        { "pieces": 4, "modifiers": [{ "stat": "crit_damage", "op": "flat", "value": 0.3 }] }
+      ]
+    },
+    {
+      "id": "wyrmscale",
+      "name": "Wyrmscale Ward",
+      "items": ["wyrmscale_helm", "wyrmscale_hauberk", "wyrmscale_gauntlets", "wyrmscale_greaves", "wyrmscale_bulwark"],
+      "bonuses": [
+        { "pieces": 2, "modifiers": [{ "stat": "magic_resist", "op": "flat", "value": 0.05 }] },
+        { "pieces": 4, "modifiers": [
+          { "stat": "physical_resist", "op": "flat", "value": 0.05 },
+          { "stat": "hp", "op": "inc", "value": 0.1 }
+        ] }
+      ]
+    }
+  ]
+}

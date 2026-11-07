@@ -1,0 +1,19 @@
+{
+  "version":1,
+  "cases":[
+    {"id":"one-active","party":[{"name":"Ally","effects":[{"id":"alpha","values":{"damage":10,"armor":5},"active":true}]}]},
+    {"id":"inactive","party":[{"name":"Ally","effects":[{"id":"alpha","values":{"damage":10,"armor":5},"active":false}]}]},
+    {"id":"unknown-effect","party":[{"name":"Ally","effects":[{"id":"missing","values":{"damage":10},"active":true}]}]},
+    {"id":"strongest-total","party":[{"name":"First","effects":[{"id":"alpha","values":{"damage":10,"armor":1},"active":true}]},{"name":"Second","effects":[{"id":"beta","values":{"damage":9,"armor":9},"active":true}]}]},
+    {"id":"earliest-tie","party":[{"name":"Zulu","effects":[{"id":"alpha","values":{"damage":10,"armor":1},"active":true}]},{"name":"Alpha","effects":[{"id":"beta","values":{"damage":5,"armor":6},"active":true}]}]},
+    {"id":"stack-order","party":[{"name":"Ally","effects":[{"id":"delta","values":{"damage":7},"active":true},{"id":"gamma","values":{"damage":5},"active":true},{"id":"alpha","values":{"damage":10},"active":true}]}]},
+    {"id":"unknown-stat-ignored","party":[{"name":"First","effects":[{"id":"alpha","values":{"damage":1,"unknown":1000000},"active":true}]},{"name":"Second","effects":[{"id":"beta","values":{"damage":2},"active":true}]}]},
+    {"id":"missing-saved-stat","party":[{"name":"Ally","effects":[{"id":"alpha","values":{"damage":10},"active":true}]}]},
+    {"id":"empty-beats-negative","party":[{"name":"First","effects":[{"id":"alpha","values":{"damage":-10},"active":true}]},{"name":"Second","effects":[{"id":"beta","values":{},"active":true}]}]},
+    {"id":"strongest-negative","party":[{"name":"First","effects":[{"id":"alpha","values":{"damage":-5},"active":true}]},{"name":"Second","effects":[{"id":"beta","values":{"damage":-10},"active":true}]}]},
+    {"id":"same-effect-across-members","party":[{"name":"First","effects":[{"id":"alpha","values":{"damage":10},"active":true}]},{"name":"Second","effects":[{"id":"alpha","values":{"damage":10},"active":true}]}]},
+    {"id":"saved-values-not-reevaluated","party":[{"name":"Manual ally","armor":999999,"effects":[{"id":"alpha","values":{"damage":0,"armor":1},"active":true}]}]},
+    {"id":"empty-party","party":[]},
+    {"id":"party-before-own-talent","equipment":{"chest":"giver_gear"},"talentSelections":{"chest":{"talent":"grant"}},"party":[{"name":"Ally","effects":[{"id":"alpha","values":{"damage":10,"armor":5},"active":true}]}]}
+  ]
+}

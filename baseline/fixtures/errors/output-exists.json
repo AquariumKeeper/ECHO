@@ -1,0 +1,79 @@
+{
+  "args": [
+    "build",
+    "new",
+    "--output",
+    "striker-rifle.json"
+  ],
+  "stdin": null,
+  "exitCode": 4,
+  "response": {
+    "apiVersion": 1,
+    "command": "build new",
+    "ok": false,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "document": {
+      "schemaVersion": 1,
+      "build": {
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "level": 40,
+        "allocations": {},
+        "equipment": {
+          "backpack": "",
+          "chest": "",
+          "gloves": "",
+          "holster": "",
+          "knees": "",
+          "mask": "",
+          "primary_weapon": "",
+          "secondary_weapon": "",
+          "sidearm": ""
+        },
+        "attributeRolls": {},
+        "modSelections": {},
+        "modRolls": {},
+        "talentSelections": {},
+        "activeSkillSelections": {},
+        "skillUpgrades": {},
+        "skillMods": {},
+        "specializationId": "",
+        "specializationNodeSelections": [],
+        "activeScenarios": {},
+        "allocatedSkills": {},
+        "accountUpgrades": {},
+        "equipmentUpgrades": {},
+        "meta": {
+          "name": "New Build",
+          "notes": ""
+        }
+      }
+    },
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "code": "active-skill-unconfigured",
+        "message": "Skill 1 has no selected active skill",
+        "subject": "skill_slot_1"
+      },
+      {
+        "severity": "warning",
+        "code": "active-skill-unconfigured",
+        "message": "Skill 2 has no selected active skill",
+        "subject": "skill_slot_2"
+      },
+      {
+        "severity": "warning",
+        "code": "specialization-unconfigured",
+        "message": "No specialization is selected"
+      }
+    ],
+    "error": {
+      "code": "output-unavailable",
+      "message": "Cannot create a file when that file already exists."
+    }
+  }
+}

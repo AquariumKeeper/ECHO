@@ -1,0 +1,4293 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "inputsSha256": "bb09f54edc216e63a1ac70eec2c9d3cc9dff59c7983aa02ba584e41bc86b0aef",
+    "packSha256": "89d1e999d245da5a560607946a3e505a368a79b6768afa1cdc5efd14be2f5358",
+    "args": [
+      "--json",
+      "--pack",
+      "pack.json",
+      "build",
+      "resolve",
+      "--input",
+      "-",
+      "--context",
+      "context.json"
+    ],
+    "inputEncoding": "utf-8"
+  },
+  "cases": [
+    {
+      "id": "copy-holstered-source",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "target_weapon",
+              "off": "source_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 135,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 135,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent (Abridged)"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            },
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "source_weapon",
+                  "name": "Source weapon",
+                  "slot": "off"
+                },
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "set": "Set",
+            "source": "Source talent",
+            "source_weapon": "Source weapon",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "source-selected-target-gated",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "off",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "target_weapon",
+              "off": "source_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "off"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 126,
+            "other": 11,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 126,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 11,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 11
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            },
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "off",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "source_weapon",
+                  "name": "Source weapon",
+                  "slot": "off"
+                },
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "set": "Set",
+            "source": "Source talent",
+            "source_weapon": "Source weapon",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 127,
+              "other": 0
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "copier-gated",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "off",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "target_weapon",
+              "off": "source_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "off",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 129,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 129,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            },
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "off",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "source_weapon",
+                  "name": "Source weapon",
+                  "slot": "off"
+                },
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "set": "Set",
+            "source": "Source talent",
+            "source_weapon": "Source weapon",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "different-weapon-type",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "shotgun",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "target_weapon",
+              "off": "shotgun"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 130,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 130,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            },
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "shotgun",
+                  "name": "Shotgun",
+                  "slot": "off"
+                },
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "set": "Set",
+            "shotgun": "Shotgun",
+            "source": "Source talent",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "excluded-source-tag",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "exotic_source",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "target_weapon",
+              "off": "exotic_source"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 130,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 130,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            },
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "exotic_source",
+                  "name": "Exotic source",
+                  "slot": "off"
+                },
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "exotic_source": "Exotic source",
+            "set": "Set",
+            "source": "Source talent",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "excluded-target-tag",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "exotic_target",
+            "off": "source_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "exotic_target",
+              "off": "source_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 110,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 110,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            },
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "exotic_target",
+                  "name": "Exotic target",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "source_weapon",
+                  "name": "Source weapon",
+                  "slot": "off"
+                },
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "exotic_target": "Exotic target",
+            "source": "Source talent",
+            "source_weapon": "Source weapon",
+            "target": "Target talent"
+          },
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 107
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "excluded-talent",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "excluded"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "target_weapon",
+              "off": "source_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "excluded"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 103,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 103,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "source_weapon",
+                  "name": "Source weapon",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "excluded": "Excluded talent",
+            "source_weapon": "Source weapon",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 100
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "missing-source",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "target_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 103,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 103,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "source": "Source talent",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 100
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "missing-target",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "off": "source_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "off": "source_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 108,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 108,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            },
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "source_weapon",
+                  "name": "Source weapon",
+                  "slot": "off"
+                },
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "source": "Source talent",
+            "source_weapon": "Source weapon",
+            "target": "Target talent"
+          },
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 107
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "missing-copier",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "target_weapon",
+              "off": "source_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 129,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 129,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "source_weapon",
+                  "name": "Source weapon",
+                  "slot": "off"
+                },
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copy": "Abridged",
+            "set": "Set",
+            "source": "Source talent",
+            "source_weapon": "Source weapon",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "inactive-source",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "inactive_source",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unmet-requirement",
+            "message": "Inactive source requires power 10/20",
+            "subject": "off"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "inactive-copier",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon",
+            "chest": "inactive_copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unmet-requirement",
+            "message": "Inactive copier requires power 10/20",
+            "subject": "chest"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unconfigured-source-talent",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "target_weapon",
+              "off": "source_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "talent-unconfigured",
+            "message": "Talent on Source weapon has no selected talent",
+            "subject": "off",
+            "target": "talent"
+          }
+        ],
+        "result": {
+          "stats": {
+            "damage": 103,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 103,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "source_weapon",
+                  "name": "Source weapon",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "source_weapon": "Source weapon",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 100
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "unknown-source-talent",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "missing"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-talent",
+            "message": "Unknown talent \"missing\"",
+            "subject": "off",
+            "target": "talent"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "forbidden-source-talent",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "forbidden"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "talent-not-allowed",
+            "message": "Forbidden talent is not allowed in Talent",
+            "subject": "off",
+            "target": "talent"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "copying-copy-is-single-pass",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "copy"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "target_weapon",
+              "off": "source_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "copy"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 104,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 104,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged (Abridged)"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "source_weapon",
+                  "name": "Source weapon",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "source_weapon": "Source weapon",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 100
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "two-copiers",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon",
+            "chest": "copier",
+            "head": "second_copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            },
+            "head": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "head": "second_copier",
+              "main": "target_weapon",
+              "off": "source_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "head": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 141,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 141,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent (Abridged)"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent (Abridged)"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            },
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "source_weapon",
+                  "name": "Source weapon",
+                  "slot": "off"
+                },
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "second_copier": "Second copier",
+            "set": "Set",
+            "source": "Source talent",
+            "source_weapon": "Source weapon",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 128
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "two-source-talents",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "dual_source",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source",
+              "extra": "other_source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "2"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "target_weapon",
+              "off": "dual_source"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "extra": "other_source",
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "2",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 139,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 139,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent (Abridged)"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "other_source",
+                    "name": "Other source talent (Abridged)"
+                  },
+                  "op": "flat",
+                  "value": 4
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "2",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            },
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "dual_source",
+                  "name": "Dual source",
+                  "slot": "off"
+                },
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "dual_source": "Dual source",
+            "other_source": "Other source talent",
+            "set": "Set",
+            "source": "Source talent",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "formula-assumption",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "talent_copy_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "target_weapon",
+            "off": "source_weapon",
+            "chest": "copier"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "main": {
+              "talent": "target"
+            },
+            "off": {
+              "talent": "source"
+            },
+            "chest": {
+              "talent": "copy"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main",
+        "mode": "on",
+        "stacks": "8"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "talent_copy_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "talent_copy_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "chest": "copier",
+              "main": "target_weapon",
+              "off": "source_weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "copy"
+              },
+              "main": {
+                "talent": "target"
+              },
+              "off": {
+                "talent": "source"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "mode": "on",
+          "stacks": "8",
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 141,
+            "other": 0,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 141,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "target",
+                    "name": "Target talent"
+                  },
+                  "op": "flat",
+                  "value": 2
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent"
+                  },
+                  "op": "flat",
+                  "value": 7
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "copy",
+                    "name": "Abridged"
+                  },
+                  "op": "flat",
+                  "value": 1
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "source",
+                    "name": "Source talent (Abridged)"
+                  },
+                  "op": "flat",
+                  "value": 11
+                },
+                {
+                  "source": {
+                    "kind": "set",
+                    "id": "set",
+                    "name": "Set (2pc)"
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            },
+            "other": {
+              "base": 0,
+              "final": 0,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "stacks",
+              "kind": "numeric",
+              "name": "Stacks",
+              "value": "8",
+              "default": 2,
+              "min": 0,
+              "max": 10,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            },
+            {
+              "id": "mode",
+              "kind": "condition",
+              "value": "on",
+              "values": [
+                "off",
+                "on"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "copier",
+                  "name": "Copier gear",
+                  "slot": "chest"
+                }
+              ]
+            },
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "target_weapon",
+                  "name": "Target weapon",
+                  "slot": "main"
+                },
+                {
+                  "kind": "item",
+                  "id": "source_weapon",
+                  "name": "Source weapon",
+                  "slot": "off"
+                },
+                {
+                  "kind": "talent",
+                  "id": "source",
+                  "name": "Source talent",
+                  "slot": "off"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "copier": "Copier gear",
+            "copy": "Abridged",
+            "set": "Set",
+            "source": "Source talent",
+            "source_weapon": "Source weapon",
+            "target": "Target talent",
+            "target_weapon": "Target weapon"
+          },
+          "sets": [
+            {
+              "id": "set",
+              "name": "Set",
+              "pieces": 2,
+              "bonusPieces": 1,
+              "thresholds": [
+                2
+              ],
+              "activeBonuses": [
+                2
+              ]
+            }
+          ],
+          "unconditional": {
+            "reset": [
+              "stacks",
+              "mode",
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 127
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    }
+  ]
+}

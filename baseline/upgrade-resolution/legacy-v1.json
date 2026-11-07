@@ -1,0 +1,2399 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "inputsSha256": "0d87e6f7ff4492b12c4be61229dd1320050821ff28f542d5c11d81fbe186edff",
+    "packSha256": "9ae504db8f63962cb0e2f4b5cb4a85537a41aa6b396ad68ff7b1ff0d0c80fa3f",
+    "args": [
+      "--json",
+      "--pack",
+      "pack.json",
+      "build",
+      "resolve",
+      "--input",
+      "-",
+      "--context",
+      "context.json"
+    ],
+    "inputEncoding": "utf-8"
+  },
+  "cases": [
+    {
+      "id": "capped-account-and-item",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "upgrade_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "watch": 10
+            },
+            "equipmentUpgrades": {
+              "main": {
+                "itemId": "weapon",
+                "rank": 2
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 127,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 127,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "account-upgrade",
+                    "id": "watch",
+                    "name": "Watch (rank 10)",
+                    "rank": 10
+                  },
+                  "op": "flat",
+                  "value": 20
+                },
+                {
+                  "source": {
+                    "kind": "item-upgrade",
+                    "id": "weapon",
+                    "name": "Weapon: Plating (rank 2)",
+                    "rank": 2,
+                    "slotId": "main"
+                  },
+                  "op": "flat",
+                  "value": 6
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "watch": "Watch",
+            "weapon": "Weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 120
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "account-at-cap",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 4
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "upgrade_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "watch": 4
+            },
+            "equipmentUpgrades": {
+              "main": {
+                "itemId": "weapon",
+                "rank": 2
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 127,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 127,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "account-upgrade",
+                    "id": "watch",
+                    "name": "Watch (rank 4)",
+                    "rank": 4
+                  },
+                  "op": "flat",
+                  "value": 20
+                },
+                {
+                  "source": {
+                    "kind": "item-upgrade",
+                    "id": "weapon",
+                    "name": "Weapon: Plating (rank 2)",
+                    "rank": 2,
+                    "slotId": "main"
+                  },
+                  "op": "flat",
+                  "value": 6
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "watch": "Watch",
+            "weapon": "Weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 120
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "account-below-cap",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 2
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "upgrade_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "watch": 2
+            },
+            "equipmentUpgrades": {
+              "main": {
+                "itemId": "weapon",
+                "rank": 2
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 117,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 117,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "account-upgrade",
+                    "id": "watch",
+                    "name": "Watch (rank 2)",
+                    "rank": 2
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "item-upgrade",
+                    "id": "weapon",
+                    "name": "Weapon: Plating (rank 2)",
+                    "rank": 2,
+                    "slotId": "main"
+                  },
+                  "op": "flat",
+                  "value": 6
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "watch": "Watch",
+            "weapon": "Weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 110
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "zero-account-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "bonus": 0
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "upgrade_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "bonus": 0
+            },
+            "equipmentUpgrades": {
+              "main": {
+                "itemId": "weapon",
+                "rank": 2
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 107,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 107,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "item-upgrade",
+                    "id": "weapon",
+                    "name": "Weapon: Plating (rank 2)",
+                    "rank": 2,
+                    "slotId": "main"
+                  },
+                  "op": "flat",
+                  "value": 6
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "bonus": "Bonus",
+            "weapon": "Weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 100
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "account-increased-bonus",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "bonus": 2
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "upgrade_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "bonus": 2
+            },
+            "equipmentUpgrades": {
+              "main": {
+                "itemId": "weapon",
+                "rank": 2
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 128.4,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 128.4,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "account-upgrade",
+                    "id": "bonus",
+                    "name": "Bonus (rank 2)",
+                    "rank": 2
+                  },
+                  "op": "inc",
+                  "value": 0.2
+                },
+                {
+                  "source": {
+                    "kind": "item-upgrade",
+                    "id": "weapon",
+                    "name": "Weapon: Plating (rank 2)",
+                    "rank": 2,
+                    "slotId": "main"
+                  },
+                  "op": "flat",
+                  "value": 6
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "bonus": "Bonus",
+            "weapon": "Weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 120
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "negative-account-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": -1
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "account-upgrade-rank-invalid",
+            "message": "Watch rank -1 is outside [0, 10]",
+            "subject": "watch"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "excess-account-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 11
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "account-upgrade-rank-invalid",
+            "message": "Watch rank 11 is outside [0, 10]",
+            "subject": "watch"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-account-ids",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "z_missing": 0,
+            "a_missing": 2
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-account-upgrade",
+            "message": "Unknown account upgrade \"a_missing\"",
+            "subject": "a_missing"
+          },
+          {
+            "severity": "error",
+            "code": "unknown-account-upgrade",
+            "message": "Unknown account upgrade \"z_missing\"",
+            "subject": "z_missing"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "zero-item-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 0
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "upgrade_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "watch": 10
+            },
+            "equipmentUpgrades": {
+              "main": {
+                "itemId": "weapon",
+                "rank": 0
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 121,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 121,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "account-upgrade",
+                    "id": "watch",
+                    "name": "Watch (rank 10)",
+                    "rank": 10
+                  },
+                  "op": "flat",
+                  "value": 20
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "watch": "Watch",
+            "weapon": "Weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 120
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "max-item-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 3
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "upgrade_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "watch": 10
+            },
+            "equipmentUpgrades": {
+              "main": {
+                "itemId": "weapon",
+                "rank": 3
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 130,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 130,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "account-upgrade",
+                    "id": "watch",
+                    "name": "Watch (rank 10)",
+                    "rank": 10
+                  },
+                  "op": "flat",
+                  "value": 20
+                },
+                {
+                  "source": {
+                    "kind": "item-upgrade",
+                    "id": "weapon",
+                    "name": "Weapon: Plating (rank 3)",
+                    "rank": 3,
+                    "slotId": "main"
+                  },
+                  "op": "flat",
+                  "value": 9
+                },
+                {
+                  "source": {
+                    "kind": "item",
+                    "id": "weapon",
+                    "name": "Weapon"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "main",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "watch": "Watch",
+            "weapon": "Weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {
+              "damage": 120
+            }
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "negative-item-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": -1
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Plating rank -1 is outside [0, 3]",
+            "subject": "main"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "excess-item-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 4
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Plating rank 4 is outside [0, 3]",
+            "subject": "main"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "stale-item-binding",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "shield",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Upgrade in main is not bound to its equipped item",
+            "subject": "main"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "empty-item-binding",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Upgrade in main is not bound to its equipped item",
+            "subject": "main"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-slot",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "z_missing": {
+              "itemId": "weapon",
+              "rank": 0
+            },
+            "a_missing": {
+              "itemId": "weapon",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Unknown equipment slot \"a_missing\"",
+            "subject": "a_missing"
+          },
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Unknown equipment slot \"z_missing\"",
+            "subject": "z_missing"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "unknown-bound-item",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "missing"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "missing",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unknown-item",
+            "message": "Unknown item \"missing\"",
+            "subject": "main"
+          },
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Unknown item \"missing\" for equipment upgrade",
+            "subject": "main"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "wrong-primary-slot",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "shield"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "shield",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "wrong-slot",
+            "message": "Shield cannot be equipped in Main",
+            "subject": "main"
+          },
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Shield is not equipped in its primary slot",
+            "subject": "main"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "no-upgrade-definition",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "off": "shield"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "off": {
+              "itemId": "shield",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "off"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "off"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Shield has no ranked upgrade",
+            "subject": "off"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "inactive-item",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "blocked"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "blocked",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unmet-requirement",
+            "message": "Blocked weapon requires power 10/20",
+            "subject": "main"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "inactive-invalid-rank",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "blocked"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "blocked",
+              "rank": 4
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "main"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "context": {
+          "weapon_slot": "main"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "unmet-requirement",
+            "message": "Blocked weapon requires power 10/20",
+            "subject": "main"
+          },
+          {
+            "severity": "error",
+            "code": "equipment-upgrade-invalid",
+            "message": "Blocked plating rank 4 is outside [0, 3]",
+            "subject": "main"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "gated-item",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "upgrade_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "weapon"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "watch": 10
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "weapon",
+              "rank": 2
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "weapon_slot": "off"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "upgrade_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "upgrade_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "weapon"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "watch": 10
+            },
+            "equipmentUpgrades": {
+              "main": {
+                "itemId": "weapon",
+                "rank": 2
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "weapon_slot": "off"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 120,
+            "power": 10
+          },
+          "primary": {
+            "power": 10
+          },
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 120,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "account-upgrade",
+                    "id": "watch",
+                    "name": "Watch (rank 10)",
+                    "rank": 10
+                  },
+                  "op": "flat",
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "assumptions": [
+            {
+              "id": "weapon_slot",
+              "kind": "condition",
+              "value": "off",
+              "values": [
+                "main",
+                "off"
+              ],
+              "sources": [
+                {
+                  "kind": "item",
+                  "id": "weapon",
+                  "name": "Weapon",
+                  "slot": "main"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "watch": "Watch",
+            "weapon": "Weapon"
+          },
+          "unconditional": {
+            "reset": [
+              "weapon_slot"
+            ],
+            "stats": {}
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    }
+  ]
+}

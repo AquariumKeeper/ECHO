@@ -1,0 +1,30 @@
+{
+  "args": [
+    "session",
+    "list",
+    "--session-dir",
+    "sessions"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "session list",
+    "ok": true,
+    "diagnostics": [],
+    "result": [
+      {
+        "id": "00000000000000000000000000000000",
+        "pid": 0,
+        "pack": {
+          "id": "division_2",
+          "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+        },
+        "startedAt": "2026-10-25T00:00:00Z",
+        "available": true,
+        "buildName": "New Build",
+        "revision": 0
+      }
+    ]
+  }
+}

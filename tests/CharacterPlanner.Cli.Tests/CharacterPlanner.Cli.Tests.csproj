@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><IsPackable>false</IsPackable><IsTestProject>true</IsTestProject></PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+    <ProjectReference Include="../../src/CharacterPlanner.Cli/CharacterPlanner.Cli.csproj" />
+    <Using Include="Xunit" />
+    <None Include="../../data/packs/division-2.json;../../data/packs/division-2.provenance.md" Link="packs/%(Filename)%(Extension)" CopyToOutputDirectory="IfDifferent" />
+    <None Include="../../data/packs/division-2/*" Link="packs/division-2/%(Filename)%(Extension)" CopyToOutputDirectory="IfDifferent" />
+    <AssemblyMetadata Include="CommittedDataRoot" Value="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../../data'))" />
+    <None Include="../../data/references/division-2-v1-conversion/*" Link="packs/conversion-reference/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

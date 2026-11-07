@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+             xmlns:views="using:CharacterPlanner.Desktop.Views"
+             x:Class="CharacterPlanner.Desktop.Views.LoadoutView" x:DataType="vm:EditorViewModel">
+  <!-- The loadout: each group's tiles on a shared two-column grid; hidden while the item picker is open. -->
+  <ScrollViewer Name="LoadoutPanel" IsVisible="{Binding Picker, Converter={x:Static ObjectConverters.IsNull}}">
+    <ItemsControl ItemsSource="{Binding TileGroups}" Margin="0,0,12,0">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="vm:TileGroupViewModel">
+          <StackPanel Spacing="6" Margin="0,0,0,12">
+            <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+            <ItemsControl ItemsSource="{Binding Tiles}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <views:TileGridPanel Columns="{Binding Columns}" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:TileViewModel">
+                  <Button Classes="tile" Classes.selected="{Binding IsSelected}" Command="{Binding SelectCommand}"
+                          AutomationProperties.Name="{Binding AccessibleName}" AutomationProperties.ItemStatus="{Binding SelectionStatus}">
+                    <Grid ColumnDefinitions="5,*,Auto">
+                      <!-- The rarity's tint, fading left to right, and the selection's yellow, rising left to right. -->
+                      <Border Grid.ColumnSpan="3" Classes="tint" Background="{Binding Accent}" IsVisible="{Binding HasAccent}" />
+                      <Border Grid.ColumnSpan="3" Classes="selection" IsVisible="{Binding IsSelected}" />
+                      <Border Classes="accent" Background="{Binding Accent}" IsVisible="{Binding HasAccent}" />
+                      <Border Classes="accent" IsVisible="{Binding !HasAccent}" />
+                      <StackPanel Grid.Column="1" Margin="10,8" Spacing="2" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Caption}" Classes="tilecaption" />
+                        <TextBlock Text="{Binding Title}" Classes="tiletitle" Classes.muted="{Binding IsMuted}" TextTrimming="CharacterEllipsis" />
+                        <StackPanel Orientation="Horizontal" Spacing="4" IsVisible="{Binding HasSubtitle}">
+                          <ItemsControl ItemsSource="{Binding Dots}" Classes="dots" />
+                          <TextBlock Text="{Binding Subtitle}" Classes="tilecaption" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                      </StackPanel>
+                      <Panel Grid.Column="2" Width="84" Height="48" Margin="0,0,8,0">
+                        <views:ArtView Art="{Binding Art}" Width="84" />
+                        <Button Classes="badge" Command="{Binding TalentCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                IsVisible="{Binding HasTalent}" ToolTip.Tip="{Binding TalentName}" AutomationProperties.Name="Compare talents">
+                          <views:IconView Source="{Binding TalentIcon}" Glyph="{x:Static vm:ArtGlyphs.Talent}" Width="20" Height="20" />
+                        </Button>
+                      </Panel>
+                    </Grid>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </ScrollViewer>
+</UserControl>

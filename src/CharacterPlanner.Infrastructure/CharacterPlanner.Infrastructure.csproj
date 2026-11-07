@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../CharacterPlanner.Core/CharacterPlanner.Core.csproj" />
+    <ProjectReference Include="../CharacterPlanner.Application/CharacterPlanner.Application.csproj" />
+  </ItemGroup>
+</Project>

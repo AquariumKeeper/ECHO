@@ -1,0 +1,1886 @@
+{
+  "args": [
+    "catalog",
+    "list",
+    "talents"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog list",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": [
+      {
+        "id": "gear_talent_ablative_nano_plating",
+        "name": "Ablative Nano-Plating",
+        "description": "Whenever you or any ally's armor breaks, they gain 80% of your armor as bonus armor for 10s. Cooldown per ally: 45s. Killing an enemy with your specialization weapon removes this cooldown for all allies."
+      },
+      {
+        "id": "gear_talent_abridged",
+        "name": "Abridged",
+        "description": "If your Primary and Secondary weapon are not Exotic or Named and of the same type, the Secondary Weapon's talent will also be applied to the Primary Weapon. Doesn't apply to talents that include Weapon Swapping."
+      },
+      {
+        "id": "gear_talent_accelerando",
+        "name": "Accelerando",
+        "description": "Decreases the number of stacks needed to proc the Symphony double buffs from 4 to 3."
+      },
+      {
+        "id": "gear_talent_ace_in_the_sleeve",
+        "name": "Ace in the Sleeve",
+        "description": "Amplifies 1 extra shot when revealing your hand."
+      },
+      {
+        "id": "gear_talent_adrenaline_rush",
+        "name": "Adrenaline Rush",
+        "description": "When you are within 10m of an enemy, gain 20% bonus armor for 5s. Stacks up to 3 times. Cooldown: 5s"
+      },
+      {
+        "id": "gear_talent_advanced_combat_tactics",
+        "name": "Advanced Combat Tactics",
+        "description": "Increases Ground Control proximity repair from 60% to 120%."
+      },
+      {
+        "id": "gear_talent_aggressive_recon",
+        "name": "Aggressive Recon",
+        "description": "Getting a Signature Weapon kill gives +15% Signature Weapon Damage for 10s and +25% Reload Speed for the next reload of the weapon (the bonuses do not stack). Automatically regenerate Signature Weapon Ammo every 60s."
+      },
+      {
+        "id": "gear_talent_all_for_one",
+        "name": "All for One",
+        "description": "Increase the amount of marks that can be placed from 4 to 8."
+      },
+      {
+        "id": "gear_talent_alternating_current",
+        "name": "Alternating Current",
+        "description": "Generate a stack of 2.5% skill damage on one of your skills every second, capping at 10 stacks. After 10 seconds at the cap the stacks transfer to your other skill. The process then repeats ad-infinitum."
+      },
+      {
+        "id": "gear_talent_apex_predator",
+        "name": "Apex Predator",
+        "description": "Enemies within 15m receive a debuff, amplifying your weapon damage against them by +20%. Killing a debuffed enemy with your weapon disorients other enemies within 5m, and amplifies weapon damage by 5% for 10s, stacking up to 5 times."
+      },
+      {
+        "id": "gear_talent_best_buds",
+        "name": "Best Buds",
+        "description": "Increase the damage buff from 25% to 50%."
+      },
+      {
+        "id": "gear_talent_bewildered",
+        "name": "Bewildered",
+        "description": "When dealing Weapon Damage to an enemy, 50% of the damage will be dealt to another enemy within 30m instead. When there are no enemies nearby, deal damage normally. Does not apply to Armor Plates."
+      },
+      {
+        "id": "gear_talent_bleeding_edge",
+        "name": "Bleeding Edge",
+        "description": "Shooting enemies within 15m applies bleed to the target. Repair 3-48% of your armor per second for every enemy that is bleeding within 15m. Repair strength per number of bleeding enemies: 1:3% 2:6% 3:12% 4:24% 5:48%"
+      },
+      {
+        "id": "gear_talent_bloodsucker",
+        "name": "Bloodsucker",
+        "description": "Killing an enemy adds and refreshes a stack of +10% bonus armor for 10s. Max stack is 10."
+      },
+      {
+        "id": "gear_talent_bob_and_weave",
+        "name": "Bob and Weave",
+        "description": "Receive repairs of 5% of your Total Armor for every 1m run in cover-to-cover. Damage taken while doing a cover-to-cover is healed over 10s."
+      },
+      {
+        "id": "gear_talent_bond",
+        "name": "Bond",
+        "description": "Both you and Allies receive +30% Critical Hit Damage, +15% Skill Efficiency and +2% Armor Regen when an Ally is within 10m of you. Receive +15% Critical Hit Damage, +7.5% Skill Efficiency and +1% Armor Regen when one of your Skills is within 10m of you. Only the highest group of buffs can be active at one time."
+      },
+      {
+        "id": "gear_talent_braced",
+        "name": "Braced",
+        "description": "While in cover weapon handling is increased by 45%."
+      },
+      {
+        "id": "gear_talent_calculated",
+        "name": "Calculated",
+        "description": "Kills from cover reduce skill cooldowns by 10%."
+      },
+      {
+        "id": "gear_talent_camaraderie",
+        "name": "Camaraderie",
+        "description": "Shooting an enemy marks them for 10 seconds. When a marked enemy dies, receive one stack of 3% Weapon Damage and 3% Critical Hit Damage for each Ally or Skill that has contributed to killing that enemy. Max stacks is 35. Stacks decay every 10 seconds. Maximum amount of marks that can be placed is 4."
+      },
+      {
+        "id": "gear_talent_chain_combustion",
+        "name": "Chain Combustion",
+        "description": "Enemies set ablaze by the Ortiz Incinerator Turret Prototype ignite other enemies within 10m."
+      },
+      {
+        "id": "gear_talent_challenger",
+        "name": "Challenger",
+        "description": "Recieve +25% Damage resistance from enemies within 20m."
+      },
+      {
+        "id": "gear_talent_charging",
+        "name": "Charging",
+        "description": "For each second spent out of cover during combat, Agents will get 5% reduced incoming skill damage. Max 50%. Charged: While fully charged, gain immunity to any movement speed debuff and share this with all of the agents hazard protection and the incoming skill damage with all allies for 10 seconds. After Charged is consumed, Charging buff will resume if still in combat and out of cover."
+      },
+      {
+        "id": "gear_talent_chemical_agent",
+        "name": "Chemical Agent",
+        "description": "Catalysis: Dealing and receiving status effects (Burn, Bleed, Shock, EMP/Disrupt, Poison and blind/disorient) builds stacks of Catalysis to a maximum of 12. Each stack grants: +2% Weapon Damage, +2% Status Effects. Each enemy within 25 Meters that is affected by a status effect grants +1 stack/sec. Being affected by status effects grants +2 stacks/sec. Stacks decay at 1 stack/sec after 5s if no enemies in the radius or you are affected by status effects. Reactant: At max stacks, killing a status-affected enemy grants bonuses for 5s: +25% bonus armor."
+      },
+      {
+        "id": "gear_talent_clutch",
+        "name": "Clutch",
+        "description": "When you are below 15% armor, critical hits repair 2.5% of missing armor. On kill, critical hits repair 2.5% of missing armor for 4 seconds. Lowest possible repair is 0% armour  Each red core attribute adds 1 second to the time. Maximum is 10 seconds."
+      },
+      {
+        "id": "gear_talent_cold",
+        "name": "Cold",
+        "description": "Stacks now supply +2% bonus armor."
+      },
+      {
+        "id": "gear_talent_combat_medic",
+        "name": "Combat Medic",
+        "description": "+80% Revive Speed. -50% Weakened Debuff timer. +45% Hive efficiency. Provides +50% damage resistance to both agents while reviving or being revived, and for 5s after a successful Hive Revive, or 10s after a Manual Revive. Any successful revives provide +1 Skill tier for 5s. Revives at skill tier 6 grant Overcharge for 15s."
+      },
+      {
+        "id": "gear_talent_combined_arms",
+        "name": "Combined Arms",
+        "description": "Shooting an enemy increases total skill damage by 25% for 3s."
+      },
+      {
+        "id": "gear_talent_companion",
+        "name": "Companion",
+        "description": "While you are within 5 m of an ally or skill, total weapon damage is increased by 15%."
+      },
+      {
+        "id": "gear_talent_compiler_optimization",
+        "name": "Compiler Optimization",
+        "description": "Decreases Hackstep Protocol cooldown from 20s to 15s."
+      },
+      {
+        "id": "gear_talent_complete_uptime",
+        "name": "Complete Uptime",
+        "description": "Cancelling your skills will reset their cooldown."
+      },
+      {
+        "id": "gear_talent_composure",
+        "name": "Composure",
+        "description": "While in cover, increases total weapon damage by 15%."
+      },
+      {
+        "id": "gear_talent_concussion",
+        "name": "Concussion",
+        "description": "Headshots increase total weapon damage by 10% for 1.5s. 5s with marksman rifles. Headshot kills increase total weapon damage by 15% for 10s. Both buffs can be active for an increase of 25% total weapon damage"
+      },
+      {
+        "id": "gear_talent_core_exercise",
+        "name": "Core Exercise",
+        "description": "For each Core attribute, receive 40% of the other two Core Attributes' bonuses. Skill Tiers count as 15% Skill Efficiency when these bonuses are applied. All pieces from this Gear Set, apart from the Backpack, will feature random Core Attributes."
+      },
+      {
+        "id": "gear_talent_counter",
+        "name": "Counter",
+        "description": "Swapping weapons will give the following groups of bonuses one by one, in order: 1. +20% Rate of Fire, +20% Weapon Damage. 2. +50% Magazine Size, +50% Reload Speed. The bonuses remain active for 12s or until the next weapon swap. Swapping to your sidearm will not trigger the next group of bonuses."
+      },
+      {
+        "id": "gear_talent_creeping_death",
+        "name": "Creeping Death",
+        "description": "When you apply a status effect, it is also applied to all enemies within 8m of your target.  Cooldown: 15s"
+      },
+      {
+        "id": "gear_talent_critical_measures",
+        "name": "Critical Measures",
+        "description": "Increases Hostile Negotiations damage to additional marked enemies from 60% to 112%."
+      },
+      {
+        "id": "gear_talent_crowd_control",
+        "name": "Hostile Negotiations",
+        "description": "Critical hits mark enemies for 20s, up to 3 marks total. When you critically hit a marked enemy, all other marked enemies take 60% of the damage dealt. Whenever a marked enemy dies, gain +10% critical hit damage, stacking up to 10 times, or until combat ends."
+      },
+      {
+        "id": "gear_talent_dead_man_s_hand",
+        "name": "Dead Man's Hand",
+        "description": "Flip a card when landing shots with a Rifle or Marksman rifle. After 5 cards are flipped, the damage of your next shot is amplified by 75%. More shots are enhanced the better the hand revealed. Four of a Kind: 4 shots. Full House: 3 shots. Aces and Eights: 2 shots. Flip an additional card on headshots."
+      },
+      {
+        "id": "gear_talent_deceit",
+        "name": "Deceit",
+        "description": "Enemies targeting your Decoy also count towards the Stoic Damage Reduction bonus."
+      },
+      {
+        "id": "gear_talent_decoy_king",
+        "name": "Decoy King",
+        "description": "While in combat, the Moon will cycle through its phases every 5s. There are 8 Moon phases. Starting from a New Moon, weapon damage you deal will be Amplified by 5%. The value of the Amplifier will increase by 5% each phase until reaching 25% during a Full Moon, then it will decrease as the Moon return to being a New Moon, restarting the cycle. During a Full Moon, deploying a Decoy will grant it Overcharge and the cycle will pause for 10s."
+      },
+      {
+        "id": "gear_talent_defibrillator",
+        "name": "Defibrillator",
+        "description": "While \"Shocker Punch\" is equipped, the stun received by the agent from the Shock status effect will be reduced by 50%. Using a shield will give 100% to melee damage. Using St. Elmo's Engine with the holster will give 100% extra melee damage and will make the next melee attack apply shock to the target. Using all three items will offer all of the above mentioned bonuses and the Shock from the melee attack will have a 5m radius, starting from the first target. 15 second cooldown."
+      },
+      {
+        "id": "gear_talent_dragon_s_glare",
+        "name": "Dragon's Glare",
+        "description": "While in combat, applies burn to the enemy closest to you within 20m. Cooldown: 35s."
+      },
+      {
+        "id": "gear_talent_efficient",
+        "name": "Efficient",
+        "description": "Using an armor kit has a 50% chance to not consume the armor kit. Specialization armor kit bonuses are increased by 100%. Requires 10 seconds to arm talent"
+      },
+      {
+        "id": "gear_talent_empathic_resolve",
+        "name": "Empathic Resolve",
+        "description": "Repairing an ally, increases their total weapon and skill damage by 3-15% for 10s. 1-7% if self. Effectiveness increased by your skill tier."
+      },
+      {
+        "id": "gear_talent_endless_hunger",
+        "name": "Endless Hunger",
+        "description": "Increases the duration of Apex Predator stacks from 10s to 30s."
+      },
+      {
+        "id": "gear_talent_energize",
+        "name": "Energize",
+        "description": "Using an armor kit grants +1 skill tier for 15s. If already at skill tier 6, grants overcharge.  Cooldown: 60s"
+      },
+      {
+        "id": "gear_talent_entrench",
+        "name": "Entrench",
+        "description": "If you are below 30% armor, headshots from cover repair 20% of your armor. Cooldown: 2 seconds."
+      },
+      {
+        "id": "gear_talent_escape_plan",
+        "name": "Escape Plan",
+        "description": "+20% Movement Speed."
+      },
+      {
+        "id": "gear_talent_explosive_delivery",
+        "name": "Explosive Delivery",
+        "description": "Whenever you throw a skill, 1.5 seconds after landing, it creates an explosion damaging enemies within 5m. Damage scales with skill tier dealing 25-100% damage of a concussion grenade. At most once per skill."
+      },
+      {
+        "id": "gear_talent_feedback_loop",
+        "name": "Feedback Loop",
+        "description": "Whenever you use or cancel a skill, your other skill's cooldown is reduced by 30s, total skill repair is increased by 10% for 20s, and total skill damage is increased by 10% for 20s. Cooldown: 10s."
+      },
+      {
+        "id": "gear_talent_fireworks_show",
+        "name": "Fireworks Show",
+        "description": "Concussion grenades become Festive Grenades. Hitting an enemy with a Festive Grenade will cause explosions to happen around two other enemies within 20m. 10m in pvp. *Dealing 15% damage in PVP."
+      },
+      {
+        "id": "gear_talent_flashpoint",
+        "name": "Flashpoint",
+        "description": "Increase the chance of applying Burn of Spontaneous Combustion to 60%"
+      },
+      {
+        "id": "gear_talent_flurry",
+        "name": "Flurry",
+        "description": "Status effects apply snowfall to target."
+      },
+      {
+        "id": "gear_talent_focus",
+        "name": "Focus",
+        "description": "Increases total weapon damage by 5% every second you are aiming while scoped 8x or higher, up to 50%."
+      },
+      {
+        "id": "gear_talent_fortissimo",
+        "name": "Fortissimo",
+        "description": "Double the weapon damage bonus from Symphony."
+      },
+      {
+        "id": "gear_talent_from_the_shadows",
+        "name": "From the Shadows",
+        "description": "Increases max stacks for Into the Light from 50 to 100, stack gain from 10 to 20 and stack consumption from 10 to 20."
+      },
+      {
+        "id": "gear_talent_from_the_shadows_into_the_light",
+        "name": "From the Shadows Into the Light",
+        "description": "From the Shadows: While out of cover and in combat, gain 10 Stacks per second up to 50. Each stack will give 0.8% Armor regen when it is consumed. Stacks consume, 10 stacks per second, only in cover. Into the Light: While in cover, gain 10 Stacks per second up to 50. Each stack will give 1.2% Critical damage increase and 0.4% RPM. Buff does not apply while shooting from cover. While out of cover Agents lose 2 stacks per second at normal speed and 1 stack per second if sprinting."
+      },
+      {
+        "id": "gear_talent_galvanize",
+        "name": "Galvanize",
+        "description": "Applying a Blind, Ensnare, Confuse, or Shock to an enemy grants 40% of your armor as bonus armor to you and all allies within 20m of that enemy for 10s"
+      },
+      {
+        "id": "gear_talent_glass_cannon",
+        "name": "Glass Cannon",
+        "description": "All damage you deal is amplified by 25%. All damage you take is amplified by 50%."
+      },
+      {
+        "id": "gear_talent_ground_control",
+        "name": "Ground Control",
+        "description": "Increases you and your allies' total weapon and skill damage by 15% when at full armor. When you repair an ally, you and all allies within 5m of you are also repaired for 60% of that amount."
+      },
+      {
+        "id": "gear_talent_gunslinger",
+        "name": "Gunslinger",
+        "description": "Weapon swapping increases total weapon damage by 23% for 5s. This buff is lost for 5s if you weapon swap while it is active."
+      },
+      {
+        "id": "gear_talent_hackstep_protocol",
+        "name": "Hackstep Protocol",
+        "description": "Replaces armor kits with an instant, infinite-use ability. Grants 50% bonus armor for 5s. Hides your nameplate for 5s. Repairs 20% of your armor. Increases total weapon damage by 2% per 5% bonus armor gained, up to 20%. Ability cooldown: 20s."
+      },
+      {
+        "id": "gear_talent_headache",
+        "name": "Headache",
+        "description": "First Headshot with a Marksman Rifle will increase next headshot by 80%, second consecutive headshot with a Marksman Rifle will give +10% armor (if at full armor it will give bonus armor max +50% of current armor value), third consecutive headshot will refill magazine. From the fourth headshot forward agents will get all 3 bonuses for each consecutive headshot kill. Missing a headshot will reset the cycle."
+      },
+      {
+        "id": "gear_talent_headhunter",
+        "name": "Headhunter",
+        "description": "After killing an enemy with a headshot, your next weapon hit within 30s deals 125% of that killing blow's damage in addition to it. Damage is capped to 800% of your weapon damage. This is raised to 1250% if your headshot damage is greater than 150%."
+      },
+      {
+        "id": "gear_talent_heartstopper",
+        "name": "Heartstopper",
+        "description": "Headshots apply pulse for 5s. Weapon hits on pulsed enemies add and refresh a stack of +1% bonus armor and +1.1% amplified weapon damage to pulsed enemies for 5s. Max stack is 50. Two stacks are lost per second."
+      },
+      {
+        "id": "gear_talent_heatstroke",
+        "name": "Heatstroke",
+        "description": "+40% Amplified Weapon Damage to enemies set on fire by the Ortiz Incinerator Turret Prototype. +25% Ortiz Incinerator Turret Prototype Range."
+      },
+      {
+        "id": "gear_talent_hivemind",
+        "name": "Hivemind",
+        "description": "Decrease the Overcharge cooldown from 40s to 25s."
+      },
+      {
+        "id": "gear_talent_hoarder",
+        "name": "Hoarder",
+        "description": "+3 Grenade Capacity. +50% Grenade Radius. +35% Grenade Damage. +25% Grenade Damage for each extra enemy caught in the blast. Automatically regenerate grenades every 30s, if you have less than 2 grenades in your inventory."
+      },
+      {
+        "id": "gear_talent_huddle",
+        "name": "Huddle",
+        "description": "Receive +1 Skill Tier for each ally Agent that is within the range of the hive or Smart Cover. While at Skill Tier 6, having at least one ally Agent in the range of your Hive or Smart Cover for 4s will grant Overcharge for 15s. Cooldown: 40s. Mortars and enemy Skills that enter the range of your Hive or Smart Cover will be destroyed. Cooldown: 10s. The cooldown is 20% faster for each ally agent within the range of your hive or smart cover."
+      },
+      {
+        "id": "gear_talent_impervious",
+        "name": "Impervious",
+        "description": "Both you and Allies within 10m of you receive +40% Hazard Protection."
+      },
+      {
+        "id": "gear_talent_improved_dampeners",
+        "name": "Improved Dampeners",
+        "description": "Decrease the Duration and Range reduction from 90% to 25%."
+      },
+      {
+        "id": "gear_talent_improved_materials",
+        "name": "Improved Materials",
+        "description": "Decreases time taken for Makeshift Repairs from 10s to 5s."
+      },
+      {
+        "id": "gear_talent_increased_interest",
+        "name": "Increased Interest",
+        "description": "For PvE: Increase the repairs received from Return to Sender from 10% to 25%, and from 20% to 35%. For PvP: Increase the repairs received from Return to Sender from 5% to 15%, and from 10% to 20%."
+      },
+      {
+        "id": "gear_talent_indirect_transmission",
+        "name": "Indirect Transmission",
+        "description": "On kill: Spread status effects of that enemy to all enemies within 10m. Refresh 50% of status effect durations."
+      },
+      {
+        "id": "gear_talent_inner_core",
+        "name": "Inner Core",
+        "description": "Increase the percentage of the bonuses you receive from the other Cores from 40% to 75%."
+      },
+      {
+        "id": "gear_talent_intimidate",
+        "name": "Intimidate",
+        "description": "While you have bonus armour, gain 3 stacks each second up to a max of 9. Each stack amplifies weapon damage by 4% to enemies within 10m. All stacks are lost when you have no bonus armour."
+      },
+      {
+        "id": "gear_talent_into_the_light",
+        "name": "Into the Light",
+        "description": "Increases max stacks for From the Shadows from 50 to 100, stack gain from 10 to 20."
+      },
+      {
+        "id": "gear_talent_iron_grip",
+        "name": "Iron Grip",
+        "description": "+50% Weapon Handling."
+      },
+      {
+        "id": "gear_talent_kill_confirmed",
+        "name": "Kill Confirmed",
+        "description": "Enemies you kill drop a trophy on death. Collecting trophies provides both a short and long term buff, the first of which scales with the number of core attributes equipped and lasts 10s. Red Core - 5% Weapon Damage. Blue Core - 10% Bonus Armor. Yellow Core - 5% Skill Efficiency. For every trophy collected gain an additional +1% weapon damage, +1% skill efficiency and +0.1% armor regeneration for 300s. Maximum 30 stacks."
+      },
+      {
+        "id": "gear_talent_kinetic_momentum",
+        "name": "Kinetic Momentum",
+        "description": "When in combat, each skill generates stacks while active or not on cooldown  Each stack increases your total skill damage by 1.5% and total skill repair by 2%. Up to 15 stacks per skill. Stacks are lost when skills go on cooldown."
+      },
+      {
+        "id": "gear_talent_leadership",
+        "name": "Leadership",
+        "description": "Performing a cover to cover grants 15% of your armor as bonus armor to you and all allies for 10s. This is doubled if you end within 10m of an enemy.  Cooldown: 10s."
+      },
+      {
+        "id": "gear_talent_lucky",
+        "name": "Lucky",
+        "description": "Agents can miss a headshot before resetting the cycle."
+      },
+      {
+        "id": "gear_talent_mad_bomber",
+        "name": "Mad Bomber",
+        "description": "Grenade Radius is increased by 50% Grenade that kill an enemy are refunded. Grenades can now be ''cooked'' by holding the fire button, making them explode earlier. Gain 15% bonus armor while aiming grendes"
+      },
+      {
+        "id": "gear_talent_makeshift_repairs",
+        "name": "Makeshift Repairs",
+        "description": "Whenever you or your shield take damage, 25% of that amount is repaired to both over 10s."
+      },
+      {
+        "id": "gear_talent_max_bpm",
+        "name": "Max BPM",
+        "description": "Max stack is now 100."
+      },
+      {
+        "id": "gear_talent_multithreaded_execution",
+        "name": "Multithreaded Execution",
+        "description": "Increases Hackstep Protocol bonus armor from 50% to 100%."
+      },
+      {
+        "id": "gear_talent_no_limit",
+        "name": "No Limit",
+        "description": "Increases Dead Man's Hand damage bonus from 75% to 100%."
+      },
+      {
+        "id": "gear_talent_obliterate",
+        "name": "Obliterate",
+        "description": "Critical hits increase total weapon damage by 1% for 10s. Stacks up to 20 times."
+      },
+      {
+        "id": "gear_talent_on_point",
+        "name": "On Point",
+        "description": "Hitting a shot with a Rifle or MMR grants a stack. Max stack is equal to the weapon's Magazine Size. Reloading will grant +2% Weapon Handling and +4% Weapon Damage per stack, for 20s.  No stacks are acquired while the bonuses are active. The timer running out will refill your magazine.  Switching weapons while the bonuses are active will stop the effect and refill your magazine. Switching weapons while the bonuses are not active will remove all stacks and refill your magazine."
+      },
+      {
+        "id": "gear_talent_one_for_all",
+        "name": "One for All",
+        "description": "Increase the Weapon Damage bonus per stack from 3% to 6%."
+      },
+      {
+        "id": "gear_talent_one_in_the_hand_two_in_the_bag",
+        "name": "One in the Hand... / ...Two in the Bag",
+        "description": "Throwing a grenade refunds it and grants +1 skill tier for 15s. Grants overcharge if already at skill tier 6. Cooldown: 60s. +1 Armor Kit Capacity. +3 Grenade Capacity. +25% Ammo Capacity. +10% Repair-Skills. +10% Status Effects."
+      },
+      {
+        "id": "gear_talent_opportunistic",
+        "name": "Opportunistic",
+        "description": "Enemies you hit with shotguns and marksman rifles amplifies the damage they take by 10% from all sources for 5s."
+      },
+      {
+        "id": "gear_talent_ortiz_incinerator_turret_prototype",
+        "name": "Ortiz Incinerator Turret Prototype",
+        "description": "The Incinerator Turret spins 360 degrees. You are immune to your own Incinerator Turret's fire. The Incinerator Turret explodes when disabled."
+      },
+      {
+        "id": "gear_talent_ortiz_rapid_application_nanite_prototype",
+        "name": "Ortiz Rapid Application Nanite Prototype",
+        "description": "Healing Skills' Duration and Range are decreased by 90%, but their Healing Efficiency is increased by 150%. Healing an Ally with a Skill will provide them 30% Hazard Protection for 10s. Cooldown per ally: 10s."
+      },
+      {
+        "id": "gear_talent_ostracize",
+        "name": "Ostracize",
+        "description": "Shooting an enemy applies a mark. Only one mark can be active at a time. The mark disappears after 15s, or when the marked enemy dies. Receive 600% Amplified Damage from the marked enemy. Deal 30% Amplified Damage to unmarked enemies. If only one enemy remains in combat, the mark disappears and cannot be reapplied."
+      },
+      {
+        "id": "gear_talent_outer_core",
+        "name": "Outer Core",
+        "description": "This Talent does not provide a direct change to the Core Exercise Talent."
+      },
+      {
+        "id": "gear_talent_over_engineered",
+        "name": "Over-engineered",
+        "description": "While at full Armor, repairs received from Return to Sender will provide Bonus Armor, up to 80% of your Total Armor. Does not apply to allies."
+      },
+      {
+        "id": "gear_talent_over_the_top",
+        "name": "Over the top",
+        "description": "Damaging an enemy with a grenade or striking an enemy with a melee attack, activates Seeing Red. Seeing Red grants +25% total weapon damage and +100% melee damage. Seeing Red lasts 20 seconds and starts a 60 second cooldown after completion. While in cooldown, damaging an enemy with a melee attack or hitting an enemy with the effect of a grenade will complete the cooldown instantly."
+      },
+      {
+        "id": "gear_talent_overcharged_nanites",
+        "name": "Overcharged Nanites",
+        "description": "Increase the Healing Efficiency bonus from 150% to 225%."
+      },
+      {
+        "id": "gear_talent_overcharging",
+        "name": "Overcharging",
+        "description": "Increases Charging max incoming damage protection to 70%."
+      },
+      {
+        "id": "gear_talent_overclock",
+        "name": "Overclock",
+        "description": "You and allies within 7m of your deployed skills, gain +25% reload speed and reduces active cooldowns by 0.2 each second."
+      },
+      {
+        "id": "gear_talent_overwatch",
+        "name": "Overwatch",
+        "description": "After staying in cover for 10s, increase your and all allies' total weapon and skill damage by 12% as long as you remain in cover or in a cover-to-cover move."
+      },
+      {
+        "id": "gear_talent_overwhelming_force",
+        "name": "Overwhelming Force",
+        "description": "Increases the radius of disorient on Apex Predator kills from 5m to 10m."
+      },
+      {
+        "id": "gear_talent_pack_instincts",
+        "name": "Pack Instincts",
+        "description": "You and all allies gain a bonus based on the distance of the last enemy you hit. 0-15m: +25% critical hit damage. 15-25m: +10% critical hit chance and +10% critical hit damage. 25m+: +25% critical hit chance."
+      },
+      {
+        "id": "gear_talent_parabellum_rounds",
+        "name": "Parabellum Rounds",
+        "description": "Increases Hollow-Point Ammo weapon damage amplification to 60%. Does not affect party ammo."
+      },
+      {
+        "id": "gear_talent_parkour",
+        "name": "Parkour!",
+        "description": "Performing a cover to cover or vaulting reloads your drawn weapon and grants +25% bonus armor for 5s."
+      },
+      {
+        "id": "gear_talent_patriotic_boost",
+        "name": "Patriotic Boost",
+        "description": "Increases Red, White, and Blue debuff strength. Red: From 15% to 30%. White: From 2% to 5%. Blue: From 10% to 20%."
+      },
+      {
+        "id": "gear_talent_perfect_adrenaline_rush",
+        "name": "Perfect Adrenaline Rush",
+        "description": "When you are within 10m of an enemy, gain 23% bonus armor for 5s. Stacks up to 3 times. Cooldown: 5s"
+      },
+      {
+        "id": "gear_talent_perfect_bloodsucker",
+        "name": "Perfect Bloodsucker",
+        "description": "Killing an enemy adds and refreshes a stack of +12% bonus armor for 10s. Max stack is 10."
+      },
+      {
+        "id": "gear_talent_perfect_braced",
+        "name": "Perfect Braced",
+        "description": "While in cover weapon handling is increased by 50%."
+      },
+      {
+        "id": "gear_talent_perfect_calculated",
+        "name": "Perfect Calculated",
+        "description": "Kills from cover reduce skill cooldowns by 15%."
+      },
+      {
+        "id": "gear_talent_perfect_clutch",
+        "name": "Perfect Clutch",
+        "description": "When you are below 20% armor, critical hits repair 2.5% of missing armor. On kill, critical hits repair 2.5% of missing armor for 4 seconds. Lowest possible repair is 0% armour  Each red core attribute adds 1 second to the time. Maximum is 10 seconds."
+      },
+      {
+        "id": "gear_talent_perfect_combined_arms",
+        "name": "Perfect Combined Arms",
+        "description": "Shooting an enemy increases total skill damage by 30% for 3s."
+      },
+      {
+        "id": "gear_talent_perfect_companion",
+        "name": "Perfect Companion",
+        "description": "While you are within 10 m of an ally or skill, total weapon damage is increased by 20%."
+      },
+      {
+        "id": "gear_talent_perfect_composure",
+        "name": "Perfect Composure",
+        "description": "While in cover, increases total weapon damage by 20%."
+      },
+      {
+        "id": "gear_talent_perfect_concussion",
+        "name": "Perfect Concussion",
+        "description": "Headshots increase total weapon damage by 20% for 1.5s. 5s with marksman rifles. Headshot kills increase total weapon damage by 15% for 10s. Both buffs can be active for an increase of 35% total weapon damage"
+      },
+      {
+        "id": "gear_talent_perfect_creeping_death",
+        "name": "Perfect Creeping Death",
+        "description": "When you apply a status effect, it is also applied to all enemies within 10m of your target.  Cooldown: 10s"
+      },
+      {
+        "id": "gear_talent_perfect_efficient",
+        "name": "Perfect Efficient",
+        "description": "Using an armor kit has a 75% chance to not consume the armor kit. Specialization armor kit bonuses are increased by 100%. Requires 10 seconds to arm talent"
+      },
+      {
+        "id": "gear_talent_perfect_empathic_resolve",
+        "name": "Perfect Empathic Resolve",
+        "description": "Repairing an ally, increases their total weapon and skill damage by 3-20% for 10s. 2.3-16.3% if self. Effectiveness increased by your skill tier."
+      },
+      {
+        "id": "gear_talent_perfect_energize",
+        "name": "Perfect Energize",
+        "description": "Using an armor kit grants +1 skill tier for 15s. If already at skill tier 6, grants overcharge.  Cooldown: 30s"
+      },
+      {
+        "id": "gear_talent_perfect_entrench",
+        "name": "Perfect Entrench",
+        "description": "If you are below 30% armor, headshots from cover repair 20% of your armor. Cooldown: 1 seconds."
+      },
+      {
+        "id": "gear_talent_perfect_explosive_delivery",
+        "name": "Perfect Explosive Delivery",
+        "description": "Whenever you throw a skill, 1.5 seconds after landing, it creates an explosion damaging enemies within 5m. Afterwards explosions will occur every 5s. Damage scales with skill tier dealing 25-100% damage of a concussion grenade."
+      },
+      {
+        "id": "gear_talent_perfect_focus",
+        "name": "Perfect Focus",
+        "description": "Increases total weapon damage by 6% every second you are aiming while scoped 8x or higher, up to 60%."
+      },
+      {
+        "id": "gear_talent_perfect_galvanize",
+        "name": "Perfect Galvanize",
+        "description": "Applying a Blind, Ensnare, Confuse, or Shock to an enemy grants 50% of your armor as bonus armor to you and all allies within 30m of that enemy for 10s"
+      },
+      {
+        "id": "gear_talent_perfect_glass_cannon",
+        "name": "Perfect Glass Cannon",
+        "description": "All damage you deal is amplified by 30%. All damage you take is amplified by 60%."
+      },
+      {
+        "id": "gear_talent_perfect_gunslinger",
+        "name": "Perfect Gunslinger",
+        "description": "Weapon swapping increases total weapon damage by 28% for 5s. This buff is lost for 5s if you weapon swap while it is active."
+      },
+      {
+        "id": "gear_talent_perfect_headhunter",
+        "name": "Perfect Headhunter",
+        "description": "After killing an enemy with a headshot, your next weapon hit within 30s deals 150% of that killing blow's damage in addition to it. Damage is capped to 800% of your weapon damage. This is raised to 1250% if your headshot damage is greater than 150%."
+      },
+      {
+        "id": "gear_talent_perfect_intimidate",
+        "name": "Perfect Intimidate",
+        "description": "While you have bonus armour, gain 3 stacks each second up to a max of 10. Each stack amplifies weapon damage by 4% to enemies within 10m. All stacks are lost when you have no bonus armour."
+      },
+      {
+        "id": "gear_talent_perfect_kinetic_momentum",
+        "name": "Perfect Kinetic Momentum",
+        "description": "When in combat, each skill generates stacks while active or not on cooldown  Each stack increases your total skill damage by 1.5% and total skill repair by 2%. Up to 18 stacks per skill. Stacks are lost when skills go on cooldown."
+      },
+      {
+        "id": "gear_talent_perfect_leadership",
+        "name": "Perfect Leadership",
+        "description": "Performing a cover to cover grants 20% of your armor as bonus armor to you and all allies for 10s. This is tripled if you end within 10m of an enemy.  Cooldown: 10s."
+      },
+      {
+        "id": "gear_talent_perfect_mad_bomber",
+        "name": "Perfect Mad Bomber",
+        "description": "Grenade Radius is increased by 75% Grenade that kill an enemy are refunded. Grenades can now be ''cooked'' by holding the fire button, making them explode earlier. Gain 15% bonus armor while aiming grendes"
+      },
+      {
+        "id": "gear_talent_perfect_obliterate",
+        "name": "Perfect Obliterate",
+        "description": "Critical hits increase total weapon damage by 1% for 10s. Stacks up to 24 times."
+      },
+      {
+        "id": "gear_talent_perfect_opportunistic",
+        "name": "Perfect Opportunistic",
+        "description": "Enemies you hit with shotguns and marksman rifles amplifies the damage they take by 15% from all sources for 5s."
+      },
+      {
+        "id": "gear_talent_perfect_overclock",
+        "name": "Perfect Overclock",
+        "description": "You and allies within 15 of your deployed skills, gain +30% reload speed and reduces active cooldowns by 0.6 each second."
+      },
+      {
+        "id": "gear_talent_perfect_overwatch",
+        "name": "Perfect Overwatch",
+        "description": "After staying in cover for 8s, increase your and all allies' total weapon and skill damage by 14% as long as you remain in cover or in a cover-to-cover move."
+      },
+      {
+        "id": "gear_talent_perfect_protected_reload",
+        "name": "Perfect Protected Reload",
+        "description": "Grants +40% bonus armor while reloading. Grants 0-30% of your armor as bonus armor to all other allies when they are reloading  Each blue core attribute adds 3% to the bonus armour Maximum is 18%"
+      },
+      {
+        "id": "gear_talent_perfect_protector",
+        "name": "Perfect Protector",
+        "description": "When your shield is damaged, you gain +25% bonus armor and all other allies gain +35% of your armor as bonus armor for 3s.  Cooldown: 3s."
+      },
+      {
+        "id": "gear_talent_perfect_reassigned",
+        "name": "Perfect Reassigned",
+        "description": "Killing an enemy adds 1 round of a random special ammo into your sidearm. Cooldown 8s"
+      },
+      {
+        "id": "gear_talent_perfect_safeguard",
+        "name": "Perfect Safeguard",
+        "description": "While at full armor, increases total skill repair by 160%."
+      },
+      {
+        "id": "gear_talent_perfect_shock_and_awe",
+        "name": "Perfect Shock and Awe",
+        "description": "Applying a status effect to an enemy increases total skill damage and repair by 20% for 27s."
+      },
+      {
+        "id": "gear_talent_perfect_skilled",
+        "name": "Perfect Skilled",
+        "description": "Skill kills have a 30% chance to reset skill cooldowns."
+      },
+      {
+        "id": "gear_talent_perfect_spark",
+        "name": "Perfect Spark",
+        "description": "Damaging an enemy with a skill increases total weapon damage by 18% for 20s."
+      },
+      {
+        "id": "gear_talent_perfect_spotter",
+        "name": "Perfect Spotter",
+        "description": "Amplifies total weapon and skill damage by 20% to pulsed enemies."
+      },
+      {
+        "id": "gear_talent_perfect_tag_team",
+        "name": "Perfect Tag Team",
+        "description": "The last enemy you have damaged with a skill is marked. Dealing weapon damage to that enemy consumes the mark to reduce active cooldowns by 12s.  Cooldown: 4s"
+      },
+      {
+        "id": "gear_talent_perfect_tamper_proof",
+        "name": "Perfect Tamper Proof",
+        "description": "Enemies that walk within 3 meters of your hive, turret, remote pulse, or decoy are shocked. Arm time: 2 seconds. Cooldown per skill: 10 seconds.(8s)"
+      },
+      {
+        "id": "gear_talent_perfect_tech_support",
+        "name": "Perfect Tech Support",
+        "description": "Skill kills increase total skill damage by 25% for 27s."
+      },
+      {
+        "id": "gear_talent_perfect_trauma",
+        "name": "Perfect Trauma",
+        "description": "Applies blind to an enemy hit in the head. Cooldown: 20 seconds. Applies bleed to an enemy hit in the chest. Cooldown: 20 seconds."
+      },
+      {
+        "id": "gear_talent_perfect_unbreakable",
+        "name": "Perfect Unbreakable",
+        "description": "When your armor is depleted, repair 100% of your armor. 55s cool down."
+      },
+      {
+        "id": "gear_talent_perfect_unstoppable_force",
+        "name": "Perfect Unstoppable Force",
+        "description": "Killing an enemy increases total weapon damage by 7% for 15s. Stacks up to 5 times. Grenade kills add 2 stacks."
+      },
+      {
+        "id": "gear_talent_perfect_vanguard",
+        "name": "Perfect Vanguard",
+        "description": "Deploying a shield makes it invulnerable for 5s and grants 50% of your armor as bonus armor to all other allies for 20s.  Cooldown: 25s"
+      },
+      {
+        "id": "gear_talent_perfect_versatile",
+        "name": "Perfect Versatile",
+        "description": "Amplifies total weapon damage for 10s when swapping between your primary and secondary weapons if they are different. 45% to enemies within 15m for Shotguns and SMGs 45% to enemies further than 25m for Rifles and MMRs 20% to enemies between 15-25m for LMGs and Assault Rifles. At most once per 5s per weapon type."
+      },
+      {
+        "id": "gear_talent_perfect_vigilance",
+        "name": "Perfect Vigilance",
+        "description": "Increases total weapon damage by 25%. Taking damage disables this buff for 3s."
+      },
+      {
+        "id": "gear_talent_perfect_wicked",
+        "name": "Perfect Wicked",
+        "description": "Applying a status effect increases total weapon damage by 18% for 27s."
+      },
+      {
+        "id": "gear_talent_point_of_honor",
+        "name": "Point of Honor",
+        "description": "Increases On Point Weapon Damage bonus from 4% to 9%."
+      },
+      {
+        "id": "gear_talent_point_of_no_return",
+        "name": "Point of no Return",
+        "description": "Increase On Point bonuses timer from 20s to 40s."
+      },
+      {
+        "id": "gear_talent_polyethylene_plating",
+        "name": "Polyethylene Plating",
+        "description": "Increase Stoic Damage Resistance bonus from 4% to 5%."
+      },
+      {
+        "id": "gear_talent_positive_reinforcement",
+        "name": "Positive Reinforcement",
+        "description": "Increases Feedback Loop skill damage and repair bonus from +10% to +25%."
+      },
+      {
+        "id": "gear_talent_press_the_advantage",
+        "name": "Press the Advantage",
+        "description": "Increases max stacks for Striker's Gamble from 100 to 200. 3 stacks lost per second between 101 and 200 stacks."
+      },
+      {
+        "id": "gear_talent_process_refinery",
+        "name": "Process Refinery",
+        "description": "Increases Makeshift Repairs from 25% over 10s to 35% over 10s."
+      },
+      {
+        "id": "gear_talent_proliferation",
+        "name": "Proliferation",
+        "description": "Increases Indirect Transmission range from 10m to 15m. Increases refresh percentage from 50% to 75%."
+      },
+      {
+        "id": "gear_talent_protected_reload",
+        "name": "Protected Reload",
+        "description": "Grants +20% bonus armor while reloading. Grants 0%-18% of your armor as bonus armor to all other allies when they are reloading  Each blue core attribute adds 3% to the bonus armour Maximum is 18%"
+      },
+      {
+        "id": "gear_talent_protector",
+        "name": "Protector",
+        "description": "When your shield is damaged, you gain +5% and all other allies gain +15% of your armor as bonus armor for 3s.  Cooldown: 3s."
+      },
+      {
+        "id": "gear_talent_quick_draw",
+        "name": "Quick Draw",
+        "description": "While your pistol is holstered, gain a stacking buff every 0.3s, up to 100. When you swap to it, your first shot consumes the buff and deals +10% damage per stack. This deals headshot damage to anywhere you hit."
+      },
+      {
+        "id": "gear_talent_reassigned",
+        "name": "Reassigned",
+        "description": "Killing an enemy adds 1 round of a random special ammo into your sidearm. Cooldown: 15 seconds."
+      },
+      {
+        "id": "gear_talent_rebalance",
+        "name": "Rebalance",
+        "description": "Getting kills and hitting enemies 3 times build Red stacks. Each stack provides 0.5% Weapon Damage. Getting hit 3 times builds Blue stacks. Each stack provides 0.5% Damage Resistance. Upon reaching 80 stacks in total, lose all stacks and receive a separate bonus of 0.5% Damage Resistance per Red stack and 0.5% Weapon Damage per Blue stack until the next time the stack cap is reached."
+      },
+      {
+        "id": "gear_talent_red_white_and_blue",
+        "name": "Red, White and Blue",
+        "description": "Enemies you shoot receive stacking debuffs of Red/White/Blue. Changes every 2 seconds. Red: Amplifies the enemy's damage taken by 15%. White: Hitting the enemy restores you and your allies' armor by 2% once every second. Blue: Decreases enemy damage dealt by 10%. Full Flag: Enemies that die while under the effect of all three debuffs create a 5m explosion, dealing damage equal to their total health and armor. Explosion strength is reduced on Named enemy deaths."
+      },
+      {
+        "id": "gear_talent_resolved",
+        "name": "Resolved",
+        "description": "Your next body shot will be considered a headshot. Cooldown: 2s Requires Equipped: Marksman Rifle, Rifle or Pistol"
+      },
+      {
+        "id": "gear_talent_resourceful",
+        "name": "Resourceful",
+        "description": "Slots in with any equipped Gear Set and/or Brand Set item to fulfill a requirement towards unlocking a Gear and/or Brand Sets bonus. Can unlock bonuses from multiple sets simultaneously."
+      },
+      {
+        "id": "gear_talent_return_to_sender",
+        "name": "Return to Sender",
+        "description": "For PvE: Receive repairs of 10% of the damage dealt by your Skills. Your allies will receive repairs of 20% of the damage dealt by your Skills. For PvP: Receive repairs of 5% of the damage dealt by your Skills. Your allies will receive repairs of 10% of the damage dealt by your Skills."
+      },
+      {
+        "id": "gear_talent_risk_management",
+        "name": "Risk Management",
+        "description": "Increases total weapon damage gained per stack of Striker's Gamble from 0.65% to 0.9%."
+      },
+      {
+        "id": "gear_talent_rules_of_engagement",
+        "name": "Rules of Engagement",
+        "description": "Shooting a status affected enemy will apply a mark. Killing a marked enemy grants a full clip of Hollow-Point Ammo for your active weapon, and half a clip of the agent's active weapon to the rest of the party. Mark lasts for 10 seconds. Hollow-Point Ammo amplifies weapon damage by 40% and applies bleed on hit."
+      },
+      {
+        "id": "gear_talent_safe_charging",
+        "name": "Safe Charging",
+        "description": "Charging gives 10% protection per second."
+      },
+      {
+        "id": "gear_talent_safeguard",
+        "name": "Safeguard",
+        "description": "While at full armor, increases total skill repair by 130%."
+      },
+      {
+        "id": "gear_talent_shock_and_awe",
+        "name": "Shock and Awe",
+        "description": "Applying a status effect to an enemy increases total skill damage and repair by 20% for 20s."
+      },
+      {
+        "id": "gear_talent_short_circuit",
+        "name": "Short Circuit",
+        "description": "Decreases Feedback Loop cooldown from 10s to 5s."
+      },
+      {
+        "id": "gear_talent_signature_moves",
+        "name": "Signature Moves",
+        "description": "+50% Amplified Weapon Damage for 15s after fully depleting the Signature Weapon of ammo. Doubles the amount of ammo generated by Aggressive Recon."
+      },
+      {
+        "id": "gear_talent_skilled",
+        "name": "Skilled",
+        "description": "Skill kills have a 25% chance to reset skill cooldowns."
+      },
+      {
+        "id": "gear_talent_slotted",
+        "name": "Slotted",
+        "description": "Receive bonuses for each non-Core Attribute on this item, depending on their color: Red: +10% Critical Hit Damage. Yellow: +5% Skill Efficiency. Blue: +1% Armor Regen. This item can feature any Core Attribute. This item features a third random Attribute instead of having a Gear Mod Slot. This item cannot feature the Headshot Damage, Health, or Skill Repair Attributes."
+      },
+      {
+        "id": "gear_talent_smart_cooperation",
+        "name": "Smart Cooperation",
+        "description": "Decrease the cooldown for destroying Mortars and enemy skills from 10s to 1s."
+      },
+      {
+        "id": "gear_talent_smoke_screen",
+        "name": "Smoke Screen",
+        "description": "On Armor break, drop a Smoke Bomb at your feet, concealing you from enemies for 3s. Cooldown: 40s."
+      },
+      {
+        "id": "gear_talent_snowball",
+        "name": "Snowball",
+        "description": "Increase the Critical Hit Damage received per stack from 5% to 8%."
+      },
+      {
+        "id": "gear_talent_spark",
+        "name": "Spark",
+        "description": "Damaging an enemy with a skill increases total weapon damage by 15% for 15s."
+      },
+      {
+        "id": "gear_talent_specialized_destruction",
+        "name": "Specialized Destruction",
+        "description": "Increase Aggressive Recon Signature Weapon Damage bonus from 15% to 30%. Every 3rd Signature Weapon kill generates Signature Weapon ammo."
+      },
+      {
+        "id": "gear_talent_spontaneous_combustion",
+        "name": "Spontaneous Combustion",
+        "description": "Every Status Effect you apply has a 40% chance of also applying Burn to the enemy. If the Status Effect initially applied was Burn, the enemy will receive +25% Burn Damage for the duration of the Burn"
+      },
+      {
+        "id": "gear_talent_spotter",
+        "name": "Spotter",
+        "description": "Amplifies total weapon and skill damage by 15% to pulsed enemies."
+      },
+      {
+        "id": "gear_talent_stand_tall",
+        "name": "Stand Tall",
+        "description": "Increases bonus Armor from 50% to 100%."
+      },
+      {
+        "id": "gear_talent_stand_your_ground",
+        "name": "Stand Your Ground",
+        "description": "Cannot be staggered by explosions. Increases total weapon damage by 3% each second you are not moving. Stacks up to 10 until you start moving. All stacks lost 10s after moving."
+      },
+      {
+        "id": "gear_talent_stoic",
+        "name": "Stoic",
+        "description": "Get +4% Damage Resistance for every enemy that is targeting you. The bonus is multiplied by 1.X, where X is the number of agents in your group."
+      },
+      {
+        "id": "gear_talent_striker_s_gamble",
+        "name": "Striker's Gamble",
+        "description": "Weapon hits amplify total weapon damage by 0.65%, stacking up to 100 times. 1 stack lost per second between 0 to 50 stacks; 2 stacks lost per second between 51 and 100 stacks."
+      },
+      {
+        "id": "gear_talent_sustainability",
+        "name": "Sustainability",
+        "description": "Increase the maximum number of stacks from 50 to 75."
+      },
+      {
+        "id": "gear_talent_symphony",
+        "name": "Symphony",
+        "description": "Kills Beyond 25 Meters: +40% Weapon Damage to Shotguns, SMGs, and Pistols; +20% Weapon Damage to Assault Rifles and LMGs; and +25% Bonus Armor for 15s. Kills Within 25 Meters: +40% Weapon Damage to Marksman Rifles and Rifles; +20% Weapon Damage to Assault Rifles and LMGs; and +30% Headshot Damage for 15s. Intermittently killing enemies from both ranges builds up stacks. At 4 stacks, all bonuses are multiplied by 1.5 and triggered simultaneously for 15s. No stacks gained while talent is active."
+      },
+      {
+        "id": "gear_talent_symptom_aggravator",
+        "name": "Symptom Aggravator",
+        "description": "Amplifies all damage you deal to status affected targets by 30%."
+      },
+      {
+        "id": "gear_talent_tactical_superiority",
+        "name": "Tactical Superiority",
+        "description": "Increases Ground Control damage bonus from 15% to 25%."
+      },
+      {
+        "id": "gear_talent_tag_team",
+        "name": "Tag Team",
+        "description": "The last enemy you have damaged with a skill is marked. Dealing weapon damage to that enemy consumes the mark to reduce active cooldowns by 6s.  Cooldown: 4s"
+      },
+      {
+        "id": "gear_talent_tamper_proof",
+        "name": "Tamper Proof",
+        "description": "Enemies that walk within 3 meters of your hive, turret, remote pulse, or decoy are shocked. Arm time: 2 seconds. Cooldown per skill: 10 seconds.(8s)"
+      },
+      {
+        "id": "gear_talent_target_rich_environment",
+        "name": "Target Rich Environment",
+        "description": "Increases Hostile Negotiations mark count from 3 to 5."
+      },
+      {
+        "id": "gear_talent_tech_support",
+        "name": "Tech Support",
+        "description": "Skill kills increase total skill damage by 25% for 25s."
+      },
+      {
+        "id": "gear_talent_tend_and_befriend",
+        "name": "Tend and Befriend",
+        "description": "Interacting with your deployed skills grants the skill 25% skill damage for 10s. This buff cannot be refreshed. Interactions include: Using / Deploying the Skill, Changing the skills target, Healing the skill."
+      },
+      {
+        "id": "gear_talent_throttle_control",
+        "name": "Throttle Control",
+        "description": "Shooting builds stacks to a max of 50. Each stack provides +0.5% Weapon Handling and +5% Critical Hit Damage. Lose 6 stacks per second while not shooting. No stacks are lost if an enemy is Suppressed."
+      },
+      {
+        "id": "gear_talent_toxic_delivery",
+        "name": "Toxic Delivery",
+        "description": "Status effects also apply a damage over time debuff for 10s. Total Damage dealt is equal to 50% of your concussion grenade damage and increased by your status effect attributes."
+      },
+      {
+        "id": "gear_talent_transference_overclock",
+        "name": "Transference Overclock",
+        "description": "Grants 15% Hive skill haste per skill tier. Detonating a hive refreshes your skill cooldowns and grants overcharge for 15s. If at Skill Tier 6, this effect also applies to all allies. Allies receiving this effect are unable to benefit from it again for 120s."
+      },
+      {
+        "id": "gear_talent_trauma",
+        "name": "Trauma",
+        "description": "Applies blind to an enemy hit in the head. Cooldown: 30 seconds. Applies bleed to an enemy hit in the chest. Cooldown: 30 seconds."
+      },
+      {
+        "id": "gear_talent_trauma_specialist",
+        "name": "Trauma Specialist",
+        "description": "Increases duration of bleed status effects by 50% and all bleed damage done by 100%."
+      },
+      {
+        "id": "gear_talent_unbreakable",
+        "name": "Unbreakable",
+        "description": "When your armor is depleted, repair 95% of your armor. 60s cool down."
+      },
+      {
+        "id": "gear_talent_unstoppable_force",
+        "name": "Unstoppable Force",
+        "description": "Killing an enemy increases total weapon damage by 5% for 15s. Stacks up to 5 times. Grenade kills add 2 stacks."
+      },
+      {
+        "id": "gear_talent_vanguard",
+        "name": "Vanguard",
+        "description": "Deploying a shield makes it invulnerable for 5s and grants 45% of your armor as bonus armor to all other allies for 20s.  Cooldown: 25s"
+      },
+      {
+        "id": "gear_talent_versatile",
+        "name": "Versatile",
+        "description": "Amplifies total weapon damage for 10s when swapping between your primary and secondary weapons if they are different. 35% to enemies within 15m for Shotguns and SMGs 35% to enemies further than 25m for Rifles and MMRs 10% to enemies between 15-25m for LMGs and Assault Rifles. At most once per 5s per weapon type."
+      },
+      {
+        "id": "gear_talent_vicious_cycle",
+        "name": "Vicious Cycle",
+        "description": "Taking damage builds stacks to a cap of 30. Each stack grants 1.5% Weapon Damage. Taking damage at max stacks triggers a purge, removing all stacks and Status Effects and then dropping a healing cloud which restores 5% of Max Armor for 10s to all allies in the cloud."
+      },
+      {
+        "id": "gear_talent_vigilance",
+        "name": "Vigilance",
+        "description": "Increases total weapon damage by 25%. Taking damage disables this buff for 4s."
+      },
+      {
+        "id": "gear_talent_waving_the_flag",
+        "name": "Waving the Flag",
+        "description": "Increases Red, White, and Blue rotation speed to 1 second."
+      },
+      {
+        "id": "gear_talent_weakest_link",
+        "name": "Weakest Link",
+        "description": "Amplifies Weapon Damage by 30% to the lowest ranking enemies currently in combat, as per the Tier hierarchy. Tier 1: Hunter, Rogue, Leader, Tank, Shield, Heavy Weapons, RPG, Medic, Controller, Warhound, Marauder. Tier 2: Support, Engineer, Bodyguard, Immobilizer, Bomber, Mini Tank, Drone Operator. Tier 3: Any other enemy or skill proxy."
+      },
+      {
+        "id": "gear_talent_white_hot",
+        "name": "White Hot",
+        "description": "Increase the Duration of the Burn Damage debuff of Spontaneous Combustion by +50%"
+      },
+      {
+        "id": "gear_talent_wicked",
+        "name": "Wicked",
+        "description": "Applying a status effect increases total weapon damage by 18% for 20s."
+      },
+      {
+        "id": "weapon_talent_actum_est",
+        "name": "Actum Est",
+        "description": "Shooting an enemy with this weapon will give 1 stack. At 100 stacks the next magazine will be 100% filled with shock ammo."
+      },
+      {
+        "id": "weapon_talent_adaptive_instincts",
+        "name": "Adaptive Instincts",
+        "description": "Hitting 30 headshots grants 20% critical hit chance and 50% critical hit damage for 45 seconds. Hitting 65 body shots grants 90% weapon damage for 45 seconds. Hitting 20 leg shots grants 150% reload speed for 45 seconds. Buffs refresh when out of combat."
+      },
+      {
+        "id": "weapon_talent_agonizing_bite",
+        "name": "Agonizing Bite",
+        "description": "Diamondback randomly marks an enemy within 20m. If no enemies are within 20m, it marks the enemy closest to you. Hitting that enemy consumes the mark, guaranteeing a critical hit with damage amplified by 20%. After hitting a mark, all shots fired are guaranteed critical hits for 5 seconds. A new random enemy is marked afterwards and whenever you reload."
+      },
+      {
+        "id": "weapon_talent_ardent",
+        "name": "Ardent",
+        "description": "Shooting heats up the weapon, filling up heat meter. The meter is equivalent to 50% of the weapon's standard Magazine Size. When the meter is full, rounds shot by the weapon will ignite enemies. When not shooting, the meter depletes over time. Reloading or swapping the weapon fully depletes the meter."
+      },
+      {
+        "id": "weapon_talent_autentico",
+        "name": "Autentico",
+        "description": "+35 Weapon Damage. +100% accuracy. No Damage Drop Off. These bonuses are built into the weapon's base stats."
+      },
+      {
+        "id": "weapon_talent_back_and_forth",
+        "name": "Back and Forth",
+        "description": "Swapping to this weapon grants +10% Rate of Fire and +9% Weapon Damage for 10s. Swapping from this weapon grants +5% Rate of Fire and +4.5% Weapon Damage for 10s. Receiving one of the bonus groups will remove the other if it's still active. Two instances of this talent will not function at the same time."
+      },
+      {
+        "id": "weapon_talent_behind_you",
+        "name": "Behind You",
+        "description": "Amplifies weapon damage by +20% to enemies that are not targeting you."
+      },
+      {
+        "id": "weapon_talent_big_game_hunter",
+        "name": "Big Game Hunter",
+        "description": "When scoped, switches to semi-automatic fire mode, dealing 450% weapon damage with each shot. Headshots grant +6% headshot damage. Stacks up to 25 times. Once at full stacks, 10 stacks decay every 4 seconds until all stacks have been removed. Headshots delay decaying of stacks."
+      },
+      {
+        "id": "weapon_talent_binary_trigger",
+        "name": "Binary Trigger",
+        "description": "This weapon fires on trigger pull and release. If both bullets hit the same enemy, gain a stack. At 7 stacks, shooting an enemy deals 500% amplified damage and creates a 7m explosion dealing 500% weapon damage, consuming the stacks."
+      },
+      {
+        "id": "weapon_talent_blossom_harvest",
+        "name": "Blossom Harvest",
+        "description": "Amplifies Weapon Damage by 3.3% for each 10% combined Armor and Health the enemy has remaining."
+      },
+      {
+        "id": "weapon_talent_boiling_point",
+        "name": "Boiling Point",
+        "description": "The first 53% of your magazine will have -100% Critical Hit Chance. The rest will have 100%."
+      },
+      {
+        "id": "weapon_talent_boomerang",
+        "name": "Boomerang",
+        "description": "Critical hits have a 50% chance to return the bullet to the magazine. If a bullet is returned to the magazine the next shot gains 40% increased damage."
+      },
+      {
+        "id": "weapon_talent_brazen",
+        "name": "Brazen",
+        "description": "Receive +3.5% Amplified Damage on the next shot with the weapon for each pellet that hits the target, if at least 6 pellets hit."
+      },
+      {
+        "id": "weapon_talent_breadbasket",
+        "name": "Breadbasket",
+        "description": "Landing body shots adds a stack of bonus +55% headshot damage to the next headshot for 10s. Max stack is 3."
+      },
+      {
+        "id": "weapon_talent_breathe_free",
+        "name": "Breathe Free",
+        "description": "When moving, gain 4 stacks per second, or 8 stacks if sprinting. Max stack is equal to the weapon's Magazine Size. Each round fired consumes a stack, amplifying damage by 75%. Kills grant +20% movement speed for 10s."
+      },
+      {
+        "id": "weapon_talent_bullet_hell",
+        "name": "Bullet Hell",
+        "description": "This weapon never needs to be reloaded. For every 100 bullets that hit an enemy, replenish some ammo to you and all your allies' reserves."
+      },
+      {
+        "id": "weapon_talent_busy_little_bee",
+        "name": "Busy Little Bee",
+        "description": "Each shot to a different target will give 1 stack, up to 10, each stack will give 20% amplified weapon damage increase. Stacks will activate once the agent switches weapon and will last for 10 seconds."
+      },
+      {
+        "id": "weapon_talent_caduceus",
+        "name": "Caduceus",
+        "description": "Critical hits repair you and your allies for 3% of the hit's dealt damage."
+      },
+      {
+        "id": "weapon_talent_capacitance",
+        "name": "Capacitance",
+        "description": "Shooting enemies builds stacks to a cap of 40. Each stack grants 1.5% Skill Damage. After 5 seconds, stacks decay 1 per second. For each skill tier gain 7.5% Weapon Damage."
+      },
+      {
+        "id": "weapon_talent_capitulate",
+        "name": "Capitulate",
+        "description": "Hitting an enemy applies -4% Movement Speed for each pellet hit for 5 seconds. Shooting the enemy again will reapply the stacks."
+      },
+      {
+        "id": "weapon_talent_close_personal",
+        "name": "Close & Personal",
+        "description": "Killing a target within 7m grants +30% weapon damage for 10s."
+      },
+      {
+        "id": "weapon_talent_cover_shooter",
+        "name": "Cover Shooter",
+        "description": "Every bullet fired while in cover increases weapon damage by 1% up to 100%. The bonus lasts for 15 seconds. Getting a kill with this weapon while in cover resets the duration. The bonus damage is canceled by reloading, swapping weapons, or exiting combat."
+      },
+      {
+        "id": "weapon_talent_determined",
+        "name": "Determined",
+        "description": "After killing an enemy with a headshot the next shot landed on any enemy will be a guaranteed headshot."
+      },
+      {
+        "id": "weapon_talent_disruptor_rounds",
+        "name": "Disruptor Rounds",
+        "description": "Shooting an enemy marks that enemy and adds a stack to the agent up to a count of 50. Shooting a marked enemy refreshes the mark and adds stacks to the agent. When you deploy a non-shield skill, remove all stacks on agent and all marked targets trigger an effect. 1-10 Stacks: Pulse marked targets for 5 seconds. 11-25 Stacks: Pulse and Disrupt marked targets for 5 seconds. 26-49 Stacks: Pulse, Disrupt, and Disorient marked targets for 5 seconds. 50 Stacks: Pulse, Disrupt, and Disorient marked targets and all hostiles within 10 meters of the marked targets. This effect will trigger immediately if any marked enemy is killed."
+      },
+      {
+        "id": "weapon_talent_doctor_home",
+        "name": "Doctor Home",
+        "description": "Shooting an enemy with this weapon will apply a mark for 5 seconds. If a marked target is killed it will give a 50% armor repair kit which applies to the whole party. The kit will not give bonus armor."
+      },
+      {
+        "id": "weapon_talent_dragon_s_breath",
+        "name": "Dragon's Breath",
+        "description": "This weapon fires Dragon's Breath shells. Each shot has a 40% chance of applying Burn to the enemy. An enemy cannot be applied Burn if they are burning already. Weapon Damage is Amplified by 50% of your Status Effects bonus."
+      },
+      {
+        "id": "weapon_talent_eagle_s_strike_tenacity",
+        "name": "Eagle's Strike / Tenacity",
+        "description": "Accuracy increases as you continuously fire, up to 30%. Headshot kills grant the Tenacity buff for 15 seconds. The strength of Tenacity is increased by 1% for body shots and 5% for headshots. Tenacity: 40-80% of damage taken is delayed until the buff expires. All of the total delayed damage is reduced for each enemy killed while the buff is active, up to 100%."
+      },
+      {
+        "id": "weapon_talent_electromagnetic_accelerator",
+        "name": "Electromagnetic Accelerator",
+        "description": "Shots fired deal 0-100% weapon damage based on how long the trigger is held before releasing."
+      },
+      {
+        "id": "weapon_talent_eyeless",
+        "name": "Eyeless",
+        "description": "Amplifies +30% weapon damage to blinded enemies. After 4 kills, applies blind to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_fast_hands",
+        "name": "Fast Hands",
+        "description": "Critical hits add a stack of 3% reload speed bonus. Max stack is 40."
+      },
+      {
+        "id": "weapon_talent_faster_than_reloading",
+        "name": "Faster Than Reloading",
+        "description": "Having this weapon holstered for 5s reloads and primes it. While primed, swapping to this weapon reloads your Primary and Secondary weapons and grants +20% Rate of Fire and +50% Weapon Damage until its magazine is emptied. Reloading or swapping from this weapon before its magazine is emptied will remove its stat bonuses."
+      },
+      {
+        "id": "weapon_talent_finisher",
+        "name": "Finisher",
+        "description": "Swapping from this weapon within 10s of killing an enemy grants 30% critical hit chance and 30% critical hit damage for 15s."
+      },
+      {
+        "id": "weapon_talent_first_blood",
+        "name": "First Blood",
+        "description": "If scoped, your first shot fired from out of combat or after fully reloading from empty deals headshot damage to any part of the body hit. Requires a Scope with 8x magnification or higher."
+      },
+      {
+        "id": "weapon_talent_flatline",
+        "name": "Flatline",
+        "description": "Amplifies weapon damage by 15% to pulsed enemies. After 4 kills, applies pulse to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_foam_at_the_mouth",
+        "name": "Foam at the Mouth",
+        "description": "After killing an enemy with a headshot, applies Ensnare to the next enemy you hit. Amplifies weapon damage by 25% to ensnared enemies."
+      },
+      {
+        "id": "weapon_talent_frenzy",
+        "name": "Frenzy",
+        "description": "For every 10 bullets in the magazine capacity, gain +3% rate of fire and +3% weapon damage for 9s when reloading from empty."
+      },
+      {
+        "id": "weapon_talent_full_stop",
+        "name": "Full Stop",
+        "description": "Shooting enemies builds stacks to a cap of 20. Headshots grant 2 stacks. Each stack grants 2% Weapon Damage and 5% Headshot Damage. On reload, clear all stacks and gain 5% of your max armor as temp armor for 10 seconds for each stack removed. Headshot kills with Dread Edict restore all bullets in the magazine. This does not count as a reload."
+      },
+      {
+        "id": "weapon_talent_future_perfect",
+        "name": "Future Perfect",
+        "description": "Weapon kills grant +1 skill tier for 15s. Stacks up to 3 times. Weapon kills at skill tier 6 grant overcharge for 15s. Overcharge Cooldown: 90s"
+      },
+      {
+        "id": "weapon_talent_future_perfection",
+        "name": "Future Perfection",
+        "description": "Weapon kills grant +1 skill tier for 19s. Stacks up to 4 times. Weapon kills at skill tier 6 grant overcharge for 15s. Overcharge Cooldown: 90s"
+      },
+      {
+        "id": "weapon_talent_gangland_hit",
+        "name": "Gangland Hit",
+        "description": "Shooting an enemy with this weapon applies a mark. You can only apply one mark at a time. Shooting another enemy will transfer the mark. More marks can be applied on the same enemy by other agents using this weapon. Maximum amount of marks that can be applied on an enemy is 4. This weapon deals +20% Amplified Damage to marked enemies. The bonus is increased by 5% for each extra mark on the enemy other than your own"
+      },
+      {
+        "id": "weapon_talent_geri_and_freki",
+        "name": "Geri and Freki",
+        "description": "On trigger pull, fire both barrels at once. When fired from the right shoulder, hits add offensive primers, and defensive primers when fired from the left shoulder. Hits from one shoulder will detonate all of the opposite shoulder's primers when present. When detonated, each offensive primer deals 100% weapon damage, while each defensive primer grants +4% bonus armor and +10% amplified damage to armor plates for 5s. Primer effectiveness is doubled at 10 stacks."
+      },
+      {
+        "id": "weapon_talent_head_scratcher",
+        "name": "Head Scratcher",
+        "description": "Deal 30% Amplified Damage to confused enemies. After 4 kills, applies Confuse to the enemy you hit."
+      },
+      {
+        "id": "weapon_talent_hidden_rock",
+        "name": "Hidden Rock",
+        "description": "Headshots apply confuse. Cooldown 20s."
+      },
+      {
+        "id": "weapon_talent_high_priority_target",
+        "name": "High Priority Target",
+        "description": "Amplifies Weapon Damage by 125% to the highest ranking enemies currently in combat, as per the Tier hierarchy. Tier 1: Hunter, Rogue, Leader, Tank, Shield, Heavy Weapons, RPG, Medic, Controller, Warhound, Marauder. Tier 2: Support, Engineer, Bodyguard, Immobilizer, Bomber, Mini Tank, Drone Operator. Tier 3: Any other enemy or skill proxy."
+      },
+      {
+        "id": "weapon_talent_ignited",
+        "name": "Ignited",
+        "description": "Amplifies +25% weapon damage to burning enemies.  After 4 kills, applies burning to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_immobilize",
+        "name": "Immobilize",
+        "description": "Amplifies weapon damage by 20% to ensared enemies. After 4 kills applies Ensnare to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_in_plain_sight",
+        "name": "In Plain Sight",
+        "description": "Your scoped view displays additional information about enemies not targeting you. Headshot and weakpoint damage against enemies not targeting you is amplified by 65%. Headshot kills reset the cooldown of your Decoy Skill. This bonus will wait until the Decoy goes on cooldown if currently active."
+      },
+      {
+        "id": "weapon_talent_in_sync",
+        "name": "In Sync",
+        "description": "Hitting an enemy grants +15% skill damage for 5s. Using a skill or damaging an enemy with a skill grants +15% weapon damage for 5s. Damage increases are doubled while both buffs are active at the same time."
+      },
+      {
+        "id": "weapon_talent_incessant_chatter",
+        "name": "Incessant Chatter",
+        "description": "When you reload, rate of fire is increased by 25% for each enemy within 15m for the duration of that magazine. Max stacks: 5. Kills refill 50% of your magazine."
+      },
+      {
+        "id": "weapon_talent_killer",
+        "name": "Killer",
+        "description": "Killing an enemy with a critical hit grants +70% critical hit damage for 10s."
+      },
+      {
+        "id": "weapon_talent_liberty_or_death",
+        "name": "Liberty or Death",
+        "description": "Hits grant +2% weapon damage. Stacks up to 30 times. Headshots consume all stacks, repairing your shield for 3% per stack."
+      },
+      {
+        "id": "weapon_talent_lucky_shot",
+        "name": "Lucky Shot",
+        "description": "Magazine capacity is increased by 20%. Missed shots from cover have a 100% chance to return to the magazine."
+      },
+      {
+        "id": "weapon_talent_measured",
+        "name": "Measured",
+        "description": "The top half of the magazine has 25% rate of fire and -25% weapon damage. The bottom half of the magazine has -18% rate of fire and +30% total weapon damage."
+      },
+      {
+        "id": "weapon_talent_mosquito_song",
+        "name": "Mosquito Song",
+        "description": "Hitting an enemy applies a stack. Stacks are shared between players. At 5 stacks, the enemy will forcefully target the last player to apply a stack for 5s and take 25% more damage to armor. Stacks deplete every 5s. Activating the effect on an enemy will remove all stacks from other enemies."
+      },
+      {
+        "id": "weapon_talent_naked",
+        "name": "Naked",
+        "description": "Hitting an enemy with no armor grants +50% headshot damage for 5s."
+      },
+      {
+        "id": "weapon_talent_near_sighted",
+        "name": "Near Sighted",
+        "description": "Receive +80% stability at the cost of -35% optimal range."
+      },
+      {
+        "id": "weapon_talent_on_empty",
+        "name": "On Empty",
+        "description": "Reloading from empty grants +60% weapon handling for 10s."
+      },
+      {
+        "id": "weapon_talent_optimist",
+        "name": "Optimist",
+        "description": "Weapon damage is increased by +3.5% for every 10% ammo missing from the magazine. (Bonus is linear across every round)"
+      },
+      {
+        "id": "weapon_talent_ortiz_assault_interface",
+        "name": "Ortiz Assault Interface",
+        "description": "While scoped, the weapon will highlight a random body section of each enemy. The weapon amplifies damage by +60% Weapon Damage to highlighted body sections."
+      },
+      {
+        "id": "weapon_talent_outsider",
+        "name": "Outsider",
+        "description": "After killing an enemy, gain 100% optimal range and +100% accuracy for 10s."
+      },
+      {
+        "id": "weapon_talent_overflowing",
+        "name": "Overflowing",
+        "description": "Every 3 reloads from empty increases your base magazine capacity by 100%."
+      },
+      {
+        "id": "weapon_talent_overwhelm",
+        "name": "Overwhelm",
+        "description": "Suppressing an enemy, that is not currently suppressed, grants +10% weapon damage for 12 seconds. Max stack is 4."
+      },
+      {
+        "id": "weapon_talent_pakhan",
+        "name": "Pakhan",
+        "description": "Each kill with this weapon gains a stack of 75% Base Magazine Size increase to the next magazine, up to 4 stacks."
+      },
+      {
+        "id": "weapon_talent_payment_in_kind",
+        "name": "Payment in Kind",
+        "description": "Dealing damage to enemies adds a stack of 2% Critical Hit Damage, up to 100 stacks, lasting 10s. On reload apply a 10s bleed to yourself, which deals 0.5% armor damage per stack."
+      },
+      {
+        "id": "weapon_talent_perfect_accurate",
+        "name": "Perfect Accurate",
+        "description": "80% accuracy."
+      },
+      {
+        "id": "weapon_talent_perfect_allegro",
+        "name": "Perfect Allegro",
+        "description": "15% rate of fire."
+      },
+      {
+        "id": "weapon_talent_perfect_back_and_forth",
+        "name": "Perfect Back and Forth",
+        "description": "Swapping to this weapon grants +13% Rate of Fire and +12% Weapon Damage for 10s. Swapping from this weapon grants +5% Rate of Fire and +4.5% Weapon Damage for 10s. Receiving one of the bonus groups will remove the other if it's still active. Two instances of this talent will not function at the same time."
+      },
+      {
+        "id": "weapon_talent_perfect_behind_you",
+        "name": "Perfect Behind You",
+        "description": "Amplifies weapon damage by +25% to enemies that are not targeting you."
+      },
+      {
+        "id": "weapon_talent_perfect_boiling_point",
+        "name": "Perfect Boiling Point",
+        "description": "The first 48% of your magazine will have -100% Critical Hit Chance. The rest will have 100%."
+      },
+      {
+        "id": "weapon_talent_perfect_boomerang",
+        "name": "Perfect Boomerang",
+        "description": "Critical hits have a 75% chance to return the bullet to the magazine. If a bullet is returned to the magazine the next shot gains 50% increased damage."
+      },
+      {
+        "id": "weapon_talent_perfect_brazen",
+        "name": "Perfect Brazen",
+        "description": "Receive +3.5% Amplified Damage on the next shot with the weapon for each pellet that hits the target, if at least 4 pellets hit."
+      },
+      {
+        "id": "weapon_talent_perfect_breadbasket",
+        "name": "Perfect Breadbasket",
+        "description": "Landing body shots adds a stack of bonus +70% headshot damage to the next headshot for 10s. Max stack is 2."
+      },
+      {
+        "id": "weapon_talent_perfect_close_personal",
+        "name": "Perfect Close & Personal",
+        "description": "Killing a target within 7m grants +38% weapon damage for 10s."
+      },
+      {
+        "id": "weapon_talent_perfect_determined",
+        "name": "Perfect Determined",
+        "description": "After killing an enemy with a headshot the next shot landed on any enemy will be a guaranteed (critical) headshot."
+      },
+      {
+        "id": "weapon_talent_perfect_distance",
+        "name": "Perfect Distance",
+        "description": "+25% optimal range."
+      },
+      {
+        "id": "weapon_talent_perfect_extra",
+        "name": "Perfect Extra",
+        "description": "+30% magazine capacity."
+      },
+      {
+        "id": "weapon_talent_perfect_eyeless",
+        "name": "Perfect Eyeless",
+        "description": "Amplifies +35% weapon damage to blinded enemies. After 3 kills, applies blind to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_perfect_fast_hands",
+        "name": "Perfect Fast Hands",
+        "description": "Critical hits add a stack of 5% reload speed bonus. Max stack is 40."
+      },
+      {
+        "id": "weapon_talent_perfect_finisher",
+        "name": "Perfect Finisher",
+        "description": "Swapping from this weapon within 10s of killing an enemy grants 35% critical hit chance and 40% critical hit damage for 15s."
+      },
+      {
+        "id": "weapon_talent_perfect_first_blood",
+        "name": "Perfect First Blood",
+        "description": "If scoped, your first 2 shot fired from out of combat or after fully reloading from empty deals headshot damage to any part of the body hit. Requires a Scope with 8x magnification or higher."
+      },
+      {
+        "id": "weapon_talent_perfect_flatline",
+        "name": "Perfect Flatline",
+        "description": "Amplifies weapon damage by 20% to pulsed enemies. After 3 kills, applies pulse to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_perfect_frenzy",
+        "name": "Perfect Frenzy",
+        "description": "For every 8 bullets in the magazine capacity, gain +3% rate of fire and +3% weapon damage for 9s when reloading from empty."
+      },
+      {
+        "id": "weapon_talent_perfect_head_scratcher",
+        "name": "Perfect Head Scratcher",
+        "description": "Deal 35% Amplified Damage to confused enemies. After 3 kills, applies Confuse to the enemy you hit."
+      },
+      {
+        "id": "weapon_talent_perfect_ignited",
+        "name": "Perfect Ignited",
+        "description": "Amplifies +30% weapon damage to burning enemies. After 3 kills, applies burning to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_perfect_immobilize",
+        "name": "Perfect Immobilize",
+        "description": "Amplifies weapon damage by 25% to ensared enemies. After 3 kills applies Ensnare to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_perfect_in_sync",
+        "name": "Perfect In Sync",
+        "description": "Hitting an enemy grants +20% skill damage for 5s. Using a skill or damaging an enemy with a skill grants +20% weapon damage for 5s. Damage increases are doubled while both buffs are active at the same time."
+      },
+      {
+        "id": "weapon_talent_perfect_jazz_hands",
+        "name": "Perfect Jazz Hands",
+        "description": "50% reload speed."
+      },
+      {
+        "id": "weapon_talent_perfect_killer",
+        "name": "Perfect Killer",
+        "description": "Killing an enemy with a critical hit grants +90% critical hit damage for 10s."
+      },
+      {
+        "id": "weapon_talent_perfect_lucky_shot",
+        "name": "Perfect Lucky Shot",
+        "description": "Magazine capacity is increased by 30%. Missed shots from cover have a 100% chance to return to the magazine."
+      },
+      {
+        "id": "weapon_talent_perfect_measured",
+        "name": "Perfect Measured",
+        "description": "The top half of the magazine has 25% rate of fire and -30% weapon damage. The bottom half of the magazine has -18% rate of fire and +38% total weapon damage."
+      },
+      {
+        "id": "weapon_talent_perfect_naked",
+        "name": "Perfect Naked",
+        "description": "Hitting an enemy with no armor grants +50% headshot damage for 8s."
+      },
+      {
+        "id": "weapon_talent_perfect_near_sighted",
+        "name": "Perfect Near Sighted",
+        "description": "Receive +100% stability at the cost of -35% optimal range."
+      },
+      {
+        "id": "weapon_talent_perfect_on_empty",
+        "name": "Perfect On Empty",
+        "description": "Reloading from empty grants +80% weapon handling for 10s."
+      },
+      {
+        "id": "weapon_talent_perfect_optimist",
+        "name": "Perfect Optimist",
+        "description": "Weapon damage is increased by +4.5% for every 10% ammo missing from the magazine. (Bonus is linear across every round)"
+      },
+      {
+        "id": "weapon_talent_perfect_optimized",
+        "name": "Perfect Optimized",
+        "description": "20% weapon handling."
+      },
+      {
+        "id": "weapon_talent_perfect_outsider",
+        "name": "Perfect Outsider",
+        "description": "After killing an enemy, gain 150% optimal range and +125% accuracy for 10s."
+      },
+      {
+        "id": "weapon_talent_perfect_overflowing",
+        "name": "Perfect Overflowing",
+        "description": "Every 2 reloads from empty increases your base magazine capacity by 100%."
+      },
+      {
+        "id": "weapon_talent_perfect_overwhelm",
+        "name": "Perfect Overwhelm",
+        "description": "Suppressing an enemy, that is not currently suppressed, grants +12% weapon damage for 12 seconds. Max stack is 4."
+      },
+      {
+        "id": "weapon_talent_perfect_perpetuation",
+        "name": "Perfect Perpetuation",
+        "description": "Headshots grant +75% status effect damage and duration to the next status effect you apply. Cooldown: 16s."
+      },
+      {
+        "id": "weapon_talent_perfect_precision_strike",
+        "name": "Perfect Precision Strike",
+        "description": "Killing enemies farther than 20m builds up stacks. Max stack is 2. Hitting an enemy within 20m will use stacks to provide 35% amplified damage per stack to enemies within 20m for 5s."
+      },
+      {
+        "id": "weapon_talent_perfect_preservation",
+        "name": "Perfect Preservation",
+        "description": "Killing an enemy repairs 15% armor over 5s. Headshot kills improve the repair by an additional 15%"
+      },
+      {
+        "id": "weapon_talent_perfect_pressure_point",
+        "name": "Perfect Pressure Point",
+        "description": "Amplifies weapon damage by 20% to enemies under status effects."
+      },
+      {
+        "id": "weapon_talent_perfect_pummel",
+        "name": "Perfect Pummel",
+        "description": "2 consecutive kills refills the magazine and grants +40% weapon damage for 10s."
+      },
+      {
+        "id": "weapon_talent_perfect_pumped_up",
+        "name": "Perfect Pumped Up",
+        "description": "Reloading grants +6% weapon damage for 10s. Stacks up to 5 times."
+      },
+      {
+        "id": "weapon_talent_perfect_ranger",
+        "name": "Perfect Ranger",
+        "description": "Amplifies weapon damage by 2% for every 3m you are away from your target."
+      },
+      {
+        "id": "weapon_talent_perfect_reformation",
+        "name": "Perfect Reformation",
+        "description": "Headshots grant +80% skill repair for 15s."
+      },
+      {
+        "id": "weapon_talent_perfect_rifleman",
+        "name": "Perfect Rifleman",
+        "description": "Landing headshots adds a stack of bonus +11% weapon damage for 5s. Max stack is 6. Additional headshots refresh the duration."
+      },
+      {
+        "id": "weapon_talent_perfect_sadist",
+        "name": "Perfect Sadist",
+        "description": "Amplifies +35% weapon damage to bleeding enemies. After 3 kills, applies bleed to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_perfect_salvage",
+        "name": "Perfect Salvage",
+        "description": "Killing a target has a +85% chance to refill the magazine."
+      },
+      {
+        "id": "weapon_talent_perfect_sledgehammer",
+        "name": "Perfect Sledgehammer",
+        "description": "Dealing damage with a grenade applies a mark on target. Targets with mark will take 20% more damage to armor from the agent that applied the mark and have a -30% movement speed. Mark will disappear after 10 seconds."
+      },
+      {
+        "id": "weapon_talent_perfect_soft_spot",
+        "name": "Perfect Soft Spot",
+        "description": "Destroying a Weakpoint grants 24% Weapon Damage for 15s."
+      },
+      {
+        "id": "weapon_talent_perfect_spike",
+        "name": "Perfect Spike",
+        "description": "Headshots grant +25% skill damage for 15s."
+      },
+      {
+        "id": "weapon_talent_perfect_stabilize",
+        "name": "Perfect Stabilize",
+        "description": "Firing your weapon increases Weapon Accuracy by 1% and Weapon Stability by 1% per shot up to 75%. If you stop firing, the bonuses reset after 6 seconds."
+      },
+      {
+        "id": "weapon_talent_perfect_steady_handed",
+        "name": "Perfect Steady Handed",
+        "description": "Hits grant a stack of +1% Accuracy and Stability. At 75 stacks, consumes stacks to refill the magazine."
+      },
+      {
+        "id": "weapon_talent_perfect_strained",
+        "name": "Perfect Strained",
+        "description": "Gain 10% critical hit damage for every 0.5s you are firing. Stacks up to 8 times."
+      },
+      {
+        "id": "weapon_talent_perfect_streamline",
+        "name": "Perfect Streamline",
+        "description": "Increase Weapon Damage by 47% when no Skills are Deployed or on Cooldown."
+      },
+      {
+        "id": "weapon_talent_perfect_thunder_strike",
+        "name": "Perfect Thunder Strike",
+        "description": "Amplifies 35% extra damage to shocked targets. After 3 kills, applies shock to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_perfect_unhinged",
+        "name": "Perfect Unhinged",
+        "description": "Grants +22% weapon damage at the cost of -25% Stability and -25% Accuracy."
+      },
+      {
+        "id": "weapon_talent_perfect_unwavering",
+        "name": "Perfect Unwavering",
+        "description": "Swapping to this weapon grants +400% weapon handling for 5s. Kills refresh the buff. Swapping away disables this from all weapons for 5s."
+      },
+      {
+        "id": "weapon_talent_perfect_vindictive",
+        "name": "Perfect Vindictive",
+        "description": "Killing an enemy with a status effect applied grants you and all allies within 20m 21% Critical hit chance and 21% critical hit damage for 20s."
+      },
+      {
+        "id": "weapon_talent_perpetuation",
+        "name": "Perpetuation",
+        "description": "Headshots grant +75% status effect damage and duration to the next status effect you apply. Cooldown: 20s."
+      },
+      {
+        "id": "weapon_talent_perturb",
+        "name": "Perturb",
+        "description": "While this weapon is holstered, generate 50% less Threat when shooting. Keeping this weapon holstered for 10s will Prime it. While primed, swapping to this weapon grants +25% Rate of Fire, +30% Weapon Damage and you generate 100% more Threat when Shooting for 20s. Swapping from this weapon before the timer ends removes the bonuses."
+      },
+      {
+        "id": "weapon_talent_plague_of_the_outcasts",
+        "name": "Plague of the Outcasts",
+        "description": "Hits apply a debuff dealing 100% weapon damage over 10s. This stacks up to 50 times. Whenever an enemy dies with this debuff, the stacks are transferred to a nearby enemy within 25m."
+      },
+      {
+        "id": "weapon_talent_precision_strike",
+        "name": "Precision Strike",
+        "description": "Killing enemies farther than 20m builds up stacks. Max stack is 3. Hitting an enemy within 20m will use stacks to provide 20% amplified damage per stack to enemies within 20m for 5s."
+      },
+      {
+        "id": "weapon_talent_preservation",
+        "name": "Preservation",
+        "description": "Killing an enemy repairs 10% armor over 5s. Headshot kills improve the repair by an additional 10%"
+      },
+      {
+        "id": "weapon_talent_pressure_point",
+        "name": "Pressure Point",
+        "description": "Amplifies weapon damage by 15% to enemies under status effects."
+      },
+      {
+        "id": "weapon_talent_primer_rounds",
+        "name": "Primer Rounds",
+        "description": "Damaged enemies lose 50% burn resistance for 5 seconds."
+      },
+      {
+        "id": "weapon_talent_pummel",
+        "name": "Pummel",
+        "description": "3 consecutive kills refills the magazine and grants +40% weapon damage for 10s."
+      },
+      {
+        "id": "weapon_talent_pumped_up",
+        "name": "Pumped Up",
+        "description": "Reloading grants +1.2% weapon damage for 10s. Stacks up to 25 times."
+      },
+      {
+        "id": "weapon_talent_ranger",
+        "name": "Ranger",
+        "description": "Amplifies weapon damage by 2% for every 4m you are away from your target."
+      },
+      {
+        "id": "weapon_talent_reformation",
+        "name": "Reformation",
+        "description": "Headshots grant +60% skill repair for 15s."
+      },
+      {
+        "id": "weapon_talent_refreshing",
+        "name": "Refreshing",
+        "description": "The weapon fires a stream of water. Hitting an ally agent builds stacks on them. Max stack is 5. Stacks deplete every 2s. While having at least 1 stack, the ally will have +50% Hazard Protection."
+      },
+      {
+        "id": "weapon_talent_regicide",
+        "name": "Regicide",
+        "description": "Headshot Kills create a 5m explosion, dealing 400% weapon damage and applying bleed to all enemies hit."
+      },
+      {
+        "id": "weapon_talent_restrained",
+        "name": "Restrained",
+        "description": "The pistol is fully automatic and deals +25% Amplified Damage for 20s after your Shield gets broken."
+      },
+      {
+        "id": "weapon_talent_rifleman",
+        "name": "Rifleman",
+        "description": "Landing headshots adds a stack of bonus +10% weapon damage for 5s. Max stack is 5. Additional headshots refresh the duration."
+      },
+      {
+        "id": "weapon_talent_rule_them_all",
+        "name": "Rule Them All",
+        "description": "When the agent has a Status Effect applied to them, 50% of the ammo in their next magazine will apply the same Status Effect to their targets. This effect will only occur during combat."
+      },
+      {
+        "id": "weapon_talent_sadist",
+        "name": "Sadist",
+        "description": "Amplifies +30% weapon damage to bleeding enemies. After 4 kills, applies bleed to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_salvage",
+        "name": "Salvage",
+        "description": "Killing a target has a +70% chance to refill the magazine."
+      },
+      {
+        "id": "weapon_talent_sandman",
+        "name": "Sandman",
+        "description": "Melee attacks instantly kill non-elite enemies. Cooldown: 15s."
+      },
+      {
+        "id": "weapon_talent_septic_shock",
+        "name": "Septic Shock",
+        "description": "Shooting a target applies stacks of venom, which last for 10s. Increasing stacks add more severe debuffs to the target. 2 - Poison. 4 - Disorient. 6 - Shock. 9 - Target takes additional 20% damage (from all sources). Stacks no longer increase. Duration of Status Effects is based on percentage of pellets hit on applying shot."
+      },
+      {
+        "id": "weapon_talent_shakedown",
+        "name": "Shakedown",
+        "description": "Body shots add 1 stack to the enemy for 10s. Max stacks: 4. Hitting a different enemy removes all stacks. This weapon deals +4% Amplified Damage per stack. Your next headshot on an enemy with stacks consumes all stacks, dealing +11% Amplified Damage per stack. Destroying an enemy's weakpoint causes them to take +30% Amplified Damage from you for 5s"
+      },
+      {
+        "id": "weapon_talent_sledgehammer",
+        "name": "Sledgehammer",
+        "description": "Dealing damage with a grenade applies a mark on target. Targets with mark will take 15% more damage to armor from the agent that applied the mark and have a -20% movement speed. Mark will disappear after 10 seconds."
+      },
+      {
+        "id": "weapon_talent_soft_spot",
+        "name": "Soft Spot",
+        "description": "Destroying a Weakpoint grants 27% Weapon Damage for 10s."
+      },
+      {
+        "id": "weapon_talent_spike",
+        "name": "Spike",
+        "description": "Headshots grant +20% skill damage for 15s."
+      },
+      {
+        "id": "weapon_talent_sport_mode",
+        "name": "Sport Mode",
+        "description": "+20% Movement Speed. This bonus does not stack with other Movement Speed bonuses."
+      },
+      {
+        "id": "weapon_talent_stabilize",
+        "name": "Stabilize",
+        "description": "Firing your weapon increases Weapon Accuracy by 1% and Weapon Stability by 1% per shot up to 60%. If you stop firing, the bonuses reset after 4 seconds."
+      },
+      {
+        "id": "weapon_talent_startling",
+        "name": "Startling",
+        "description": "Whenever this weapon makes an enemy Suppressed, the enemy is applied Disorient, and you and allies receive +30% Damage to Targets Out of Cover for 15s."
+      },
+      {
+        "id": "weapon_talent_steady_handed",
+        "name": "Steady Handed",
+        "description": "Hits grant a stack of +1% Accuracy and Stability. At 100 stacks, consumes stacks to refill the magazine."
+      },
+      {
+        "id": "weapon_talent_strained",
+        "name": "Strained",
+        "description": "Gain 10% critical hit damage for every 0.5s you are firing. Stacks up to 5 times."
+      },
+      {
+        "id": "weapon_talent_streamline",
+        "name": "Streamline",
+        "description": "Increase Weapon Damage by 42% when no Skills are Deployed or on Cooldown."
+      },
+      {
+        "id": "weapon_talent_swift",
+        "name": "Swift",
+        "description": "Performing a cover to cover grants +20% weapon damage for 20s."
+      },
+      {
+        "id": "weapon_talent_symbiosis",
+        "name": "Symbiosis",
+        "description": "While having a Shield deployed, lose Shield Health at a rate of 10% per second. Your Shield receives repairs of 25% of the damage dealt by this weapon."
+      },
+      {
+        "id": "weapon_talent_the_trap",
+        "name": "The Trap",
+        "description": "Tags enemies when in scope (maximum 10). If Agent kills any marked target with a headshot, all other targets will have 50% (20% PVP) movement speed and receive burn for 10 seconds. Cooldown 30 seconds. Killing another enemy with a headshot will shorten the cooldown for 10 seconds. Targets are marked after 1 second in crosshair."
+      },
+      {
+        "id": "weapon_talent_thunder_strike",
+        "name": "Thunder Strike",
+        "description": "Amplifies 30% extra damage to shocked targets. After 4 kills, applies shock to the next enemy you hit."
+      },
+      {
+        "id": "weapon_talent_transfusion",
+        "name": "Transfusion",
+        "description": "Hitting headshots builds stacks up to a max of 8. When shooting an Ally or Skill, repair them for 50% of the shot damage for each stack. Healed Allies receive 200% of your Repair Skills bonus as Bonus Armor for each stack for 10 seconds. All hits become guaranteed headshots for 8 seconds after healing an Ally or Skill while at maximum stacks."
+      },
+      {
+        "id": "weapon_talent_unhinged",
+        "name": "Unhinged",
+        "description": "Grants +18% weapon damage at the cost of -25% Stability and -25% Accuracy."
+      },
+      {
+        "id": "weapon_talent_unnerve",
+        "name": "Unnerve",
+        "description": "Killing an enemy will apply a mark on every enemy within 20m of it. Multiple marks can be applied to the same enemy. Max number of marks that can be applied to an enemy is 5. All marks on an enemy will disappear 10s after the last one has been applied. Deal +15% Amplified Damage per mark to marked enemies."
+      },
+      {
+        "id": "weapon_talent_unwavering",
+        "name": "Unwavering",
+        "description": "Swapping to this weapon grants +300% weapon handling for 5s. Kills refresh the buff. Swapping away disables this from all weapons for 5s."
+      },
+      {
+        "id": "weapon_talent_vindictive",
+        "name": "Vindictive",
+        "description": "Killing an enemy with a status effect applied grants you and all allies within 15m 16% Critical hit chance and 16% critical hit damage for 20s."
+      },
+      {
+        "id": "weapon_talent_you_can_look_but_you_can_t_touch",
+        "name": "You can look...but you can't touch",
+        "description": "When out of combat, receive 10 stacks. This weapon deals +11% Amplified Damage per stack. 1 stack is automatically consumed to fully repair one instance of damage you receive. 1 stack replenishes every 3s."
+      }
+    ]
+  }
+}

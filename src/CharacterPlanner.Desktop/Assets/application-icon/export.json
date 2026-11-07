@@ -1,0 +1,143 @@
+{
+  "ok": true,
+  "format": "shade-tech.application-icon-export",
+  "version": 1,
+  "record_sha256": "35726b4096788f46c33329b36126b12214d84f95b1644f619a68d236e733eb17",
+  "implementation_sha256": "0d1ba761971426cd871cc360421c3ec5a566e75c1b7cd6d22021fc6ac427b337",
+  "target": "character-planner",
+  "authorship_declared": {
+    "author": "Shade-Tech contributors",
+    "method": "Original stacked-card polygon mark authored from the owner-selected abstract loadout/card direction in orange and charcoal. No initials, traced logos, game objects or reference images.",
+    "ai_tool": "OpenAI Codex (AI-assisted SVG code authoring)",
+    "image_inputs": []
+  },
+  "license_declared": {
+    "spdx": "MIT",
+    "path": "LICENSE.txt",
+    "sha256": "9575a669eb10f7b316f7942c7adcb2f01709033f889d62420dd9b8266a517bb6",
+    "attribution": "Copyright (c) 2026 Shade-Tech contributors. MIT License; include LICENSE.txt."
+  },
+  "recipe": {
+    "profile": "shade-tech.layered-polygon-mark-v1",
+    "master_size": [
+      1024,
+      1024
+    ],
+    "master_supersampling": 4,
+    "resampling": "LANCZOS",
+    "png_compress_level": 9,
+    "ico_sizes": [
+      16,
+      24,
+      32,
+      48,
+      64,
+      256
+    ],
+    "ico_payload": "PNG",
+    "pillow_version": "13.0.0"
+  },
+  "master": {
+    "size": [
+      1024,
+      1024
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "alpha_bounds": [
+      61,
+      61,
+      963,
+      963
+    ],
+    "alpha_touches_canvas": false,
+    "decoder": {
+      "name": "Pillow",
+      "version": "13.0.0"
+    }
+  },
+  "ico_frames": [
+    {
+      "size": 16,
+      "png_sha256": "5388b12217216c4b78fc0cfd926ea9a8daea3f349122439ab7c9d1140a0df505",
+      "decoded_pixels_match": true
+    },
+    {
+      "size": 24,
+      "png_sha256": "14b3bf252643be2fa79bed1440d01fd5bec75e00f57d325b844d61d7d7f0f166",
+      "decoded_pixels_match": true
+    },
+    {
+      "size": 32,
+      "png_sha256": "60c7e3768878fcc35bbf37a4837eadf8f5f51a1e23f875230cfa999cb3b6515c",
+      "decoded_pixels_match": true
+    },
+    {
+      "size": 48,
+      "png_sha256": "9d56560a9e59eae8597490d4d9d0349b4be4db6aa642c099edab7e146e333646",
+      "decoded_pixels_match": true
+    },
+    {
+      "size": 64,
+      "png_sha256": "a441e70b4c466853daac99552b6d07261210377b1d1a839302ac1376c8ff2cff",
+      "decoded_pixels_match": true
+    },
+    {
+      "size": 256,
+      "png_sha256": "cde7806f7da6bbb1312d878697d9e3a6b64b8189453730356b51da5a809d32e9",
+      "decoded_pixels_match": true
+    }
+  ],
+  "members": {
+    "mark.svg": {
+      "sha256": "e74462681b6c99fb5bd3768063ec3abe34dc113817ffe7bc0e4d454a04848a58",
+      "bytes": 542
+    },
+    "LICENSE.txt": {
+      "sha256": "9575a669eb10f7b316f7942c7adcb2f01709033f889d62420dd9b8266a517bb6",
+      "bytes": 1080
+    },
+    "record.json": {
+      "sha256": "35726b4096788f46c33329b36126b12214d84f95b1644f619a68d236e733eb17",
+      "bytes": 1255
+    },
+    "master.png": {
+      "sha256": "a8b1de38347bba41ee24e91acb6c679db32d6b45a46ce713a0a21f7d9b74ff2f",
+      "bytes": 7680
+    },
+    "application.ico": {
+      "sha256": "6e040e548e6de7c9fe4924c0b17f49f1fa731f8f2082e5a31c43d11afe1d57b7",
+      "bytes": 7353
+    },
+    "previews/icon-16.png": {
+      "sha256": "5388b12217216c4b78fc0cfd926ea9a8daea3f349122439ab7c9d1140a0df505",
+      "bytes": 592
+    },
+    "previews/icon-24.png": {
+      "sha256": "14b3bf252643be2fa79bed1440d01fd5bec75e00f57d325b844d61d7d7f0f166",
+      "bytes": 833
+    },
+    "previews/icon-32.png": {
+      "sha256": "60c7e3768878fcc35bbf37a4837eadf8f5f51a1e23f875230cfa999cb3b6515c",
+      "bytes": 887
+    },
+    "previews/icon-48.png": {
+      "sha256": "9d56560a9e59eae8597490d4d9d0349b4be4db6aa642c099edab7e146e333646",
+      "bytes": 1225
+    },
+    "previews/icon-64.png": {
+      "sha256": "a441e70b4c466853daac99552b6d07261210377b1d1a839302ac1376c8ff2cff",
+      "bytes": 1243
+    },
+    "previews/icon-256.png": {
+      "sha256": "cde7806f7da6bbb1312d878697d9e3a6b64b8189453730356b51da5a809d32e9",
+      "bytes": 2471
+    }
+  },
+  "visual_review_performed": false,
+  "rights_certified": false,
+  "consumer_adopted": false
+}

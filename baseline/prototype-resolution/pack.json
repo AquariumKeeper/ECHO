@@ -1,0 +1,32 @@
+{
+  "id":"prototype_contract","name":"Prototype contract","schemaVersion":1,"version":"1",
+  "progression":{"startingLevel":1,"maxLevel":10,"startingPoints":0,"pointsPerLevel":0},
+  "stats":[
+    {"id":"power","name":"Power","kind":"primary","base":10,"min":0,"max":99},
+    {"id":"damage","name":"Damage","kind":"derived","formula":"100"},
+    {"id":"skill_tier","name":"Skill Tier","kind":"derived","formula":"0"},
+    {"id":"prototype_count","name":"Prototypes","kind":"derived","formula":"0"}
+  ],
+  "numericContextInputs":[{"id":"normalized","name":"Normalized","min":0,"max":1,"step":1,"default":0}],
+  "prototype":{"slots":["main","head"],"excludeTags":["exotic"],"countStat":"prototype_count","normalizeInput":"normalized","augments":[{"id":"entropy","name":"Entropy","stat":"damage","base":5,"perLevel":2,"levels":3}]},
+  "accountUpgrades":[{"id":"watch","name":"Watch","maxRank":3,"modifiersPerRank":[{"stat":"damage","op":"flat","value":2}]}],
+  "attributes":[
+    {"id":"damage_attr","name":"Damage roll","stat":"damage","op":"flat","min":1,"max":10,"step":2,"prototypeMin":12,"prototypeMax":20},
+    {"id":"fallback_attr","name":"Fallback roll","stat":"damage","op":"flat","min":1,"max":10,"step":2,"prototypeMax":20},
+    {"id":"skill_attr","name":"Skill roll","stat":"skill_tier","op":"flat","min":0,"max":1,"step":1}
+  ],
+  "slots":[{"id":"main","name":"Main","acceptTags":["weapon"]},{"id":"off","name":"Off","acceptTags":["weapon"]},{"id":"head","name":"Head","acceptTags":["gear"]}],
+  "items":[
+    {"id":"weapon","name":"Weapon","occupies":["main"],"tags":["weapon"],"effectsRequireContext":{"weapon_slot":"main"},
+     "modifiers":[{"stat":"damage","op":"flat","value":1}],
+     "upgrade":{"name":"Plating","maxRank":3,"modifiersPerRank":[{"stat":"damage","op":"flat","value":3}]},
+     "attributeSlots":[
+       {"id":"core","name":"Core","choices":[{"attributeId":"damage_attr","min":2,"max":8,"step":2}]},
+       {"id":"fallback","name":"Fallback","choices":[{"attributeId":"fallback_attr","min":2,"max":8,"step":2}]},
+       {"id":"skill","name":"Skill","choices":[{"attributeId":"skill_attr","min":1,"max":1,"step":1}]}]},
+    {"id":"exotic","name":"Exotic weapon","occupies":["main"],"tags":["weapon","exotic"]},
+    {"id":"off_weapon","name":"Off weapon","occupies":["off"],"tags":["weapon"],"effectsRequireContext":{"weapon_slot":"off"}},
+    {"id":"blocked","name":"Blocked weapon","occupies":["main"],"tags":["weapon"],"requirements":{"power":20}},
+    {"id":"helm","name":"Helm","occupies":["head"],"tags":["gear"]}
+  ]
+}

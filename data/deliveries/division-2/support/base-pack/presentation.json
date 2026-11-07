@@ -1,0 +1,499 @@
+{
+  "theme": {
+    "primary": "#FF7F00",
+    "background": "#050505",
+    "variant": "dark",
+    "colors": {
+      "button": "#1F1F1F",
+      "disabled": "#8A8A8A",
+      "disabledButton": "#141414",
+      "error": "#E5484D",
+      "focus": "#FF7F00",
+      "foreground": "#FFFFFF",
+      "foregroundOnPrimary": "#FFFFFF",
+      "headerBackground": "#414040",
+      "hover": "#FFFFFF14",
+      "hyperlink": "#FF9A40",
+      "inputBackground": "#141414",
+      "inputBorder": "#414040",
+      "menuBackground": "#141414",
+      "overlayBackground": "#101010",
+      "placeholder": "#A0A0A0",
+      "pressed": "#FFFFFF29",
+      "scrollBar": "#FF7F0080",
+      "selection": "#FF7F0059",
+      "separator": "#414040",
+      "shadow": "#00000099",
+      "success": "#4FC27A",
+      "warning": "#FFDD32"
+    }
+  },
+  "layout": {
+    "slotGroups": [
+      {
+        "name": "Weapons",
+        "slots": [
+          "primary_weapon",
+          "secondary_weapon",
+          "sidearm"
+        ],
+        "compareStats": [
+          "equipped_weapon_damage",
+          "equipped_weapon_rpm",
+          "equipped_weapon_magazine_size"
+        ]
+      },
+      {
+        "name": "Gear",
+        "slots": [
+          "mask",
+          "backpack",
+          "chest",
+          "gloves",
+          "holster",
+          "knees"
+        ],
+        "countAttributes": true,
+        "columns": 2,
+        "compareStats": [
+          "character_armor",
+          "character_health",
+          "skill_tier",
+          "skill_overcharge"
+        ]
+      }
+    ],
+    "headline": [
+      {
+        "stat": "equipped_weapon_practical_reload_cycle_dps",
+        "label": "Practical Reload-Cycle DPS",
+        "unavailable": "Needs an equipped active weapon"
+      },
+      {
+        "skillRates": true
+      },
+      {
+        "buildOutput": "build_dps",
+        "label": "Build DPS"
+      },
+      {
+        "buildOutput": "build_time_to_kill",
+        "label": "Build Time to Kill (s)",
+        "lowerIsBetter": true
+      },
+      {
+        "stat": "effective_hp",
+        "label": "Effective HP"
+      },
+      {
+        "buildOutput": "shield_effective_hp",
+        "label": "Effective HP with Shield"
+      },
+      {
+        "stat": "time_to_armor_break",
+        "label": "Time to Armor Break (s)",
+        "conditional": true
+      }
+    ],
+    "summary": [
+      {
+        "name": "Weapon",
+        "stats": [
+          "equipped_weapon_damage",
+          "effective_critical_hit_chance",
+          "equipped_weapon_average_bodyshot_damage",
+          "equipped_weapon_practical_firing_dps",
+          "equipped_weapon_practical_reload_cycle_dps",
+          "equipped_weapon_bodyshot_dps",
+          "equipped_weapon_magazine_damage",
+          "equipped_weapon_firing_duration",
+          "equipped_weapon_reload_cycle_dps",
+          "equipped_weapon_critical_damage",
+          "equipped_weapon_headshot_damage",
+          "equipped_weapon_critical_headshot_damage",
+          "equipped_weapon_rpm",
+          "equipped_weapon_magazine_size",
+          "equipped_weapon_reload_time",
+          "equipped_weapon_tactical_reload_time",
+          "equipped_weapon_optimal_range",
+          "equipped_weapon_long_range",
+          "equipped_weapon_max_range",
+          "effective_accuracy",
+          "effective_stability",
+          "effective_swap_speed",
+          "effective_reload_speed"
+        ]
+      },
+      {
+        "name": "Target",
+        "stats": [
+          "enemy_target_health",
+          "enemy_target_armor",
+          "equipped_weapon_target_bodyshots",
+          "equipped_weapon_target_magazines",
+          "equipped_weapon_target_time_to_kill",
+          "enemy_target_hit_damage",
+          "enemy_target_incoming_dps",
+          "time_to_armor_break",
+          "time_to_down"
+        ]
+      },
+      {
+        "name": "Offense",
+        "stats": [
+          "weapon_damage",
+          "critical_hit_chance",
+          "critical_hit_damage",
+          "headshot_damage",
+          "dtoc",
+          "damage_to_armor",
+          "health_damage"
+        ],
+        "conditional": [
+          "symphony_trigger_stacks",
+          "apex_predator_stack_duration",
+          "apex_predator_disorient_radius",
+          "on_point_buff_duration",
+          "crowd_control_mark_limit",
+          "camaraderie_mark_limit",
+          "aces_eights_four_kind_shots",
+          "aces_eights_full_house_shots",
+          "aces_eights_aces_hand_shots",
+          "aggressive_recon_ammo_interval",
+          "umbra_light_stack_limit",
+          "umbra_light_stack_gain",
+          "umbra_light_stack_consumption",
+          "umbra_light_normal_decay",
+          "umbra_light_sprint_decay",
+          "crowd_control_transfer_percent",
+          "indirect_transmission_radius",
+          "indirect_transmission_refresh",
+          "headache_next_headshot_bonus",
+          "headache_miss_allowance",
+          "symptom_aggravator_damage_bonus",
+          "trauma_bleed_duration_bonus",
+          "trauma_bleed_damage_bonus",
+          "combustion_burn_damage_factor"
+        ]
+      },
+      {
+        "name": "Defense",
+        "stats": [
+          "effective_hp",
+          "character_armor",
+          "character_health",
+          "estimated_bonus_armor",
+          "effective_hp_vs_elites",
+          "effective_hp_vs_explosives",
+          "estimated_armor_regeneration",
+          "estimated_armor_on_kill",
+          "estimated_health_on_kill"
+        ],
+        "conditional": [
+          "effective_damage_taken",
+          "estimated_armor_repair_on_depletion",
+          "estimated_armor_repair_on_headshot",
+          "estimated_armor_repair_on_kill_over_time",
+          "estimated_armor_repair_on_crit",
+          "clutch_post_kill_window",
+          "estimated_true_patriot_white_repair",
+          "true_patriot_blue_enemy_damage_factor",
+          "true_patriot_rotation_interval",
+          "umbra_shadow_stack_limit",
+          "umbra_shadow_stack_gain",
+          "umbra_shadow_stack_consumption",
+          "umbra_shadow_repair_per_stack",
+          "makeshift_repairs_share",
+          "makeshift_repairs_duration",
+          "makeshift_repair_budget",
+          "makeshift_repair_average_rate",
+          "return_to_sender_self_share",
+          "return_to_sender_ally_share",
+          "return_to_sender_self_budget",
+          "return_to_sender_ally_budget",
+          "ground_control_proximity_repair_budget",
+          "return_to_sender_bonus_armor_cap",
+          "return_to_sender_bonus_armor_capacity",
+          "hackstep_available_armor_repair",
+          "hackstep_available_bonus_armor",
+          "umbra_shadow_available_repair_per_stack",
+          "umbra_shadow_full_stack_repair_capacity",
+          "umbra_shadow_repair_budget",
+          "umbra_shadow_delivery_time",
+          "umbra_shadow_average_repair_rate",
+          "charging_protection_gain",
+          "charging_protection_cap",
+          "charged_share_duration",
+          "charging_assumed_skill_protection",
+          "charging_skill_damage_factor",
+          "charging_full_charge_time",
+          "headache_armor_repair_share",
+          "headache_available_armor_repair",
+          "headache_bonus_armor_cap",
+          "headache_bonus_armor_capacity",
+          "hackstep_bonus_armor_grant",
+          "hackstep_bonus_armor_duration",
+          "hackstep_nameplate_duration",
+          "hackstep_armor_repair_share",
+          "hackstep_cooldown",
+          "hackstep_damage_per_interval",
+          "hackstep_damage_cap",
+          "stoic_resistance_per_enemy",
+          "stoic_decoy_target_eligibility",
+          "stoic_assumed_resistance"
+        ]
+      },
+      {
+        "name": "Skill",
+        "stats": [
+          "skill_tier",
+          "skill_overcharge",
+          "effective_skill_damage",
+          "effective_skill_haste",
+          "effective_repair_skills",
+          "effective_skill_duration",
+          "effective_skill_health",
+          "effective_status_effects"
+        ],
+        "conditional": [
+          "feedback_loop_cooldown",
+          "ground_control_proximity_repair_percent",
+          "rigger_buff_duration",
+          "huddle_overcharge_trigger_time",
+          "huddle_overcharge_duration",
+          "huddle_overcharge_cooldown",
+          "huddle_destruction_base_cooldown",
+          "nanite_duration_reduction",
+          "nanite_range_reduction",
+          "nanite_healing_efficiency",
+          "nanite_ally_hazard_protection",
+          "nanite_ally_buff_duration",
+          "nanite_ally_cooldown",
+          "combustion_burn_chance",
+          "combustion_burn_damage_bonus",
+          "combustion_debuff_duration_bonus",
+          "core_exercise_conversion_share",
+          "core_exercise_skill_tier_basis",
+          "exuro_turret_rotation",
+          "exuro_own_fire_immunity",
+          "exuro_disabled_explosion",
+          "exuro_chain_ignite_radius",
+          "exuro_heatstroke_weapon_bonus",
+          "exuro_heatstroke_range_bonus",
+          "rigger_cancel_reset_available"
+        ]
+      }
+    ],
+    "assumptionSections": [
+      {
+        "name": "Enemy target"
+      },
+      {
+        "name": "Weapon"
+      },
+      {
+        "name": "Skills"
+      },
+      {
+        "name": "Talents and gear",
+        "default": true
+      },
+      {
+        "name": "Skill comparisons"
+      }
+    ],
+    "attributeCategories": [
+      {
+        "id": "offensive",
+        "name": "Offensive",
+        "color": "#A43B3B"
+      },
+      {
+        "id": "defensive",
+        "name": "Defensive",
+        "color": "#45618E"
+      },
+      {
+        "id": "skill",
+        "name": "Skill",
+        "color": "#FFD373"
+      }
+    ],
+    "rarities": [
+      {
+        "id": "exotic",
+        "name": "Exotic",
+        "color": "#FF6F36",
+        "tags": [
+          "exotic"
+        ]
+      },
+      {
+        "id": "named",
+        "name": "Named",
+        "color": "#EAA213",
+        "tags": [
+          "named"
+        ]
+      },
+      {
+        "id": "gear_set",
+        "name": "Gear Set",
+        "color": "#01FF90",
+        "tagPrefixes": [
+          "gear_set_"
+        ]
+      },
+      {
+        "id": "high_end",
+        "name": "High-End",
+        "color": "#FFAF10",
+        "tags": [
+          "gear",
+          "weapon"
+        ]
+      }
+    ]
+  },
+  "icons": {
+    "slots": {
+      "backpack": "slot_backpack",
+      "chest": "slot_chest",
+      "gloves": "slot_gloves",
+      "holster": "slot_holster",
+      "knees": "slot_knees",
+      "mask": "slot_mask",
+      "primary_weapon": "icon_slot_main_weapon",
+      "secondary_weapon": "icon_slot_main_weapon",
+      "sidearm": "icon_slot_sidearm"
+    }
+  },
+  "specializationImages": {},
+  "itemArt": {},
+  "artwork": {
+    "sources": [
+      {
+        "id": "original_slot_backpack",
+        "name": "Shade-Tech contributors",
+        "url": "",
+        "license": "MIT",
+        "attribution": "Copyright (c) 2026 Shade-Tech contributors. MIT License; include LICENSE.txt.",
+        "notes": "Original polygon coordinates authored from the written flat-silhouette brief; no tracing, source-image sampling or image-conditioned generation. Generic backpack slot symbol, not an item identity. AI tool: OpenAI Codex (AI-assisted SVG code authoring). Visual reference declarations: []. License and exact production records are supplied in the assembly support tree."
+      },
+      {
+        "id": "original_slot_chest",
+        "name": "Shade-Tech contributors",
+        "url": "",
+        "license": "MIT",
+        "attribution": "Copyright (c) 2026 Shade-Tech contributors. MIT License; include LICENSE.txt.",
+        "notes": "New polygon coordinates authored by Codex after visually consulting the declared user-provided product photo for generic equipment proportions. Simplified flat silhouette; no tracing, logo copying, pixel extraction or image-generation call. Generic chest slot symbol, not a specific product/item identity. Reference photo is not bundled; its rights are not covered by the new geometry license. AI tool: OpenAI Codex (AI-assisted SVG code authoring). Visual reference declarations: [{\"name\": \"gen4-fully-modular-quick-release-plate-carrier-903254_1280x.jpg\", \"sha256\": \"e87e7da1472bbb4fd78a28d569d3fa33d423f4600b0eda25aa94cd59a57c1c97\", \"role\": \"visual-form-reference\"}]. License and exact production records are supplied in the assembly support tree."
+      },
+      {
+        "id": "original_slot_gloves",
+        "name": "Shade-Tech contributors",
+        "url": "",
+        "license": "MIT",
+        "attribution": "Copyright (c) 2026 Shade-Tech contributors. MIT License; include LICENSE.txt.",
+        "notes": "New polygon coordinates authored by Codex after visually consulting the declared user-provided product photo for generic equipment proportions. Simplified flat silhouette; no tracing, logo copying, pixel extraction or image-generation call. Generic gloves slot symbol, not a specific product/item identity. Reference photo is not bundled; its rights are not covered by the new geometry license. AI tool: OpenAI Codex (AI-assisted SVG code authoring). Visual reference declarations: [{\"name\": \"mechanix_coldwork_gloves.jpg\", \"sha256\": \"ebf25eac6fb7a73888c2cd3cdbb55c9054d207ebce15f0d05c65b33e0ae6f19f\", \"role\": \"visual-form-reference\"}]. License and exact production records are supplied in the assembly support tree."
+      },
+      {
+        "id": "original_slot_holster",
+        "name": "Shade-Tech contributors",
+        "url": "",
+        "license": "MIT",
+        "attribution": "Copyright (c) 2026 Shade-Tech contributors. MIT License; include LICENSE.txt.",
+        "notes": "New polygon coordinates authored by Codex after visually consulting the declared user-provided product photo for generic equipment proportions. Simplified flat silhouette; no tracing, logo copying, pixel extraction or image-generation call. Generic holster slot symbol, not a specific product/item identity. Reference photo is not bundled; its rights are not covered by the new geometry license. AI tool: OpenAI Codex (AI-assisted SVG code authoring). Visual reference declarations: [{\"name\": \"model_6005_sls_tactical_quick_holster.webp\", \"sha256\": \"40db3d8e4a62c5a944e44f9752482bc05e037d487419c3c6583ad2b6d0f02eee\", \"role\": \"visual-form-reference\"}]. License and exact production records are supplied in the assembly support tree."
+      },
+      {
+        "id": "original_slot_knees",
+        "name": "Shade-Tech contributors",
+        "url": "",
+        "license": "MIT",
+        "attribution": "Copyright (c) 2026 Shade-Tech contributors. MIT License; include LICENSE.txt.",
+        "notes": "New polygon coordinates authored by Codex after visually consulting the declared user-provided product photo for generic equipment proportions. Simplified flat silhouette; no tracing, logo copying, pixel extraction or image-generation call. Generic knees slot symbol, not a specific product/item identity. Reference photo is not bundled; its rights are not covered by the new geometry license. AI tool: OpenAI Codex (AI-assisted SVG code authoring). Visual reference declarations: [{\"name\": \"5_11Tactical_Kneepad.webp\", \"sha256\": \"77c68aa6105f70e3eb8f8f44433ee463d88884610c4ea869263738219f2152df\", \"role\": \"visual-form-reference\"}]. License and exact production records are supplied in the assembly support tree."
+      },
+      {
+        "id": "original_slot_mask",
+        "name": "Shade-Tech contributors",
+        "url": "",
+        "license": "MIT",
+        "attribution": "Copyright (c) 2026 Shade-Tech contributors. MIT License; include LICENSE.txt.",
+        "notes": "New polygon coordinates authored by Codex after visually consulting the declared user-provided product photo for generic equipment proportions. Simplified flat silhouette; no tracing, logo copying, pixel extraction or image-generation call. Generic mask slot symbol, not a specific product/item identity. Reference photo is not bundled; its rights are not covered by the new geometry license. AI tool: OpenAI Codex (AI-assisted SVG code authoring). Visual reference declarations: [{\"name\": \"parcil_T61_half_face_respirator_mask.webp\", \"sha256\": \"ddd555a128798b63fef7b58a8c746534913ddfea27f2541ee2bf03eb53ea4835\", \"role\": \"visual-form-reference\"}]. License and exact production records are supplied in the assembly support tree."
+      },
+      {
+        "id": "original_icon_slot_main_weapon",
+        "name": "Shade-Tech contributors",
+        "url": "",
+        "license": "MIT",
+        "attribution": "Copyright (c) 2026 Shade-Tech contributors. MIT License; include LICENSE.txt.",
+        "notes": "New polygon coordinates authored by Codex after visually consulting the declared user-provided product photo for generic equipment proportions. Simplified flat silhouette; no tracing, logo copying, pixel extraction or image-generation call. Generic main-weapon slot symbol, not a specific product/item identity. Reference photo is not bundled; its rights are not covered by the new geometry license. AI tool: OpenAI Codex (AI-assisted SVG code authoring). Visual reference declarations: [{\"name\": \"cmmg_mk47_rifle.jpg\", \"sha256\": \"02b867efbd058dd17bcaa2b82e4913f4f83029872d4261545a4d528ce555a4a4\", \"role\": \"visual-form-reference\"}]. License and exact production records are supplied in the assembly support tree."
+      },
+      {
+        "id": "original_icon_slot_sidearm",
+        "name": "Shade-Tech contributors",
+        "url": "",
+        "license": "MIT",
+        "attribution": "Copyright (c) 2026 Shade-Tech contributors. MIT License; include LICENSE.txt.",
+        "notes": "Original polygon coordinates authored from the written flat-silhouette brief; no tracing, source-image sampling or image-conditioned generation. Generic sidearm slot symbol, not an item identity. AI tool: OpenAI Codex (AI-assisted SVG code authoring). Visual reference declarations: []. License and exact production records are supplied in the assembly support tree."
+      }
+    ],
+    "assets": [
+      {
+        "id": "slot_backpack",
+        "path": "assets/original-slots/slot_backpack.png",
+        "kind": "icon",
+        "sha256": "15fb7788e61616847dccd71a085ca69423201a0347f6b250b9cffee77bb621b4",
+        "sourceId": "original_slot_backpack"
+      },
+      {
+        "id": "slot_chest",
+        "path": "assets/original-slots/slot_chest.png",
+        "kind": "icon",
+        "sha256": "e50a7c4b294002b17e4bacd5457a0ecff918503bb204979ebde65e614d7c45db",
+        "sourceId": "original_slot_chest"
+      },
+      {
+        "id": "slot_gloves",
+        "path": "assets/original-slots/slot_gloves.png",
+        "kind": "icon",
+        "sha256": "c173f7ed65f3bb833420c5c37f8738978c4a11b1d35622e285f826e8535bb876",
+        "sourceId": "original_slot_gloves"
+      },
+      {
+        "id": "slot_holster",
+        "path": "assets/original-slots/slot_holster.png",
+        "kind": "icon",
+        "sha256": "f9d6c66294d1eb6b4137c7e5faf12d2ef46374e6f838c8fbea8cab31031a106f",
+        "sourceId": "original_slot_holster"
+      },
+      {
+        "id": "slot_knees",
+        "path": "assets/original-slots/slot_knees.png",
+        "kind": "icon",
+        "sha256": "07cb6a426767e32fbae6da1b387d9d745941e4d00f0c4381acaca7738a90ec30",
+        "sourceId": "original_slot_knees"
+      },
+      {
+        "id": "slot_mask",
+        "path": "assets/original-slots/slot_mask.png",
+        "kind": "icon",
+        "sha256": "995c8c38294bafbe11ab67d867de41c3289a9a98f974143a086867170cd72ac4",
+        "sourceId": "original_slot_mask"
+      },
+      {
+        "id": "icon_slot_main_weapon",
+        "path": "assets/original-slots/icon_slot_main_weapon.png",
+        "kind": "icon",
+        "sha256": "768074389bfbdf476a1c551d006e4df9afc0831ef15e1da59748817f18f622e0",
+        "sourceId": "original_icon_slot_main_weapon"
+      },
+      {
+        "id": "icon_slot_sidearm",
+        "path": "assets/original-slots/icon_slot_sidearm.png",
+        "kind": "icon",
+        "sha256": "6dec54cedad95a076fc272210c6f75462e0a8b79986a317bf719fd6ba25784bd",
+        "sourceId": "original_icon_slot_sidearm"
+      }
+    ]
+  }
+}

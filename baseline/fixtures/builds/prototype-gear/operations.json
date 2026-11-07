@@ -1,0 +1,236 @@
+[
+  {
+    "kind": "name",
+    "text": "prototype-gear"
+  },
+  {
+    "kind": "equipment",
+    "slot": "primary_weapon",
+    "id": "primary_weapon_police_m4"
+  },
+  {
+    "kind": "attribute",
+    "slot": "primary_weapon",
+    "target": "minor_1",
+    "id": "damage_to_armor_weapon_minor"
+  },
+  {
+    "kind": "mod",
+    "slot": "primary_weapon",
+    "target": "optics",
+    "id": "weapon_mod_optics_acog_scope_4x"
+  },
+  {
+    "kind": "mod",
+    "slot": "primary_weapon",
+    "target": "magazine",
+    "id": "weapon_mod_magazine_tactical_5_56_mag"
+  },
+  {
+    "kind": "mod",
+    "slot": "primary_weapon",
+    "target": "muzzle",
+    "id": "weapon_mod_muzzle_large_suppressor_5_56"
+  },
+  {
+    "kind": "mod",
+    "slot": "primary_weapon",
+    "target": "underbarrel",
+    "id": "weapon_mod_underbarrel_short_grip"
+  },
+  {
+    "kind": "talent",
+    "slot": "primary_weapon",
+    "target": "talent",
+    "id": "weapon_talent_breadbasket"
+  },
+  {
+    "kind": "equipment",
+    "slot": "mask",
+    "id": "mask_providence_defense_mask"
+  },
+  {
+    "kind": "attribute",
+    "slot": "mask",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "mask",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "attribute",
+    "slot": "mask",
+    "target": "minor_2",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "mod",
+    "slot": "mask",
+    "target": "mod_1",
+    "id": "critical_hit_chance_gear_mod"
+  },
+  {
+    "kind": "equipment",
+    "slot": "chest",
+    "id": "chest_providence_defense_chest"
+  },
+  {
+    "kind": "attribute",
+    "slot": "chest",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "chest",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "attribute",
+    "slot": "chest",
+    "target": "minor_2",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "mod",
+    "slot": "chest",
+    "target": "mod_1",
+    "id": "critical_hit_chance_gear_mod"
+  },
+  {
+    "kind": "talent",
+    "slot": "chest",
+    "target": "talent",
+    "id": "gear_talent_explosive_delivery"
+  },
+  {
+    "kind": "equipment",
+    "slot": "backpack",
+    "id": "backpack_providence_defense_backpack"
+  },
+  {
+    "kind": "attribute",
+    "slot": "backpack",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "backpack",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "attribute",
+    "slot": "backpack",
+    "target": "minor_2",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "mod",
+    "slot": "backpack",
+    "target": "mod_1",
+    "id": "critical_hit_chance_gear_mod"
+  },
+  {
+    "kind": "talent",
+    "slot": "backpack",
+    "target": "talent",
+    "id": "gear_talent_combined_arms"
+  },
+  {
+    "kind": "equipment",
+    "slot": "gloves",
+    "id": "gloves_providence_defense_gloves"
+  },
+  {
+    "kind": "attribute",
+    "slot": "gloves",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "gloves",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "attribute",
+    "slot": "gloves",
+    "target": "minor_2",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "equipment",
+    "slot": "holster",
+    "id": "holster_providence_defense_holster"
+  },
+  {
+    "kind": "attribute",
+    "slot": "holster",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "holster",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "attribute",
+    "slot": "holster",
+    "target": "minor_2",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "equipment",
+    "slot": "knees",
+    "id": "knees_providence_defense_kneepads"
+  },
+  {
+    "kind": "attribute",
+    "slot": "knees",
+    "target": "core_1",
+    "id": "armor_gear_core"
+  },
+  {
+    "kind": "attribute",
+    "slot": "knees",
+    "target": "minor_1",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "attribute",
+    "slot": "knees",
+    "target": "minor_2",
+    "id": "weapon_handling_gear_minor"
+  },
+  {
+    "kind": "prototype",
+    "slot": "chest",
+    "id": "augment_echo",
+    "value": 10
+  },
+  {
+    "kind": "prototype",
+    "slot": "backpack",
+    "id": "augment_entropy",
+    "value": 5
+  },
+  {
+    "kind": "prototype",
+    "slot": "primary_weapon"
+  },
+  {
+    "kind": "active_skill",
+    "slot": "skill_slot_1",
+    "id": "skill_artillery_turret"
+  }
+]

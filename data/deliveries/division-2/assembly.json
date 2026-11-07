@@ -1,0 +1,160 @@
+{
+  "format": "shade-tech.planner-v2-assembly",
+  "version": 1,
+  "plan_sha256": "2bc3d7455e9b60ce0e0a5b153eff580f20a1259055ec1ca1157fbad3be560850",
+  "pack_manifest_sha256": "dbec840e49a1cae8cbfcd1369af9a40469552b948732a1f599352872376d4b00",
+  "complete_pack_assembled": true,
+  "complete_native_source_derivation": false,
+  "consumer_accepted": false,
+  "runtime_verified": false,
+  "outputs": {
+    "support/base-pack/manifest.json": {
+      "sha256": "fc3e3cb0fe4e13a5b8128d3a027031197a068a1b5f6d2376f6eef7ec5077f0ab",
+      "bytes": 1828
+    },
+    "support/base-pack/presentation.json": {
+      "sha256": "b14b9b7de8948c88af6962b53badc23804bf51346160d7f6e4bb9a1f30c0946d",
+      "bytes": 20185
+    },
+    "support/base-pack/provenance.md": {
+      "sha256": "34499502717ba101e5345de71e2f829bf33c6289873024c60413a4b4bba7b9e9",
+      "bytes": 211464
+    },
+    "support/base-pack/share-codes.json": {
+      "sha256": "7ad28718e2f57edbee9512fcbe778df324b3a931ccccf976efaeeb7fa02c4087",
+      "bytes": 209
+    },
+    "support/base-pack/simulation.json": {
+      "sha256": "dfdcd014619a1fa8b69c37c0413ffd19942fe5d05e8ea3bd18773480e11ab111",
+      "bytes": 38833
+    },
+    "support/base-pack/rules.json": {
+      "sha256": "b2b96d66110da2f68d03eb0d04c123cb5b1eefeb77d8c83a9bd431e0d776839f",
+      "bytes": 2554786
+    },
+    "support/evidence/packet.json": {
+      "sha256": "39cc370ee5567e39413c6d0cbcafd198a49381e9aec3ad963fc236e6a2963231",
+      "bytes": 2148
+    },
+    "support/evidence/docs/R73_SOURCE_REVIEW.md": {
+      "sha256": "e59ceacbfbe0ebf0d6922d8b796b31660773c59e7a58967ac9775fd1c7a909ae",
+      "bytes": 2281
+    },
+    "support/evidence/sources/talent.fruit": {
+      "sha256": "3c731c8db6955d2ba93f35e138b8bbd0ce5b324ed32df99636312a60d0561f7f",
+      "bytes": 7536
+    },
+    "support/evidence/sources/talent.fruit.json": {
+      "sha256": "0c657804491a2ae4598a03069c3325c49c11ac0e049178ba6a66eeaa2ebe7adb",
+      "bytes": 831
+    },
+    "support/evidence/sources/warlock_talent_weapon_kills_grant_skill_tier.mtalent": {
+      "sha256": "39b245e9f97a2a92d045edede14c269b58776a1848ea52e687f796622cf42dbb",
+      "bytes": 5875
+    },
+    "support/evidence/sources/warlock_talent_weapon_kills_grant_skill_tier.mtalent.json": {
+      "sha256": "6ed20df92d5921cc1f759b1e19639ff16db433b7d1c97f9efcc8d73b1da7230c",
+      "bytes": 871
+    },
+    "support/evidence/sources/warlock_talent_weapon_kills_grant_skill_tier_perfect.mtalent": {
+      "sha256": "17ed8cd54d25cbaa70b6937ad25a30697dc196d665a75e7198c9591f3a9031a7",
+      "bytes": 4693
+    },
+    "support/evidence/sources/warlock_talent_weapon_kills_grant_skill_tier_perfect.mtalent.json": {
+      "sha256": "57da49dbb70ddc46cb56aff571f581b4b0a16585e34bc1e582933df2a78ed196",
+      "bytes": 878
+    },
+    "support/evidence/sources/warlock_talentrule_weapon_kills_grant_skill_tier.mtalentrules": {
+      "sha256": "9a516aed3496a77843603acdb04ab320a6a4b8e6a6573ad1295505bb063ce255",
+      "bytes": 4474
+    },
+    "support/evidence/sources/warlock_talentrule_weapon_kills_grant_skill_tier.mtalentrules.json": {
+      "sha256": "1f08bbe513b96565f21bcf023b3e9fd7289bad8491cf646ea2355e6bb66fd05b",
+      "bytes": 885
+    },
+    "support/evidence/sources/warlock_talentrule_weapon_kills_grant_skill_tier_overcharge.mtalentrules": {
+      "sha256": "ab1b7c9e4282c7860b168d44eeeb775be29f70053a6212b6ddebaa0095cb207a",
+      "bytes": 1612
+    },
+    "support/evidence/sources/warlock_talentrule_weapon_kills_grant_skill_tier_overcharge.mtalentrules.json": {
+      "sha256": "6b4453b8a3a918cf5280432228c029536baa19f3718cea2af1a13f191cff6b15",
+      "bytes": 895
+    },
+    "pack/presentation.json": {
+      "sha256": "b14b9b7de8948c88af6962b53badc23804bf51346160d7f6e4bb9a1f30c0946d",
+      "bytes": 20185
+    },
+    "pack/provenance.md": {
+      "sha256": "e1065da47c9ef25abf96db2341c72d94ef80071d5138ede08950f6ff1f4a9f9e",
+      "bytes": 212479
+    },
+    "pack/share-codes.json": {
+      "sha256": "7ad28718e2f57edbee9512fcbe778df324b3a931ccccf976efaeeb7fa02c4087",
+      "bytes": 209
+    },
+    "pack/simulation.json": {
+      "sha256": "95399e380c5a491a68b1c7616d1433defc01e7bff27997e90d79ee727b70e384",
+      "bytes": 38931
+    },
+    "pack/rules.json": {
+      "sha256": "b2b96d66110da2f68d03eb0d04c123cb5b1eefeb77d8c83a9bd431e0d776839f",
+      "bytes": 2554786
+    },
+    "pack/manifest.json": {
+      "sha256": "dbec840e49a1cae8cbfcd1369af9a40469552b948732a1f599352872376d4b00",
+      "bytes": 1828
+    },
+    "pack/assets/original-slots/slot_backpack.png": {
+      "sha256": "15fb7788e61616847dccd71a085ca69423201a0347f6b250b9cffee77bb621b4",
+      "bytes": 1960
+    },
+    "pack/assets/original-slots/slot_chest.png": {
+      "sha256": "e50a7c4b294002b17e4bacd5457a0ecff918503bb204979ebde65e614d7c45db",
+      "bytes": 1865
+    },
+    "pack/assets/original-slots/slot_gloves.png": {
+      "sha256": "c173f7ed65f3bb833420c5c37f8738978c4a11b1d35622e285f826e8535bb876",
+      "bytes": 4066
+    },
+    "pack/assets/original-slots/slot_holster.png": {
+      "sha256": "f9d6c66294d1eb6b4137c7e5faf12d2ef46374e6f838c8fbea8cab31031a106f",
+      "bytes": 2250
+    },
+    "pack/assets/original-slots/slot_knees.png": {
+      "sha256": "07cb6a426767e32fbae6da1b387d9d745941e4d00f0c4381acaca7738a90ec30",
+      "bytes": 2108
+    },
+    "pack/assets/original-slots/slot_mask.png": {
+      "sha256": "995c8c38294bafbe11ab67d867de41c3289a9a98f974143a086867170cd72ac4",
+      "bytes": 2270
+    },
+    "pack/assets/original-slots/icon_slot_main_weapon.png": {
+      "sha256": "768074389bfbdf476a1c551d006e4df9afc0831ef15e1da59748817f18f622e0",
+      "bytes": 2320
+    },
+    "pack/assets/original-slots/icon_slot_sidearm.png": {
+      "sha256": "6dec54cedad95a076fc272210c6f75462e0a8b79986a317bf719fd6ba25784bd",
+      "bytes": 1712
+    },
+    "overlay-plan.json": {
+      "sha256": "d3ab37ff0041900f0ab2116c49a8687e93609b55d35c55277eaca2166a868828",
+      "bytes": 3569
+    },
+    "support/intermediate-manifest.json": {
+      "sha256": "692bee0585415da4d314414d669e1a263bd0401042ec355c5cc2eab13e0d6725",
+      "bytes": 1832
+    },
+    "reports/artwork.json": {
+      "sha256": "d2f846d7c4d21cc52ddda89d1606e2c915d1da433ade54b3d4abb61b54a5a822",
+      "bytes": 11813
+    },
+    "composition-plan.json": {
+      "sha256": "2bc3d7455e9b60ce0e0a5b153eff580f20a1259055ec1ca1157fbad3be560850",
+      "bytes": 505
+    },
+    "reports/talent-overlay.json": {
+      "sha256": "36c084572d9b67049ae94c3c59d53d30f7081ac35180f6523d9853fc811dfb3d",
+      "bytes": 4141
+    }
+  }
+}

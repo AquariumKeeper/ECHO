@@ -1,0 +1,243 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+             xmlns:views="using:CharacterPlanner.Desktop.Views"
+             x:Class="CharacterPlanner.Desktop.Views.InspectorView" x:DataType="vm:EditorViewModel">
+  <!-- The inspector: what the selected tile holds, to edit, or the picker's highlighted item. -->
+  <UserControl.DataTemplates>
+    <!-- A rank shown on its own (a skill's Expertise): its name and range, then the rank row. -->
+    <DataTemplate DataType="vm:RankViewModel">
+      <StackPanel Spacing="2" Margin="0,2">
+        <TextBlock>
+          <Run Text="{Binding Name}" /><Run Text=" " /><Run Text="{Binding Range}" Foreground="{DynamicResource DivisionMuted}" />
+        </TextBlock>
+        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RankRow}" />
+      </StackPanel>
+    </DataTemplate>
+    <!-- An attribute slot in the inspector: its name, the attribute, then its roll. -->
+    <DataTemplate DataType="vm:AttributeViewModel">
+      <StackPanel Spacing="2" Margin="0,2">
+        <TextBlock Text="{Binding Name}" />
+        <ComboBox ItemsSource="{Binding Choices}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch"
+                  AutomationProperties.Name="{Binding Name}" />
+        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RollRow}" />
+      </StackPanel>
+    </DataTemplate>
+  </UserControl.DataTemplates>
+  <ScrollViewer Name="Inspector">
+    <ContentControl Content="{Binding Inspected}" Margin="0,0,12,0">
+      <ContentControl.DataTemplates>
+        <!-- A slot, as Go's inspector: the item's header, Choose or Change item and Unequip, its core stats, its
+             configuration (core attributes, attributes, mods, talents, upgrade, Prototype), its brand bonuses. -->
+        <DataTemplate DataType="vm:SlotViewModel">
+          <StackPanel Spacing="6">
+            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource ItemHeader}" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Name="ChooseItem" Content="{Binding ChooseText}" Command="{Binding BrowseCommand}" />
+              <Button Content="Unequip" Command="{Binding UnequipCommand}" />
+            </StackPanel>
+            <Separator />
+            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource CoreStats}" />
+            <Button Name="RankUpgradesButton" Content="Rank Upgrades" IsVisible="{Binding CanRank}" Command="{Binding RankUpgradesCommand}" CommandParameter="{Binding Id}" />
+            <TextBlock Text="Core attributes" FontWeight="Bold" IsVisible="{Binding HasCoreAttributes}" />
+            <ItemsControl ItemsSource="{Binding CoreAttributes}" />
+            <TextBlock Text="Attributes" FontWeight="Bold" IsVisible="{Binding HasOtherAttributes}" />
+            <ItemsControl ItemsSource="{Binding OtherAttributes}" />
+            <TextBlock Text="Mods" FontWeight="Bold" IsVisible="{Binding HasMods}" />
+            <ItemsControl ItemsSource="{Binding Mods}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:ModViewModel">
+                  <StackPanel Spacing="2" Margin="0,2">
+                    <TextBlock Text="{Binding Name}" />
+                    <ComboBox ItemsSource="{Binding Choices}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch"
+                              AutomationProperties.Name="{Binding Name}" />
+                    <TextBlock Text="{Binding Description}" Classes="caption" TextWrapping="Wrap" IsVisible="{Binding HasDescription}" />
+                    <StackPanel Spacing="2" IsVisible="{Binding HasRoll}">
+                      <TextBlock Text="{Binding RollName}" />
+                      <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RollRow}" />
+                    </StackPanel>
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Text="Talents" FontWeight="Bold" IsVisible="{Binding HasTalents}" />
+            <ItemsControl ItemsSource="{Binding Talents}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:TalentViewModel">
+                  <StackPanel Spacing="2" Margin="0,2">
+                    <TextBlock Text="{Binding Name}" />
+                    <Grid ColumnDefinitions="32,*,Auto" ColumnSpacing="6">
+                      <views:IconView Source="{Binding Icon}" Glyph="{x:Static vm:ArtGlyphs.Talent}" Width="32" Height="32" />
+                      <ComboBox Grid.Column="1" ItemsSource="{Binding Choices}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch"
+                                AutomationProperties.Name="{Binding Name}" />
+                      <Button Grid.Column="2" Name="CompareTalentsButton" Content="Compare" Command="{Binding CompareCommand}" />
+                    </Grid>
+                    <TextBlock Text="{Binding Description}" Classes="caption" TextWrapping="Wrap" IsVisible="{Binding HasDescription}" />
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <StackPanel Spacing="2" IsVisible="{Binding Upgrade, Converter={x:Static ObjectConverters.IsNotNull}}">
+              <TextBlock Text="{Binding Upgrade.Name}" FontWeight="Bold" />
+              <TextBlock Text="{Binding UpgradeDescription}" Classes="caption" TextWrapping="Wrap" />
+              <StackPanel Spacing="2" DataContext="{Binding Upgrade}" x:DataType="vm:RankViewModel">
+                <TextBlock Text="Press Enter to apply a rank." Classes="caption" />
+                <TextBlock Text="{Binding RankRange}" />
+                <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RankRow}" />
+              </StackPanel>
+            </StackPanel>
+            <StackPanel Spacing="4" IsVisible="{Binding PrototypeEligible}">
+              <TextBlock Text="Prototype" FontWeight="Bold" />
+              <CheckBox Name="PrototypeCheck" Content="Prototype quality" IsChecked="{Binding IsPrototype}" />
+              <Grid ColumnDefinitions="64,*" RowDefinitions="Auto,Auto" ColumnSpacing="6" RowSpacing="4">
+                <TextBlock Text="Augment" VerticalAlignment="Center" />
+                <ComboBox Grid.Column="1" ItemsSource="{Binding Augments}" SelectedItem="{Binding Augment}" HorizontalAlignment="Stretch"
+                          IsEnabled="{Binding IsPrototype}" AutomationProperties.Name="Augment" />
+                <TextBlock Grid.Row="1" Text="Level" VerticalAlignment="Center" />
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Levels}" SelectedItem="{Binding Level}" Width="90"
+                          IsEnabled="{Binding HasAugment}" AutomationProperties.Name="Level" />
+              </Grid>
+              <TextBlock Text="{Binding AugmentEffect}" TextWrapping="Wrap" IsVisible="{Binding HasAugmentEffect}" />
+              <TextBlock Classes="caption" TextWrapping="Wrap"
+                         Text="Attributes roll from the previous maximum to 1.5 ×. Entropy, Trapper, Echo and Paradox change your stats; other augments are shown as stats only. The Activity assumption normalizes Prototype items." />
+            </StackPanel>
+            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource BrandBonuses}" />
+            <TextBlock Text="{Binding Hint}" TextWrapping="Wrap" IsVisible="{Binding HasHint}" />
+          </StackPanel>
+        </DataTemplate>
+        <!-- The picker's highlighted item, as Go's candidate view, with Equip. -->
+        <DataTemplate DataType="vm:CandidateViewModel">
+          <StackPanel Spacing="6" Name="CandidatePanel">
+            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource ItemHeader}" />
+            <TextBlock Text="{Binding Marker}" Classes="caption" IsVisible="{Binding HasMarker}" />
+            <Button Name="EquipButton" Content="Equip" Command="{Binding EquipCommand}" Classes="accent" />
+            <Separator />
+            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource CoreStats}" />
+            <ItemsControl Name="ItemCard" ItemsSource="{Binding Card}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:CardLine">
+                  <Panel>
+                    <TextBlock Text="{Binding Text}" FontWeight="Bold" Margin="0,4,0,0" IsVisible="{Binding IsHeader}" />
+                    <TextBlock Text="{Binding Text}" TextWrapping="Wrap" IsVisible="{Binding IsText}" />
+                    <TextBlock Text="{Binding Text}" Classes="caption" TextWrapping="Wrap" IsVisible="{Binding IsCaption}" />
+                    <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsTalent}">
+                      <views:IconView Source="{Binding Icon}" Glyph="{x:Static vm:ArtGlyphs.Talent}" Width="32" Height="32" />
+                      <TextBlock Text="{Binding Text}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Spacing="2" IsVisible="{Binding IsRoll}">
+                      <TextBlock Text="{Binding Text}" TextWrapping="Wrap" />
+                      <ProgressBar Classes="rollbar" Minimum="0" Maximum="1" Value="{Binding Fraction}" Foreground="{Binding Color}" IsVisible="{Binding HasColor}" />
+                      <ProgressBar Classes="rollbar" Minimum="0" Maximum="1" Value="{Binding Fraction}" IsVisible="{Binding !HasColor}" />
+                    </StackPanel>
+                  </Panel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource BrandBonuses}" />
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="vm:SkillSlotViewModel">
+          <StackPanel Spacing="6">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <views:IconView Source="{Binding Icon}" Glyph="{x:Static vm:ArtGlyphs.Skill}" Width="64" Height="64" />
+              <TextBlock Text="{Binding Name}" Classes="heading" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Text="Installed grades and skill mods apply where modeled." Classes="caption" TextWrapping="Wrap" />
+            <StackPanel Spacing="6">
+              <ComboBox ItemsSource="{Binding Choices}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch"
+                        AutomationProperties.Name="{Binding Name}" />
+              <ContentControl Content="{Binding Expertise}" />
+              <ItemsControl ItemsSource="{Binding Mods}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:SkillModViewModel">
+                    <StackPanel Spacing="2" Margin="0,2">
+                      <TextBlock Text="{Binding Name}" />
+                      <ComboBox ItemsSource="{Binding Choices}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch"
+                                IsEnabled="{Binding IsEnabled}" AutomationProperties.Name="{Binding Name}" />
+                      <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RollRow}" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <TextBlock Text="{Binding Description}" Classes="label" TextWrapping="Wrap" IsVisible="{Binding HasDescription}" />
+              <TextBlock Text="{Binding Status}" TextWrapping="Wrap" IsVisible="{Binding HasStatus}" />
+              <ItemsControl ItemsSource="{Binding Outputs}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:SkillOutputViewModel">
+                    <Expander Header="{Binding Text}" HorizontalAlignment="Stretch" Margin="0,2">
+                      <ItemsControl ItemsSource="{Binding Details}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate x:DataType="x:String">
+                            <TextBlock Text="{Binding}" Classes="label" TextWrapping="Wrap" />
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </Expander>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="vm:SpecializationViewModel">
+          <StackPanel Spacing="6" Name="SpecializationPanel">
+            <TextBlock Text="Specialization" Classes="heading" />
+            <StackPanel Spacing="8">
+              <ComboBox ItemsSource="{Binding Choices}" SelectedItem="{Binding Selected}" Width="300" AutomationProperties.Name="Specialization" />
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <views:IconView Source="{Binding Icon}" Glyph="{x:Static vm:ArtGlyphs.Specialization}" Width="32" Height="32" />
+                <TextBlock Text="{Binding Title}" FontWeight="Bold" VerticalAlignment="Center" />
+              </StackPanel>
+              <views:IconView Source="{Binding Image}" Width="288" Height="144"
+                     HorizontalAlignment="Left" IsVisible="{Binding HasImage}" />
+              <TextBlock Text="{Binding Description}" Classes="label" TextWrapping="Wrap" />
+              <ItemsControl ItemsSource="{Binding Budgets}" />
+              <ItemsControl Name="SpecializationNodes" ItemsSource="{Binding Nodes}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <StackPanel Spacing="8" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:SpecializationNodeViewModel">
+                    <Border Classes="slot" Classes.allocated="{Binding IsAllocated}">
+                      <StackPanel Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                          <views:IconView Source="{Binding Icon}" Glyph="{x:Static vm:ArtGlyphs.Node}" Width="32" Height="32" />
+                          <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding Status}" Classes="label" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="12" />
+                        <Button Content="{Binding ToggleText}" Command="{Binding ToggleCommand}" AutomationProperties.Name="{Binding Name}" />
+                      </StackPanel>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="vm:AccountUpgradesViewModel">
+          <StackPanel Spacing="6" Name="WatchPanel">
+            <TextBlock Text="Account upgrades" Classes="heading" />
+            <TextBlock Text="Persistent ranks saved with the build." Classes="label" />
+            <ItemsControl ItemsSource="{Binding Upgrades}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Spacing="2" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:RankViewModel">
+                  <StackPanel Spacing="2" Margin="0,2">
+                    <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Range}" />
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RankRow}" />
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </DataTemplate>
+      </ContentControl.DataTemplates>
+    </ContentControl>
+  </ScrollViewer>
+</UserControl>

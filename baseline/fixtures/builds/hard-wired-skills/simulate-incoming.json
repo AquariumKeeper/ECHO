@@ -1,0 +1,377 @@
+{
+  "args": [
+    "build",
+    "simulate",
+    "--input",
+    "hard-wired-skills.json",
+    "--incoming",
+    "--iterations",
+    "500",
+    "--seed",
+    "1"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "build simulate",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "document": {
+      "schemaVersion": 1,
+      "build": {
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "level": 40,
+        "allocations": {},
+        "equipment": {
+          "backpack": "backpack_hard_wired_backpack",
+          "chest": "chest_hard_wired_chest",
+          "gloves": "gloves_hard_wired_gloves",
+          "holster": "holster_hard_wired_holster",
+          "knees": "knees_hard_wired_kneepads",
+          "mask": "mask_hard_wired_mask",
+          "primary_weapon": "primary_weapon_scorpio",
+          "secondary_weapon": "",
+          "sidearm": ""
+        },
+        "attributeRolls": {
+          "backpack": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "chest": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "gloves": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "holster": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "knees": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "mask": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "primary_weapon": {
+            "core_1": {
+              "attributeId": "shotgun_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "damage_to_armor_weapon_core",
+              "value": 0.12
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          }
+        },
+        "modSelections": {
+          "backpack": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "chest": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "mask": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "primary_weapon": {
+            "magazine": "weapon_mod_magazine_venom_glands",
+            "muzzle": "weapon_mod_muzzle_aculeus",
+            "optics": "weapon_mod_optics_starlight_receptors",
+            "underbarrel": "weapon_mod_underbarrel_chelae_grip"
+          }
+        },
+        "modRolls": {
+          "backpack": {
+            "mod_1": 0.06
+          },
+          "chest": {
+            "mod_1": 0.06
+          },
+          "mask": {
+            "mod_1": 0.06
+          }
+        },
+        "talentSelections": {
+          "backpack": {
+            "talent": "gear_talent_short_circuit"
+          },
+          "chest": {
+            "talent": "gear_talent_positive_reinforcement"
+          },
+          "primary_weapon": {
+            "talent": "weapon_talent_septic_shock"
+          }
+        },
+        "activeSkillSelections": {
+          "skill_slot_1": "skill_firestarter_chem_launcher",
+          "skill_slot_2": "skill_shock_trap"
+        },
+        "skillUpgrades": {
+          "skill_slot_1": {
+            "skillId": "skill_firestarter_chem_launcher",
+            "rank": 10
+          },
+          "skill_slot_2": {
+            "skillId": "skill_shock_trap",
+            "rank": 5
+          }
+        },
+        "skillMods": {},
+        "specializationId": "technician",
+        "specializationNodeSelections": [
+          "technician_depleted_rounds_tier_1",
+          "technician_e_m_i_tier_1",
+          "technician_this_is_my_rifle_tier_1"
+        ],
+        "activeScenarios": {},
+        "allocatedSkills": {},
+        "accountUpgrades": {},
+        "equipmentUpgrades": {},
+        "meta": {
+          "name": "hard-wired-skills",
+          "notes": ""
+        }
+      }
+    },
+    "context": {
+      "weapon_slot": "primary_weapon"
+    },
+    "diagnostics": [],
+    "result": {
+      "mode": "random",
+      "iterations": 500,
+      "duration": 60,
+      "seed": 1,
+      "retargetDelay": 1,
+      "target": true,
+      "dps": {
+        "mean": 190776.95653025195,
+        "stdDev": 19405.90212141385,
+        "min": 127956.64685599999,
+        "p5": 156787.930236,
+        "p50": 193272.81936466662,
+        "p95": 217831.5149666666,
+        "max": 260059.50311399996
+      },
+      "weaponDps": {
+        "mean": 172969.7067802519,
+        "stdDev": 19405.902121413856,
+        "min": 110149.39710599999,
+        "p5": 138980.680486,
+        "p50": 175465.56961466663,
+        "p95": 200024.26521666662,
+        "max": 242252.25336399997
+      },
+      "skillDps": {
+        "mean": 17807.249750000155,
+        "stdDev": 1.5643308870494366e-10,
+        "min": 17807.24975,
+        "p5": 17807.24975,
+        "p50": 17807.24975,
+        "p95": 17807.24975,
+        "max": 17807.24975
+      },
+      "kills": {
+        "mean": 0,
+        "stdDev": 0,
+        "min": 0,
+        "p5": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "timeToKill": {
+        "mean": 0,
+        "stdDev": 0,
+        "min": 0,
+        "p5": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "shotsFired": 20.244,
+      "reloads": 2.612,
+      "incoming": {
+        "timeToArmorBreak": {
+          "mean": 11.799138461538494,
+          "stdDev": 1.297364909135286,
+          "min": 8.861538461538462,
+          "p5": 9.969230769230766,
+          "p50": 11.630769230769221,
+          "p95": 14.030769230769213,
+          "max": 16.61538461538459
+        },
+        "armorBreaks": 1,
+        "downed": 1,
+        "timeToDown": {
+          "mean": 13.23766153846147,
+          "stdDev": 1.41271648985564,
+          "min": 10.15384615384615,
+          "p5": 11.07692307692307,
+          "p50": 13.107692307692293,
+          "p95": 15.692307692307669,
+          "max": 18.461538461538428
+        },
+        "damageTaken": 2001076,
+        "repaired": 0,
+        "shotsBlocked": 16,
+        "expectedTimeToArmorBreak": 8.679638047038384
+      },
+      "swaps": 0,
+      "targetStatuses": {
+        "burning": 0.0625,
+        "shocked": 0.04583333333333333
+      },
+      "timeline": [
+        1900875.1075380144,
+        1090887.4048547999,
+        1108429.3302847994,
+        183160.5,
+        0,
+        1468701.7013226429,
+        1110039.1466159986,
+        1115066.2108699197,
+        0,
+        0,
+        1628760.4815134364,
+        965371.40864208,
+        749274.3397766394,
+        0,
+        0,
+        106326.99418656003,
+        15189.57059808,
+        4535.195612159999,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "triggers": [
+        {
+          "key": "septic_shock_nine_stacks",
+          "kind": "buff",
+          "talents": [
+            "weapon_talent_septic_shock"
+          ],
+          "mean": 0.25674999999999976,
+          "unit": "share",
+          "triggered": 1.91
+        }
+      ],
+      "skills": [
+        {
+          "slot": "skill_slot_1",
+          "skill": "skill_firestarter_chem_launcher",
+          "perUse": true,
+          "uses": 1,
+          "dps": 17807.249750000177,
+          "status": "burning"
+        },
+        {
+          "slot": "skill_slot_2",
+          "skill": "skill_shock_trap",
+          "perUse": true,
+          "uses": 1,
+          "dps": 0,
+          "status": "shocked"
+        }
+      ],
+      "states": 2,
+      "expected": {
+        "practicalReloadCycleDps": 544028.5575807228,
+        "skillDps": 40956.67442499999,
+        "buildDps": 584985.2320057228,
+        "practicalShotsToKill": 67.84139027357955
+      }
+    }
+  }
+}

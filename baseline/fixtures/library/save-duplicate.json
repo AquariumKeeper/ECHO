@@ -1,0 +1,28 @@
+{
+  "args": [
+    "library",
+    "save",
+    "--library",
+    "library.json",
+    "--id",
+    "foundry-shield",
+    "--input",
+    "foundry-shield.json"
+  ],
+  "stdin": null,
+  "exitCode": 3,
+  "response": {
+    "apiVersion": 1,
+    "command": "library save",
+    "ok": false,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "error": {
+      "code": "library-exists",
+      "message": "\"foundry-shield\": build record already exists"
+    }
+  }
+}

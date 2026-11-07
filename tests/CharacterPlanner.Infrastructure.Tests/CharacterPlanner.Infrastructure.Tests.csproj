@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><IsPackable>false</IsPackable><IsTestProject>true</IsTestProject></PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+    <ProjectReference Include="../../src/CharacterPlanner.Infrastructure/CharacterPlanner.Infrastructure.csproj" />
+    <Using Include="Xunit" />
+    <None Include="../../examples/artwork/minimal-slots/**" Link="artwork-example/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The committed Division pack with its artwork, so full loading is checked on every run. -->
+    <None Include="../../data/packs/division-2/**" LinkBase="packs/division-2" CopyToOutputDirectory="IfDifferent" />
+    <!-- Delivery checks compare whole directory trees, so they read the committed sources:
+         PreserveNewest copies never delete files a later delivery renamed or removed. -->
+    <AssemblyMetadata Include="CommittedDataRoot" Value="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../../data'))" />
+    <None Include="../../data/references/division-2-v1-conversion/rules.json" Link="conversion-reference/rules.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

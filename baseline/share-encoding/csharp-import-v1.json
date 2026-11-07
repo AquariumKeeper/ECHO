@@ -1,0 +1,2616 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "encodingsSha256": "4dfa491196c956e02a7a85072294268f78ff9ef09284ed3f6110783dafa0cc76",
+    "csharpAssemblySha256": "e7d64c778d70a1296e861ce2965adef10f66e6400e1595a185a10f3502de5055",
+    "sharePackSha256": "3da9d7229a80479027ca41be1a66a70a3640682aa92b0c5a2762139905aa9ca7",
+    "divisionPackSha256": "9a78ce0cc038df2f3088798e83103eac358e279c3fd27a1387d6b3d49df1e52e",
+    "args": [
+      "--json",
+      "--pack",
+      "PACK.json",
+      "build",
+      "import",
+      "--share",
+      "CODE"
+    ]
+  },
+  "cases": [
+    {
+      "id": "v1",
+      "code": "izbUUSrOSCxKjU_OzyspSkwuUdJRMlTSMdSJNojVic4rzcmJ1VHySy1XcCrNzElR0lFSigUA",
+      "legacyCode": "ADQAy_9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIk5ldyBCdWlsZCIsIiJdAwA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2",
+      "code": "izbSUSrOSCxKjU_OzyspSkwuUdJRMlTSMdSJNojVic4rzcmJ1YkuKSpNjdVR8kstV3AqzcxJUdJRUooFAA",
+      "legacyCode": "ADsAxP9bMiwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sW3RydWVdLCJOZXcgQnVpbGQiLCIiXQMA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {
+              "scenario": {}
+            },
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v3",
+      "code": "BcHRCYAwDAXAVeR9vw-LGziAC4QgpaYohAppi-t7JxvR7xx2lreNyGWASGCirEpp010pNXs3pYyYpsRh37LPxy8Q0B8",
+      "legacyCode": "AEMAvP9bMywic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sW2ZhbHNlXSxbdHJ1ZV0sIk5ldyBCdWlsZCIsIiJdAwA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v4",
+      "code": "RcexCsIwFAXQX5E736EFXTJ2c_EHQpDX9ImFRwvJiw4l_y50cTqceCXqW4o-8755kewgRnBkHBLj1swS40us6t8D1cUU4UDey6m4l3VurvcF4RyIj1hThFvvnXjo9zK11RYQSD8",
+      "legacyCode": "AHgAh_9bNCwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sW2ZhbHNlXSxbZmFsc2VdLHsic3RhbGUiOnsiY29yZSI6eyJhdHRyaWJ1dGVJZCI6ImF0dHIiLCJ2YWx1ZSI6NX19fSwiTmV3IEJ1aWxkIiwiIl0DAA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {
+              "stale": {
+                "core": {
+                  "attributeId": "attr",
+                  "value": 5
+                }
+              }
+            },
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v5",
+      "code": "RYoxCsMwEAS_Erbewi7cuPQD_AEhjJDPJOQigXUmhdDfjdKk2hlm3USUZzhliznZGaKBGMGRbvB06VL1dEfQIv-tjRWfvBfMFcWCyg9yfIth7gWtET0k66duq3wfy_XSHQT8DQ",
+      "legacyCode": "AHgAh_9bNSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sW2ZhbHNlXSxbZmFsc2VdLHt9LHsibW9kcyI6eyJzdGFsZSI6eyJzb2NrZXQiOiJtb2QifX0sInRhbGVudHMiOnt9fSwiTmV3IEJ1aWxkIiwiIl0DAA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {
+              "stale": {
+                "socket": "mod"
+              }
+            },
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v6",
+      "code": "RY2xCgIxEAV_RV69hddYXGlnY2MZgizJiotrIpfcCYb8u8TGaph5xXMHQrnzIteQU104VBAm0ERu78ml1cyTu7EV-bN1anjmWDC3TqhskupPxsCh6iaXh5qNhpwEM8pwdEJ5SVA2_XDVnE4R8zjphLO8d8dVLYIA_wU",
+      "legacyCode": "RM2xygIxEATgV_mZeov_Gosr7WxsLMMhS7Li4prIZU_BkHeX2FgN30wxYUeoV17lHEv2laODMIEmCv8LhbyZLRQubFV-2To13EuqmFsnOJtk_2IMHF2fcrqp2ehQsmBGHUYn1IdEZdM3u5Z8SJjHSScc5fW339QSCFg-AwA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "skill"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v7",
+      "code": "RYqxCgIxEAV_RV69hVcJKe1sbK4MQZZkxeCayGVPwXD_LncIVo-Zef5AaDee5BJrsYmjgTCABvL7QL7MqoH8lbXJf_tCHY-aGlxfCMYqxTZYA0fLLxnvWfV3KDXJKCrRci0NzmOq1RAI7Skxs-YPr-mU4DaFhXCW9-44Z00gIHwB",
+      "legacyCode": "RMqxCsJAEATQX5GptzCVkNLOxiblcchyt-Lheiu5jYIh_y4JgtUw8yYcCO3Go1ySVR85OQgdqKOwjxTqpBopXFmb_HNeaMbDckM_LwRnlepbWYGTl5cM96L6O1TLMohK8mK1oQ8YzRyR0J6SCmv58EqnjH6bsBDO8t4dp6IZBMTvAA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "spec",
+            "specializationNodeSelections": [
+              "root"
+            ],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v8",
+      "code": "RU49C8IwEP0r8uYb2k0yurk42DEECcmJoWcizVXBkv8u0cHpfcOze0K9-YUvoWRdfFAQRtBIdnBk8yriyF69VP7j1mjDvcRzEakwG6p64S8pYWaFGVqj3uhpI_Q461f0qQ-anjzN6TdvhFwiTywcNJVcYawj1AeH5CW9fTePEaa_aYQTv3aHNUkEAe4D",
+      "legacyCode": "RI69qgIxEIVf5XLqKXa7S0o7Gwu3DEFCMmLYMZHNrIJL3l2yFlbz850Pjv0n1Jtf-BJK1sUHBWEEjWQHRzavIo7s1Uvl39wabbiXeC4iFWZDVS-8LyXMrDBDa9QTnTZCx1n3o6s-aHryNKev3gi5RJ5YOGgqucJYR6gPDslLevv-PEaY3qYRTvz6O6xJIghwnwEA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {
+              "stale": {
+                "socket": 0
+              }
+            },
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v9",
+      "code": "VY4xC8IwFIT_itz8Bjva0c3FweIUijySpwafSW0SBUv_u1TU4nR3H9xxZkVIZ-7lYGPIPdsMQgWqyCxbMqGotmSOrElmHUYaILfiu6uEvO9OPTtJqIeRcI1uF1Xn9HGZVUJ-h6nN1sby1_0i1NVIYJv9XZqL_02F6KQRFZt9DAm1aQmpE-tZ_ZMnuHGop8MjYSuPxbp4dSCgfQE",
+      "legacyCode": "VI4xa8MwEEb_SvnmG-qxGrt16VDTSYhySNdW9Cy5lpRAjP57cEhiMt29B-84-0Iov7zIl8-pLuwrCANoIPvsyKam6sh-sxbZ59pphfy3OE-S6uf8s3CQArN2wpTDR1bd6bpVVkn1AlvN3uf20N4UzNAJ7Gs8yPgX76dSDjKKiq8xpwJjHaHM4iNrPPEm3wLM9nAnvMvx6bVFDSDAnQcA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "account": 1
+            },
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v10",
+      "code": "XY-xTsUwDEV_5enOHtq149tY3kDFFFXISgxEdZPSpCBR5d-fQhBFTPaxfa5k03eE9MabPNsY8sY2g9CDejLdRCbsqhOZF9YkZz0KHZD33a-LhPy0vm7sJGE4CmGJ7jGqnvTTZVYJ-RuqzdbG_b_LNvsPGWfffMQgGJAqoxBCdDKKis0-hoTBTNSWf1Kac7T5g_vVCRuHGUNfCiGtYj2r_-KaVK_qn4Vwk8_LdffqQMB0Bw",
+      "legacyCode": "XI-xTsQwDIZfBf2zh-vakY2FgRNTVCErMRCdzylNChJR3h2FIIqY7M_290t204mQX3mTJ5-sbOwLCBNoIndayNmuupB7Zs1y1NqoQt72uF7FyuP6snGQjLk2wjWFh6R60E9XWMXKN3SbvU_7f5d9ie9yvsThI5lgRu6MRrAU5CwqvsRkGbNbaCz_pAynjvld-NUJG9sF89QaIa_iI2v85J7Ur_qfjXAvHze3e9QAApavAQA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "skill"
+            },
+            "skillUpgrades": {
+              "one": {
+                "skillId": "skill",
+                "rank": 1
+              }
+            },
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v11",
+      "code": "XY-xbsMwDER_pbiZQ7x67JYhHRp0EoyAkJhWKCO5lpwAMfTvgSKjRjuRR_LxSNN1hPTFk5xsDHlim0HoQB2Z3UAmzKoDmTNrki0uhRbIz-zHi4T8MX5O7CShXwrhEt17VN3UmmVWCfkpKs3Wxvk_yzb7qxy_feMRg6BHqhqFEKKTo6jY7GNI6M1ArXloLm1-abW9-0W3M0pZib--aRTrWf2d6-ZK1r8L4U1uL6-zVwcChgc",
+      "legacyCode": "XI8xT0UhDIX_ijlzB-96RzcHHXxxIsQ0UJXYB9cLaCLhvxvkxRud2tP262nNshDyK-_y5FIsO7sCwgJayFxbMrGqWjLPrFmO2Do1yHsN21liedxedvaSsbZOOCf_kFQPdckKq8TyIwbNzqX6n2VXwoec3sLkkaJgRR4anRCTl5OouBJSzFiNpdm8my5zvs3arf9FjzN6vxB_ffMmLrCGLx6bBzn-7oR7-by6qUE9CLDfAwA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "skill"
+            },
+            "skillUpgrades": {},
+            "skillMods": {
+              "one": {
+                "skillId": "skill",
+                "mods": {}
+              }
+            },
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v12",
+      "code": "XY6xTgQxDER_BU3tgr0yJR0FFJyoVitksuaIyCZL4hyCVf4dJTrtCSrPyPbMG4cDIb9zkhcbgya2CsIAGmi8nWiEU1kw0fjGPst1bljYBZgNNiZpk1WTey0q9zNMdyCc2ReBGQ61Vtogn8WtiwR9Xk-JZ8kwWyUscX6K3l_dRa0patTvtd_thY2od3Q0ApdTi2ylF0XwchYPM9RKUPYStEc2BrY2lv8EbNWd5fjhdooQZzmKF6suhgwzToTc9g87Xrd_c_Iq1rF3P9zeGmUo3lfCo3zd3BXnZxAw_QI",
+      "legacyCode": "XI6xTvQwEIRf5dfUW_y50iUdBRScqKIILc5yWGzsEK-DIPK7I0coJ6hmRvbOfH13IuRXXuTJp2gLewOhA3XU_x-oRzCZMFD_wprlqhsmDhFug0-LNGWzJTwXk9sRbk8grKxF4LpTrZU2yHsJ8yTRHufLwqNkuK0SpjQ-JNVr-nHzkizZ57z_OwYb0b7RDAhcLq0S7nAElVUUrquVYKwSrVXsDOx9Kn8J2FtY5fwWDoqYRjmLireQYobrB0Ju73cH3h5_9-RZfGANX9zOGmUsqpVwLx__bkrQEQQM3wMA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "item"
+            },
+            "attributeRolls": {
+              "main": {
+                "core": {
+                  "attributeId": "attr",
+                  "value": 12
+                }
+              }
+            },
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "prototypes": {
+              "main": {
+                "itemId": "item",
+                "augment": "augment",
+                "level": 1
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "mod-unconfigured",
+            "message": "Socket on Item has no selected mod",
+            "subject": "main",
+            "target": "socket"
+          },
+          {
+            "severity": "warning",
+            "code": "talent-unconfigured",
+            "message": "Talent on Item has no selected talent",
+            "subject": "main",
+            "target": "talent"
+          },
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "all-features",
+      "code": "fVHBTsMwDP0V9M4RouWWIzcOcGDaqaqmkFojWpqU1BmCqv-O3HQbk4CTY-f5-T27qWqF8c0k2tkYOBnLUKigKtXUrWrgmHq0quGU6Rwm9MYF6Ak2JpJomJN7zUyPHfSSQeFofCboqp7nWU2g9-yGngJvh30yHY3SeCKSOUvvMlAhmXCAruZZoY_dS_T-Cj5GeyCGvl8Bv37KBwQwpMiRP4f_R5q8F3Wif30peDqSX3Ww8RT4iqKUoE-PYtRYG_O1TVNKwqRgLLsjbQ5uNRUDQWOUHLNCiB1tyJNlF8MI3SDFyGhVgTytbpeuqdQWG4Xgso7TGiapXBA72cr5OHe3cp155f4p-U_-cpp6aRrIOuPdlxGtBTWQFRfP9HHzkJ2XWWi_AQ",
+      "legacyCode": "fFGxbuMwDP2Vw5uJw9m3abzthnZo0MkwAlUmUiGy5Mp0itbQvxe0naQB2k6iqMen9x6bqiaMzzbz3qUo2ToBoQJV1NQtNfDCPVpqJE98OWb01keYGS5l1tOKZP80Cf_vYJYbCCcbJoap6lIKzeCXyQ89R3kcDtl2PMJcifSfZVYLELKNR5iqFEKfuocUwg18TO7IAvN3A3z5qJNQwJCTJHkbfv7STgdVB3OpCIFPHDYdYgNHuaFYWzDnYjVqnUvTrc2tpUwE68SfeHf0m6kUGQaj3lEIMXW848BOfIojTIOckqClFXK3uV2m5rW32FgqXOM4xzBr54rYayqX5fz5rdspG_dnyd_yr6upNdhxYOdt8O9Wta6ogZ26uOfXX_8mHzoQ0H4MAA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 2
+            },
+            "equipment": {
+              "main": "item"
+            },
+            "attributeRolls": {
+              "main": {
+                "core": {
+                  "attributeId": "attr",
+                  "value": 12
+                }
+              }
+            },
+            "modSelections": {
+              "main": {
+                "socket": "mod"
+              }
+            },
+            "modRolls": {
+              "main": {
+                "socket": 3
+              }
+            },
+            "talentSelections": {
+              "main": {
+                "talent": "talent"
+              }
+            },
+            "activeSkillSelections": {
+              "one": "skill"
+            },
+            "skillUpgrades": {
+              "one": {
+                "skillId": "skill",
+                "rank": 2
+              }
+            },
+            "skillMods": {
+              "one": {
+                "skillId": "skill",
+                "mods": {
+                  "socket": {
+                    "modId": "skill_mod",
+                    "value": 0.2
+                  }
+                }
+              }
+            },
+            "specializationId": "spec",
+            "specializationNodeSelections": [
+              "root"
+            ],
+            "activeScenarios": {
+              "scenario": {}
+            },
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {
+              "account": 1
+            },
+            "equipmentUpgrades": {
+              "main": {
+                "itemId": "item",
+                "rank": 1
+              }
+            },
+            "prototypes": {
+              "main": {
+                "itemId": "item",
+                "augment": "augment",
+                "level": 1
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "party-is-not-shared",
+      "code": "izbUUSrOSCxKjU_OzyspSkwuUdJRMlTSMdSJNojVic4rzcmJ1VHySy1XcCrNzElR0lFSigUA",
+      "legacyCode": "ADQAy_9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIk5ldyBCdWlsZCIsIiJdAwA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "unknown-allocation-is-not-positional",
+      "code": "izbUUSrOSCxKjU_OzyspSkwuUdJRMlTSMdSJNojVic4rzcmJ1VHySy1XcCrNzElR0lFSigUA",
+      "legacyCode": "ADQAy_9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIk5ldyBCdWlsZCIsIiJdAwA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "unknown-equipment-is-not-positional",
+      "code": "izbUUSrOSCxKjU_OzyspSkwuUdJRMlTSMdSJNojVic4rzcmJ1VHySy1XcCrNzElR0lFSigUA",
+      "legacyCode": "ADQAy_9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIk5ldyBCdWlsZCIsIiJdAwA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "empty-inner-config-keeps-v1",
+      "code": "izbUUSrOSCxKjU_OzyspSkwuUdJRMlTSMdSJNojVic4rzcmJ1VHySy1XcCrNzElR0lFSigUA",
+      "legacyCode": "ADQAy_9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIk5ldyBCdWlsZCIsIiJdAwA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "empty-selected-mod-keeps-v5",
+      "code": "RYoxCsMwEAS_Erbewi7cuPQD_AEhjJDPJOQigXUmhdDfjdKk2plh3USUZzhliznZGaKBGMGRbvB06VL1dEfQIv-tjRWfvBfMFcWCyg9yfIthBlojek3WH91W-T6W66U7CPgb",
+      "legacyCode": "AHUAiv9bNSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sW2ZhbHNlXSxbZmFsc2VdLHt9LHsibW9kcyI6eyJzdGFsZSI6eyJzb2NrZXQiOiIifX0sInRhbGVudHMiOnt9fSwiTmV3IEJ1aWxkIiwiIl0DAA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {
+              "stale": {
+                "socket": ""
+              }
+            },
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "zero-rank-keeps-v9",
+      "code": "VY4xC8IwFIT_irz5De1oRjcXB4tTCPJInhp8TWqTKFjy36WiFqe7--CO02uEdKGRjzaGPJLNgNACtqgbgzoUEYP6RJJ40aniBHwrfug55MNwHslxAjVVhD66fRRZ0sdlEg75HeY2WRvLX_eLQDUVgWz2d-6u_jcVouOOhW32MSRQ2iCkga0n8U-a4daBmg9XhB0_VpvixQECmBc",
+      "legacyCode": "VI4xT8QwDEb_CvpmD-1IRjYWBiqmKEJWYiDCTUqTgESV_37q6e6qm-z3pGfZPhLKF6_y7nOqK_sKwggayQ6ObGqqjuwHa5Fjbp02yE-Lyyypvi2fKwcpMFsnzDm8ZtWDLltllVTPsNfsfW537VXBDJ3AvsZfmb7j7VTKQSZR8TXmVGCsI5RFfGSN_7zL5wCzP9wJL_L38NSiBhDgTgMA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "account": 0
+            },
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "zero-grade-keeps-v10",
+      "code": "XY8xbsMwDEWvUvyZg7167NalQ4JOglEQEpsIoSXXkhsghu5eqArioBP5SL4P0PQdIZ15kU8bQ17YZhB6UE-mG8mEVXUk88WaZK9boQ3yvfp5kpA_5tPCThKGrRCm6A5Rdad7l1kl5D-oNlsb1_8u2-x_5HjxzUcMggGpMgohRCdHUbHZx5AwmJHa8imlOVubv7mHTlg4XDB0pRDSLNaz-hvXpHpV_yyEd7m-vK5eHQgYfwE",
+      "legacyCode": "XI-xTsQwDIZfBf2zh3btyMbCwIkpqpCVGIjO55QmBYko745CEIeY7M_290t280TIr7zLk09WdvYFhBk0k5tWcnaoruSeWbNca21UIW9H3C5i5XF72TlIxlIb4ZLCQ1K90k9XWMXKN3SbvU_Hf5d9ie9yOsfhI5lgQe6MRrAU5CQqvsRkGYtbaSz_pAynjvld-NUJO9sZy9QaIW_iI2v85J7Ur_qfjXAvHze3R9QAAtavAQA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "skill"
+            },
+            "skillUpgrades": {
+              "one": {
+                "skillId": "skill",
+                "rank": 0
+              }
+            },
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "unicode-meta",
+      "code": "izbUUSrOSCxKjU_OzyspSkwuUdJRMlTSMdSJNojVic4rzcmJ1VEKBqlQiCl1sTB2iSl1cTUwUNJR8ssvSS1WiCk1MDB2BpFGZmC2q1IsAA",
+      "legacyCode": "AE0Asv9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIlNoYXJlIPCfmIAiLCJOb3RlcyBcdTAwM2NcdTAwMjZcdTAwM2UiXQMA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "Share 😀",
+              "notes": "Notes <&>"
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "division/foundry-shield",
+      "code": "zVfbbuM4DP0XPbtB4u1ltn8wD_uyg30qAoKRGJuILl5KTpsU-feFbKe1m0sxmB3MvEUUSZ3jQ1LK02JRKMNbjhw8lKpQuy_xj1l502xpVs7L-5vF_Ka8m8WayZp4E5-xibOFKm7nxdOyeFIO4wY0pholclSF0jXFBOvQeiM7WLX2GWUDnVUVaoV606DenDgcN1ShKhu2FE88erMqVB1sTCQnDoNdFWrjqUvwAhEawV1nbIQdyg6eCZvgYY1rz9keSQdvRju0YQcRbPAVxMQdpsiGUFwHs21gFYLrt5bdZ1gWr2_U1OOr0kEIFvkXpiS8ahN9NepRobggUBEKZBdVqC3altTj4mE-n88PhXLsg5wLHcDV6I1lX_VJOu_3LPPZ_MvhMGjwG-AYJPv1QI6l8euRdKX5k3CYFHSu-lHRj08_RpY_xiB3_E8iwF4Hl88XapAlXsBRXqPSHy9UkSfBlMfauSy3f5Z3mc10KlzjFeuQqtaDQYcVHYfFlOJ8trjL_ZdTnME2hKYAPcpLOcqrKp9PcqrWfeb3cbpdY-hQNtGhB-G1pR8hWhOa_L2u5ljMFov_kWg_ob9DwZNZPmb38DvJeCheFf3bcuPIp3-aStB0QyTnD-bvYG03UsY3kAsmn9rFjy6EqfnYymNrn_NSPqWFE2u0UHMCXaPXNPRXMOrMSZ8GfMDwqf9pwzqscM-e3udYznW0Dhf921oVKjSJdZy697aj8-BRqNYbkhWKkJ36jzaOQWPfC533CdQhg82kDbBPVAkmMhAbYV-pQrl2v7cfwzsbWJSKILZNIxRjEHiA-_I6W9ShgqhDQ3D7orL0CS35dKJ-b1aPqlOiX0EjQVOMILRmT7KbyH82gl0jYUuZcSJhtHFcAWdDtqw5tBH0Tls6r_9b3EBwiDSCVfAQYSWEqb4kyYXohmRNOoGgr0jUdMBciFkJ7smrvl9R69B-7FbUibf0bcNDx8b8C6INqav9YZmENyTQv7nz4_Pdq3zzwhixtQlSK0IpA_TB0DeypPOlF9Xjk1qz0DNaC4YaS7mQJL-ZIySmPJSKdw8CB3zGnmqOwBHcbrgVBpflAOuvYVZMMQ7rr93UPQf3fcisOZc2OMq9zrH7vi6Y4UKqPCXWIMh2MhTz5VOHNuauGAWgcwFW4WUyhruylorSB2fX2sSQQpimfrg7ZAV73FP5YkOa0fK-e1d0SY4fKgsw_CG5eRNOLf8D",
+      "legacyCode": "zFfLbuPIDv0XrhXD9u10-uYPejGbacwqCAi6REuE66FhlZw4gf99UHokUvyYGfQ0uncu6vDosPiSH1arAkrZS5TgcQ0FHL7E_y3WN82eF-vl-vPNanmzvl3EWtiW8SY-URMXKyg-LYuHx-IBHMUdGko1aZQIBZiaY8JtaH2pB9y09ol0h50VCtiQ2TVkdieA8QEUUNmw53iC6M1QQB1sTKwngMEOBew8dwTPGLFROrBCAY2KIz3gE1MTPG5p6yXbI5vgy8kT3onDiDb4CmOSTlOUkkldJ7NtcBOC6x89dtfwWLy-hQb3r2CCMq7yL0pJZdMm_lrCPZC6oFgxKWYIFLAn2zLcr-6Wy-XyWIATH_Sc6yCuJl9a8VVP0qHfWZaL5ZfjccjBL6BjSNnPFzKWxs9X0pXmD9JRpmBy1U-Kfvr20XP9fRHkjv9BAYg3weX3KzckGi_oWF8LpX-9csWelVIea-dYPv1_fXs8fpwK1-KKdUhV67EkRxWPw2Ie4nKxus39l2vsjLbBNQXsVV7iWF-7pAskJ7e0_Hw8nk63axE60l105FFla_l7Aq2ZynxfVzlWi9XqPwy0n9D_IoMns3zCubr7ldJ4LF6B_2ylcezTH02lVHZjNfOH8vdgbT7NNpALZX5r5z9ZCHPz2MpTa895iQ-MShJDFmtJaGryhof-CiVMV88_dfig4W_xpw3rqKIX8fw-xzLXaB0W_dsZCghNEhPn8N42ggdEAa0vWTekynaOnzwYnabYC533JmLGNVpHBpuDLlF84kopcYmxUfEVFODalxf70b2zoSWtGGPbNMoxBsU7_Ly-Hi2ZUGE0oWH89Ay5ixJZ9ukk-70Z7qHLXH_CRoPhGFF5K571MEv_WQ9xjYY95-QkViEbpxVw1mUvRkIb0RyM5fP5f_MbAhw8S6UqeIy4UaZUX0rJBe-GdcsmoZKvWGE-YC74bJRe2EPfr2RMaD92K5kke_62k6FjY_6F0YbUNddwTCo7Vuy_uaGYotZvKIqRWpswtaqcskAfSv7Glk1eehHuH2Aryk9kLZbcWM6FpPmbOWISzruleEcwOpQz9lRLRInoDsNWGCCPg6zfhlkx1zicv5aX5L4Pma3k0kbHudclumEWDAup8pzEoJLY2VDMy6cObcxdMXEg5wJuwvMUm3dMyr2RPoBda5NgCmFOfXd7zBnsdc_TFxs2QlZeuu-KjmS8qJyA4Q_JTayFbQkFwONfAwA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "division_2",
+          "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "division_2",
+            "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+            "level": 40,
+            "allocations": {},
+            "equipment": {
+              "backpack": "backpack_foundry_bulwark_backpack",
+              "chest": "chest_foundry_bulwark_chest",
+              "gloves": "gloves_foundry_bulwark_gloves",
+              "holster": "holster_foundry_bulwark_holster",
+              "knees": "knees_fox_s_prayer",
+              "mask": "mask_catharsis",
+              "primary_weapon": "primary_weapon_fafnir",
+              "secondary_weapon": "secondary_weapon_ekim_s_long_stick",
+              "sidearm": "sidearm_backup_boomstick"
+            },
+            "attributeRolls": {
+              "backpack": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "chest": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "gloves": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "holster": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "knees": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "dtoc_foxs_prayer",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "mask": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "incoming_repairs_gear_minor",
+                  "value": 0.2
+                },
+                "minor_2": {
+                  "attributeId": "armor_regeneration_gear_minor",
+                  "value": 4925
+                }
+              },
+              "primary_weapon": {
+                "core_1": {
+                  "attributeId": "shotgun_damage_weapon_core",
+                  "value": 0.15
+                },
+                "core_2": {
+                  "attributeId": "damage_to_armor_weapon_core",
+                  "value": 0.12
+                },
+                "minor_1": {
+                  "attributeId": "damage_to_armor_weapon_minor",
+                  "value": 0.06
+                }
+              },
+              "secondary_weapon": {
+                "core_1": {
+                  "attributeId": "marksman_rifle_damage_weapon_core",
+                  "value": 0.15
+                },
+                "core_2": {
+                  "attributeId": "headshot_damage_weapon_core",
+                  "value": 1.11
+                },
+                "minor_1": {
+                  "attributeId": "damage_to_armor_weapon_minor",
+                  "value": 0.06
+                }
+              },
+              "sidearm": {
+                "core_1": {
+                  "attributeId": "shotgun_damage_backup_boomstick",
+                  "value": 0.17
+                },
+                "core_2": {
+                  "attributeId": "damage_to_armor_weapon_core",
+                  "value": 0.12
+                },
+                "minor_1": {
+                  "attributeId": "damage_to_armor_weapon_minor",
+                  "value": 0.06
+                }
+              }
+            },
+            "modSelections": {
+              "backpack": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "chest": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "mask": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "primary_weapon": {
+                "magazine": "weapon_mod_magazine_fafnir_magazine",
+                "optics": "weapon_mod_optics_fafnir_optics",
+                "underbarrel": "weapon_mod_underbarrel_fafnir_underbarrel"
+              },
+              "secondary_weapon": {
+                "magazine": "weapon_mod_magazine_underbalanced_integrated_spring",
+                "muzzle": "weapon_mod_muzzle_large_suppressor_7_62",
+                "optics": "weapon_mod_optics_acog_scope_4x"
+              }
+            },
+            "modRolls": {
+              "backpack": {
+                "mod_1": 0.06
+              },
+              "chest": {
+                "mod_1": 0.06
+              },
+              "mask": {
+                "mod_1": 0.06
+              }
+            },
+            "talentSelections": {
+              "backpack": {
+                "talent": "gear_talent_process_refinery"
+              },
+              "chest": {
+                "talent": "gear_talent_improved_materials"
+              },
+              "mask": {
+                "talent": "gear_talent_vicious_cycle"
+              },
+              "primary_weapon": {
+                "talent": "weapon_talent_dragon_s_breath"
+              },
+              "secondary_weapon": {
+                "talent": "weapon_talent_perfect_ranger"
+              },
+              "sidearm": {
+                "talent": "weapon_talent_brazen"
+              }
+            },
+            "activeSkillSelections": {
+              "skill_slot_1": "skill_striker_shield",
+              "skill_slot_2": "skill_assault_turret"
+            },
+            "skillUpgrades": {},
+            "skillMods": {
+              "skill_slot_2": {
+                "skillId": "skill_assault_turret",
+                "mods": {
+                  "firing_mechanism": {
+                    "modId": "magnetic_rail",
+                    "value": 0.05
+                  },
+                  "housing": {
+                    "modId": "ammo_box",
+                    "value": 0.1
+                  },
+                  "targeting": {
+                    "modId": "multi_tool",
+                    "value": 0.075
+                  }
+                }
+              }
+            },
+            "specializationId": "firewall",
+            "specializationNodeSelections": [
+              "firewall_depleted_rounds_tier_1",
+              "firewall_e_m_i_tier_1",
+              "firewall_this_is_my_rifle_tier_1"
+            ],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "foundry-shield",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "division/hard-wired-skills",
+      "code": "zVZNb9swDP0vPDuB461dkX-w64qdgoBgJdYmIkueJKdoivz3QbLT2knaHtuLYVF8j48fkr1ZlQVo2UsQZ7GCAp7vwo9ltej2vKzK6naxKhfVzTI0wkaHRXiiLixXUPwsi8222EBLYYcNeY1P4lljWkMBquEQp_ZsgAIeSO06UjPMyQYF1MbtOUw3BwsU0DgTIvvp3miCAnaW57Bk6EgnYOelJf-MT0ydsxiU8504KGxvTH5scyrb4uVVHaxfQDnPuEpvFKOXhz7ybw1rIN86jzWTx-QCBezJ9Azr1a-yLMtjAa1Y569BRwUNWW3E1gNJ9n5jKZfl3fE4VvAb6Bjr__VCTs3-eiV52L6BjnzWvl7G_Hx9JCg0Lta9RU0t1Xw6kHNt5XJ1k8Y_UVSXFCM0Ohyye4-j-ii7d0gu87s9Ho_FC_C_XrqWbfzb1Z50bn7id_qPMyaPwvTmaJ1OUTN-cpDn5lPzptaB8z0-UF6iKDLYSETVkFU8NsZpuBLpU8CZhk_9LzvdUk0Hsfw2MonrZMU9W9dibcjmm7jtDwdz7pttSKo33Ccn10VRYe402DBE8kbqJqJnxV10PgF6q9k_kPds5qjJRvr-GGKsvXSQ6hzJsI0XpR7MsIac9rDC0DgfUYlXvcRZoa-6dy5IlD2jZ7GPzitOo3O9fq8Eo-xTRE4Jp8BqB8MMklKuP59AUinQ_U7GKQzpDYNxMfdzWD6K51S59PFUDbdoqLeqyd_NCaB6BeSwGD11SbR1mu_ZsIribID1BiKrxooSsqi5MxxZo3e91QGjcDpxxdSHsUW5uhMbCSgB22f08mj45LQdhU2SPUttXA-3yqdZerI7WK_SjTdP-JJmkvsJd5PmJXSshIwcKJUhA94SSWVK_x6L_O-xyExpMmH7Hw",
+      "legacyCode": "zFZNb-M4DP0vPCuB7d3ODvIP5rqDPRUBwUqsTUSWtJKcoi3y3xfyR2u36cze2ksQUXyPj9ST7du6UmDkLEm8wwYUPH5Pf-ybXTjzvqmab7u62jU3-9QJW5N26YFC2teg_qzU7VHdQk_phB1Fgw8S2WBZgwLdccrr-BgABXekT4H0BrPEQEFr_ZnTenOKgILO25Q5rvfmECg4Od7CSiCQSaAgROkpPuIDU_AOk_YxiAflBmvHn-PYylE9v6iDwzNoHxnr8o9yjnI3ZP5h4AAUex-xZYpYUkDBmezAcKj_qqqquijoxfl4DTor6MgZK66dSMbsV5ZqX32_XOYJfgEd8_w_X8hy2J-vpHjrK0xkvGufL2N7v341l9T53A4ODfXU8nIht9qqfX1T7F96at5TzNDscfL_RxzNr7r7gOR9f98ul4t6Bv53kNCzy_-ENpIZr0Ph9-Zvb21ZbZ4cvTel6ohfXeRteDm8dXTi_IgPdJQsmix2klF35DTPB-MNXKn0W8AbDb_Nf3_SPbX0JI5fLVO4liie2fkeW0tufBL3w9OTfZs7xpD0YHkoST5k0WmbNMUwZYpW2i5jZM0h-1gAgzMc7yhGtlvUagN1x5YY2ygBimkzWXb53ainMBxgnOu0wtT5mFFL1IPkzaCvpgefJMuZMbK4ex81F-tcn98LwSx7qcil4VJYn2DyIGnth7cOJF0K_TzJ7MJU_mGyPo-GmZb3ErlMrrw8dcc9Whqc7rhYfQVoXgBjWcyRQhHtvOGfbFln8S7B4RYy686JFnJoOFjObDD6wZmEWbi8cdQ6h7FHubqTO0koCftHjHJveUk6zsJWza6V1i_rH-Z_dRnJneBQl3fiiqa5RrPqfcHdFL-kwFrIyhOVMYyA10bKmMpnyW789tilk1ibQAEc_xsA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "division_2",
+          "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "division_2",
+            "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+            "level": 40,
+            "allocations": {},
+            "equipment": {
+              "backpack": "backpack_hard_wired_backpack",
+              "chest": "chest_hard_wired_chest",
+              "gloves": "gloves_hard_wired_gloves",
+              "holster": "holster_hard_wired_holster",
+              "knees": "knees_hard_wired_kneepads",
+              "mask": "mask_hard_wired_mask",
+              "primary_weapon": "primary_weapon_scorpio",
+              "secondary_weapon": "",
+              "sidearm": ""
+            },
+            "attributeRolls": {
+              "backpack": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "chest": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "gloves": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "holster": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "knees": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "mask": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "primary_weapon": {
+                "core_1": {
+                  "attributeId": "shotgun_damage_weapon_core",
+                  "value": 0.15
+                },
+                "core_2": {
+                  "attributeId": "damage_to_armor_weapon_core",
+                  "value": 0.12
+                },
+                "minor_1": {
+                  "attributeId": "damage_to_armor_weapon_minor",
+                  "value": 0.06
+                }
+              }
+            },
+            "modSelections": {
+              "backpack": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "chest": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "mask": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "primary_weapon": {
+                "magazine": "weapon_mod_magazine_venom_glands",
+                "muzzle": "weapon_mod_muzzle_aculeus",
+                "optics": "weapon_mod_optics_starlight_receptors",
+                "underbarrel": "weapon_mod_underbarrel_chelae_grip"
+              }
+            },
+            "modRolls": {
+              "backpack": {
+                "mod_1": 0.06
+              },
+              "chest": {
+                "mod_1": 0.06
+              },
+              "mask": {
+                "mod_1": 0.06
+              }
+            },
+            "talentSelections": {
+              "backpack": {
+                "talent": "gear_talent_short_circuit"
+              },
+              "chest": {
+                "talent": "gear_talent_positive_reinforcement"
+              },
+              "primary_weapon": {
+                "talent": "weapon_talent_septic_shock"
+              }
+            },
+            "activeSkillSelections": {
+              "skill_slot_1": "skill_firestarter_chem_launcher",
+              "skill_slot_2": "skill_shock_trap"
+            },
+            "skillUpgrades": {
+              "skill_slot_1": {
+                "skillId": "skill_firestarter_chem_launcher",
+                "rank": 10
+              },
+              "skill_slot_2": {
+                "skillId": "skill_shock_trap",
+                "rank": 5
+              }
+            },
+            "skillMods": {},
+            "specializationId": "technician",
+            "specializationNodeSelections": [
+              "technician_depleted_rounds_tier_1",
+              "technician_e_m_i_tier_1",
+              "technician_this_is_my_rifle_tier_1"
+            ],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "hard-wired-skills",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "division/party-buffs",
+      "code": "3VbBbtswDP0XnpXA8ZquyB_suh6DgKAl1hYiS4Iku02K_Psg22mTxlsPu-Vi2E98T3wUTWj7JEDpXkftLJYg4PAUfyzLhe95WRbl42JVLMr1MjaajYqL-Eo-LlcgHgqx3YkttBT3WIfOO4yurQJhRMKMggDZcEy3qwMMAiqSe09yhn9eAQG1cT3H25ARBwGNMzFxuI2YFkDA3vKcRIY9qSzig24pHPCVyTuL3hktGdsHELYzZnjsBsM78f6RN2zeQbrAuMpvlFLQVZf4l4INUGhdwJopYA4BAT2ZjmGz-lkURXES0Grrwhx1yqEhq4y29SgyRH-qFMvi6UOj_A-N03RKd-Jl6or7MHNu4PtwM_yEd-JlmG_3YeV68v3TVIzUmYRBvxhGRS3VfB6Y1y6L5WqdB0sWmkmvYTKp-UahXP2rShM3ORxLPYncenw8nU7iHVqnfjtjhv67HN-tU1l-CLyYhNfw-bQv0Qw79Tc9kEEnLclgoxPKhqzk6RScgpmdviV8yeHb-Ntjbammo7b82R9Z64xiIjkKrnH9mGEQ0HbHo_lKGDA0FGrG2HkfOEYXBhoIcD5pGa8pI4YkXY1ROs_48AYCOqs4VBQCm-v4iwWMjQv5CqE95JonMmzTTdlHGDYwlGD8QunaSltWuUXiVdFnw_nNGxd1z6jY6J7DYb6OH-Qp44leBSZVUdxzgrHnckF7ft7rse9OAqxT_MyGZdLORthsdwKiZ6nJ6CNlMDd3vmzknSmkw6LqXl7yBQV2fwA",
+      "legacyCode": "3FbNbuo8EH2XWRsU8pV-FW9wt7dLhEYTe5pYOLZlO2mh4t2vnIQWSm67uDs2iBzPOZmfk5G3TwKU7nXUzmIJAg5P8b9lufA9L8uifFysikW5XsZGs1FxEV_Jx-UKxEMhtjuxhZbiHuvQeYfRtVUgjEiYURAgG47p9nSAQUBFcu9JzvDPJyCgNq7neBsy4iCgcSYmDrcR0wEI2Fuek8iwJxVBgA-6pXDAVybvLHpntGRsH0DYzpjhZzcUvBPvH3nD5h2kC4yr_I9SCrrqEv9SsAEKrQtYMwXMISCgJ9MxbFb_F0VRnAS02rowR51yaMgqo209igzRnyrFsnj60Cj_QeM0TelOaplccR_FnA18H9Xkr-1eJjPst_so5XrzfTufGKkzCYN-MYyKWqr5vDCvqyyWq3VeLLk7M-k1TCY1PyiUq--6NHGTw3E5TSK3NT6eTifxDq1Tv50xg_8u13frVJYfAi824TV8nvYlmpNz6m96IINOWpLBRieUDVnJ0xScgpk3_Uj4ksOP8bdjbammo7b86Y-sdUYxkRwF17h-xJZqENB2x6P5ShgwNBRqxth5HzhGFwYaCHA-aRmvKSOGJF2NUTrP-PAGAjqrOFQUApvr-IsDjI0L-QqhPWS3JjJs003bRxg2MPR4fELp2kpbVtki8arps-H85o2LumdUbHTP4TDfxw_ylPFErwKTqijuOcHoudzQnp_3evTdSYB1ip_ZsEza2Qib7U5A9Cw1GX2kDObvI1828psppMOi6l5eIgiA3Z8BAA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "division_2",
+          "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "division_2",
+            "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+            "level": 40,
+            "allocations": {},
+            "equipment": {
+              "backpack": "backpack_grupo_sombra_s_a_backpack",
+              "chest": "chest_grupo_sombra_s_a_chest",
+              "gloves": "gloves_grupo_sombra_s_a_gloves",
+              "holster": "holster_grupo_sombra_s_a_holster",
+              "knees": "knees_grupo_sombra_s_a_kneepads",
+              "mask": "mask_grupo_sombra_s_a_mask",
+              "primary_weapon": "primary_weapon_police_m4",
+              "secondary_weapon": "",
+              "sidearm": ""
+            },
+            "attributeRolls": {
+              "backpack": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "chest": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "gloves": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "holster": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "knees": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "mask": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "primary_weapon": {
+                "core_1": {
+                  "attributeId": "assault_rifle_damage_weapon_core",
+                  "value": 0.15
+                },
+                "core_2": {
+                  "attributeId": "health_damage_weapon_core",
+                  "value": 0.21
+                },
+                "minor_1": {
+                  "attributeId": "damage_to_armor_weapon_minor",
+                  "value": 0.06
+                }
+              }
+            },
+            "modSelections": {
+              "backpack": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "chest": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "mask": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "primary_weapon": {
+                "magazine": "weapon_mod_magazine_tactical_5_56_mag",
+                "muzzle": "weapon_mod_muzzle_large_suppressor_5_56",
+                "optics": "weapon_mod_optics_acog_scope_4x",
+                "underbarrel": "weapon_mod_underbarrel_short_grip"
+              }
+            },
+            "modRolls": {
+              "backpack": {
+                "mod_1": 0.06
+              },
+              "chest": {
+                "mod_1": 0.06
+              },
+              "mask": {
+                "mod_1": 0.06
+              }
+            },
+            "talentSelections": {
+              "backpack": {
+                "talent": "gear_talent_combined_arms"
+              },
+              "chest": {
+                "talent": "gear_talent_explosive_delivery"
+              },
+              "primary_weapon": {
+                "talent": "weapon_talent_breadbasket"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "party-buffs",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "Skill 1 has no selected active skill",
+            "subject": "skill_slot_1"
+          },
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "Skill 2 has no selected active skill",
+            "subject": "skill_slot_2"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "division/prototype-gear",
+      "code": "3VbNbtswDH4XnpXA9pquyBvssMuKnYJAYCTWFiJLmiS7TYq8-yDbSZzGbQbslosh8ecTSX2ktcoLBlK1KihreAEMdk_h27yYuZbmRVY8zvJsVizmoVKkZZiFV3RhngN7yNhqzVZQY9hy522rJBlBXNILmUA8yYGBqCjEKX2nAAYbFFuHYhLjqAMGpbYthSmjXgMMKqtDJD9lM6iAwdbQNExSOJQJyHlVo9_xV0JnDXdWK0G8fgBmGq27z7pLfs3eT_HD8h2E9cTztMIYvdo0kX5IWAL62npeEnqeTIBBi7ohWObfsyzLDgxqZayfch1iqNBIrUzZg3TWZ5Rsnj2dMIr_wDgM93UnuQzMuI9kjhS-j2y6NryTXLpJdx-pXE6-L5MKARsduVcvmrjEGks6DszLLLN5vkiDJQFNhFcR6ljdQCjyr6o0-EbL-1IPINc5Ph4OB_YO9KdRriYTf7vSo-yImPCt_GW17mg5nuq1lenUzn80IC_FRxKMpT3mZ3ggvIpKoOaVilxUmP5G_eVYCRMn3XT4EMNN--vbrrHEvTJ0pk3COkp5RNEDLvjiMYmBQd3s9_qjQyfjGn1JPDTOeQrB-s4NGFgXlQiXLr2Mo7AlD8I64g9vwKAxkvwGvSd9aT9S8FBZH3nplYOexDbauHN0VXkVqe4Y84-PDmzKRJNE937FyURv3Q4YaGpTTIvxRZ3wb756JpBFZc-weTZ5P6cDPn-ijKDPcFmqS0RNJl4VpRfDEjpq9DsubL1RhmTqqHBBxklzenPaBtWmRLVqye-m-XVyHuIe3DeeUG4wbClC36IohG0-NmhiX0vPWzU0aUgrHrSNHd37LfqotCa_47HxPgEyMFbSM2kSUVkTYLlas976Z9-eh2F7eVxwJBRqtcfklsqeXn5jgs1SDYABrP8C",
+      "legacyCode": "3FbLjuo4EP2XWhuUZJqeK_5gFrOZq1khZBV23cTCsT22k25o8e8jx-GRJt0s7o4NiutxXI9ThTdlxUCqXgVlDa-AweFH-GNZLVxPy6qoXhdlsahWy9Ao0jIswhu6sCyBvRRss2UbaDHsufO2V5KMIC7pF5lAPMmBgWgoxDn9oAAGOxR7h2IW46wDBrW2PYU5o6wBBo3VIZKfsxlVwGBvaB4mKRzKAAycVy36A38jdNZwZ7USxNsXYKbTevjZDslv2cclflh_gLCeeJm-MEavdl2kvySsAX1rPa8JPU8mwKBH3RGsyz-LoihODFplrJ9zHWNo0EitTJ1BBusrSrEsflwwqt_AOI39epJcRmY8RzJnCj9HNmnanqUzw6Z7jlSmm-_b_oSAnY7cq1-auMQWazovzGmWxbJcpcWSqjMTXkOoY_MAoSq_q9LoGy3Py2kEuc_x9XQ6sQ-g_zrlWjLxX1d7lMOKSPhW_mO1TqfJVm-tTLcO_jcLcio-k-BWmjG_wgPhVVQCNW9U5KLB9G-Um2MlzNz00OFTDA_t77vdYo1HZehKm4R1lvKIIgOu-OqVt1gDg7Y7HvVnh0HGNfqaeOic8xSC9YMbMLAuKhGmLlnGUdiaB2Ed8Zd3YNAZSX6H3pOe2t8oeGisj7z2ykEmsY02HhzdVV5FagfSnYVzD4GLAwPs6kSTNMP5i5OJ3roDMNDUp5hWt4264D989cwgi8ZeYctitj-XC75-opwBYQ1XuCLVJaImE--KksWwhoF7-cSFbXfKkEwTFSZknDWnd6dtUH2qolY9-cM8vy7OY9yj-84Tyh2GPUXII4pC2O7zgCb29fRzr8YhDemLB23jME_5iD4qrckfeOy8T4AMjJX0kzSJqKwJsN5sWbb-O4_naTxOrwuOhEKtjpjcUtnTy--WYIua0AMD2P4_AA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "division_2",
+          "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "division_2",
+            "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+            "level": 40,
+            "allocations": {},
+            "equipment": {
+              "backpack": "backpack_providence_defense_backpack",
+              "chest": "chest_providence_defense_chest",
+              "gloves": "gloves_providence_defense_gloves",
+              "holster": "holster_providence_defense_holster",
+              "knees": "knees_providence_defense_kneepads",
+              "mask": "mask_providence_defense_mask",
+              "primary_weapon": "primary_weapon_police_m4",
+              "secondary_weapon": "",
+              "sidearm": ""
+            },
+            "attributeRolls": {
+              "backpack": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "chest": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "gloves": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "holster": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "knees": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "mask": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "primary_weapon": {
+                "core_1": {
+                  "attributeId": "assault_rifle_damage_weapon_core",
+                  "value": 0.15
+                },
+                "core_2": {
+                  "attributeId": "health_damage_weapon_core",
+                  "value": 0.21
+                },
+                "minor_1": {
+                  "attributeId": "damage_to_armor_weapon_minor",
+                  "value": 0.06
+                }
+              }
+            },
+            "modSelections": {
+              "backpack": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "chest": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "mask": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "primary_weapon": {
+                "magazine": "weapon_mod_magazine_tactical_5_56_mag",
+                "muzzle": "weapon_mod_muzzle_large_suppressor_5_56",
+                "optics": "weapon_mod_optics_acog_scope_4x",
+                "underbarrel": "weapon_mod_underbarrel_short_grip"
+              }
+            },
+            "modRolls": {
+              "backpack": {
+                "mod_1": 0.06
+              },
+              "chest": {
+                "mod_1": 0.06
+              },
+              "mask": {
+                "mod_1": 0.06
+              }
+            },
+            "talentSelections": {
+              "backpack": {
+                "talent": "gear_talent_combined_arms"
+              },
+              "chest": {
+                "talent": "gear_talent_explosive_delivery"
+              },
+              "primary_weapon": {
+                "talent": "weapon_talent_breadbasket"
+              }
+            },
+            "activeSkillSelections": {
+              "skill_slot_1": "skill_artillery_turret"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "prototypes": {
+              "backpack": {
+                "itemId": "backpack_providence_defense_backpack",
+                "augment": "augment_entropy",
+                "level": 5
+              },
+              "chest": {
+                "itemId": "chest_providence_defense_chest",
+                "augment": "augment_echo",
+                "level": 10
+              },
+              "primary_weapon": {
+                "itemId": "primary_weapon_police_m4",
+                "augment": "",
+                "level": 0
+              }
+            },
+            "meta": {
+              "name": "prototype-gear",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "Skill 2 has no selected active skill",
+            "subject": "skill_slot_2"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ]
+      }
+    },
+    {
+      "id": "division/shotgun-close",
+      "code": "3VbbbtswDP0XPiuB47VdkT_Y6_pYBAQjc7YQWTJI2b0h_z7ITtqkTVpgHdBhb_YheczDG3x7baByg1MXA5Zg4OFav83LWTfwvCzKq9mimJWXc20c-0pnekedzhdgLgpzuzK30JJusGGStBamDQtmBAzYhjUdW0YIDKzJbjqyr-L2KBiofRxYj80TBgaa6DVlQPouosZ2LYSKhDsDGNgEZkXLuiEcHiSus4NgxGzoqMo0nbiW5AHvmLoYkKziIutXtjFUB5YuemcZ2wswofd-NepemadnGbB8AhuFcZGfKCVx6z7xjwqWQNJGwZpJMLuAgYF8z7BcfC-KotgaaF2Icip09_mGQuVdqCeS0fuFpZgX19vtrtj_QB67Jn19IvtZ-OJM9hzl59SM8_yfaBnPw9cPyPH6v5eQNjHVfcCKWqp5fxWOcyvmi8u8hpniRH12oSnipO4cR_meujMkb_VdZX2vz9i7JVel3icU98vzZ3Q2TD41HzCUi7-lcmueoI3Vz-j9uB2HB7mNVaYfHQ_u4zG8n8VDNMOxOscHVlxyljw2LqFtKFjezVms4MSXPgx4lcOH_m8HN3bJWX2Z_8w0YagteY9SKaqNXW5DHyqWNYmwP444MKA2URLW4jo4M0ot1fToAh9z7FFMZCcRl3h5lWEw0PaPj_51wIihJ6kZte86YdUoYxiY95SRjfUkCi_u_0TX1kAizyG9afUEwxLGsk9vaKM_7u9Jr5bucd21p_uU9hG77PbMPipjx6IxkD9X8DPBQqFmgWkXctEHvtm43T5ofkL1MY2TNb2ue39HssHpjy7_8Lx4lc9ewoMbWLBxA-eUQqz4hj3b5GJQWN6uDGjH1pF3j5TB6Vb2MriBvNM0CplO52yUCAZg9Rs",
+      "legacyCode": "3FbRbus2DP0XPiuB47VdkT_Y6-5jERCMzNlCZMkgZfe2hf99kO30Jm2TO6wDOtw365DnhEekiDzcG6jc4NTFgCUYeLrX39blqht4XRbl3WpTrMrbtTaOfaUrfaRO1xswN4V52JkHaEkP2DBJ2gvTgQUzAgZsw5rOIxMEBvZkDx3ZN7wjCgZqHwfW8_CMgYEmek0sWEvfRdTY7oVQkXAJgIFDYFa0rAfC4UniPicIRsyBjioFA524luQJH5m6GJCs4ib7V7YxVCeRLnpnGdsbMKH3fjf53pmXVxuwfQEbhXGTvyglcfs-8R8VbIGkjYI1k2BOAQMD-Z5hu_m9KIpiNNC6EOUj6vLzDYXKu1DPIlP2D5ViXdyP43LZ_4M6liZ9fSHHWfjiSo4a5Sc0xmWefxEv03r4Yivj2-d_7W61ianuA1bUUs3HrXBeW7He3OZnmD19cD8LNUWcG3VJo7zm7oLIe3934_h-jV2dHlXqfUJxf3n-jM-GyafmJwrl5r9yOZoXaGP1Z_ReYXu-kNtYZfkp8WQ_nsPHWTxFc3GxuqQHVlxyljw2LqFtKFhe5ixWcLqJ_ynhTQ0_zX8_uLFLzuqP-c9KM4bakvcolaLa2OU29KFi2ZMI-3PGSQC1iZKwFtfBhVFqqaZnF_hc44hiIjubuMXbO2ypBgNt__zs3xImDD1Jzah91wmrRploYK45Ixvr2RTefP83vkYDiTyH9K7VMwxbmNo0n9BGf97fD7Na-o77rv24T6-Mpbqjso_K2LFoDOQvXfgFslCoWWB-C_nSB_52cMt70PyF6mOaRnc-7nv_SHLA-R8dmNOs8jVLeHADCzZu4FxSiBV_Y882uRgUtg87A9qxdeTdM2VwWnTay-AG8k5TZi2rc2V9VAYDsPt7AA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "division_2",
+          "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "division_2",
+            "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+            "level": 40,
+            "allocations": {},
+            "equipment": {
+              "backpack": "backpack_heartbreaker_backpack",
+              "chest": "chest_heartbreaker_chest",
+              "gloves": "gloves_heartbreaker_gloves",
+              "holster": "holster_grupo_sombra_s_a_holster",
+              "knees": "knees_ceska_vyroba_s_r_o_kneepads",
+              "mask": "mask_heartbreaker_mask",
+              "primary_weapon": "primary_weapon_acs_12",
+              "secondary_weapon": "secondary_weapon_police_m4",
+              "sidearm": ""
+            },
+            "attributeRolls": {
+              "backpack": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "chest": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "gloves": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "holster": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "knees": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "mask": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "primary_weapon": {
+                "core_1": {
+                  "attributeId": "shotgun_damage_weapon_core",
+                  "value": 0.15
+                },
+                "core_2": {
+                  "attributeId": "damage_to_armor_weapon_core",
+                  "value": 0.12
+                },
+                "minor_1": {
+                  "attributeId": "damage_to_armor_weapon_minor",
+                  "value": 0.06
+                }
+              },
+              "secondary_weapon": {
+                "core_1": {
+                  "attributeId": "assault_rifle_damage_weapon_core",
+                  "value": 0.15
+                },
+                "core_2": {
+                  "attributeId": "health_damage_weapon_core",
+                  "value": 0.21
+                },
+                "minor_1": {
+                  "attributeId": "damage_to_armor_weapon_minor",
+                  "value": 0.06
+                }
+              }
+            },
+            "modSelections": {
+              "backpack": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "chest": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "mask": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "primary_weapon": {
+                "optics": "weapon_mod_optics_small_rds_scope",
+                "underbarrel": "weapon_mod_underbarrel_short_grip"
+              },
+              "secondary_weapon": {
+                "magazine": "weapon_mod_magazine_tactical_5_56_mag",
+                "muzzle": "weapon_mod_muzzle_large_suppressor_5_56",
+                "optics": "weapon_mod_optics_acog_scope_4x",
+                "underbarrel": "weapon_mod_underbarrel_short_grip"
+              }
+            },
+            "modRolls": {
+              "backpack": {
+                "mod_1": 0.06
+              },
+              "chest": {
+                "mod_1": 0.06
+              },
+              "mask": {
+                "mod_1": 0.06
+              }
+            },
+            "talentSelections": {
+              "backpack": {
+                "talent": "gear_talent_cold"
+              },
+              "chest": {
+                "talent": "gear_talent_max_bpm"
+              },
+              "primary_weapon": {
+                "talent": "weapon_talent_close_personal"
+              },
+              "secondary_weapon": {
+                "talent": "weapon_talent_ranger"
+              }
+            },
+            "activeSkillSelections": {
+              "skill_slot_1": "skill_bulwark_shield",
+              "skill_slot_2": "skill_reviver_hive"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "survivalist",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "shotgun-close",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    },
+    {
+      "id": "division/striker-rifle",
+      "code": "3VZLb-M4DP4rBc9q4GSadpDrnPYwly32VBQELbO2ED28eqTTFvnvC8l2mzSPzmIX6GBuNsmP5keRn3w3nwto1EYF5SwuQMDT1_BltrjsNzxbVIvry3l1uVjOQqdYN-EyPFIfZnMQV5W4uxd3YCisMUSv1uwxYE0xam6ZPGYPCJAdh3g8orhAQE1y3ZM8kWfygoBWuw2H42GDDwR0TofIHiWHNeHmybuaMKBHh6MLBKwtc8DWp95hcKb2OYQwm3tqcpreK0P-CR-ZemcxRGRtHAZk2yrLICCwdLbZiemdVpLRXGWnapi8KdWnHmvnTIhKruG-9O1evLzShtULSOcZ5_mJYvSqTpH_aGAF5I3zOHTL-fzVDenEsJrfVFVVbQUYZZ0_Bh2L6sg2Wtl2SFKi37JUs-rrdjse0i9Qx3iIn1_INCmfXMmUY_Hf2JRp_024FFn5_AHZl4ezBYVASUf06kEzNmSo5Ukx9iusZvNlXsac6EiXOiYduw8yLObnGI7Y6HBo05jkkON15vhe4H5TloNSnyMXOhfbZKeiDjR9l9vNGW4nCjvoz-L_YrcVL8B_J9UbtvGvvvXUFCHI-V3zp9O6yMLuTWRck79a8DsXw755WsJd65DzVD6QXkUlSWOnIsqOrORxwVwDR770IeBdDR_GH26soZae813-uvo512RFZUPSFPnNBAJMen7W7xHFhm7DXnbk24wYwgS4PioZ9uMHG-blSjI6j56UBgHJNuxr8p71PmDHsVNV61UPJ9b0A2qR5NCrJS6vs_k8M51JYUh97zkE5wvsPDmSrsUgXc949eNnuYXO-Tjy2gqIpNnGg4kazLCCcrrDG3oV1mjIUst51vcm6iigUMHYMVKzIRup5eNT8ooeix7xJGMymL9w4ghO4GrP1NQU1jwg39TnZwBlo0lKl_b2GULXoOZNbu68qioBjxRlh0d2AlbL4-5BV7J7KyDPx4Zv12pUiJCfMGgXy64Nr5Pmx-Q95x_5najFa9T0t954Z0uLrWv4ljXLqJwNsLqDNlmbI7jXnCfbu2SbgFFxVkAx-RkNqgNrm2zI1zX7A1fsVEAV0DyN99IYcD-W-n3Uq3124_ug_MeJTkL3oHz-UTCce6tCOUbjmgI11FqOSk7b_SbMy_KDmYKy7S6AjHFYu7wtb1dBWQPfcnwXbJKOCqNz-6lvlts8I0PdewPybyl6smtYfSnJepaKtHqmfGIFNDS4DPBwvJelwSDgW3XxoH7E5Hl1cTv4Lorvok5KNzO4_wc",
+      "legacyCode": "3FbJbiM3EP0Vo8600NKMxgNdc5pDLjFyMoxCiSx3E-LS4SJv0L8H7EVWW8s4SAAHc1PXpveKVY-8m88FKL3VUXuHCxDw_D1-mS2u2y3PFtXi2_W8ul4sZ7HRbFS8jo_UxtkcxNdK3N2LO7AUNxhT0BsOGHFNKRmumQIWDwiQDcd0OqJzgYA1yU1L8kyd0QsCauO3HE-H9T4Q0HgTEweUHDeE2-fg14QRA3ocXCBg45gj1iG3HqO361BCCIu5JRVBQBu0pfCMj0ytdxgTsrEeI7KrtWMQEFl6pw5iWm-0ZLRfi1MrpmA79LnFtfc2Ji03cN_17V687mnD6hWkD4zz8otSCnqdE_9QsAIK1gfs-lBCQMCWTGZYzW-qqqp2Aqx2PpxKHUA15JTRru6LdNFvVapZ9X23Gw7pf4BjOMTPBzJOyicjGWss_kWN3TDtvwiXTlY-mcruvTxc7G2MlE3CoB8MoyJLNY-KMUVYzebLsoyF2YkuNUwmNT-psJhfYjjkJo_9iQ9Fjjl-2-2OBe4XZdkr9SVysfGpzm4EdaTpBzXnNxe4nQF21J_Ff8VuJ16B_8q6tezSn20dSHXyWup79Yc3pnxNbiLrVfnXLv_gYpiaxyU8tPY1z9UDGXTSkgw2OqFsyEkeFswrOLyCPprwDsNP44831lJNL-Uu369-qTVaUbuYDSV-M4EAm19ezPuMzoZ-y0E2FGoeTSDAt0nLOI3vbViWK8vkAwbSBgRkpzisKQQ204QDxwGqOugWzqzpHvGkzmjFRLLv1RKX3wq9y8xMIYUxt23gGH3o0i6TI-lrjNK3jF-fPsotNj6kgddOQCLDLh1NVG-GFXTT0H9h0HGDlhzVXGZ9MlEnEzoqmBpGUltyiWo-PSX77AH0kE8yZYvlH84cwZm8dWBSa4obTjBVn48kdBtNUvo82WeIjULD29LceVVVAh4pyQZP7ASslqfdva4U905AmY8t3270oBCx_MJofOqWuf8cNT_lEDiBOIxa7KPG17oK3nUtdl7xLRuWSXsXYXUHdXaOAypuDZd9Cz47FTFpLk8OMfoZLeoja51dLK8GDkeu1OiIOqJ9Hu6lIeB-gPr7oFcHuOf77x_qPNFR6B50KA8Fy0VvdLSDHnWplmrHSctxu9-EuVzyjc9Ru_owgaz1uPZPh7HlNk9l-9K7YJtN0pi8n5a-We6K6ve4JwPyTykGchtYfemKtSw1Gf1C5cS6pL7B5TSH473uGgwCfquuHvRTyoFXV7e976rzXa2zNmoG938PAA",
+      "response": {
+        "apiVersion": 1,
+        "command": "build import",
+        "ok": true,
+        "pack": {
+          "id": "division_2",
+          "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "division_2",
+            "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+            "level": 40,
+            "allocations": {},
+            "equipment": {
+              "backpack": "backpack_striker_s_battlegear_backpack",
+              "chest": "chest_striker_s_battlegear_chest",
+              "gloves": "gloves_striker_s_battlegear_gloves",
+              "holster": "holster_ceska_vyroba_s_r_o_holster",
+              "knees": "knees_grupo_sombra_s_a_kneepads",
+              "mask": "mask_striker_s_battlegear_mask",
+              "primary_weapon": "primary_weapon_st_elmo_s_engine",
+              "secondary_weapon": "secondary_weapon_police_m4",
+              "sidearm": "sidearm_backup_boomstick"
+            },
+            "attributeRolls": {
+              "backpack": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "chest": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "gloves": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "holster": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "knees": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                },
+                "minor_2": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "mask": {
+                "core_1": {
+                  "attributeId": "armor_gear_core",
+                  "value": 170000
+                },
+                "minor_1": {
+                  "attributeId": "weapon_handling_gear_minor",
+                  "value": 0.08
+                }
+              },
+              "primary_weapon": {
+                "core_1": {
+                  "attributeId": "assault_rifle_damage_weapon_core",
+                  "value": 0.15
+                },
+                "core_2": {
+                  "attributeId": "health_damage_weapon_core",
+                  "value": 0.21
+                },
+                "minor_1": {
+                  "attributeId": "damage_to_armor_weapon_minor",
+                  "value": 0.06
+                }
+              },
+              "secondary_weapon": {
+                "core_1": {
+                  "attributeId": "assault_rifle_damage_weapon_core",
+                  "value": 0.15
+                },
+                "core_2": {
+                  "attributeId": "health_damage_weapon_core",
+                  "value": 0.21
+                },
+                "minor_1": {
+                  "attributeId": "damage_to_armor_weapon_minor",
+                  "value": 0.06
+                }
+              },
+              "sidearm": {
+                "core_1": {
+                  "attributeId": "shotgun_damage_backup_boomstick",
+                  "value": 0.17
+                },
+                "core_2": {
+                  "attributeId": "damage_to_armor_weapon_core",
+                  "value": 0.12
+                },
+                "minor_1": {
+                  "attributeId": "damage_to_armor_weapon_minor",
+                  "value": 0.06
+                }
+              }
+            },
+            "modSelections": {
+              "backpack": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "chest": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "mask": {
+                "mod_1": "critical_hit_chance_gear_mod"
+              },
+              "primary_weapon": {
+                "magazine": "weapon_mod_magazine_insulated_magazine",
+                "muzzle": "weapon_mod_muzzle_overcharged_muzzle",
+                "optics": "weapon_mod_optics_conductor_rail",
+                "underbarrel": "weapon_mod_underbarrel_insulated_grip"
+              },
+              "secondary_weapon": {
+                "magazine": "weapon_mod_magazine_tactical_5_56_mag",
+                "muzzle": "weapon_mod_muzzle_large_suppressor_5_56",
+                "optics": "weapon_mod_optics_acog_scope_4x",
+                "underbarrel": "weapon_mod_underbarrel_short_grip"
+              }
+            },
+            "modRolls": {
+              "backpack": {
+                "mod_1": 0.06
+              },
+              "chest": {
+                "mod_1": 0.06
+              },
+              "mask": {
+                "mod_1": 0.06
+              }
+            },
+            "talentSelections": {
+              "backpack": {
+                "talent": "gear_talent_risk_management"
+              },
+              "chest": {
+                "talent": "gear_talent_press_the_advantage"
+              },
+              "primary_weapon": {
+                "talent": "weapon_talent_actum_est"
+              },
+              "secondary_weapon": {
+                "talent": "weapon_talent_breadbasket"
+              },
+              "sidearm": {
+                "talent": "weapon_talent_breadbasket"
+              }
+            },
+            "activeSkillSelections": {
+              "skill_slot_1": "skill_assault_turret",
+              "skill_slot_2": "skill_striker_drone"
+            },
+            "skillUpgrades": {
+              "skill_slot_1": {
+                "skillId": "skill_assault_turret",
+                "rank": 3
+              }
+            },
+            "skillMods": {
+              "skill_slot_1": {
+                "skillId": "skill_assault_turret",
+                "mods": {
+                  "firing_mechanism": {
+                    "modId": "magnetic_rail",
+                    "value": 0.05
+                  },
+                  "housing": {
+                    "modId": "ammo_box",
+                    "value": 0.1
+                  },
+                  "targeting": {
+                    "modId": "multi_tool",
+                    "value": 0.075
+                  }
+                }
+              }
+            },
+            "specializationId": "gunner",
+            "specializationNodeSelections": [
+              "gunner_depleted_rounds_tier_1",
+              "gunner_e_m_i_tier_1",
+              "gunner_gunslinger_tier_1",
+              "gunner_this_is_my_rifle_tier_1"
+            ],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "shd_level": 1000,
+              "watch_critical_hit_chance": 50,
+              "watch_critical_hit_damage": 50
+            },
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "striker-rifle",
+              "notes": "C0 fixture: Striker rifle build."
+            }
+          }
+        },
+        "diagnostics": []
+      }
+    }
+  ]
+}

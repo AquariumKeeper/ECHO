@@ -1,0 +1,2236 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "inputsSha256": "b084a82da8ea3d12daac66cff566b66672d1879f75f78cc40ee3ea6e32aa6a05",
+    "packSha256": "628b6ae9e519ddd4bc9c1ea651028e942cbdd00b0f7b05018deec84a9da953c2",
+    "args": [
+      "--json",
+      "--pack",
+      "pack.json",
+      "build",
+      "resolve",
+      "--input",
+      "-",
+      "--context",
+      "context.json"
+    ],
+    "inputEncoding": "utf-8"
+  },
+  "cases": [
+    {
+      "id": "one-active",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "Ally",
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": 10,
+                    "armor": 5
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "Ally",
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "armor": 5,
+                      "damage": 10
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1005,
+            "damage": 110
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1005,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: Ally, Alpha"
+                  },
+                  "op": "flat",
+                  "value": 5
+                }
+              ]
+            },
+            "damage": {
+              "base": 100,
+              "final": 110,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: Ally, Alpha"
+                  },
+                  "op": "flat",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "inactive",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "Ally",
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": 10,
+                    "armor": 5
+                  },
+                  "active": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "Ally",
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "armor": 5,
+                      "damage": 10
+                    },
+                    "active": false
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1000,
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1000,
+              "clamped": false,
+              "contributions": []
+            },
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "unknown-effect",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "Ally",
+              "effects": [
+                {
+                  "id": "missing",
+                  "values": {
+                    "damage": 10
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "Ally",
+                "effects": [
+                  {
+                    "id": "missing",
+                    "values": {
+                      "damage": 10
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1000,
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1000,
+              "clamped": false,
+              "contributions": []
+            },
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "strongest-total",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "First",
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": 10,
+                    "armor": 1
+                  },
+                  "active": true
+                }
+              ]
+            },
+            {
+              "name": "Second",
+              "effects": [
+                {
+                  "id": "beta",
+                  "values": {
+                    "damage": 9,
+                    "armor": 9
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "First",
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "armor": 1,
+                      "damage": 10
+                    },
+                    "active": true
+                  }
+                ]
+              },
+              {
+                "name": "Second",
+                "effects": [
+                  {
+                    "id": "beta",
+                    "values": {
+                      "armor": 9,
+                      "damage": 9
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1009,
+            "damage": 109
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1009,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "beta",
+                    "name": "Party: Second, Beta"
+                  },
+                  "op": "flat",
+                  "value": 9
+                }
+              ]
+            },
+            "damage": {
+              "base": 100,
+              "final": 109,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "beta",
+                    "name": "Party: Second, Beta"
+                  },
+                  "op": "flat",
+                  "value": 9
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "earliest-tie",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "Zulu",
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": 10,
+                    "armor": 1
+                  },
+                  "active": true
+                }
+              ]
+            },
+            {
+              "name": "Alpha",
+              "effects": [
+                {
+                  "id": "beta",
+                  "values": {
+                    "damage": 5,
+                    "armor": 6
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "Zulu",
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "armor": 1,
+                      "damage": 10
+                    },
+                    "active": true
+                  }
+                ]
+              },
+              {
+                "name": "Alpha",
+                "effects": [
+                  {
+                    "id": "beta",
+                    "values": {
+                      "armor": 6,
+                      "damage": 5
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1001,
+            "damage": 110
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1001,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: Zulu, Alpha"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "damage": {
+              "base": 100,
+              "final": 110,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: Zulu, Alpha"
+                  },
+                  "op": "flat",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "stack-order",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "Ally",
+              "effects": [
+                {
+                  "id": "delta",
+                  "values": {
+                    "damage": 7
+                  },
+                  "active": true
+                },
+                {
+                  "id": "gamma",
+                  "values": {
+                    "damage": 5
+                  },
+                  "active": true
+                },
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": 10
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "Ally",
+                "effects": [
+                  {
+                    "id": "delta",
+                    "values": {
+                      "damage": 7
+                    },
+                    "active": true
+                  },
+                  {
+                    "id": "gamma",
+                    "values": {
+                      "damage": 5
+                    },
+                    "active": true
+                  },
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "damage": 10
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1000,
+            "damage": 122
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1000,
+              "clamped": false,
+              "contributions": []
+            },
+            "damage": {
+              "base": 100,
+              "final": 122,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "gamma",
+                    "name": "Party: Ally, Gamma"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: Ally, Alpha"
+                  },
+                  "op": "flat",
+                  "value": 10
+                },
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "delta",
+                    "name": "Party: Ally, Delta"
+                  },
+                  "op": "flat",
+                  "value": 7
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "unknown-stat-ignored",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "First",
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": 1,
+                    "unknown": 1000000
+                  },
+                  "active": true
+                }
+              ]
+            },
+            {
+              "name": "Second",
+              "effects": [
+                {
+                  "id": "beta",
+                  "values": {
+                    "damage": 2
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "First",
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "damage": 1,
+                      "unknown": 1000000
+                    },
+                    "active": true
+                  }
+                ]
+              },
+              {
+                "name": "Second",
+                "effects": [
+                  {
+                    "id": "beta",
+                    "values": {
+                      "damage": 2
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1000,
+            "damage": 102
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1000,
+              "clamped": false,
+              "contributions": []
+            },
+            "damage": {
+              "base": 100,
+              "final": 102,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "beta",
+                    "name": "Party: Second, Beta"
+                  },
+                  "op": "flat",
+                  "value": 2
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "missing-saved-stat",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "Ally",
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": 10
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "Ally",
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "damage": 10
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1000,
+            "damage": 110
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1000,
+              "clamped": false,
+              "contributions": []
+            },
+            "damage": {
+              "base": 100,
+              "final": 110,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: Ally, Alpha"
+                  },
+                  "op": "flat",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "empty-beats-negative",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "First",
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": -10
+                  },
+                  "active": true
+                }
+              ]
+            },
+            {
+              "name": "Second",
+              "effects": [
+                {
+                  "id": "beta",
+                  "values": {},
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "First",
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "damage": -10
+                    },
+                    "active": true
+                  }
+                ]
+              },
+              {
+                "name": "Second",
+                "effects": [
+                  {
+                    "id": "beta",
+                    "values": {},
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1000,
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1000,
+              "clamped": false,
+              "contributions": []
+            },
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "strongest-negative",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "First",
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": -5
+                  },
+                  "active": true
+                }
+              ]
+            },
+            {
+              "name": "Second",
+              "effects": [
+                {
+                  "id": "beta",
+                  "values": {
+                    "damage": -10
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "First",
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "damage": -5
+                    },
+                    "active": true
+                  }
+                ]
+              },
+              {
+                "name": "Second",
+                "effects": [
+                  {
+                    "id": "beta",
+                    "values": {
+                      "damage": -10
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1000,
+            "damage": 95
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1000,
+              "clamped": false,
+              "contributions": []
+            },
+            "damage": {
+              "base": 100,
+              "final": 95,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: First, Alpha"
+                  },
+                  "op": "flat",
+                  "value": -5
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "same-effect-across-members",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "First",
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": 10
+                  },
+                  "active": true
+                }
+              ]
+            },
+            {
+              "name": "Second",
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": 10
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "First",
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "damage": 10
+                    },
+                    "active": true
+                  }
+                ]
+              },
+              {
+                "name": "Second",
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "damage": 10
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1000,
+            "damage": 110
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1000,
+              "clamped": false,
+              "contributions": []
+            },
+            "damage": {
+              "base": 100,
+              "final": 110,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: First, Alpha"
+                  },
+                  "op": "flat",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "saved-values-not-reevaluated",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "Manual ally",
+              "armor": 999999,
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": 0,
+                    "armor": 1
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "Manual ally",
+                "armor": 999999,
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "armor": 1,
+                      "damage": 0
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1001,
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1001,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: Manual ally, Alpha"
+                  },
+                  "op": "flat",
+                  "value": 1
+                }
+              ]
+            },
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: Manual ally, Alpha"
+                  },
+                  "op": "flat",
+                  "value": 0
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "empty-party",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": []
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1000,
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1000,
+              "clamped": false,
+              "contributions": []
+            },
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "party-before-own-talent",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "party_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {
+            "chest": "giver_gear"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {
+            "chest": {
+              "talent": "grant"
+            }
+          },
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "Ally",
+              "effects": [
+                {
+                  "id": "alpha",
+                  "values": {
+                    "damage": 10,
+                    "armor": 5
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "party_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "party_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {
+              "chest": "giver_gear"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {
+              "chest": {
+                "talent": "grant"
+              }
+            },
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "Ally",
+                "effects": [
+                  {
+                    "id": "alpha",
+                    "values": {
+                      "armor": 5,
+                      "damage": 10
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "armor": 1505,
+            "damage": 110
+          },
+          "primary": {},
+          "breakdowns": {
+            "armor": {
+              "base": 1000,
+              "final": 1505,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: Ally, Alpha"
+                  },
+                  "op": "flat",
+                  "value": 5
+                },
+                {
+                  "source": {
+                    "kind": "talent",
+                    "id": "grant",
+                    "name": "Grant"
+                  },
+                  "op": "flat",
+                  "value": 500
+                }
+              ]
+            },
+            "damage": {
+              "base": 100,
+              "final": 110,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "party",
+                    "id": "alpha",
+                    "name": "Party: Ally, Alpha"
+                  },
+                  "op": "flat",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {},
+          "names": {
+            "giver_gear": "Giver gear",
+            "grant": "Grant"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    }
+  ]
+}

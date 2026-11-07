@@ -1,0 +1,123 @@
+{
+  "args": [
+    "catalog",
+    "list",
+    "upgrades"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog list",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": [
+      {
+        "id": "shd_level",
+        "name": "SHD Level",
+        "description": "Automatic health: 30 per SHD level, capped at level 2,000 (+60,000). Independent of Watch upgrade ranks. Flat health is applied before Health (%) bonuses; live-game verification remains required.",
+        "maxRank": 2147483647
+      },
+      {
+        "id": "watch_accuracy",
+        "name": "Watch — Accuracy",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_ammo_capacity",
+        "name": "Watch — Ammo Capacity",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 20%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_critical_hit_chance",
+        "name": "Watch — Critical Hit Chance",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_critical_hit_damage",
+        "name": "Watch — Critical Hit Damage",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 20%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_explosive_resistance",
+        "name": "Watch — Explosive Resistance",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_hazard_protection",
+        "name": "Watch — Hazard Protection",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_headshot_damage",
+        "name": "Watch — Headshot Damage",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 20%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_health_percent",
+        "name": "Watch — Health",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_reload_speed",
+        "name": "Watch — Reload Speed",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_repair_skills",
+        "name": "Watch — Repair Skills",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_skill_damage",
+        "name": "Watch — Skill Damage",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_skill_duration",
+        "name": "Watch — Skill Duration",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 20%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_skill_haste",
+        "name": "Watch — Skill Haste",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_stability",
+        "name": "Watch — Stability",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_total_armor",
+        "name": "Watch — Total Armor",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      },
+      {
+        "id": "watch_weapon_damage",
+        "name": "Watch — Weapon Damage",
+        "description": "Enter your actual allocated rank (0–50). Community reference maximum: 10%. Ranks are not inferred from SHD level; allocation schedules and scavenging are not simulated.",
+        "maxRank": 50
+      }
+    ]
+  }
+}

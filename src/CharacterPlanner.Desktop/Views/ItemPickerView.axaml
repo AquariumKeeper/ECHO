@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+             xmlns:views="using:CharacterPlanner.Desktop.Views"
+             x:Class="CharacterPlanner.Desktop.Views.ItemPickerView" x:DataType="vm:EditorViewModel">
+  <!-- The item picker, docked over the loadout while open: search, filters, sort, and the slot's items to preview. -->
+  <Border Name="ItemPicker" Classes="panel" Padding="12" IsVisible="{Binding Picker, Converter={x:Static ObjectConverters.IsNotNull}}">
+    <Grid DataContext="{Binding Picker}" x:DataType="vm:ItemPickerViewModel" RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="8">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+        <Button Content="Back" Command="{Binding CloseCommand}" HotKey="Escape" ToolTip.Tip="Back to the loadout (Esc)" />
+        <TextBlock Grid.Column="1" Text="{Binding Title}" Classes="heading" VerticalAlignment="Center" />
+        <TextBlock Grid.Column="2" Text="Comparing…" Classes="label" AutomationProperties.LiveSetting="Polite" VerticalAlignment="Center" IsVisible="{Binding IsComparing}" />
+      </Grid>
+      <TextBox Grid.Row="1" Name="PickerSearch" Text="{Binding Search}" PlaceholderText="Search items" AutomationProperties.Name="Search items" />
+      <Grid Grid.Row="2" ColumnDefinitions="*,*,*" ColumnSpacing="8">
+        <StackPanel Spacing="2" IsVisible="{Binding HasRarities}">
+          <TextBlock Text="Rarity" Classes="label" />
+          <ComboBox ItemsSource="{Binding Rarities}" SelectedItem="{Binding Rarity}" HorizontalAlignment="Stretch" AutomationProperties.Name="Rarity" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Spacing="2" IsVisible="{Binding HasFamilies}">
+          <TextBlock Text="{Binding FamilyCaption}" Classes="label" />
+          <ComboBox ItemsSource="{Binding Families}" SelectedItem="{Binding Family}" HorizontalAlignment="Stretch" AutomationProperties.Name="{Binding FamilyCaption}" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Spacing="2">
+          <TextBlock Text="Sort by (highest first)" Classes="label" />
+          <ComboBox Name="PickerSort" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SortBy}" HorizontalAlignment="Stretch" AutomationProperties.Name="Sort by" />
+        </StackPanel>
+      </Grid>
+      <ListBox Grid.Row="3" Name="PickerRows" ItemsSource="{Binding Rows}" SelectedItem="{Binding Highlighted}" AutomationProperties.Name="Items">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:ItemRowViewModel">
+            <Grid ColumnDefinitions="4,96,*,Auto" ColumnSpacing="8">
+              <Border Background="{Binding Accent}" CornerRadius="2" />
+              <views:ArtView Grid.Column="1" Art="{Binding Art}" Width="96" Height="48" />
+              <StackPanel Grid.Column="2" Spacing="2" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding Marker}" Classes="label" IsVisible="{Binding HasMarker}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <ItemsControl ItemsSource="{Binding Dots}" Classes="dots" />
+                  <TextBlock Text="{Binding Caption}" Classes="label" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+              </StackPanel>
+              <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <ItemsControl ItemsSource="{Binding Stats}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <StackPanel Orientation="Horizontal" Spacing="12" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:CompareValue">
+                      <StackPanel MinWidth="70">
+                        <TextBlock Text="{Binding Label}" Classes="label" HorizontalAlignment="Right" />
+                        <TextBlock Text="{Binding Text}" Classes.up="{Binding IsUp}" Classes.down="{Binding IsDown}" HorizontalAlignment="Right" />
+                      </StackPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Text="{Binding Change}" FontWeight="SemiBold" IsVisible="{Binding HasChange}" VerticalAlignment="Center" MinWidth="60" TextAlignment="Right" />
+              </StackPanel>
+            </Grid>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <StackPanel Grid.Row="4" Spacing="4">
+        <TextBlock Text="Highlight an item to preview it; Equip is in the inspector." Classes="caption" />
+        <Expander Header="Model coverage">
+          <TextBlock Text="{Binding Coverage}" TextWrapping="Wrap" />
+        </Expander>
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

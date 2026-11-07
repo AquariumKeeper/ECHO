@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CharacterPlanner.Application/CharacterPlanner.Application.csproj" />
+    <Project Path="src/CharacterPlanner.Cli/CharacterPlanner.Cli.csproj" />
+    <Project Path="src/CharacterPlanner.Core/CharacterPlanner.Core.csproj" />
+    <Project Path="src/CharacterPlanner.Desktop/CharacterPlanner.Desktop.csproj" />
+    <Project Path="src/CharacterPlanner.Infrastructure/CharacterPlanner.Infrastructure.csproj" />
+    <Project Path="src/CharacterPlanner.Legacy/CharacterPlanner.Legacy.csproj" />
+    <Project Path="src/CharacterPlanner.Simulation/CharacterPlanner.Simulation.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CharacterPlanner.Application.Tests/CharacterPlanner.Application.Tests.csproj" />
+    <Project Path="tests/CharacterPlanner.Cli.Tests/CharacterPlanner.Cli.Tests.csproj" />
+    <Project Path="tests/CharacterPlanner.Core.Tests/CharacterPlanner.Core.Tests.csproj" />
+    <Project Path="tests/CharacterPlanner.Desktop.Tests/CharacterPlanner.Desktop.Tests.csproj" />
+    <Project Path="tests/CharacterPlanner.Infrastructure.Tests/CharacterPlanner.Infrastructure.Tests.csproj" />
+    <Project Path="tests/CharacterPlanner.Legacy.Tests/CharacterPlanner.Legacy.Tests.csproj" />
+    <Project Path="tests/CharacterPlanner.Simulation.Tests/CharacterPlanner.Simulation.Tests.csproj" />
+  </Folder>
+</Solution>

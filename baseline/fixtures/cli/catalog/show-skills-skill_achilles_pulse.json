@@ -1,0 +1,109 @@
+{
+  "args": [
+    "catalog",
+    "show",
+    "skills",
+    "skill_achilles_pulse"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog show",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": {
+      "id": "skill_achilles_pulse",
+      "name": "Achilles Pulse",
+      "icon": "icon_skill_achilles_pulse",
+      "family": "pulse",
+      "modifiers": [],
+      "previewOutputs": [
+        {
+          "id": "effective_skill_tier",
+          "name": "Effective Skill Tier",
+          "description": "Modeled tier floored and capped at 0-6; Overcharge excluded.",
+          "format": "integer",
+          "formula": "min(6, max(0, floor(skill_tier)))"
+        },
+        {
+          "id": "cooldown_seconds",
+          "name": "Estimated Ordinary Cooldown (s)",
+          "description": "Community level-40 ordinary PvE cooldown reference from Skill List!C79:J79 (TU27 workbook). Base 40s, divided by one plus Skill Haste and Skill Efficiency counted once. Only explicitly reviewed tier Skill Haste enters the additive haste pool; dashed entries contribute zero. Nonpositive speed yields zero as an invalid-boundary estimate, not readiness. Excludes charge refill, skill mods, skill Expertise, Overcharge, timers, use/cancellation/destruction, deployment delays and actual resets. Existing conditional reset capability remains separate. Source baselines and stacking require live verification.",
+          "format": "decimal",
+          "formula": "1 + effective_skill_haste + curve('skill_achilles_pulse_cooldown_seconds_tiers', min(6, max(0, floor(skill_tier)))) > 0 ? 40 / (1 + effective_skill_haste + curve('skill_achilles_pulse_cooldown_seconds_tiers', min(6, max(0, floor(skill_tier))))) : 0"
+        },
+        {
+          "id": "zone_capacity",
+          "name": "Estimated Zone Capacity",
+          "description": "Integral community PvE capacity reference from Skill List!C76:J76; reviewed additive tier table. Independent of player ammo, magazine size, damage, repair and Skill Efficiency. Maximum capacity, not current count, targets hit or events. No mods, Expertise or Overcharge; live verification required.",
+          "format": "integer",
+          "formula": "max(0, floor(1 + curve('skill_achilles_pulse_zone_capacity_tiers', min(6, max(0, floor(skill_tier))))))"
+        },
+        {
+          "id": "effect_duration_seconds",
+          "name": "Estimated Effect Lifetime Reference (s)",
+          "description": "Community PvE source property from Skill List!C78:J78; exact tier table. Only effect lifetime consumes Combined Skill Duration, separately from status duration. Zone health and charging time receive no player/device health, haste, Status Effects or Skill Efficiency bonuses. No target zones depleted, detection, charge progress, damage amplification or actual timing. No mods, Expertise or Overcharge; live verification required.",
+          "format": "decimal",
+          "formula": "10 * (1 + curve('skill_achilles_pulse_effect_duration_seconds_tiers', min(6, max(0, floor(skill_tier))))) * max(0, 1 + effective_skill_duration)"
+        },
+        {
+          "id": "zone_health_reference",
+          "name": "Source Zone Health Reference",
+          "description": "Community PvE source property from Skill List!C77:J77; exact tier table. Only effect lifetime consumes Combined Skill Duration, separately from status duration. Zone health and charging time receive no player/device health, haste, Status Effects or Skill Efficiency bonuses. No target zones depleted, detection, charge progress, damage amplification or actual timing. No mods, Expertise or Overcharge; live verification required.",
+          "format": "integer",
+          "formula": "398174 * (1 + curve('skill_achilles_pulse_zone_health_reference_tiers', min(6, max(0, floor(skill_tier)))))"
+        },
+        {
+          "when": "skill_upgrade_rank > 0",
+          "id": "expertise_bonus_reference",
+          "name": "Installed Expertise Damage Bonus Reference",
+          "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G5:G6 (TU27): +1% Damage per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs. This is the source increment, not a separate multiplier on the final estimate or a claim about caps.",
+          "format": "percent",
+          "formula": "skill_upgrade_rank * 0.01"
+        },
+        {
+          "when": "context_value('overcharge_capacity_preview') == 1",
+          "id": "overcharge_zone_capacity",
+          "name": "Overcharge Estimated Zone Capacity",
+          "description": "Hypothetical level-40 PvE Overcharge maximum capacity from Skill List!K76 (TU27 workbook). Adds 5 to the base count of 1, replacing the ordinary tier addition; this is not a percentage or an extra bonus on top of tier 6. Independent of player ammo, magazine size, Skill Efficiency, installed Expertise, skill mods and other comparison assumptions. Maximum count only: no current charges, remaining ammo, refill time, self-revive consumption, simultaneous deployment, zones detected, targets hit, event counts or activation is inferred. Ordinary outputs and stats remain unchanged. Source values and capacity interpretation require live-game verification.",
+          "format": "integer",
+          "formula": "max(0, floor(1 + 5))"
+        },
+        {
+          "when": "context_value('overcharge_lifetime_preview') == 1",
+          "id": "overcharge_effect_duration_seconds",
+          "name": "Overcharge Estimated Effect Lifetime Reference (s)",
+          "description": "Hypothetical level-40 PvE Overcharge lifetime from Skill List!K78 (TU27 workbook). Replaces the ordinary tier lifetime bonus with 100%; preserves Combined Skill Duration (Skill Efficiency once) and the existing reviewed Nanite duration reduction where applicable. A reviewed dash contributes zero tier bonus. Deployment, cloud and effect lifetimes remain separate from status duration and recipient buff duration. Lifetime reference only: no time remaining, charge/fuel depletion, survival, event count, ticks, uptime, DPS or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+          "format": "decimal",
+          "formula": "10 * (1 + 1.0) * max(0, 1 + effective_skill_duration)"
+        },
+        {
+          "when": "context_value('overcharge_health_preview') == 1",
+          "id": "overcharge_zone_health_reference",
+          "name": "Overcharge Source Zone Health Reference",
+          "description": "Hypothetical level-40 PvE Overcharge health capacity from Skill List!K77 (TU27 workbook). Replaces the ordinary tier health bonus with 100%; a reviewed dash contributes zero tier bonus. Source zone or foam reference only; generic Skill Health, Shield Health and Skill Efficiency do not scale this reference. No current health, damage taken, survival, foam break time, depleted zones, shield invulnerability, event count or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+          "format": "integer",
+          "formula": "398174 * (1 + 1.0)"
+        },
+        {
+          "when": "context_value('overcharge_recovery_preview') == 1",
+          "id": "overcharge_cooldown_seconds",
+          "name": "Overcharge Estimated Ordinary Cooldown (s)",
+          "description": "Hypothetical level-40 PvE Overcharge recovery from Skill List!K79 (TU27 workbook). Replaces the ordinary tier haste bonus with 100%; preserves Combined Skill Haste (Skill Efficiency once) in the additive recovery-speed pool. A reviewed dash contributes zero tier bonus. Ordinary cooldown and single-ammo recovery remain distinct. Nonpositive recovery speed yields a guarded zero estimate, not readiness. No current timer, Hive charge recovery, full refill, remaining ammo, charge speed, cancellation/destruction, actual reset, deployment delay or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs, cooldown factors and stats remain unchanged. Source values and stacking require live-game verification.",
+          "format": "decimal",
+          "formula": "1 + effective_skill_haste + 1.0 > 0 ? 40 / (1 + effective_skill_haste + 1.0) : 0"
+        }
+      ],
+      "upgrade": {
+        "name": "Expertise",
+        "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G5:G6 (TU27): +1% Damage per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs.",
+        "maxRank": 30
+      }
+    }
+  }
+}

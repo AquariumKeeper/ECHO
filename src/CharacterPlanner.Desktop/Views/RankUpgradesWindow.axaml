@@ -1,0 +1,50 @@
+<Window Icon="/Assets/application.ico" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+        x:Class="CharacterPlanner.Desktop.Views.RankUpgradesWindow" x:DataType="vm:RankUpgradesViewModel"
+        Title="{Binding Title}" Width="620" Height="720" WindowStartupLocation="CenterOwner">
+  <!-- Rank Upgrades (F42), as the Go app's upgrade_ranking.go: Rank by, the search, Only gains with the count, the hint, the rows. -->
+  <DockPanel Margin="16">
+    <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+        <TextBlock Text="Rank by" VerticalAlignment="Center" />
+        <ComboBox Grid.Column="1" Name="RankByPicker" ItemsSource="{Binding Stats}" SelectedItem="{Binding RankBy}"
+                  HorizontalAlignment="Stretch" AutomationProperties.Name="Rank by" />
+      </Grid>
+      <TextBox Name="RankSearchBox" Text="{Binding Search}" PlaceholderText="{x:Static vm:RankUpgradesViewModel.SearchPlaceholder}"
+               AutomationProperties.Name="Search changes" />
+      <DockPanel>
+        <TextBlock DockPanel.Dock="Right" Name="RankShownText" Text="{Binding Shown}" AutomationProperties.LiveSetting="Polite" VerticalAlignment="Center" />
+        <CheckBox Name="OnlyGainsBox" Content="Only gains" IsChecked="{Binding OnlyGains}" />
+      </DockPanel>
+      <TextBlock Text="{x:Static vm:RankUpgradesViewModel.Hint}" Classes="label" TextWrapping="Wrap" />
+      <TextBlock Text="Ranking…" Classes="label" IsVisible="{Binding IsRanking}" />
+      <Expander Header="Model coverage">
+        <TextBlock Text="{Binding Coverage}" TextWrapping="Wrap" />
+      </Expander>
+    </StackPanel>
+    <Button DockPanel.Dock="Bottom" Name="CloseButton" Content="Close" IsCancel="True" HorizontalAlignment="Right"
+            Margin="0,8,0,0" Click="OnClose" />
+    <ScrollViewer>
+      <StackPanel>
+        <TextBlock Name="RankProblem" Text="{Binding Problem}" Classes="error" TextWrapping="Wrap"
+                   IsVisible="{Binding Problem, Converter={x:Static ObjectConverters.IsNotNull}}" />
+        <TextBlock Name="RankEmpty" Text="{x:Static vm:RankUpgradesViewModel.Empty}" TextWrapping="Wrap" IsVisible="{Binding IsEmpty}" />
+        <ItemsControl Name="RankRows" ItemsSource="{Binding Rows}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:UpgradeRowViewModel">
+              <Border BorderBrush="{DynamicResource DivisionBorder}" BorderThickness="0,0,0,1" Padding="0,6">
+                <DockPanel>
+                  <Button DockPanel.Dock="Right" Content="Apply" Command="{Binding ApplyCommand}" VerticalAlignment="Center" Margin="8,0,0,0" />
+                  <StackPanel Spacing="2">
+                    <TextBlock Text="{Binding Change}" FontWeight="Bold" Classes.up="{Binding IsGain}" Classes.down="{Binding IsLoss}" />
+                    <TextBlock Text="{Binding Label}" TextWrapping="Wrap" />
+                  </StackPanel>
+                </DockPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</Window>

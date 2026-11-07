@@ -1,0 +1,26 @@
+{
+  "version":1,
+  "defaults":{"level":5,"activeSkillSelections":{"one":"turret","two":"drone"}},
+  "cases":[
+    {"id":"two-skills"},
+    {"id":"ranked-preview","skillUpgrades":{"one":{"skillId":"turret","rank":2}}},
+    {"id":"zero-rank","skillUpgrades":{"one":{"skillId":"turret","rank":0}}},
+    {"id":"max-rank","skillUpgrades":{"one":{"skillId":"turret","rank":3}}},
+    {"id":"negative-rank","skillUpgrades":{"one":{"skillId":"turret","rank":-1}}},
+    {"id":"excess-rank","skillUpgrades":{"one":{"skillId":"turret","rank":4}}},
+    {"id":"stale-upgrade","skillUpgrades":{"one":{"skillId":"drone","rank":2}}},
+    {"id":"unsupported-upgrade","skillUpgrades":{"two":{"skillId":"drone","rank":1}}},
+    {"id":"unknown-upgrade-slots","skillUpgrades":{"z":{"skillId":"turret","rank":1},"a":{"skillId":"turret","rank":1}}},
+    {"id":"duplicate-family","activeSkillSelections":{"one":"turret","two":"turret_variant"}},
+    {"id":"upgrade-on-rejected-family","activeSkillSelections":{"one":"turret","two":"turret_variant"},"skillUpgrades":{"two":{"skillId":"turret_variant","rank":0}}},
+    {"id":"unconfigured","activeSkillSelections":{}},
+    {"id":"unknown-skill","activeSkillSelections":{"one":"missing","two":"drone"}},
+    {"id":"not-allowed","activeSkillSelections":{"one":"forbidden","two":"drone"}},
+    {"id":"unknown-slots","activeSkillSelections":{"one":"turret","two":"drone","z":"missing","a":"missing"}},
+    {"id":"empty-family-repeated","activeSkillSelections":{"one":"plain","two":"plain"}},
+    {"id":"bad-formula","activeSkillSelections":{"one":"bad_formula","two":"drone"}},
+    {"id":"bad-condition","activeSkillSelections":{"one":"bad_condition","two":"drone"}},
+    {"id":"clamped-preview-level","level":20},
+    {"id":"formula-assumption","skillUpgrades":{"one":{"skillId":"turret","rank":1}},"context":{"stacks":"8"}}
+  ]
+}

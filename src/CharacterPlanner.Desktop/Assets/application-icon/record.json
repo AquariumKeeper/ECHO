@@ -1,0 +1,45 @@
+{
+  "format": "shade-tech.application-icon",
+  "version": 1,
+  "id": "character-planner-cards-v1",
+  "target": "character-planner",
+  "source": {
+    "path": "mark.svg",
+    "sha256": "e74462681b6c99fb5bd3768063ec3abe34dc113817ffe7bc0e4d454a04848a58"
+  },
+  "license": {
+    "spdx": "MIT",
+    "path": "LICENSE.txt",
+    "sha256": "9575a669eb10f7b316f7942c7adcb2f01709033f889d62420dd9b8266a517bb6",
+    "attribution": "Copyright (c) 2026 Shade-Tech contributors. MIT License; include LICENSE.txt."
+  },
+  "authorship": {
+    "author": "Shade-Tech contributors",
+    "method": "Original stacked-card polygon mark authored from the owner-selected abstract loadout/card direction in orange and charcoal. No initials, traced logos, game objects or reference images.",
+    "ai_tool": "OpenAI Codex (AI-assisted SVG code authoring)",
+    "image_inputs": []
+  },
+  "recipe": {
+    "profile": "shade-tech.layered-polygon-mark-v1",
+    "master_size": [
+      1024,
+      1024
+    ],
+    "master_supersampling": 4,
+    "resampling": "LANCZOS",
+    "png_compress_level": 9,
+    "ico_sizes": [
+      16,
+      24,
+      32,
+      48,
+      64,
+      256
+    ],
+    "ico_payload": "PNG",
+    "pillow_version": "13.0.0"
+  },
+  "review": {
+    "status": "pending"
+  }
+}

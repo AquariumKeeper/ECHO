@@ -1,0 +1,86 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+                    xmlns:views="using:CharacterPlanner.Desktop.Views">
+  <!-- Templates more than one view shows, used as ContentControl ContentTemplate="{StaticResource ...}". -->
+
+  <!-- A roll: Max, the slider and the typed box, as the owner chose (Go's slider and Max beside this app's box). -->
+  <DataTemplate x:Key="RollRow" x:DataType="vm:RollViewModel">
+    <Grid ColumnDefinitions="Auto,*,80" ColumnSpacing="6" IsVisible="{Binding HasRoll}" IsEnabled="{Binding IsEnabled}">
+      <Button Content="Max" Command="{Binding MaximumCommand}" ToolTip.Tip="Set the roll to its highest" />
+      <Slider Grid.Column="1" Minimum="{Binding SliderMinimum}" Maximum="{Binding SliderMaximum}" Value="{Binding SliderValue}"
+              TickFrequency="{Binding SliderStep}" IsEnabled="{Binding CanSlide}" VerticalAlignment="Center"
+              AutomationProperties.Name="{Binding RollLabel}" />
+      <TextBox Grid.Column="2" Text="{Binding ValueText}" ToolTip.Tip="{Binding Range}" AutomationProperties.Name="{Binding RollLabel}" />
+    </Grid>
+  </DataTemplate>
+
+  <!-- A rank: Max, the slider (whole steps) and the typed box. -->
+  <DataTemplate x:Key="RankRow" x:DataType="vm:RankViewModel">
+    <Grid ColumnDefinitions="Auto,*,80" ColumnSpacing="6">
+      <Button Content="Max" Command="{Binding MaximumCommand}" ToolTip.Tip="Set the rank to its highest" />
+      <Slider Grid.Column="1" Minimum="{Binding Min}" Maximum="{Binding Max}" Value="{Binding SliderValue}" TickFrequency="1"
+              IsSnapToTickEnabled="True" VerticalAlignment="Center" AutomationProperties.Name="{Binding Name}" />
+      <TextBox Grid.Column="2" Text="{Binding ValueText}" ToolTip.Tip="{Binding Range}" AutomationProperties.Name="{Binding Name}" />
+    </Grid>
+  </DataTemplate>
+
+  <!-- An item's header in the inspector (the slot's item or the picker's candidate): rarity bar, name, caption, art. -->
+  <DataTemplate x:Key="ItemHeader" x:DataType="vm:IItemSummary">
+    <Grid ColumnDefinitions="5,*" ColumnSpacing="10">
+      <Border Background="{DynamicResource DivisionMuted}" IsVisible="{Binding !HasAccent}" />
+      <Border Background="{Binding Accent}" IsVisible="{Binding HasAccent}" />
+      <StackPanel Grid.Column="1" Spacing="2">
+        <TextBlock Name="InspectorTitle" Text="{Binding Title}" Classes="heading" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding HeaderCaption}" Classes="caption" />
+        <views:ArtView Art="{Binding Art}" Width="256" Height="128" HorizontalAlignment="Left" IsVisible="{Binding HasArt}" />
+      </StackPanel>
+    </Grid>
+  </DataTemplate>
+
+  <!-- An item's core stats in a row, a candidate's marked against the slot's item. -->
+  <DataTemplate x:Key="CoreStats" x:DataType="vm:IItemSummary">
+    <StackPanel Spacing="2" IsVisible="{Binding HasCoreStats}">
+      <TextBlock Text="Core stats" FontWeight="Bold" />
+      <ItemsControl ItemsSource="{Binding CoreStats}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <UniformGrid Rows="1" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:CompareValue">
+            <StackPanel>
+              <TextBlock Text="{Binding Label}" Classes="caption" TextTrimming="CharacterEllipsis" />
+              <TextBlock Text="{Binding Text}" FontWeight="Bold" Classes.up="{Binding IsUp}" Classes.down="{Binding IsDown}" />
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </DataTemplate>
+
+  <!-- The item's brand and gear set tiers. -->
+  <DataTemplate x:Key="BrandBonuses" x:DataType="vm:IItemSummary">
+    <StackPanel Spacing="2" IsVisible="{Binding HasBrandBonuses}">
+      <TextBlock Text="Brand and gear set bonuses" FontWeight="Bold" />
+      <ItemsControl ItemsSource="{Binding BrandBonuses}" Classes="lines" />
+    </StackPanel>
+  </DataTemplate>
+
+  <!-- A stat row's info button: asks for the row's breakdown and shows it in a flyout. -->
+  <DataTemplate x:Key="StatInfo" x:DataType="vm:StatRowViewModel">
+    <Button Classes="info" Content="ⓘ" ToolTip.Tip="How this is worked out" Command="{Binding SelectCommand}"
+            AutomationProperties.Name="{Binding Name}" AutomationProperties.HelpText="How this is worked out">
+      <Button.Flyout>
+        <Flyout Placement="BottomEdgeAlignedRight">
+          <ScrollViewer MaxWidth="440" MaxHeight="280">
+            <StackPanel Spacing="2" DataContext="{Binding Details}" x:DataType="vm:StatDetailsViewModel">
+              <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+              <ItemsControl ItemsSource="{Binding Lines}" Classes="lines" />
+            </StackPanel>
+          </ScrollViewer>
+        </Flyout>
+      </Button.Flyout>
+    </Button>
+  </DataTemplate>
+</ResourceDictionary>

@@ -1,0 +1,22 @@
+{
+  "args": [
+    "session",
+    "inspect",
+    "--session-dir",
+    "sessions",
+    "--session",
+    "ffffffffffffffffffffffffffffffff"
+  ],
+  "stdin": null,
+  "exitCode": 4,
+  "response": {
+    "apiVersion": 1,
+    "command": "session inspect",
+    "ok": false,
+    "diagnostics": [],
+    "error": {
+      "code": "session-unavailable",
+      "message": "requested session is unavailable"
+    }
+  }
+}

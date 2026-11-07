@@ -1,0 +1,1659 @@
+{
+  "triggers": [
+    {
+      "talent": "weapon_talent_killer",
+      "key": "killer_active",
+      "on": "crit_kill",
+      "kind": "buff",
+      "duration": 10
+    },
+    {
+      "talent": "weapon_talent_perfect_killer",
+      "key": "killer_active",
+      "on": "crit_kill",
+      "kind": "buff",
+      "duration": 10
+    },
+    {
+      "talent": "gear_talent_combined_arms",
+      "key": "combined_arms_active",
+      "on": "hit",
+      "kind": "buff",
+      "duration": 3
+    },
+    {
+      "talent": "gear_talent_perfect_combined_arms",
+      "key": "combined_arms_active",
+      "on": "hit",
+      "kind": "buff",
+      "duration": 3
+    },
+    {
+      "talent": "gear_talent_concussion",
+      "key": "concussion_headshot_active",
+      "on": "headshot",
+      "kind": "buff",
+      "duration": 1.5,
+      "weaponTags": [
+        "weapon_type_pistol",
+        "weapon_type_assault_rifle",
+        "weapon_type_smg",
+        "weapon_type_lmg",
+        "weapon_type_shotgun",
+        "weapon_type_rifle"
+      ]
+    },
+    {
+      "talent": "gear_talent_concussion",
+      "key": "concussion_kill_active",
+      "on": "headshot_kill",
+      "kind": "buff",
+      "duration": 10
+    },
+    {
+      "talent": "gear_talent_perfect_concussion",
+      "key": "concussion_headshot_active",
+      "on": "headshot",
+      "kind": "buff",
+      "duration": 1.5,
+      "weaponTags": [
+        "weapon_type_pistol",
+        "weapon_type_assault_rifle",
+        "weapon_type_smg",
+        "weapon_type_lmg",
+        "weapon_type_shotgun",
+        "weapon_type_rifle"
+      ]
+    },
+    {
+      "talent": "gear_talent_perfect_concussion",
+      "key": "concussion_kill_active",
+      "on": "headshot_kill",
+      "kind": "buff",
+      "duration": 10
+    },
+    {
+      "talent": "weapon_talent_spike",
+      "key": "spike_active",
+      "on": "headshot",
+      "kind": "buff",
+      "duration": 15
+    },
+    {
+      "talent": "weapon_talent_perfect_spike",
+      "key": "spike_active",
+      "on": "headshot",
+      "kind": "buff",
+      "duration": 15
+    },
+    {
+      "talent": "weapon_talent_in_sync",
+      "key": "in_sync_weapon_hit_active",
+      "on": "hit",
+      "kind": "buff",
+      "duration": 5
+    },
+    {
+      "talent": "weapon_talent_perfect_in_sync",
+      "key": "in_sync_weapon_hit_active",
+      "on": "hit",
+      "kind": "buff",
+      "duration": 5
+    },
+    {
+      "talent": "weapon_talent_naked",
+      "key": "naked_active",
+      "on": "unarmored_hit",
+      "kind": "buff",
+      "duration": 5
+    },
+    {
+      "talent": "weapon_talent_perfect_naked",
+      "key": "naked_active",
+      "on": "unarmored_hit",
+      "kind": "buff",
+      "duration": 8
+    },
+    {
+      "talent": "weapon_talent_on_empty",
+      "key": "on_empty_active",
+      "on": "reload_end",
+      "kind": "buff",
+      "duration": 10,
+      "every": 10
+    },
+    {
+      "talent": "weapon_talent_perfect_on_empty",
+      "key": "on_empty_active",
+      "on": "reload_end",
+      "kind": "buff",
+      "duration": 10,
+      "every": 10
+    },
+    {
+      "talent": "weapon_talent_outsider",
+      "key": "outsider_active",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 10,
+      "every": 10
+    },
+    {
+      "talent": "weapon_talent_perfect_outsider",
+      "key": "outsider_active",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 10,
+      "every": 10
+    },
+    {
+      "talent": "weapon_talent_reformation",
+      "key": "reformation_active",
+      "on": "headshot",
+      "kind": "buff",
+      "duration": 15
+    },
+    {
+      "talent": "gear_talent_obliterate",
+      "key": "obliterate_stacks",
+      "on": "crit",
+      "kind": "stacks",
+      "duration": 10,
+      "max": 20,
+      "refresh": true
+    },
+    {
+      "talent": "gear_talent_perfect_obliterate",
+      "key": "obliterate_stacks",
+      "on": "crit",
+      "kind": "stacks",
+      "duration": 10,
+      "max": 24,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_strained",
+      "key": "strained_stacks",
+      "on": "shot",
+      "kind": "stacks",
+      "max": 5,
+      "every": 0.5,
+      "refresh": true,
+      "duration": 0.8
+    },
+    {
+      "talent": "weapon_talent_perfect_strained",
+      "key": "strained_stacks",
+      "on": "shot",
+      "kind": "stacks",
+      "max": 8,
+      "every": 0.5,
+      "refresh": true,
+      "duration": 0.8
+    },
+    {
+      "talent": "weapon_talent_fast_hands",
+      "key": "fast_hands_stacks",
+      "on": "crit",
+      "kind": "stacks",
+      "max": 40,
+      "resetOn": "reload_end"
+    },
+    {
+      "talent": "weapon_talent_perfect_fast_hands",
+      "key": "fast_hands_stacks",
+      "on": "crit",
+      "kind": "stacks",
+      "max": 40,
+      "resetOn": "reload_end"
+    },
+    {
+      "talent": "weapon_talent_breadbasket",
+      "key": "breadbasket_stacks",
+      "on": "body_hit",
+      "kind": "stacks",
+      "duration": 10,
+      "max": 3,
+      "refresh": true,
+      "consumeOn": "headshot",
+      "resetOn": "reload"
+    },
+    {
+      "talent": "weapon_talent_perfect_breadbasket",
+      "key": "breadbasket_stacks",
+      "on": "body_hit",
+      "kind": "stacks",
+      "duration": 10,
+      "max": 2,
+      "refresh": true,
+      "consumeOn": "headshot",
+      "resetOn": "reload"
+    },
+    {
+      "talent": "gear_talent_unstoppable_force",
+      "key": "unstoppable_force_stacks",
+      "on": "kill",
+      "kind": "stacks",
+      "duration": 15,
+      "max": 5,
+      "refresh": true
+    },
+    {
+      "talent": "gear_talent_perfect_unstoppable_force",
+      "key": "unstoppable_force_stacks",
+      "on": "kill",
+      "kind": "stacks",
+      "duration": 15,
+      "max": 5,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_rifleman",
+      "key": "rifleman_stacks",
+      "on": "headshot",
+      "kind": "stacks",
+      "duration": 5,
+      "max": 5,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_perfect_rifleman",
+      "key": "rifleman_stacks",
+      "on": "headshot",
+      "kind": "stacks",
+      "duration": 5,
+      "max": 6,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_stabilize",
+      "key": "stabilize_stacks",
+      "on": "shot",
+      "kind": "stacks",
+      "max": 60,
+      "duration": 4,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_perfect_stabilize",
+      "key": "stabilize_stacks",
+      "on": "shot",
+      "kind": "stacks",
+      "max": 75,
+      "duration": 6,
+      "refresh": true
+    },
+    {
+      "talent": "gear_talent_bloodsucker",
+      "key": "bloodsucker_stacks",
+      "on": "kill",
+      "kind": "stacks",
+      "duration": 10,
+      "max": 10,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_finisher",
+      "key": "finisher_swap_buff",
+      "on": "swap_after_kill",
+      "kind": "buff",
+      "duration": 15
+    },
+    {
+      "talent": "weapon_talent_perfect_finisher",
+      "key": "finisher_swap_buff",
+      "on": "swap_after_kill",
+      "kind": "buff",
+      "duration": 15
+    },
+    {
+      "talent": "gear_talent_unbreakable",
+      "key": "unbreakable_ready",
+      "on": "armor_break",
+      "kind": "ready",
+      "duration": 60
+    },
+    {
+      "talent": "gear_talent_perfect_unbreakable",
+      "key": "unbreakable_ready",
+      "on": "armor_break",
+      "kind": "ready",
+      "duration": 55
+    },
+    {
+      "talent": "gear_talent_vigilance",
+      "key": "vigilance_active",
+      "on": "damaged",
+      "kind": "lockout",
+      "duration": 4
+    },
+    {
+      "talent": "gear_talent_perfect_vigilance",
+      "key": "vigilance_active",
+      "on": "damaged",
+      "kind": "lockout",
+      "duration": 3
+    },
+    {
+      "talent": "weapon_talent_measured",
+      "key": "measured_phase",
+      "kind": "magazine",
+      "phases": [
+        {
+          "until": 0.5,
+          "value": "top"
+        },
+        {
+          "until": 1,
+          "value": "bottom"
+        }
+      ]
+    },
+    {
+      "talent": "weapon_talent_perfect_measured",
+      "key": "measured_phase",
+      "kind": "magazine",
+      "phases": [
+        {
+          "until": 0.5,
+          "value": "top"
+        },
+        {
+          "until": 1,
+          "value": "bottom"
+        }
+      ]
+    },
+    {
+      "talent": "weapon_talent_boiling_point",
+      "key": "boiling_point_phase",
+      "kind": "magazine",
+      "phases": [
+        {
+          "until": 0.53,
+          "value": "early"
+        },
+        {
+          "until": 1,
+          "value": "late"
+        }
+      ]
+    },
+    {
+      "talent": "weapon_talent_perfect_boiling_point",
+      "key": "boiling_point_phase",
+      "kind": "magazine",
+      "phases": [
+        {
+          "until": 0.48,
+          "value": "early"
+        },
+        {
+          "until": 1,
+          "value": "late"
+        }
+      ]
+    },
+    {
+      "talent": "weapon_talent_optimist",
+      "key": "ammo_missing_percent",
+      "kind": "magazine",
+      "percent": true
+    },
+    {
+      "talent": "weapon_talent_perfect_optimist",
+      "key": "ammo_missing_percent",
+      "kind": "magazine",
+      "percent": true
+    },
+    {
+      "talent": "weapon_talent_pumped_up",
+      "key": "pumped_up_stacks",
+      "on": "reload_end",
+      "kind": "stacks",
+      "duration": 10,
+      "max": 25,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_perfect_pumped_up",
+      "key": "pumped_up_stacks",
+      "on": "reload_end",
+      "kind": "stacks",
+      "duration": 10,
+      "max": 5,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_frenzy",
+      "key": "frenzy_active",
+      "on": "reload_end",
+      "kind": "buff",
+      "duration": 9,
+      "every": 9,
+      "cancelOn": "swap"
+    },
+    {
+      "talent": "weapon_talent_perfect_frenzy",
+      "key": "frenzy_active",
+      "on": "reload_end",
+      "kind": "buff",
+      "duration": 9,
+      "every": 9,
+      "cancelOn": "swap"
+    },
+    {
+      "talent": "weapon_talent_future_perfect",
+      "key": "future_perfect_stacks",
+      "on": "kill",
+      "kind": "stacks",
+      "duration": 15,
+      "max": 3,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_future_perfection",
+      "key": "future_perfect_stacks",
+      "on": "kill",
+      "kind": "stacks",
+      "duration": 19,
+      "max": 4,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_steady_handed",
+      "key": "steady_handed_stacks",
+      "on": "hit",
+      "kind": "stacks",
+      "max": 99,
+      "purge": true
+    },
+    {
+      "talent": "weapon_talent_perfect_steady_handed",
+      "key": "steady_handed_stacks",
+      "on": "hit",
+      "kind": "stacks",
+      "max": 74,
+      "purge": true
+    },
+    {
+      "talent": "weapon_talent_perfect_reformation",
+      "key": "reformation_active",
+      "on": "headshot",
+      "kind": "buff",
+      "duration": 15
+    },
+    {
+      "talent": "gear_talent_perfect_bloodsucker",
+      "key": "bloodsucker_stacks",
+      "on": "kill",
+      "kind": "stacks",
+      "duration": 10,
+      "max": 10,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_ranger",
+      "key": "ranger_target_distance_m",
+      "kind": "distance"
+    },
+    {
+      "talent": "weapon_talent_perfect_ranger",
+      "key": "ranger_target_distance_m",
+      "kind": "distance"
+    },
+    {
+      "talent": "weapon_talent_close_personal",
+      "key": "close_personal_active",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 10,
+      "within": 7
+    },
+    {
+      "talent": "weapon_talent_perfect_close_personal",
+      "key": "close_personal_active",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 10,
+      "within": 7
+    },
+    {
+      "talent": "gear_talent_challenger",
+      "key": "challenger_active",
+      "kind": "distance",
+      "within": 20
+    },
+    {
+      "talent": "gear_talent_pack_instincts",
+      "key": "pack_instincts_range",
+      "kind": "distance",
+      "phases": [
+        {
+          "until": 15,
+          "value": "close"
+        },
+        {
+          "until": 25,
+          "value": "mid"
+        },
+        {
+          "until": 1000,
+          "value": "far"
+        }
+      ]
+    },
+    {
+      "talent": "weapon_talent_pummel",
+      "key": "pummel_active",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 10,
+      "count": 3,
+      "refill": true,
+      "countWindow": 20
+    },
+    {
+      "talent": "weapon_talent_perfect_pummel",
+      "key": "pummel_active",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 10,
+      "count": 2,
+      "refill": true,
+      "countWindow": 20
+    },
+    {
+      "talent": "weapon_talent_full_stop",
+      "key": "full_stop_stacks",
+      "on": "body_hit",
+      "kind": "stacks",
+      "max": 20,
+      "resetOn": "reload",
+      "also": [
+        {
+          "on": "headshot",
+          "gain": 2
+        }
+      ],
+      "clearGrant": "temporary_armor",
+      "clearAmount": 0.05,
+      "clearDuration": 10
+    },
+    {
+      "talent": "weapon_talent_capacitance",
+      "key": "capacitance_stacks",
+      "on": "hit",
+      "kind": "stacks",
+      "duration": 5,
+      "max": 40,
+      "refresh": true,
+      "decay": 1
+    },
+    {
+      "talent": "weapon_talent_liberty_or_death",
+      "key": "liberty_stacks",
+      "on": "hit",
+      "kind": "stacks",
+      "max": 30,
+      "consumeOn": "headshot",
+      "clearGrant": "shield_repair",
+      "clearAmount": 0.03
+    },
+    {
+      "talent": "weapon_talent_payment_in_kind",
+      "key": "payment_in_kind_stacks",
+      "on": "hit",
+      "kind": "stacks",
+      "duration": 10,
+      "max": 100,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_brazen",
+      "key": "brazen_previous_shot_pellets",
+      "kind": "pellets"
+    },
+    {
+      "talent": "weapon_talent_brazen",
+      "key": "brazen_next_shot_active",
+      "kind": "pellets",
+      "atLeast": 6
+    },
+    {
+      "talent": "weapon_talent_perfect_brazen",
+      "key": "brazen_previous_shot_pellets",
+      "kind": "pellets"
+    },
+    {
+      "talent": "weapon_talent_perfect_brazen",
+      "key": "brazen_next_shot_active",
+      "kind": "pellets",
+      "atLeast": 4
+    },
+    {
+      "talent": "gear_talent_vicious_cycle",
+      "key": "vicious_cycle_stacks",
+      "on": "damaged",
+      "kind": "stacks",
+      "max": 30,
+      "purge": true
+    },
+    {
+      "talent": "weapon_talent_overflowing",
+      "key": "overflowing_active",
+      "on": "reload",
+      "kind": "buff",
+      "consumeOn": "reload",
+      "count": 3
+    },
+    {
+      "talent": "weapon_talent_perfect_overflowing",
+      "key": "overflowing_active",
+      "on": "reload",
+      "kind": "buff",
+      "consumeOn": "reload",
+      "count": 2
+    },
+    {
+      "talent": "weapon_talent_ignited",
+      "key": "target_burning",
+      "on": "kill",
+      "kind": "status",
+      "duration": 7,
+      "count": 4,
+      "status": "burning"
+    },
+    {
+      "talent": "weapon_talent_perfect_ignited",
+      "key": "target_burning",
+      "on": "kill",
+      "kind": "status",
+      "duration": 7,
+      "count": 3,
+      "status": "burning"
+    },
+    {
+      "talent": "weapon_talent_sadist",
+      "key": "target_bleeding",
+      "on": "kill",
+      "kind": "status",
+      "duration": 10,
+      "count": 4,
+      "status": "bleeding"
+    },
+    {
+      "talent": "weapon_talent_perfect_sadist",
+      "key": "target_bleeding",
+      "on": "kill",
+      "kind": "status",
+      "duration": 10,
+      "count": 3,
+      "status": "bleeding"
+    },
+    {
+      "talent": "weapon_talent_pressure_point",
+      "key": "target_status_affected",
+      "kind": "status",
+      "status": "any"
+    },
+    {
+      "talent": "weapon_talent_perfect_pressure_point",
+      "key": "target_status_affected",
+      "kind": "status",
+      "status": "any"
+    },
+    {
+      "talent": "gear_talent_bleeding_edge",
+      "key": "bleeding_edge_bleeding_enemies",
+      "kind": "status",
+      "status": "bleeding"
+    },
+    {
+      "talent": "weapon_talent_vindictive",
+      "key": "vindictive_active",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 20,
+      "whileStatus": "any"
+    },
+    {
+      "talent": "weapon_talent_perfect_vindictive",
+      "key": "vindictive_active",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 20,
+      "whileStatus": "any"
+    },
+    {
+      "talent": "weapon_talent_thunder_strike",
+      "key": "target_shocked",
+      "on": "kill",
+      "kind": "status",
+      "duration": 5,
+      "count": 4,
+      "status": "shocked"
+    },
+    {
+      "talent": "weapon_talent_perfect_thunder_strike",
+      "key": "target_shocked",
+      "on": "kill",
+      "kind": "status",
+      "duration": 5,
+      "count": 3,
+      "status": "shocked"
+    },
+    {
+      "talent": "weapon_talent_immobilize",
+      "key": "target_ensnared",
+      "on": "kill",
+      "kind": "status",
+      "duration": 7,
+      "count": 4,
+      "status": "ensnared"
+    },
+    {
+      "talent": "weapon_talent_perfect_immobilize",
+      "key": "target_ensnared",
+      "on": "kill",
+      "kind": "status",
+      "duration": 7,
+      "count": 3,
+      "status": "ensnared"
+    },
+    {
+      "talent": "weapon_talent_foam_at_the_mouth",
+      "key": "target_ensnared",
+      "on": "headshot_kill",
+      "kind": "status",
+      "duration": 7,
+      "status": "ensnared"
+    },
+    {
+      "talent": "weapon_talent_eyeless",
+      "key": "target_blinded",
+      "on": "kill",
+      "kind": "status",
+      "duration": 7,
+      "count": 4,
+      "status": "blinded"
+    },
+    {
+      "talent": "weapon_talent_perfect_eyeless",
+      "key": "target_blinded",
+      "on": "kill",
+      "kind": "status",
+      "duration": 7,
+      "count": 3,
+      "status": "blinded"
+    },
+    {
+      "talent": "gear_talent_gunslinger",
+      "key": "gunslinger_active",
+      "on": "swapped",
+      "kind": "buff",
+      "duration": 5,
+      "cancelOn": "swapped",
+      "cancelFor": 5
+    },
+    {
+      "talent": "gear_talent_perfect_gunslinger",
+      "key": "gunslinger_active",
+      "on": "swapped",
+      "kind": "buff",
+      "duration": 5,
+      "cancelOn": "swapped",
+      "cancelFor": 5
+    },
+    {
+      "talent": "gear_talent_spark",
+      "key": "spark_active",
+      "on": "skill_hit",
+      "kind": "buff",
+      "duration": 15
+    },
+    {
+      "talent": "gear_talent_perfect_spark",
+      "key": "spark_active",
+      "on": "skill_hit",
+      "kind": "buff",
+      "duration": 20
+    },
+    {
+      "talent": "gear_talent_wicked",
+      "key": "wicked_active",
+      "on": "status_applied",
+      "kind": "buff",
+      "duration": 20
+    },
+    {
+      "talent": "gear_talent_perfect_wicked",
+      "key": "wicked_active",
+      "on": "status_applied",
+      "kind": "buff",
+      "duration": 27
+    },
+    {
+      "talent": "weapon_talent_perpetuation",
+      "key": "perpetuation_next_status",
+      "on": "headshot",
+      "kind": "buff",
+      "every": 20,
+      "consumeOn": "status_applied",
+      "cooldownFromEnd": true
+    },
+    {
+      "talent": "weapon_talent_perfect_perpetuation",
+      "key": "perpetuation_next_status",
+      "on": "headshot",
+      "kind": "buff",
+      "every": 16,
+      "consumeOn": "status_applied",
+      "cooldownFromEnd": true
+    },
+    {
+      "talent": "gear_talent_kill_confirmed",
+      "key": "memento_short_buff_active",
+      "on": "pickup",
+      "kind": "buff",
+      "duration": 10
+    },
+    {
+      "talent": "gear_talent_kill_confirmed",
+      "key": "memento_trophy_stacks",
+      "on": "pickup",
+      "kind": "stacks",
+      "duration": 300,
+      "max": 30
+    },
+    {
+      "talent": "gear_talent_stand_your_ground",
+      "key": "sawyer_active",
+      "on": "second",
+      "kind": "buff",
+      "duration": 2
+    },
+    {
+      "talent": "gear_talent_stand_your_ground",
+      "key": "sawyer_stacks",
+      "on": "second",
+      "kind": "stacks",
+      "max": 10
+    },
+    {
+      "talent": "gear_talent_chemical_agent",
+      "key": "catalysis_stacks",
+      "on": "second",
+      "kind": "stacks",
+      "duration": 5,
+      "max": 12,
+      "refresh": true,
+      "decay": 1,
+      "whileStatus": "any"
+    },
+    {
+      "talent": "weapon_talent_mosquito_song",
+      "key": "mosquito_song_active",
+      "on": "hit",
+      "kind": "buff",
+      "duration": 5,
+      "count": 5
+    },
+    {
+      "talent": "weapon_talent_septic_shock",
+      "key": "septic_shock_nine_stacks",
+      "on": "hit",
+      "kind": "buff",
+      "duration": 10,
+      "consumeOn": "kill",
+      "count": 8
+    },
+    {
+      "talent": "weapon_talent_restrained",
+      "key": "restrained_active",
+      "on": "shield_break",
+      "kind": "buff",
+      "duration": 20
+    },
+    {
+      "talent": "gear_talent_decoy_king",
+      "key": "decoy_king_amplification_percent",
+      "kind": "cycle",
+      "phases": [
+        {
+          "until": 5,
+          "value": "5"
+        },
+        {
+          "until": 10,
+          "value": "10"
+        },
+        {
+          "until": 15,
+          "value": "15"
+        },
+        {
+          "until": 20,
+          "value": "20"
+        },
+        {
+          "until": 25,
+          "value": "25"
+        },
+        {
+          "until": 30,
+          "value": "20"
+        },
+        {
+          "until": 35,
+          "value": "15"
+        },
+        {
+          "until": 40,
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "talent": "weapon_talent_blossom_harvest",
+      "key": "blossom_harvest_target_remaining_percent",
+      "kind": "target"
+    },
+    {
+      "talent": "gear_talent_rebalance",
+      "key": "rebalance_red_stacks",
+      "on": "kill",
+      "kind": "stacks",
+      "max": 80,
+      "also": [
+        {
+          "on": "hit",
+          "gain": 1,
+          "count": 3
+        }
+      ],
+      "pool": "rebalance",
+      "poolMax": 80,
+      "bank": "rebalance_red_banked"
+    },
+    {
+      "talent": "gear_talent_rebalance",
+      "key": "rebalance_blue_stacks",
+      "on": "damaged",
+      "kind": "stacks",
+      "max": 80,
+      "count": 3,
+      "pool": "rebalance",
+      "poolMax": 80,
+      "bank": "rebalance_blue_banked"
+    },
+    {
+      "talent": "weapon_talent_full_stop",
+      "key": "full_stop_refill_event",
+      "on": "headshot_kill",
+      "kind": "buff",
+      "duration": 0.001,
+      "refill": true
+    },
+    {
+      "talent": "gear_talent_dragon_s_glare",
+      "key": "target_burning",
+      "on": "second",
+      "kind": "status",
+      "duration": 7,
+      "every": 35,
+      "status": "burning"
+    },
+    {
+      "talent": "gear_talent_concussion",
+      "key": "concussion_mmr_headshot_active",
+      "on": "headshot",
+      "kind": "buff",
+      "duration": 5,
+      "weaponTags": [
+        "weapon_type_marksman_rifle"
+      ]
+    },
+    {
+      "talent": "gear_talent_perfect_concussion",
+      "key": "concussion_mmr_headshot_active",
+      "on": "headshot",
+      "kind": "buff",
+      "duration": 5,
+      "weaponTags": [
+        "weapon_type_marksman_rifle"
+      ]
+    },
+    {
+      "talent": "gear_talent_resolved",
+      "key": "resolved_ready",
+      "on": "hit",
+      "kind": "ready",
+      "duration": 2,
+      "weaponTags": [
+        "weapon_type_marksman_rifle",
+        "weapon_type_rifle",
+        "weapon_type_pistol"
+      ],
+      "forceHeadshot": true
+    },
+    {
+      "talent": "gear_talent_ablative_nano_plating",
+      "key": "ablative_self_ready",
+      "on": "armor_break",
+      "kind": "ready",
+      "duration": 45,
+      "grant": "temporary_armor",
+      "grantAmount": 0.8,
+      "grantDuration": 10
+    },
+    {
+      "talent": "weapon_talent_steady_handed",
+      "key": "steady_handed_refill",
+      "on": "hit",
+      "kind": "buff",
+      "duration": 0.1,
+      "count": 100,
+      "refill": true
+    },
+    {
+      "talent": "weapon_talent_perfect_steady_handed",
+      "key": "steady_handed_refill",
+      "on": "hit",
+      "kind": "buff",
+      "duration": 0.1,
+      "count": 75,
+      "refill": true
+    },
+    {
+      "talent": "gear_talent_trauma",
+      "key": "target_blinded",
+      "on": "headshot",
+      "kind": "status",
+      "duration": 7,
+      "every": 30,
+      "status": "blinded",
+      "applyOnHit": true
+    },
+    {
+      "talent": "gear_talent_trauma",
+      "key": "target_bleeding",
+      "on": "body_hit",
+      "kind": "status",
+      "duration": 10,
+      "every": 30,
+      "status": "bleeding",
+      "applyOnHit": true
+    },
+    {
+      "talent": "gear_talent_perfect_trauma",
+      "key": "target_blinded",
+      "on": "headshot",
+      "kind": "status",
+      "duration": 7,
+      "every": 20,
+      "status": "blinded",
+      "applyOnHit": true
+    },
+    {
+      "talent": "gear_talent_perfect_trauma",
+      "key": "target_bleeding",
+      "on": "body_hit",
+      "kind": "status",
+      "duration": 10,
+      "every": 20,
+      "status": "bleeding",
+      "applyOnHit": true
+    },
+    {
+      "talent": "gear_talent_quick_draw",
+      "key": "quick_draw_stacks",
+      "kind": "stacks",
+      "max": 100,
+      "gainWhileHolstered": 0.3,
+      "consumeOn": "shot",
+      "weaponTags": [
+        "weapon_type_pistol"
+      ],
+      "forceHeadshot": true
+    },
+    {
+      "talent": "weapon_talent_ardent",
+      "key": "ardent_heat_stacks",
+      "on": "shot",
+      "kind": "stacks",
+      "max": 100,
+      "maxMagazine": 0.5,
+      "duration": 0.5,
+      "refresh": true,
+      "decay": 12,
+      "resetOn": "reload_end"
+    },
+    {
+      "talent": "weapon_talent_ardent",
+      "key": "target_burning",
+      "on": "hit",
+      "kind": "status",
+      "duration": 7,
+      "status": "burning",
+      "applyOnHit": true,
+      "whileKey": "ardent_heat_stacks",
+      "whileFull": true
+    },
+    {
+      "talent": "gear_talent_clutch",
+      "key": "clutch_flag",
+      "on": "kill",
+      "kind": "buff",
+      "durationStat": "clutch_post_kill_window"
+    },
+    {
+      "talent": "gear_talent_clutch",
+      "key": "clutch_crit_repair",
+      "on": "crit_pellet",
+      "kind": "buff",
+      "duration": 0.1,
+      "whileArmorBelow": 0.15,
+      "whileKey": "clutch_flag",
+      "grant": "missing_armor_repair",
+      "grantAmount": 0.025
+    },
+    {
+      "talent": "gear_talent_perfect_clutch",
+      "key": "clutch_flag",
+      "on": "kill",
+      "kind": "buff",
+      "durationStat": "clutch_post_kill_window"
+    },
+    {
+      "talent": "gear_talent_perfect_clutch",
+      "key": "clutch_crit_repair",
+      "on": "crit_pellet",
+      "kind": "buff",
+      "duration": 0.1,
+      "whileArmorBelow": 0.2,
+      "whileKey": "clutch_flag",
+      "grant": "missing_armor_repair",
+      "grantAmount": 0.025
+    },
+    {
+      "talent": "weapon_talent_preservation",
+      "key": "preservation_repair",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 5,
+      "grant": "armor_repair",
+      "grantAmount": 0.1,
+      "grantDuration": 5,
+      "grantInstances": "independent"
+    },
+    {
+      "talent": "weapon_talent_preservation",
+      "key": "preservation_headshot_repair",
+      "on": "headshot_kill",
+      "kind": "buff",
+      "duration": 5,
+      "grant": "armor_repair",
+      "grantAmount": 0.1,
+      "grantDuration": 5,
+      "grantInstances": "independent"
+    },
+    {
+      "talent": "weapon_talent_perfect_preservation",
+      "key": "preservation_repair",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 5,
+      "grant": "armor_repair",
+      "grantAmount": 0.15,
+      "grantDuration": 5,
+      "grantInstances": "independent"
+    },
+    {
+      "talent": "weapon_talent_perfect_preservation",
+      "key": "preservation_headshot_repair",
+      "on": "headshot_kill",
+      "kind": "buff",
+      "duration": 5,
+      "grant": "armor_repair",
+      "grantAmount": 0.15,
+      "grantDuration": 5,
+      "grantInstances": "independent"
+    },
+    {
+      "talent": "weapon_talent_doctor_home",
+      "key": "doctor_home_mark",
+      "on": "hit",
+      "kind": "buff",
+      "duration": 5,
+      "consumeOn": "target_death"
+    },
+    {
+      "talent": "weapon_talent_doctor_home",
+      "key": "doctor_home_kit",
+      "on": "target_death",
+      "kind": "buff",
+      "duration": 0.1,
+      "whileKey": "doctor_home_mark",
+      "grant": "armor_repair",
+      "grantAmount": 0.5
+    },
+    {
+      "talent": "gear_talent_afterburn",
+      "key": "afterburn_stacks",
+      "on": "hit_pellet",
+      "kind": "stacks",
+      "max": 20,
+      "resetOn": "reload",
+      "consumeOn": "target_death"
+    },
+    {
+      "talent": "weapon_talent_voracious",
+      "key": "voracious_stacks",
+      "on": "hit",
+      "kind": "stacks",
+      "count": 100,
+      "max": 4
+    },
+    {
+      "talent": "weapon_talent_voracious",
+      "key": "voracious_target_remaining_percent",
+      "kind": "target"
+    },
+    {
+      "talent": "gear_talent_apex_engine",
+      "key": "apex_engine_bonus_stacks",
+      "on": "hit_pellet",
+      "kind": "stacks",
+      "count": 100,
+      "max": 3,
+      "duration": 30,
+      "refresh": true
+    },
+    {
+      "talent": "weapon_talent_incessant_chatter",
+      "key": "chatterbox_stacks",
+      "kind": "count",
+      "on": "reload_end",
+      "within": 15,
+      "max": 5
+    },
+    {
+      "talent": "gear_talent_adrenaline_rush",
+      "key": "adrenaline_rush_stacks",
+      "kind": "count",
+      "within": 10,
+      "max": 3
+    },
+    {
+      "talent": "gear_talent_adrenaline_rush",
+      "key": "adrenaline_rush_active",
+      "kind": "count",
+      "within": 10,
+      "atLeast": 1
+    },
+    {
+      "talent": "gear_talent_perfect_adrenaline_rush",
+      "key": "adrenaline_rush_stacks",
+      "kind": "count",
+      "within": 10,
+      "max": 3
+    },
+    {
+      "talent": "gear_talent_perfect_adrenaline_rush",
+      "key": "adrenaline_rush_active",
+      "kind": "count",
+      "within": 10,
+      "atLeast": 1
+    },
+    {
+      "talent": "gear_talent_bleeding_edge",
+      "key": "bleeding_edge_bleeding_enemies",
+      "kind": "count",
+      "on": "second",
+      "status": "bleeding",
+      "within": 15,
+      "max": 5
+    },
+    {
+      "talent": "weapon_talent_gangland_hit",
+      "key": "gangland_hit_active",
+      "on": "hit",
+      "kind": "buff",
+      "resetOn": "target_changed",
+      "consumeOn": "target_death"
+    },
+    {
+      "talent": "weapon_talent_shakedown",
+      "key": "shakedown_stacks",
+      "on": "body_hit",
+      "kind": "stacks",
+      "max": 4,
+      "duration": 10,
+      "refresh": true,
+      "consumeOn": "headshot",
+      "resetOn": "target_death",
+      "alsoResetOn": "target_changed"
+    },
+    {
+      "talent": "gear_talent_bleeding_edge",
+      "key": "target_bleeding",
+      "on": "hit",
+      "kind": "status",
+      "status": "bleeding",
+      "duration": 10,
+      "applyOnHit": true,
+      "within": 15
+    },
+    {
+      "talent": "gear_talent_energize",
+      "key": "energize_skill_tier_active",
+      "on": "armor_kit",
+      "kind": "buff",
+      "duration": 15,
+      "every": 60
+    },
+    {
+      "talent": "gear_talent_perfect_energize",
+      "key": "energize_skill_tier_active",
+      "on": "armor_kit",
+      "kind": "buff",
+      "duration": 15,
+      "every": 30
+    },
+    {
+      "talent": "gunner_hardened_armor_kits_tier_1",
+      "key": "hardened_armor_kits_active",
+      "on": "armor_kit",
+      "kind": "buff",
+      "duration": 10,
+      "grant": "temporary_armor",
+      "grantAmount": 0.3,
+      "grantDuration": 10
+    },
+    {
+      "talent": "demolitionist_stimulant_patch_tier_1",
+      "key": "stimulant_patch_active",
+      "on": "armor_kit",
+      "kind": "buff",
+      "duration": 15
+    },
+    {
+      "talent": "sharpshooter_emergency_cleanse_tier_1",
+      "key": "emergency_cleanse_active",
+      "on": "armor_kit",
+      "kind": "buff",
+      "duration": 20
+    },
+    {
+      "talent": "weapon_talent_future_perfect",
+      "key": "future_perfect_overcharge_active",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 15,
+      "every": 90,
+      "everyGroup": "future_perfect_overcharge",
+      "whileStatAtLeast": {
+        "stat": "overcharged_skill_tier",
+        "value": 6
+      }
+    },
+    {
+      "talent": "weapon_talent_future_perfection",
+      "key": "future_perfect_overcharge_active",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 15,
+      "every": 90,
+      "everyGroup": "future_perfect_overcharge",
+      "whileStatAtLeast": {
+        "stat": "overcharged_skill_tier",
+        "value": 6
+      }
+    }
+  ],
+  "skills": [
+    {
+      "skill": "skill_burn_sticky_bomb",
+      "cooldown": "cooldown_seconds",
+      "impact": "damage",
+      "status": "burning",
+      "statusRate": "assumed_ticking_dps",
+      "statusWindow": "burn_duration_seconds",
+      "statusArmorBonus": "damage_to_armor"
+    },
+    {
+      "skill": "skill_assault_turret",
+      "rate": "assumed_burst_cycle_dps",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true
+    },
+    {
+      "skill": "skill_incinerator_turret",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true,
+      "status": "burning",
+      "statusRate": "assumed_ticking_dps",
+      "statusWindow": "burn_duration_seconds",
+      "statusArmorBonus": "damage_to_armor"
+    },
+    {
+      "skill": "skill_stinger_hive",
+      "rate": "assumed_sting_dps",
+      "window": "sting_window_seconds",
+      "cooldownFromEnd": true,
+      "rateRead": "live",
+      "status": "bleeding",
+      "cooldown": "cooldown_seconds",
+      "statusRate": "assumed_ticking_dps",
+      "statusWindow": "bleed_duration_seconds",
+      "statusArmorBonus": "damage_to_armor"
+    },
+    {
+      "skill": "skill_firestarter_chem_launcher",
+      "cooldown": "ammo_recovery_seconds",
+      "impact": "damage",
+      "status": "burning",
+      "statusRate": "assumed_ticking_dps",
+      "statusWindow": "burn_duration_seconds",
+      "statusArmorBonus": "damage_to_armor",
+      "stock": "charge_capacity",
+      "stockInterval": 2
+    },
+    {
+      "skill": "skill_oxidizer_chem_launcher",
+      "rate": "assumed_ticking_dps",
+      "window": "cloud_duration_seconds",
+      "cooldown": "ammo_recovery_seconds",
+      "stock": "charge_capacity",
+      "stockInterval": 2
+    },
+    {
+      "skill": "skill_explosive_seeker_mine",
+      "cooldown": "cooldown_seconds",
+      "impact": "damage",
+      "status": "bleeding",
+      "statusRate": "assumed_ticking_dps",
+      "statusWindow": "bleed_duration_seconds",
+      "statusArmorBonus": "damage_to_armor"
+    },
+    {
+      "skill": "skill_airburst_seeker_mine",
+      "cooldown": "cooldown_seconds",
+      "impact": "damage",
+      "status": "burning",
+      "statusRate": "assumed_ticking_dps",
+      "statusWindow": "burn_duration_seconds",
+      "statusArmorBonus": "damage_to_armor"
+    },
+    {
+      "skill": "skill_artillery_turret",
+      "cooldown": "use_end_cooldown_seconds",
+      "impact": "damage",
+      "impacts": "charge_capacity",
+      "status": "bleeding",
+      "cooldownFromEnd": true,
+      "statusRate": "assumed_ticking_dps",
+      "statusWindow": "bleed_duration_seconds",
+      "statusArmorBonus": "damage_to_armor",
+      "impactInterval": "assumed_shell_interval_seconds"
+    },
+    {
+      "skill": "skill_shock_trap",
+      "window": "shock_duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "status": "shocked"
+    },
+    {
+      "skill": "skill_riot_foam_chem_launcher",
+      "window": "ensnare_duration_seconds",
+      "cooldown": "ammo_recovery_seconds",
+      "status": "ensnared",
+      "stock": "charge_capacity",
+      "stockInterval": 2
+    },
+    {
+      "skill": "skill_blinder_firefly",
+      "window": "blind_duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "status": "blinded"
+    },
+    {
+      "skill": "skill_banshee_pulse",
+      "window": "disorient_duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "status": "disoriented"
+    },
+    {
+      "skill": "skill_bulwark_shield",
+      "cooldown": "cooldown_seconds",
+      "shield": "skill_health",
+      "regeneration": "active_regeneration_reference",
+      "weapons": [
+        "sidearm"
+      ]
+    },
+    {
+      "skill": "skill_crusader_shield",
+      "cooldown": "cooldown_seconds",
+      "shield": "skill_health",
+      "regeneration": "active_regeneration_reference",
+      "weapons": [
+        "primary_weapon",
+        "secondary_weapon"
+      ],
+      "excludeTags": [
+        "weapon_type_lmg",
+        "weapon_type_marksman_rifle"
+      ]
+    },
+    {
+      "skill": "skill_deflector_shield",
+      "cooldown": "cooldown_seconds",
+      "shield": "skill_health",
+      "regeneration": "active_regeneration_reference",
+      "weapons": [
+        "sidearm"
+      ]
+    },
+    {
+      "skill": "skill_striker_shield",
+      "cooldown": "cooldown_seconds",
+      "shield": "skill_health",
+      "regeneration": "active_regeneration_reference",
+      "weapons": [
+        "primary_weapon",
+        "secondary_weapon"
+      ],
+      "excludeTags": [
+        "weapon_type_lmg",
+        "weapon_type_marksman_rifle"
+      ]
+    },
+    {
+      "skill": "skill_explosive_sticky_bomb",
+      "impact": "damage",
+      "cooldown": "cooldown_seconds"
+    },
+    {
+      "skill": "skill_burster_firefly",
+      "impact": "damage",
+      "cooldown": "cooldown_seconds"
+    },
+    {
+      "skill": "skill_cluster_seeker_mine",
+      "impact": "damage",
+      "impacts": "deployable_capacity",
+      "cooldown": "cooldown_seconds",
+      "impactInterval": "assumed_mine_interval_seconds"
+    },
+    {
+      "skill": "skill_sniper_turret",
+      "impact": "damage",
+      "impacts": "charge_capacity",
+      "cooldown": "use_cycle_seconds",
+      "impactInterval": "reload_seconds"
+    }
+  ],
+  "statusDamage": [
+    {
+      "status": "burning",
+      "tick": "burn_tick_damage",
+      "period": 0.5,
+      "tickOnApply": true,
+      "armorBonus": "damage_to_armor"
+    },
+    {
+      "status": "bleeding",
+      "tick": "bleed_tick_damage",
+      "period": 0.5,
+      "tickOnApply": true,
+      "armorBonus": "damage_to_armor"
+    }
+  ],
+  "talentDamage": [
+    {
+      "talent": "gear_talent_toxic_delivery",
+      "on": "status_applied",
+      "total": "toxic_delivery_total_damage",
+      "duration": 10,
+      "period": 0.5
+    },
+    {
+      "talent": "gear_talent_afterburn",
+      "on": "reload",
+      "total": "afterburn_detonation_damage",
+      "duration": 0.5,
+      "period": 0.5
+    }
+  ],
+  "distanceDefaults": [
+    {
+      "input": "enemy_hit_rate",
+      "bands": [
+        {
+          "upTo": 15,
+          "value": 70
+        },
+        {
+          "value": 30
+        }
+      ]
+    }
+  ],
+  "armorKit": {
+    "repair": 1,
+    "useSeconds": 2.5,
+    "extendSeconds": 0.3,
+    "maxUseSeconds": 4.9,
+    "replacedBySpecializations": [
+      "firewall",
+      "survivalist"
+    ],
+    "replacedByTalents": [
+      "gear_talent_hackstep_protocol"
+    ]
+  }
+}

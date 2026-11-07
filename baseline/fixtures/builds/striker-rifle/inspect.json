@@ -1,0 +1,251 @@
+{
+  "args": [
+    "build",
+    "inspect",
+    "--input",
+    "striker-rifle.json"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "build inspect",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "document": {
+      "schemaVersion": 1,
+      "build": {
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "level": 40,
+        "allocations": {},
+        "equipment": {
+          "backpack": "backpack_striker_s_battlegear_backpack",
+          "chest": "chest_striker_s_battlegear_chest",
+          "gloves": "gloves_striker_s_battlegear_gloves",
+          "holster": "holster_ceska_vyroba_s_r_o_holster",
+          "knees": "knees_grupo_sombra_s_a_kneepads",
+          "mask": "mask_striker_s_battlegear_mask",
+          "primary_weapon": "primary_weapon_st_elmo_s_engine",
+          "secondary_weapon": "secondary_weapon_police_m4",
+          "sidearm": "sidearm_backup_boomstick"
+        },
+        "attributeRolls": {
+          "backpack": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "chest": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "gloves": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "holster": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "knees": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "mask": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "primary_weapon": {
+            "core_1": {
+              "attributeId": "assault_rifle_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "health_damage_weapon_core",
+              "value": 0.21
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          },
+          "secondary_weapon": {
+            "core_1": {
+              "attributeId": "assault_rifle_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "health_damage_weapon_core",
+              "value": 0.21
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          },
+          "sidearm": {
+            "core_1": {
+              "attributeId": "shotgun_damage_backup_boomstick",
+              "value": 0.17
+            },
+            "core_2": {
+              "attributeId": "damage_to_armor_weapon_core",
+              "value": 0.12
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          }
+        },
+        "modSelections": {
+          "backpack": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "chest": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "mask": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "primary_weapon": {
+            "magazine": "weapon_mod_magazine_insulated_magazine",
+            "muzzle": "weapon_mod_muzzle_overcharged_muzzle",
+            "optics": "weapon_mod_optics_conductor_rail",
+            "underbarrel": "weapon_mod_underbarrel_insulated_grip"
+          },
+          "secondary_weapon": {
+            "magazine": "weapon_mod_magazine_tactical_5_56_mag",
+            "muzzle": "weapon_mod_muzzle_large_suppressor_5_56",
+            "optics": "weapon_mod_optics_acog_scope_4x",
+            "underbarrel": "weapon_mod_underbarrel_short_grip"
+          }
+        },
+        "modRolls": {
+          "backpack": {
+            "mod_1": 0.06
+          },
+          "chest": {
+            "mod_1": 0.06
+          },
+          "mask": {
+            "mod_1": 0.06
+          }
+        },
+        "talentSelections": {
+          "backpack": {
+            "talent": "gear_talent_risk_management"
+          },
+          "chest": {
+            "talent": "gear_talent_press_the_advantage"
+          },
+          "primary_weapon": {
+            "talent": "weapon_talent_actum_est"
+          },
+          "secondary_weapon": {
+            "talent": "weapon_talent_breadbasket"
+          },
+          "sidearm": {
+            "talent": "weapon_talent_breadbasket"
+          }
+        },
+        "activeSkillSelections": {
+          "skill_slot_1": "skill_assault_turret",
+          "skill_slot_2": "skill_striker_drone"
+        },
+        "skillUpgrades": {
+          "skill_slot_1": {
+            "skillId": "skill_assault_turret",
+            "rank": 3
+          }
+        },
+        "skillMods": {
+          "skill_slot_1": {
+            "skillId": "skill_assault_turret",
+            "mods": {
+              "firing_mechanism": {
+                "modId": "magnetic_rail",
+                "value": 0.05
+              },
+              "housing": {
+                "modId": "ammo_box",
+                "value": 0.1
+              },
+              "targeting": {
+                "modId": "multi_tool",
+                "value": 0.075
+              }
+            }
+          }
+        },
+        "specializationId": "gunner",
+        "specializationNodeSelections": [
+          "gunner_depleted_rounds_tier_1",
+          "gunner_e_m_i_tier_1",
+          "gunner_gunslinger_tier_1",
+          "gunner_this_is_my_rifle_tier_1"
+        ],
+        "activeScenarios": {},
+        "allocatedSkills": {},
+        "accountUpgrades": {
+          "shd_level": 1000,
+          "watch_critical_hit_chance": 50,
+          "watch_critical_hit_damage": 50
+        },
+        "equipmentUpgrades": {},
+        "meta": {
+          "name": "striker-rifle",
+          "notes": "C0 fixture: Striker rifle build."
+        }
+      }
+    },
+    "diagnostics": []
+  }
+}

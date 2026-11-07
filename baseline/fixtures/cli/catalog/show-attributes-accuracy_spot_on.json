@@ -1,0 +1,32 @@
+{
+  "args": [
+    "catalog",
+    "show",
+    "attributes",
+    "accuracy_spot_on"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog show",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": {
+      "id": "accuracy_spot_on",
+      "name": "Accuracy (Skill)",
+      "stat": "accuracy",
+      "op": "flat",
+      "min": 0.38,
+      "max": 0.38,
+      "step": 0.001,
+      "format": "percent",
+      "category": "skill",
+      "prototypeMax": 0.57
+    }
+  }
+}

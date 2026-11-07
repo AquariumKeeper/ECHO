@@ -1,0 +1,2226 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "inputsSha256": "7913f7f1d1f8a5c5340e2d7e6d40d24746387820577fc19b57d03d436d0bb434",
+    "packSha256": "3da9d7229a80479027ca41be1a66a70a3640682aa92b0c5a2762139905aa9ca7",
+    "args": [
+      "--json",
+      "--pack",
+      "pack.json",
+      "build",
+      "share",
+      "--input",
+      "-",
+      "--context",
+      "context.json"
+    ],
+    "inputEncoding": "utf-8"
+  },
+  "cases": [
+    {
+      "id": "v1",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "ADQAy_9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIk5ldyBCdWlsZCIsIiJdAwA"
+        }
+      },
+      "payloadJson": "[1,\"share_contract\",\"1\",1,[0],[null],\"New Build\",\"\"]"
+    },
+    {
+      "id": "v2",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {
+            "scenario": {}
+          },
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {
+              "scenario": {}
+            },
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "ADsAxP9bMiwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sW3RydWVdLCJOZXcgQnVpbGQiLCIiXQMA"
+        }
+      },
+      "payloadJson": "[2,\"share_contract\",\"1\",1,[0],[null],[true],\"New Build\",\"\"]"
+    },
+    {
+      "id": "v3",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "AEMAvP9bMywic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sW2ZhbHNlXSxbdHJ1ZV0sIk5ldyBCdWlsZCIsIiJdAwA"
+        }
+      },
+      "payloadJson": "[3,\"share_contract\",\"1\",1,[0],[null],[false],[true],\"New Build\",\"\"]"
+    },
+    {
+      "id": "v4",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {
+            "stale": {
+              "core": {
+                "attributeId": "attr",
+                "value": 5
+              }
+            }
+          },
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {
+              "stale": {
+                "core": {
+                  "attributeId": "attr",
+                  "value": 5
+                }
+              }
+            },
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "AHgAh_9bNCwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sW2ZhbHNlXSxbZmFsc2VdLHsic3RhbGUiOnsiY29yZSI6eyJhdHRyaWJ1dGVJZCI6ImF0dHIiLCJ2YWx1ZSI6NX19fSwiTmV3IEJ1aWxkIiwiIl0DAA"
+        }
+      },
+      "payloadJson": "[4,\"share_contract\",\"1\",1,[0],[null],[false],[false],{\"stale\":{\"core\":{\"attributeId\":\"attr\",\"value\":5}}},\"New Build\",\"\"]"
+    },
+    {
+      "id": "v5",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {
+            "stale": {
+              "socket": "mod"
+            }
+          },
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {
+              "stale": {
+                "socket": "mod"
+              }
+            },
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "AHgAh_9bNSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sW2ZhbHNlXSxbZmFsc2VdLHt9LHsibW9kcyI6eyJzdGFsZSI6eyJzb2NrZXQiOiJtb2QifX0sInRhbGVudHMiOnt9fSwiTmV3IEJ1aWxkIiwiIl0DAA"
+        }
+      },
+      "payloadJson": "[5,\"share_contract\",\"1\",1,[0],[null],[false],[false],{},{\"mods\":{\"stale\":{\"socket\":\"mod\"}},\"talents\":{}},\"New Build\",\"\"]"
+    },
+    {
+      "id": "v6",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "skill"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "skill"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "RM2xygIxEATgV_mZeov_Gosr7WxsLMMhS7Li4prIZU_BkHeX2FgN30wxYUeoV17lHEv2laODMIEmCv8LhbyZLRQubFV-2To13EuqmFsnOJtk_2IMHF2fcrqp2ehQsmBGHUYn1IdEZdM3u5Z8SJjHSScc5fW339QSCFg-AwA"
+        }
+      },
+      "payloadJson": "[6,\"share_contract\",\"1\",1,[0],[null],[false],[false],{},{\"mods\":{},\"talents\":{}},{\"activeSkills\":{\"one\":\"skill\"},\"specializationId\":null},\"New Build\",\"\"]"
+    },
+    {
+      "id": "v7",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "spec",
+          "specializationNodeSelections": [
+            "root"
+          ],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "spec",
+            "specializationNodeSelections": [
+              "root"
+            ],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          }
+        ],
+        "result": {
+          "code": "RMqxCsJAEATQX5GptzCVkNLOxiblcchyt-Lheiu5jYIh_y4JgtUw8yYcCO3Go1ySVR85OQgdqKOwjxTqpBopXFmb_HNeaMbDckM_LwRnlepbWYGTl5cM96L6O1TLMohK8mK1oQ8YzRyR0J6SCmv58EqnjH6bsBDO8t4dp6IZBMTvAA"
+        }
+      },
+      "payloadJson": "[7,\"share_contract\",\"1\",1,[0],[null],[false],[false],{},{\"mods\":{},\"talents\":{}},{\"activeSkills\":{},\"nodeSelections\":[\"root\"],\"specializationId\":\"spec\"},\"New Build\",\"\"]"
+    },
+    {
+      "id": "v8",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {
+            "stale": {
+              "socket": 0
+            }
+          },
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {
+              "stale": {
+                "socket": 0
+              }
+            },
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "RI69qgIxEIVf5XLqKXa7S0o7Gwu3DEFCMmLYMZHNrIJL3l2yFlbz850Pjv0n1Jtf-BJK1sUHBWEEjWQHRzavIo7s1Uvl39wabbiXeC4iFWZDVS-8LyXMrDBDa9QTnTZCx1n3o6s-aHryNKev3gi5RJ5YOGgqucJYR6gPDslLevv-PEaY3qYRTvz6O6xJIghwnwEA"
+        }
+      },
+      "payloadJson": "[8,\"share_contract\",\"1\",1,[0],[null],[false],[false],{},{\"modRolls\":{\"stale\":{\"socket\":0}},\"mods\":{},\"talents\":{}},{\"activeSkills\":{},\"nodeSelections\":[],\"specializationId\":null},\"New Build\",\"\"]"
+    },
+    {
+      "id": "v9",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "account": 1
+          },
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "account": 1
+            },
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "VI4xa8MwEEb_SvnmG-qxGrt16VDTSYhySNdW9Cy5lpRAjP57cEhiMt29B-84-0Iov7zIl8-pLuwrCANoIPvsyKam6sh-sxbZ59pphfy3OE-S6uf8s3CQArN2wpTDR1bd6bpVVkn1AlvN3uf20N4UzNAJ7Gs8yPgX76dSDjKKiq8xpwJjHaHM4iNrPPEm3wLM9nAnvMvx6bVFDSDAnQcA"
+        }
+      },
+      "payloadJson": "[9,\"share_contract\",\"1\",1,[0],[null],[false],[false],{},{\"equipmentUpgrades\":{},\"modRolls\":{},\"mods\":{},\"talents\":{}},{\"accountUpgrades\":{\"account\":1},\"activeSkills\":{},\"nodeSelections\":[],\"specializationId\":null},\"New Build\",\"\"]"
+    },
+    {
+      "id": "v10",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "skill"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "skill",
+              "rank": 1
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "skill"
+            },
+            "skillUpgrades": {
+              "one": {
+                "skillId": "skill",
+                "rank": 1
+              }
+            },
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "XI-xTsQwDIZfBf2zh-vakY2FgRNTVCErMRCdzylNChJR3h2FIIqY7M_290t204mQX3mTJ5-sbOwLCBNoIndayNmuupB7Zs1y1NqoQt72uF7FyuP6snGQjLk2wjWFh6R60E9XWMXKN3SbvU_7f5d9ie9yvsThI5lgRu6MRrAU5CwqvsRkGbNbaCz_pAynjvld-NUJG9sF89QaIa_iI2v85J7Ur_qfjXAvHze3e9QAApavAQA"
+        }
+      },
+      "payloadJson": "[10,\"share_contract\",\"1\",1,[0],[null],[false],[false],{},{\"equipmentUpgrades\":{},\"modRolls\":{},\"mods\":{},\"talents\":{}},{\"accountUpgrades\":{},\"activeSkills\":{\"one\":\"skill\"},\"nodeSelections\":[],\"skillUpgrades\":{\"one\":{\"skillId\":\"skill\",\"rank\":1}},\"specializationId\":null},\"New Build\",\"\"]"
+    },
+    {
+      "id": "v11",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "skill"
+          },
+          "skillUpgrades": {},
+          "skillMods": {
+            "one": {
+              "skillId": "skill",
+              "mods": {}
+            }
+          },
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "skill"
+            },
+            "skillUpgrades": {},
+            "skillMods": {
+              "one": {
+                "skillId": "skill",
+                "mods": {}
+              }
+            },
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "XI8xT0UhDIX_ijlzB-96RzcHHXxxIsQ0UJXYB9cLaCLhvxvkxRud2tP262nNshDyK-_y5FIsO7sCwgJayFxbMrGqWjLPrFmO2Do1yHsN21liedxedvaSsbZOOCf_kFQPdckKq8TyIwbNzqX6n2VXwoec3sLkkaJgRR4anRCTl5OouBJSzFiNpdm8my5zvs3arf9FjzN6vxB_ffMmLrCGLx6bBzn-7oR7-by6qUE9CLDfAwA"
+        }
+      },
+      "payloadJson": "[11,\"share_contract\",\"1\",1,[0],[null],[false],[false],{},{\"equipmentUpgrades\":{},\"modRolls\":{},\"mods\":{},\"talents\":{}},{\"accountUpgrades\":{},\"activeSkills\":{\"one\":\"skill\"},\"nodeSelections\":[],\"skillMods\":{\"one\":{\"skillId\":\"skill\",\"mods\":{}}},\"skillUpgrades\":{},\"specializationId\":null},\"New Build\",\"\"]"
+    },
+    {
+      "id": "v12",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": "item"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "attr",
+                "value": 12
+              }
+            }
+          },
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "prototypes": {
+            "main": {
+              "itemId": "item",
+              "augment": "augment",
+              "level": 1
+            }
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": "item"
+            },
+            "attributeRolls": {
+              "main": {
+                "core": {
+                  "attributeId": "attr",
+                  "value": 12
+                }
+              }
+            },
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "prototypes": {
+              "main": {
+                "itemId": "item",
+                "augment": "augment",
+                "level": 1
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "mod-unconfigured",
+            "message": "Socket on Item has no selected mod",
+            "subject": "main",
+            "target": "socket"
+          },
+          {
+            "severity": "warning",
+            "code": "talent-unconfigured",
+            "message": "Talent on Item has no selected talent",
+            "subject": "main",
+            "target": "talent"
+          },
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "XI6xTvQwEIRf5dfUW_y50iUdBRScqKIILc5yWGzsEK-DIPK7I0coJ6hmRvbOfH13IuRXXuTJp2gLewOhA3XU_x-oRzCZMFD_wprlqhsmDhFug0-LNGWzJTwXk9sRbk8grKxF4LpTrZU2yHsJ8yTRHufLwqNkuK0SpjQ-JNVr-nHzkizZ57z_OwYb0b7RDAhcLq0S7nAElVUUrquVYKwSrVXsDOx9Kn8J2FtY5fwWDoqYRjmLireQYobrB0Ju73cH3h5_9-RZfGANX9zOGmUsqpVwLx__bkrQEQQM3wMA"
+        }
+      },
+      "payloadJson": "[12,\"share_contract\",\"1\",1,[0],[\"item\"],[false],[false],{\"main\":{\"core\":{\"attributeId\":\"attr\",\"value\":12}}},{\"equipmentUpgrades\":{},\"modRolls\":{},\"mods\":{},\"prototypes\":{\"main\":{\"itemId\":\"item\",\"augment\":\"augment\",\"level\":1}},\"talents\":{}},{\"accountUpgrades\":{},\"activeSkills\":{},\"nodeSelections\":[],\"skillMods\":{},\"skillUpgrades\":{},\"specializationId\":null},\"New Build\",\"\"]"
+    },
+    {
+      "id": "all-features",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 2
+          },
+          "equipment": {
+            "main": "item"
+          },
+          "attributeRolls": {
+            "main": {
+              "core": {
+                "attributeId": "attr",
+                "value": 12
+              }
+            }
+          },
+          "modSelections": {
+            "main": {
+              "socket": "mod"
+            }
+          },
+          "modRolls": {
+            "main": {
+              "socket": 3
+            }
+          },
+          "talentSelections": {
+            "main": {
+              "talent": "talent"
+            }
+          },
+          "activeSkillSelections": {
+            "one": "skill"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "skill",
+              "rank": 2
+            }
+          },
+          "skillMods": {
+            "one": {
+              "skillId": "skill",
+              "mods": {
+                "socket": {
+                  "modId": "skill_mod",
+                  "value": 0.2
+                }
+              }
+            }
+          },
+          "specializationId": "spec",
+          "specializationNodeSelections": [
+            "root"
+          ],
+          "activeScenarios": {
+            "scenario": {}
+          },
+          "allocatedSkills": {
+            "passive": {}
+          },
+          "accountUpgrades": {
+            "account": 1
+          },
+          "equipmentUpgrades": {
+            "main": {
+              "itemId": "item",
+              "rank": 1
+            }
+          },
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "prototypes": {
+            "main": {
+              "itemId": "item",
+              "augment": "augment",
+              "level": 1
+            }
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 2
+            },
+            "equipment": {
+              "main": "item"
+            },
+            "attributeRolls": {
+              "main": {
+                "core": {
+                  "attributeId": "attr",
+                  "value": 12
+                }
+              }
+            },
+            "modSelections": {
+              "main": {
+                "socket": "mod"
+              }
+            },
+            "modRolls": {
+              "main": {
+                "socket": 3
+              }
+            },
+            "talentSelections": {
+              "main": {
+                "talent": "talent"
+              }
+            },
+            "activeSkillSelections": {
+              "one": "skill"
+            },
+            "skillUpgrades": {
+              "one": {
+                "skillId": "skill",
+                "rank": 2
+              }
+            },
+            "skillMods": {
+              "one": {
+                "skillId": "skill",
+                "mods": {
+                  "socket": {
+                    "modId": "skill_mod",
+                    "value": 0.2
+                  }
+                }
+              }
+            },
+            "specializationId": "spec",
+            "specializationNodeSelections": [
+              "root"
+            ],
+            "activeScenarios": {
+              "scenario": {}
+            },
+            "allocatedSkills": {
+              "passive": {}
+            },
+            "accountUpgrades": {
+              "account": 1
+            },
+            "equipmentUpgrades": {
+              "main": {
+                "itemId": "item",
+                "rank": 1
+              }
+            },
+            "prototypes": {
+              "main": {
+                "itemId": "item",
+                "augment": "augment",
+                "level": 1
+              }
+            },
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "code": "fFGxbuMwDP2Vw5uJw9m3abzthnZo0MkwAlUmUiGy5Mp0itbQvxe0naQB2k6iqMen9x6bqiaMzzbz3qUo2ToBoQJV1NQtNfDCPVpqJE98OWb01keYGS5l1tOKZP80Cf_vYJYbCCcbJoap6lIKzeCXyQ89R3kcDtl2PMJcifSfZVYLELKNR5iqFEKfuocUwg18TO7IAvN3A3z5qJNQwJCTJHkbfv7STgdVB3OpCIFPHDYdYgNHuaFYWzDnYjVqnUvTrc2tpUwE68SfeHf0m6kUGQaj3lEIMXW848BOfIojTIOckqClFXK3uV2m5rW32FgqXOM4xzBr54rYayqX5fz5rdspG_dnyd_yr6upNdhxYOdt8O9Wta6ogZ26uOfXX_8mHzoQ0H4MAA"
+        }
+      },
+      "payloadJson": "[12,\"share_contract\",\"1\",1,[2],[\"item\"],[true],[true],{\"main\":{\"core\":{\"attributeId\":\"attr\",\"value\":12}}},{\"equipmentUpgrades\":{\"main\":{\"itemId\":\"item\",\"rank\":1}},\"modRolls\":{\"main\":{\"socket\":3}},\"mods\":{\"main\":{\"socket\":\"mod\"}},\"prototypes\":{\"main\":{\"itemId\":\"item\",\"augment\":\"augment\",\"level\":1}},\"talents\":{\"main\":{\"talent\":\"talent\"}}},{\"accountUpgrades\":{\"account\":1},\"activeSkills\":{\"one\":\"skill\"},\"nodeSelections\":[\"root\"],\"skillMods\":{\"one\":{\"skillId\":\"skill\",\"mods\":{\"socket\":{\"modId\":\"skill_mod\",\"value\":0.2}}}},\"skillUpgrades\":{\"one\":{\"skillId\":\"skill\",\"rank\":2}},\"specializationId\":\"spec\"},\"New Build\",\"\"]"
+    },
+    {
+      "id": "party-is-not-shared",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          },
+          "party": [
+            {
+              "name": "Ally",
+              "effects": [
+                {
+                  "id": "unknown",
+                  "values": {
+                    "damage": 100
+                  },
+                  "active": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "party": [
+              {
+                "name": "Ally",
+                "effects": [
+                  {
+                    "id": "unknown",
+                    "values": {
+                      "damage": 100
+                    },
+                    "active": true
+                  }
+                ]
+              }
+            ],
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "ADQAy_9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIk5ldyBCdWlsZCIsIiJdAwA"
+        }
+      },
+      "payloadJson": "[1,\"share_contract\",\"1\",1,[0],[null],\"New Build\",\"\"]"
+    },
+    {
+      "id": "unknown-allocation-is-not-positional",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "unknown": 5
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "unknown": 5
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "ADQAy_9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIk5ldyBCdWlsZCIsIiJdAwA"
+        }
+      },
+      "payloadJson": "[1,\"share_contract\",\"1\",1,[0],[null],\"New Build\",\"\"]"
+    },
+    {
+      "id": "unknown-equipment-is-not-positional",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "stale": "missing"
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "stale": "missing"
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "ADQAy_9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIk5ldyBCdWlsZCIsIiJdAwA"
+        }
+      },
+      "payloadJson": "[1,\"share_contract\",\"1\",1,[0],[null],\"New Build\",\"\"]"
+    },
+    {
+      "id": "empty-inner-config-keeps-v1",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {
+            "stale": {}
+          },
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {
+              "stale": {}
+            },
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "ADQAy_9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIk5ldyBCdWlsZCIsIiJdAwA"
+        }
+      },
+      "payloadJson": "[1,\"share_contract\",\"1\",1,[0],[null],\"New Build\",\"\"]"
+    },
+    {
+      "id": "empty-selected-mod-keeps-v5",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {
+            "stale": {
+              "socket": ""
+            }
+          },
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {
+              "stale": {
+                "socket": ""
+              }
+            },
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "AHUAiv9bNSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sW2ZhbHNlXSxbZmFsc2VdLHt9LHsibW9kcyI6eyJzdGFsZSI6eyJzb2NrZXQiOiIifX0sInRhbGVudHMiOnt9fSwiTmV3IEJ1aWxkIiwiIl0DAA"
+        }
+      },
+      "payloadJson": "[5,\"share_contract\",\"1\",1,[0],[null],[false],[false],{},{\"mods\":{\"stale\":{\"socket\":\"\"}},\"talents\":{}},\"New Build\",\"\"]"
+    },
+    {
+      "id": "zero-rank-keeps-v9",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {
+            "account": 0
+          },
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {
+              "account": 0
+            },
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "VI4xT8QwDEb_CvpmD-1IRjYWBiqmKEJWYiDCTUqTgESV_37q6e6qm-z3pGfZPhLKF6_y7nOqK_sKwggayQ6ObGqqjuwHa5Fjbp02yE-Lyyypvi2fKwcpMFsnzDm8ZtWDLltllVTPsNfsfW537VXBDJ3AvsZfmb7j7VTKQSZR8TXmVGCsI5RFfGSN_7zL5wCzP9wJL_L38NSiBhDgTgMA"
+        }
+      },
+      "payloadJson": "[9,\"share_contract\",\"1\",1,[0],[null],[false],[false],{},{\"equipmentUpgrades\":{},\"modRolls\":{},\"mods\":{},\"talents\":{}},{\"accountUpgrades\":{\"account\":0},\"activeSkills\":{},\"nodeSelections\":[],\"specializationId\":null},\"New Build\",\"\"]"
+    },
+    {
+      "id": "zero-grade-keeps-v10",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "skill"
+          },
+          "skillUpgrades": {
+            "one": {
+              "skillId": "skill",
+              "rank": 0
+            }
+          },
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "skill"
+            },
+            "skillUpgrades": {
+              "one": {
+                "skillId": "skill",
+                "rank": 0
+              }
+            },
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "XI-xTsQwDIZfBf2zh3btyMbCwIkpqpCVGIjO55QmBYko745CEIeY7M_290t280TIr7zLk09WdvYFhBk0k5tWcnaoruSeWbNca21UIW9H3C5i5XF72TlIxlIb4ZLCQ1K90k9XWMXKN3SbvU_Hf5d9ie9yOsfhI5lgQe6MRrAU5CQqvsRkGYtbaSz_pAynjvld-NUJO9sZy9QaIW_iI2v85J7Ur_qfjXAvHze3R9QAAtavAQA"
+        }
+      },
+      "payloadJson": "[10,\"share_contract\",\"1\",1,[0],[null],[false],[false],{},{\"equipmentUpgrades\":{},\"modRolls\":{},\"mods\":{},\"talents\":{}},{\"accountUpgrades\":{},\"activeSkills\":{\"one\":\"skill\"},\"nodeSelections\":[],\"skillUpgrades\":{\"one\":{\"skillId\":\"skill\",\"rank\":0}},\"specializationId\":null},\"New Build\",\"\"]"
+    },
+    {
+      "id": "unicode-meta",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "share_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {
+            "power": 0
+          },
+          "equipment": {
+            "main": ""
+          },
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "Share 😀",
+            "notes": "Notes <&>"
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build share",
+        "ok": true,
+        "pack": {
+          "id": "share_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "share_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {
+              "power": 0
+            },
+            "equipment": {
+              "main": ""
+            },
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "Share 😀",
+              "notes": "Notes <&>"
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "specialization-unconfigured",
+            "message": "No specialization is selected"
+          }
+        ],
+        "result": {
+          "code": "AE0Asv9bMSwic2hhcmVfY29udHJhY3QiLCIxIiwxLFswXSxbbnVsbF0sIlNoYXJlIPCfmIAiLCJOb3RlcyBcdTAwM2NcdTAwMjZcdTAwM2UiXQMA"
+        }
+      },
+      "payloadJson": "[1,\"share_contract\",\"1\",1,[0],[null],\"Share 😀\",\"Notes \\u003c\\u0026\\u003e\"]"
+    }
+  ]
+}

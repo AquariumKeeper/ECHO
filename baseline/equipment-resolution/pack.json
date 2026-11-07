@@ -1,0 +1,35 @@
+{
+  "id":"equipment_contract", "name":"Equipment contract", "schemaVersion":1, "version":"1",
+  "progression":{"startingLevel":1,"maxLevel":10,"startingPoints":0,"pointsPerLevel":0},
+  "stats":[
+    {"id":"damage","name":"Damage","kind":"derived","formula":"100"},
+    {"id":"cores","name":"Cores","kind":"derived","formula":"0"},
+    {"id":"other","name":"Other","kind":"derived","formula":"0"}
+  ],
+  "numericContextInputs":[{"id":"stacks","name":"Stacks","min":0,"max":10,"step":1,"default":2}],
+  "attributes":[
+    {"id":"damage_attr","name":"Damage roll","stat":"damage","op":"flat","min":1,"max":10,"step":1,"countStat":"cores"},
+    {"id":"other_attr","name":"Other roll","stat":"other","op":"flat","min":0,"max":10,"step":1}
+  ],
+  "slots":[{"id":"main","name":"Main","acceptTags":["weapon"]},{"id":"off","name":"Off","acceptTags":["weapon"]}],
+  "items":[
+    {"id":"weapon","name":"Weapon","tags":["weapon"],"occupies":["main"],"effectsRequireContext":{"weapon_slot":"main"},
+     "modifiers":[{"stat":"damage","op":"flat","value":1}],
+     "attributeSlots":[{"id":"core","name":"Core","choices":[{"attributeId":"damage_attr","min":2,"max":8,"step":2}]}],
+     "modSlots":[{"id":"socket","name":"Socket","choices":["ranged","fixed"]}],
+     "talentSlots":[{"id":"talent","name":"Talent","choices":["talent"]}]},
+    {"id":"off_weapon","name":"Off weapon","tags":["weapon"],"occupies":["off"],"effectsRequireContext":{"weapon_slot":"off"}}
+  ],
+  "mods":[
+    {"id":"ranged","name":"Ranged mod","rollAttributeId":"damage_attr","modifiers":[{"stat":"damage","op":"flat","value":2}]},
+    {"id":"fixed","name":"Fixed mod","modifiers":[{"stat":"damage","op":"flat","value":4}]},
+    {"id":"forbidden_mod","name":"Forbidden mod","modifiers":[]}
+  ],
+  "talents":[
+    {"id":"talent","name":"Talent","setPieceCredit":1,"modifiers":[
+      {"stat":"damage","op":"flat","value":"context_value('stacks') + 1"},
+      {"stat":"damage","op":"flat","value":"context_value('stacks') + 5","whileHolstered":true}]},
+    {"id":"forbidden_talent","name":"Forbidden talent","modifiers":[]}
+  ],
+  "sets":[{"id":"set","name":"Set","items":["weapon"],"bonuses":[{"pieces":2,"modifiers":[{"stat":"damage","op":"flat","value":20,"when":"has_talent('talent')"}]}]}]
+}

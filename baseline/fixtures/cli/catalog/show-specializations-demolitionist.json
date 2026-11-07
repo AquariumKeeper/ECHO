@@ -1,0 +1,726 @@
+{
+  "args": [
+    "catalog",
+    "show",
+    "specializations",
+    "demolitionist"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog show",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": {
+      "id": "demolitionist",
+      "name": "Demolitionist",
+      "icon": "icon_specialization_demolitionist",
+      "image": "signature_art_wiki_12432",
+      "description": "Weapon-type damage tiers affect the selected weapon preview. Permanent stat bonuses affect totals; recovery and signature-weapon bonuses are rates only. Conditional effects are descriptive. Parent unlock tiers need live-game verification.",
+      "modifiers": [],
+      "budgets": [
+        {
+          "id": "total",
+          "name": "Specialization",
+          "points": 165
+        },
+        {
+          "id": "weapon_damage_hub",
+          "name": "Weapon Damage Hub",
+          "points": 45,
+          "parentId": "total"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "demolitionist_this_is_my_rifle_tier_1",
+          "name": "This is my Rifle — Tier 1",
+          "icon": "icon_node_thisismyrifle",
+          "description": "Increases Rifle Damage by 5%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": [
+            {
+              "stat": "rifle_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_this_is_my_rifle_tier_2",
+          "name": "This is my Rifle — Tier 2",
+          "icon": "icon_node_thisismyrifle",
+          "description": "Increases Rifle Damage by 10%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 2,
+          "prerequisites": [
+            "demolitionist_this_is_my_rifle_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "rifle_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_this_is_my_rifle_tier_3",
+          "name": "This is my Rifle — Tier 3",
+          "icon": "icon_node_thisismyrifle",
+          "description": "Increases Rifle Damage by 15%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 3,
+          "prerequisites": [
+            "demolitionist_this_is_my_rifle_tier_2"
+          ],
+          "modifiers": [
+            {
+              "stat": "rifle_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_depleted_rounds_tier_1",
+          "name": "Depleted Rounds — Tier 1",
+          "icon": "icon_node_depletedrounds",
+          "description": "Increases Marksman Rifle Damage by 5%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": [
+            {
+              "stat": "marksman_rifle_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_depleted_rounds_tier_2",
+          "name": "Depleted Rounds — Tier 2",
+          "icon": "icon_node_depletedrounds",
+          "description": "Increases Marksman Rifle Damage by 10%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 2,
+          "prerequisites": [
+            "demolitionist_depleted_rounds_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "marksman_rifle_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_depleted_rounds_tier_3",
+          "name": "Depleted Rounds — Tier 3",
+          "icon": "icon_node_depletedrounds",
+          "description": "Increases Marksman Rifle Damage by 15%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 3,
+          "prerequisites": [
+            "demolitionist_depleted_rounds_tier_2"
+          ],
+          "modifiers": [
+            {
+              "stat": "marksman_rifle_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_e_m_i_tier_1",
+          "name": "E.M.I — Tier 1",
+          "icon": "icon_node_emi",
+          "description": "Increases Assault Rifle Damage by 5%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": [
+            {
+              "stat": "assault_rifle_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_e_m_i_tier_2",
+          "name": "E.M.I — Tier 2",
+          "icon": "icon_node_emi",
+          "description": "Increases Assault Rifle Damage by 10%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 2,
+          "prerequisites": [
+            "demolitionist_e_m_i_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "assault_rifle_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_e_m_i_tier_3",
+          "name": "E.M.I — Tier 3",
+          "icon": "icon_node_emi",
+          "description": "Increases Assault Rifle Damage by 15%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 3,
+          "prerequisites": [
+            "demolitionist_e_m_i_tier_2"
+          ],
+          "modifiers": [
+            {
+              "stat": "assault_rifle_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_gunslinger_tier_1",
+          "name": "Gunslinger — Tier 1",
+          "icon": "icon_node_gunslinger",
+          "description": "Increases Pistol Damage by 5%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": [
+            {
+              "stat": "pistol_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_gunslinger_tier_2",
+          "name": "Gunslinger — Tier 2",
+          "icon": "icon_node_gunslinger",
+          "description": "Increases Pistol Damage by 10%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 2,
+          "prerequisites": [
+            "demolitionist_gunslinger_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "pistol_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_gunslinger_tier_3",
+          "name": "Gunslinger — Tier 3",
+          "icon": "icon_node_gunslinger",
+          "description": "Increases Pistol Damage by 15%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 3,
+          "prerequisites": [
+            "demolitionist_gunslinger_tier_2"
+          ],
+          "modifiers": [
+            {
+              "stat": "pistol_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_onslaught_tier_1",
+          "name": "Onslaught — Tier 1",
+          "icon": "icon_node_onslaught",
+          "description": "Increases LMG Damage by 5%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": [
+            {
+              "stat": "lmg_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_onslaught_tier_2",
+          "name": "Onslaught — Tier 2",
+          "icon": "icon_node_onslaught",
+          "description": "Increases LMG Damage by 10%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 2,
+          "prerequisites": [
+            "demolitionist_onslaught_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "lmg_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_onslaught_tier_3",
+          "name": "Onslaught — Tier 3",
+          "icon": "icon_node_onslaught",
+          "description": "Increases LMG Damage by 15%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 3,
+          "prerequisites": [
+            "demolitionist_onslaught_tier_2"
+          ],
+          "modifiers": [
+            {
+              "stat": "lmg_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_running_the_gun_tier_1",
+          "name": "Running the Gun — Tier 1",
+          "icon": "icon_node_runningthegun",
+          "description": "Increases Shotgun Damage by 5%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": [
+            {
+              "stat": "shotgun_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_running_the_gun_tier_2",
+          "name": "Running the Gun — Tier 2",
+          "icon": "icon_node_runningthegun",
+          "description": "Increases Shotgun Damage by 10%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 2,
+          "prerequisites": [
+            "demolitionist_running_the_gun_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "shotgun_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_running_the_gun_tier_3",
+          "name": "Running the Gun — Tier 3",
+          "icon": "icon_node_runningthegun",
+          "description": "Increases Shotgun Damage by 15%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 3,
+          "prerequisites": [
+            "demolitionist_running_the_gun_tier_2"
+          ],
+          "modifiers": [
+            {
+              "stat": "shotgun_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_spray_and_pray_tier_1",
+          "name": "Spray and Pray — Tier 1",
+          "icon": "icon_node_sprayandpray",
+          "description": "Increases SMG Damage by 5%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": [
+            {
+              "stat": "smg_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_spray_and_pray_tier_2",
+          "name": "Spray and Pray — Tier 2",
+          "icon": "icon_node_sprayandpray",
+          "description": "Increases SMG Damage by 10%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 2,
+          "prerequisites": [
+            "demolitionist_spray_and_pray_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "smg_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_spray_and_pray_tier_3",
+          "name": "Spray and Pray — Tier 3",
+          "icon": "icon_node_sprayandpray",
+          "description": "Increases SMG Damage by 15%",
+          "budgetId": "weapon_damage_hub",
+          "cost": 5,
+          "tier": 3,
+          "prerequisites": [
+            "demolitionist_spray_and_pray_tier_2"
+          ],
+          "modifiers": [
+            {
+              "stat": "smg_damage",
+              "op": "flat",
+              "value": 0.05
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_signature_weapon_damage_tier_1",
+          "name": "Signature Weapon Damage — Tier 1",
+          "description": "Increases Signature Weapon Damage by 10%",
+          "budgetId": "total",
+          "cost": 10,
+          "tier": 1,
+          "prerequisites": [
+            "demolitionist_signature_ammo_acquisition_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "signature_weapon_damage",
+              "op": "flat",
+              "value": 0.1
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_signature_weapon_damage_tier_2",
+          "name": "Signature Weapon Damage — Tier 2",
+          "description": "Increases Signature Weapon Damage by 20%",
+          "budgetId": "total",
+          "cost": 10,
+          "tier": 2,
+          "prerequisites": [
+            "demolitionist_signature_weapon_damage_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "signature_weapon_damage",
+              "op": "flat",
+              "value": 0.1
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_signature_weapon_damage_tier_3",
+          "name": "Signature Weapon Damage — Tier 3",
+          "description": "Increases Signature Weapon Damage by 30%",
+          "budgetId": "total",
+          "cost": 10,
+          "tier": 3,
+          "prerequisites": [
+            "demolitionist_signature_weapon_damage_tier_2"
+          ],
+          "modifiers": [
+            {
+              "stat": "signature_weapon_damage",
+              "op": "flat",
+              "value": 0.1
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_signature_weapon_damage_tier_4",
+          "name": "Signature Weapon Damage — Tier 4",
+          "description": "Increases Signature Weapon Damage by 40%",
+          "budgetId": "total",
+          "cost": 10,
+          "tier": 4,
+          "prerequisites": [
+            "demolitionist_signature_weapon_damage_tier_3"
+          ],
+          "modifiers": [
+            {
+              "stat": "signature_weapon_damage",
+              "op": "flat",
+              "value": 0.1
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_signature_ammo_acquisition_tier_1",
+          "name": "Signature Ammo Acquisition — Tier 1",
+          "icon": "icon_node_40mmammoacquisition",
+          "description": "Killing enemies with explosions adds 3 to the ammo bar, excluding kills with the spec weapon",
+          "budgetId": "total",
+          "cost": 0,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": []
+        },
+        {
+          "id": "demolitionist_group_signature_ammo_acquisition_tier_1",
+          "name": "Group Signature Ammo Acquisition — Tier 1",
+          "icon": "icon_node_groupsigantureammosupply",
+          "description": "Killing enemies with explosions adds 2 to your groups ammo bar, excluding kills with the spec weapon",
+          "budgetId": "total",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [
+            "demolitionist_signature_ammo_acquisition_tier_1"
+          ],
+          "modifiers": []
+        },
+        {
+          "id": "demolitionist_fragmentation_grenade_tier_1",
+          "name": "Fragmentation Grenade — Tier 1",
+          "icon": "icon_node_fragmentationgrenade",
+          "description": "The fragmentation grenade deals damage and causes targets to bleed",
+          "budgetId": "total",
+          "cost": 3,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": []
+        },
+        {
+          "id": "demolitionist_diceros_special_tier_1",
+          "name": "Diceros Special — Tier 1",
+          "icon": "icon_node_dicerosspecial",
+          "description": "A hard-hitting .357 Magnum revolver. Carries the Perfect Optimist talent",
+          "budgetId": "total",
+          "cost": 10,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": []
+        },
+        {
+          "id": "demolitionist_explosive_ordnance_tier_1",
+          "name": "Explosive Ordnance — Tier 1",
+          "icon": "icon_node_explosiveordnance",
+          "description": "Increases Explosive Damage by 3%",
+          "budgetId": "total",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": [
+            {
+              "stat": "explosive_damage",
+              "op": "flat",
+              "value": 0.03
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_explosive_ordnance_tier_2",
+          "name": "Explosive Ordnance — Tier 2",
+          "icon": "icon_node_explosiveordnance",
+          "description": "Increases Explosive Damage by 6%",
+          "budgetId": "total",
+          "cost": 5,
+          "tier": 2,
+          "prerequisites": [
+            "demolitionist_explosive_ordnance_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "explosive_damage",
+              "op": "flat",
+              "value": 0.03
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_explosive_ordnance_tier_3",
+          "name": "Explosive Ordnance — Tier 3",
+          "icon": "icon_node_explosiveordnance",
+          "description": "Increases Explosive Damage by 10%",
+          "budgetId": "total",
+          "cost": 8,
+          "tier": 3,
+          "prerequisites": [
+            "demolitionist_explosive_ordnance_tier_2"
+          ],
+          "modifiers": [
+            {
+              "stat": "explosive_damage",
+              "op": "flat",
+              "value": 0.04
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_incombustible_tier_1",
+          "name": "Incombustible — Tier 1",
+          "icon": "icon_node_incombustible",
+          "description": "Increase Burn Resistance by 20%",
+          "budgetId": "total",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [
+            "demolitionist_explosive_ordnance_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "burn_resistance",
+              "op": "flat",
+              "value": 0.2
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_stimulant_patch_tier_1",
+          "name": "Stimulant Patch — Tier 1",
+          "icon": "icon_node_stimulantpatch",
+          "description": "Armor kits repair 100% damage and boost weapon handling by 30% for 15s",
+          "budgetId": "total",
+          "cost": 3,
+          "tier": 1,
+          "prerequisites": [
+            "demolitionist_explosive_ordnance_tier_1"
+          ],
+          "modifiers": []
+        },
+        {
+          "id": "demolitionist_artillery_tier_1",
+          "name": "Artillery — Tier 1",
+          "icon": "icon_node_artilleryturret",
+          "description": "The artillery turret launches ordnance at nearby targeted locations",
+          "budgetId": "total",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": []
+        },
+        {
+          "id": "demolitionist_cyclone_magazine_tier_1",
+          "name": "Cyclone Magazine — Tier 1",
+          "icon": "icon_node_cyclonemagazineupgrade",
+          "description": "Mod to increase the turret's ammunition count",
+          "budgetId": "total",
+          "cost": 3,
+          "tier": 1,
+          "prerequisites": [
+            "demolitionist_artillery_tier_1"
+          ],
+          "modifiers": []
+        },
+        {
+          "id": "demolitionist_shd_cpu_v2_tier_1",
+          "name": "SHD CPU V2 — Tier 1",
+          "icon": "icon_node_cyclonemagazineupgrade",
+          "description": "Mod to increase the turret's damage",
+          "budgetId": "total",
+          "cost": 3,
+          "tier": 1,
+          "prerequisites": [
+            "demolitionist_cyclone_magazine_tier_1"
+          ],
+          "modifiers": []
+        },
+        {
+          "id": "demolitionist_demolitionist_tactical_link_tier_1",
+          "name": "Demolitionist Tactical Link — Tier 1",
+          "icon": "icon_node_demolitionisttacticallink",
+          "description": "Group members gain 5% damage to targets out of cover",
+          "budgetId": "total",
+          "cost": 10,
+          "tier": 1,
+          "prerequisites": [],
+          "modifiers": []
+        },
+        {
+          "id": "demolitionist_vital_protection_tier_1",
+          "name": "Vital Protection — Tier 1",
+          "icon": "icon_node_vitalprotection",
+          "description": "Increases Pulse Resistance by 50%",
+          "budgetId": "total",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [
+            "demolitionist_demolitionist_tactical_link_tier_1"
+          ],
+          "modifiers": [
+            {
+              "stat": "pulse_resistance",
+              "op": "flat",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "id": "demolitionist_crisis_response_tier_1",
+          "name": "Crisis Response — Tier 1",
+          "icon": "icon_node_crisisresponse",
+          "description": "When armor is reduced to 0, refills all main weapon clip ammo",
+          "budgetId": "total",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [
+            "demolitionist_demolitionist_tactical_link_tier_1"
+          ],
+          "modifiers": []
+        },
+        {
+          "id": "demolitionist_braced_for_impact_tier_1",
+          "name": "Braced for Impact — Tier 1",
+          "icon": "icon_node_bracedforimpact",
+          "description": "Ignore explosions. Can only trigger once every 60 seconds",
+          "budgetId": "total",
+          "cost": 5,
+          "tier": 1,
+          "prerequisites": [
+            "demolitionist_demolitionist_tactical_link_tier_1"
+          ],
+          "modifiers": []
+        }
+      ]
+    }
+  }
+}

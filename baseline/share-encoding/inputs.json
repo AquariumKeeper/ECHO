@@ -1,0 +1,26 @@
+{
+  "version":1,
+  "cases":[
+    {"id":"v1"},
+    {"id":"v2","activeScenarios":{"scenario":{}}},
+    {"id":"v3","allocatedSkills":{"passive":{}}},
+    {"id":"v4","attributeRolls":{"stale":{"core":{"attributeId":"attr","value":5}}}},
+    {"id":"v5","modSelections":{"stale":{"socket":"mod"}}},
+    {"id":"v6","activeSkillSelections":{"one":"skill"}},
+    {"id":"v7","specializationId":"spec","specializationNodeSelections":["root"]},
+    {"id":"v8","modRolls":{"stale":{"socket":0}}},
+    {"id":"v9","accountUpgrades":{"account":1}},
+    {"id":"v10","activeSkillSelections":{"one":"skill"},"skillUpgrades":{"one":{"skillId":"skill","rank":1}}},
+    {"id":"v11","activeSkillSelections":{"one":"skill"},"skillMods":{"one":{"skillId":"skill","mods":{}}}},
+    {"id":"v12","equipment":{"main":"item"},"attributeRolls":{"main":{"core":{"attributeId":"attr","value":12}}},"prototypes":{"main":{"itemId":"item","augment":"augment","level":1}}},
+    {"id":"all-features","activeScenarios":{"scenario":{}},"allocatedSkills":{"passive":{}},"allocations":{"power":2},"equipment":{"main":"item"},"attributeRolls":{"main":{"core":{"attributeId":"attr","value":12}}},"modSelections":{"main":{"socket":"mod"}},"talentSelections":{"main":{"talent":"talent"}},"modRolls":{"main":{"socket":3}},"activeSkillSelections":{"one":"skill"},"skillUpgrades":{"one":{"skillId":"skill","rank":2}},"skillMods":{"one":{"skillId":"skill","mods":{"socket":{"modId":"skill_mod","value":0.2}}}},"specializationId":"spec","specializationNodeSelections":["root"],"accountUpgrades":{"account":1},"equipmentUpgrades":{"main":{"itemId":"item","rank":1}},"prototypes":{"main":{"itemId":"item","augment":"augment","level":1}}},
+    {"id":"party-is-not-shared","party":[{"name":"Ally","effects":[{"id":"unknown","values":{"damage":100},"active":true}]}]},
+    {"id":"unknown-allocation-is-not-positional","allocations":{"unknown":5}},
+    {"id":"unknown-equipment-is-not-positional","equipment":{"stale":"missing"}},
+    {"id":"empty-inner-config-keeps-v1","modSelections":{"stale":{}}},
+    {"id":"empty-selected-mod-keeps-v5","modSelections":{"stale":{"socket":""}}},
+    {"id":"zero-rank-keeps-v9","accountUpgrades":{"account":0}},
+    {"id":"zero-grade-keeps-v10","activeSkillSelections":{"one":"skill"},"skillUpgrades":{"one":{"skillId":"skill","rank":0}}},
+    {"id":"unicode-meta","meta":{"name":"Share \ud83d\ude00","notes":"Notes <&>"}}
+  ]
+}

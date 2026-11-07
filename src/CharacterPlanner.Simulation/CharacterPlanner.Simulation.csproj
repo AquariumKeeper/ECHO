@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../CharacterPlanner.Core/CharacterPlanner.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="CharacterPlanner.Simulation.Tests" />
+  </ItemGroup>
+</Project>

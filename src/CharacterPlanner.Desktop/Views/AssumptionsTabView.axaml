@@ -1,0 +1,85 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+             x:Class="CharacterPlanner.Desktop.Views.AssumptionsTabView" x:DataType="vm:EditorViewModel">
+  <!-- The Assumptions tab, as the Go app's: the assumption set bar, the search box and the caption over the sections,
+       each a section bar over its cards in a wrapping grid; a note when no card is shown. -->
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,8,8">
+      <Grid Name="AssumptionSetBar" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" IsVisible="{Binding AssumptionsTab.Sets.IsAvailable}">
+        <TextBlock Text="{x:Static vm:AssumptionSetBarViewModel.Label}" VerticalAlignment="Center" />
+        <ComboBox Grid.Column="1" Name="AssumptionSetPicker" ItemsSource="{Binding AssumptionsTab.Sets.Names}" SelectedItem="{Binding AssumptionsTab.Sets.Selected}"
+                  PlaceholderText="{x:Static vm:AssumptionSetBarViewModel.Custom}" HorizontalAlignment="Stretch"
+                  AutomationProperties.Name="{x:Static vm:AssumptionSetBarViewModel.Label}" />
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+          <Button Name="SaveAssumptionSetButton" Content="Save As..." Click="OnSaveSet" />
+          <Button Name="DeleteAssumptionSetButton" Content="Delete" Click="OnDeleteSet" />
+        </StackPanel>
+      </Grid>
+      <TextBlock Name="AssumptionSetNotice" Text="{Binding AssumptionsTab.Sets.Notice}" Classes="warning" TextWrapping="Wrap"
+                 IsVisible="{Binding AssumptionsTab.Sets.HasNotice}" />
+      <TextBox Name="AssumptionSearchBox" Text="{Binding AssumptionsTab.Search}" PlaceholderText="{x:Static vm:AssumptionsTabViewModel.SearchPlaceholder}"
+               AutomationProperties.Name="{x:Static vm:AssumptionsTabViewModel.SearchPlaceholder}" />
+      <TextBlock Text="{x:Static vm:AssumptionsTabViewModel.Caption}" Classes="caption" TextWrapping="Wrap" />
+    </StackPanel>
+    <ScrollViewer Name="AssumptionsPanel">
+      <StackPanel Margin="0,0,8,0">
+        <TextBlock Name="AssumptionsEmptyText" Text="{x:Static vm:AssumptionsTabViewModel.EmptyText}" TextWrapping="Wrap"
+                   IsVisible="{Binding AssumptionsTab.IsEmpty}" />
+        <ItemsControl ItemsSource="{Binding AssumptionSections}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:AssumptionSectionViewModel">
+              <StackPanel Margin="0,0,0,8" IsVisible="{Binding HasVisible}">
+                <Border Classes="sectionbar" Margin="0,4,0,8">
+                  <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                </Border>
+                <!-- Cards about 320 wide, as Go's grid; a hidden card measures to nothing, so it leaves no gap. -->
+                <ItemsControl ItemsSource="{Binding Assumptions}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.DataTemplates>
+                    <DataTemplate DataType="vm:SelectorAssumptionViewModel">
+                      <Border Classes="card" IsVisible="{Binding IsShown}">
+                        <StackPanel Spacing="4">
+                          <TextBlock Text="{Binding Name}" FontWeight="Bold" TextWrapping="Wrap" />
+                          <ComboBox ItemsSource="{Binding Choices}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch"
+                                    AutomationProperties.Name="{Binding Name}" />
+                          <TextBlock Text="{Binding ShownDescription}" Classes="caption" TextWrapping="Wrap" IsVisible="{Binding HasDescription}" />
+                        </StackPanel>
+                      </Border>
+                    </DataTemplate>
+                    <DataTemplate DataType="vm:NumericAssumptionViewModel">
+                      <Border Classes="card" IsVisible="{Binding IsShown}">
+                        <StackPanel Spacing="4">
+                          <TextBlock Text="{Binding Name}" FontWeight="Bold" TextWrapping="Wrap" />
+                          <TextBlock Text="{Binding Hint}" Classes="caption" IsVisible="{Binding !HasChoices}" />
+                          <ComboBox ItemsSource="{Binding Choices}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch"
+                                    IsVisible="{Binding HasChoices}" AutomationProperties.Name="{Binding Name}" />
+                          <TextBox Text="{Binding ValueText}" IsVisible="{Binding !HasChoices}" ToolTip.Tip="{Binding Range}"
+                                   AutomationProperties.Name="{Binding Name}" />
+                          <TextBlock Text="{Binding ShownDescription}" Classes="caption" TextWrapping="Wrap" IsVisible="{Binding HasDescription}" />
+                        </StackPanel>
+                      </Border>
+                    </DataTemplate>
+                    <DataTemplate DataType="vm:GroupedAssumptionViewModel">
+                      <Border Classes="card" IsVisible="{Binding IsShown}">
+                        <StackPanel Spacing="4">
+                          <TextBlock Text="{Binding Name}" FontWeight="Bold" TextWrapping="Wrap" />
+                          <ComboBox ItemsSource="{Binding Choices}" SelectedItem="{Binding Selected}" HorizontalAlignment="Stretch"
+                                    AutomationProperties.Name="{Binding Name}" />
+                          <TextBlock Text="{Binding ShownDescription}" Classes="caption" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.DataTemplates>
+                </ItemsControl>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

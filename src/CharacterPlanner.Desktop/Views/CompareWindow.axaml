@@ -1,0 +1,32 @@
+<Window Icon="/Assets/application.ico" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+        x:Class="CharacterPlanner.Desktop.Views.CompareWindow" x:DataType="vm:CompareViewModel"
+        Title="{x:Static vm:CompareViewModel.Title}" Width="720" Height="560" WindowStartupLocation="CenterOwner">
+  <!-- Compare Builds (F43), as the Go app's compare.go: the selectors, the status lines, the stat table and Close. -->
+  <DockPanel Margin="16">
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*,16,Auto,*" ColumnSpacing="8" Margin="0,0,0,8">
+      <TextBlock Text="Build A" VerticalAlignment="Center" />
+      <ComboBox Grid.Column="1" Name="BuildAPicker" ItemsSource="{Binding Options}" SelectedItem="{Binding BuildA}"
+                HorizontalAlignment="Stretch" AutomationProperties.Name="Build A" />
+      <TextBlock Grid.Column="3" Text="Build B" VerticalAlignment="Center" />
+      <ComboBox Grid.Column="4" Name="BuildBPicker" ItemsSource="{Binding Options}" SelectedItem="{Binding BuildB}"
+                HorizontalAlignment="Stretch" AutomationProperties.Name="Build B" />
+    </Grid>
+    <TextBlock DockPanel.Dock="Top" Name="CompareStatus" Text="{Binding Status}" Classes="error" AutomationProperties.LiveSetting="Assertive" TextWrapping="Wrap"
+               IsVisible="{Binding HasStatus}" Margin="0,0,0,8" />
+    <Button DockPanel.Dock="Bottom" Name="CloseButton" Content="Close" IsDefault="True" IsCancel="True"
+            HorizontalAlignment="Right" Margin="0,8,0,0" Click="OnClose" />
+    <Expander DockPanel.Dock="Top" Header="Model coverage" Margin="0,0,0,8">
+      <TextBlock Text="{Binding Coverage}" TextWrapping="Wrap" />
+    </Expander>
+    <!-- Avalonia's table: its own headers (resizable), rows and scrolling. -->
+    <TableView Name="CompareRows" ItemsSource="{Binding Rows}" CanUserResizeColumns="True">
+      <TableView.Columns>
+        <TableViewColumn Header="Stat" Width="2*" x:DataType="vm:CompareRowViewModel" Binding="{Binding Stat}" />
+        <TableViewColumn Header="Build A" Width="*" x:DataType="vm:CompareRowViewModel" Binding="{Binding A}" />
+        <TableViewColumn Header="Build B" Width="*" x:DataType="vm:CompareRowViewModel" Binding="{Binding B}" />
+        <TableViewColumn Header="Delta (B - A)" Width="*" x:DataType="vm:CompareRowViewModel" Binding="{Binding Delta}" />
+      </TableView.Columns>
+    </TableView>
+  </DockPanel>
+</Window>

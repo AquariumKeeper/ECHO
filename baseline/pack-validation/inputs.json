@@ -1,0 +1,2773 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "catalog-01-bad-range",
+      "input": "{\"stats\":[{\"id\":\"a\",\"kind\":\"primary\"}]}"
+    },
+    {
+      "id": "catalog-02-bad-progression",
+      "input": "{\"progression\":{\"startingLevel\":5,\"maxLevel\":1}}"
+    },
+    {
+      "id": "catalog-03-duplicate-id",
+      "input": "{\"slots\":[{\"id\":\"a\"},{\"id\":\"a\"}]}"
+    },
+    {
+      "id": "catalog-04-unknown-slot",
+      "input": "{\"items\":[{\"id\":\"a\",\"occupies\":[\"missing\"]}]}"
+    },
+    {
+      "id": "catalog-05-duplicate-slot",
+      "input": "{\"slots\":[{\"id\":\"a\"}],\"items\":[{\"id\":\"x\",\"occupies\":[\"a\",\"a\"]}]}"
+    },
+    {
+      "id": "catalog-06-tag-mismatch",
+      "input": "{\"slots\":[{\"id\":\"a\",\"accepts\":[\"gear\"]}],\"items\":[{\"id\":\"x\",\"occupies\":[\"a\"],\"tags\":[\"weapon\"]}]}"
+    },
+    {
+      "id": "catalog-07-unknown-stat",
+      "input": "{\"items\":[{\"id\":\"a\",\"requirements\":{\"missing\":1}}]}"
+    },
+    {
+      "id": "catalog-08-no-attribute-choices",
+      "input": "{\"items\":[{\"id\":\"a\",\"attributeSlots\":[{\"id\":\"core\"}]}]}"
+    },
+    {
+      "id": "catalog-09-unknown-mod",
+      "input": "{\"items\":[{\"id\":\"a\",\"modSlots\":[{\"id\":\"mod\",\"choices\":[\"missing\"]}]}]}"
+    },
+    {
+      "id": "catalog-10-unknown-talent",
+      "input": "{\"items\":[{\"id\":\"a\",\"talentSlots\":[{\"id\":\"talent\",\"choices\":[\"missing\"]}]}]}"
+    },
+    {
+      "id": "catalog-11-unknown-attribute",
+      "input": "{\"mods\":[{\"id\":\"a\",\"rollAttributeId\":\"missing\"}]}"
+    },
+    {
+      "id": "catalog-12-unknown-set",
+      "input": "{\"talents\":[{\"id\":\"a\",\"modeledBySets\":[\"missing\"]}]}"
+    },
+    {
+      "id": "catalog-13-invalid-set-piece-credit",
+      "input": "{\"talents\":[{\"id\":\"a\",\"setPieceCredit\":-1}]}"
+    },
+    {
+      "id": "catalog-14-unknown-item",
+      "input": "{\"sets\":[{\"id\":\"a\",\"items\":[\"missing\"]}]}"
+    },
+    {
+      "id": "catalog-15-bad-upgrade-rank",
+      "input": "{\"accountUpgrades\":[{\"id\":\"a\",\"maxRank\":-1}]}"
+    },
+    {
+      "id": "catalog-16-bad-upgrade-effect-cap",
+      "input": "{\"accountUpgrades\":[{\"id\":\"a\",\"maxRank\":10,\"effectCap\":11}]}"
+    },
+    {
+      "id": "catalog-17-negative-skill-cost",
+      "input": "{\"skills\":[{\"id\":\"a\",\"cost\":-1}]}"
+    },
+    {
+      "id": "catalog-18-skill-cycle",
+      "input": "{\"skills\":[{\"id\":\"a\",\"prerequisites\":[\"a\"]}]}"
+    },
+    {
+      "id": "catalog-19-unknown-skill-prerequisite",
+      "input": "{\"skills\":[{\"id\":\"a\",\"prerequisites\":[\"missing\"]}]}"
+    },
+    {
+      "id": "catalog-20-unknown-active-skill",
+      "input": "{\"activeSkillSlots\":[{\"id\":\"a\",\"choices\":[\"missing\"]}]}"
+    },
+    {
+      "id": "catalog-21-invalid-skill-upgrade-definition",
+      "input": "{\"activeSkills\":[{\"id\":\"a\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":-1}}]}"
+    },
+    {
+      "id": "catalog-22-invalid-active-skill-preview-output-kind",
+      "input": "{\"activeSkills\":[{\"id\":\"a\",\"previewOutputs\":[{\"id\":\"damage\",\"name\":\"Damage\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":true}]}]}"
+    },
+    {
+      "id": "catalog-23-invalid-build-output",
+      "input": "{\"buildOutputs\":[{\"id\":\"bad-id\",\"formula\":\"1\"}]}"
+    },
+    {
+      "id": "catalog-24-specialization-budget-cycle",
+      "input": "{\"specializations\":[{\"id\":\"a\",\"budgets\":[{\"id\":\"b\",\"parentId\":\"b\"}]}]}"
+    },
+    {
+      "id": "catalog-25-unknown-specialization-budget",
+      "input": "{\"specializations\":[{\"id\":\"a\",\"nodes\":[{\"id\":\"n\",\"budgetId\":\"missing\"}]}]}"
+    },
+    {
+      "id": "catalog-26-empty-scenario-tag",
+      "input": "{\"scenarios\":[{\"id\":\"a\"}]}"
+    },
+    {
+      "id": "catalog-27-unknown-slot",
+      "input": "{\"prototype\":{\"slots\":[\"missing\"]}}"
+    },
+    {
+      "id": "catalog-28-bad-theme-variant",
+      "input": "{\"theme\":{\"variant\":\"unknown\"}}"
+    },
+    {
+      "id": "catalog-29-bad-layout-color",
+      "input": "{\"theme\":{\"colors\":{\"primary\":\"red\"}}}"
+    },
+    {
+      "id": "catalog-30-unknown-theme-color",
+      "input": "{\"theme\":{\"colors\":{\"typo\":\"#FFFFFF\"}}}"
+    },
+    {
+      "id": "catalog-31-unknown-layout-slot",
+      "input": "{\"layout\":{\"slotGroups\":[{\"slots\":[\"missing\"]}]}}"
+    },
+    {
+      "id": "catalog-32-invalid-layout-headline",
+      "input": "{\"layout\":{\"headline\":[{\"stat\":\"a\",\"skillRates\":true}]}}"
+    },
+    {
+      "id": "catalog-33-unknown-layout-stat",
+      "input": "{\"layout\":{\"summary\":[{\"stats\":[\"missing\"]}]}}"
+    },
+    {
+      "id": "catalog-34-invalid-assumption-sections",
+      "input": "{\"layout\":{\"assumptionSections\":[{\"name\":\"Main\"}]}}"
+    },
+    {
+      "id": "catalog-35-bad-artwork-path",
+      "input": "{\"artwork\":{\"assets\":[{\"id\":\"a\",\"path\":\"assets/../secret\"}]}}"
+    },
+    {
+      "id": "catalog-36-unknown-artwork-asset",
+      "input": "{\"slots\":[{\"id\":\"a\",\"icon\":\"missing\"}]}"
+    },
+    {
+      "id": "catalog-37-bad-sim-trigger",
+      "input": "{\"simTriggers\":[{\"talent\":\"missing\"}]}"
+    },
+    {
+      "id": "catalog-38-bad-sim-skill",
+      "input": "{\"simSkills\":[{\"skill\":\"missing\"}]}"
+    },
+    {
+      "id": "shape-01",
+      "input": "{\"numericContextInputs\":null}"
+    },
+    {
+      "id": "shape-02",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"max\":1}]}"
+    },
+    {
+      "id": "shape-03",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":1,\"step\":null}]}"
+    },
+    {
+      "id": "shape-04",
+      "input": "{\"items\":[{\"modifiers\":[{\"value\":null}]}]}"
+    },
+    {
+      "id": "shape-05",
+      "input": "{\"items\":[{\"modifiers\":[{\"value\":\"\"}]}]}"
+    },
+    {
+      "id": "shape-06",
+      "input": "{\"items\":[{\"modifiers\":[{\"value\":true}]}]}"
+    },
+    {
+      "id": "shape-07",
+      "input": "{\"items\":[{\"modifiers\":[{\"bucket\":\"\"}]}]}"
+    },
+    {
+      "id": "shape-08",
+      "input": "{\"activeSkills\":[{\"family\":null}]}"
+    },
+    {
+      "id": "shape-09",
+      "input": "{\"activeSkills\":[{\"previewOutputs\":[{\"id\":\"bad-id\",\"name\":\"X\",\"formula\":\"1\"}]}]}"
+    },
+    {
+      "id": "shape-10",
+      "input": "{\"stats\":\"not an array\"}"
+    },
+    {
+      "id": "shape-11",
+      "input": "{\"stats\":[{\"base\":1e400}]}"
+    },
+    {
+      "id": "shape-12",
+      "input": "{\"activeSkills\":[{\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[]}]}]}"
+    },
+    {
+      "id": "shape-13",
+      "input": "{"
+    },
+    {
+      "id": "shape-14",
+      "input": "{\"attributes\":[{\"id\":\"a\",\"min\":0}]}"
+    },
+    {
+      "id": "shape-15",
+      "input": "{\"numericContextInputs\":[null]}"
+    },
+    {
+      "id": "shape-16",
+      "input": "{\"activeSkills\":[{\"previewOutputs\":[null]}]}"
+    },
+    {
+      "id": "shape-17",
+      "input": "{\"curves\":{\"x\":[[1]]}}"
+    },
+    {
+      "id": "shape-18",
+      "input": "{\"curves\":{\"x\":[[1,2,3]]}}"
+    },
+    {
+      "id": "shape-19",
+      "input": "{\"curves\":{\"x\":[null]}}"
+    },
+    {
+      "id": "shape-20",
+      "input": "{\"curves\":{\"x\":[[1e400,2]]}}"
+    },
+    {
+      "id": "formula-unknown",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"missing + 1\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}]}"
+    },
+    {
+      "id": "formula-function",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"unknown(1)\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}]}"
+    },
+    {
+      "id": "formula-curve",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"curve('missing', strength)\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}]}"
+    },
+    {
+      "id": "formula-self",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"hp+1\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}]}"
+    },
+    {
+      "id": "formula-parse",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"1+\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}]}"
+    },
+    {
+      "id": "formula-context-call",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"context_value(strength)\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}]}"
+    },
+    {
+      "id": "formula-context-id",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"context_value('missing')\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}]}"
+    },
+    {
+      "id": "formula-talent-id",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"has_talent('missing')\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}]}"
+    },
+    {
+      "id": "formula-talent-call",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"has_talent(1)\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}]}"
+    },
+    {
+      "id": "valid-empty",
+      "input": "{}"
+    },
+    {
+      "id": "valid-null",
+      "input": "null"
+    },
+    {
+      "id": "valid-unknown",
+      "input": "{\"future\":{\"version\":10}}"
+    },
+    {
+      "id": "duplicate-scalar",
+      "input": "{\"id\":\"first\",\"id\":\"last\"}"
+    },
+    {
+      "id": "duplicate-progression-merge",
+      "input": "{\"progression\":{\"startingLevel\":5},\"progression\":{\"maxLevel\":2}}"
+    },
+    {
+      "id": "duplicate-map-merge",
+      "input": "{\"curves\":{\"b\":[[1,2],[0,3]]},\"curves\":{\"a\":[[0,1],[1,2]]}}"
+    },
+    {
+      "id": "case-insensitive-ordinary",
+      "input": "{\"SLOTS\":[{\"ID\":\"x\",\"NAME\":\"X\"}]}"
+    },
+    {
+      "id": "case-sensitive-numeric-required",
+      "input": "{\"numericContextInputs\":[{\"ID\":\"x\",\"name\":\"X\",\"min\":0,\"max\":1}]}"
+    },
+    {
+      "id": "case-insensitive-numeric-root",
+      "input": "{\"NumericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":1}]}"
+    },
+    {
+      "id": "case-sensitive-numeric-null-root",
+      "input": "{\"NumericContextInputs\":null}"
+    },
+    {
+      "id": "case-insensitive-attribute-bounds",
+      "input": "{\"attributes\":[{\"id\":\"x\",\"MIN\":0,\"MAX\":1}]}"
+    },
+    {
+      "id": "valid-null-defaults",
+      "input": "{\"progression\":null,\"curves\":null,\"slots\":[null],\"items\":[null]}"
+    },
+    {
+      "id": "empty-context-gate",
+      "input": "{\"items\":[{\"id\":\"item\",\"effectsRequireContext\":{}}]}"
+    },
+    {
+      "id": "invalid-context-gate",
+      "input": "{\"items\":[{\"id\":\"item\",\"effectsRequireContext\":{\"Bad\":\"\"}}]}"
+    },
+    {
+      "id": "valid-context-gate-null",
+      "input": "{\"items\":[{\"id\":\"item\",\"effectsRequireContext\":null}]}"
+    },
+    {
+      "id": "curve-unsorted",
+      "input": "{\"curves\":{\"z\":[[1,2],[0,3]],\"a\":[[2,1],[1,2]]}}"
+    },
+    {
+      "id": "primary-range",
+      "input": "{\"stats\":[{\"id\":\"a\",\"kind\":\"primary\",\"base\":100,\"min\":2,\"max\":1}]}"
+    },
+    {
+      "id": "numeric-step",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":2,\"step\":0}]}"
+    },
+    {
+      "id": "numeric-default",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":2,\"default\":0.5}]}"
+    },
+    {
+      "id": "numeric-options",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":2,\"options\":[]}]}"
+    },
+    {
+      "id": "numeric-group",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":2,\"group\":\"g\"}]}"
+    },
+    {
+      "id": "duplicate-numeric",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":1},{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":1}]}"
+    },
+    {
+      "id": "mixed-order",
+      "input": "{\"numericContextInputs\":[{\"id\":\"Bad\",\"name\":\"\",\"min\":2,\"max\":1}],\"slots\":[{\"id\":\"x\",\"icon\":\"missing\"},{\"id\":\"x\"}],\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"missing\"}],\"attributes\":[{\"id\":\"a\",\"stat\":\"missing\",\"min\":2,\"max\":1}],\"items\":[{\"id\":\"i\",\"occupies\":[\"no\"]}],\"simTriggers\":[{\"talent\":\"bad\"}],\"theme\":{\"variant\":\"bad\"}}"
+    },
+    {
+      "id": "cycle-modifier",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"strength * 10\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}], \"items\": [{\"id\": \"x\", \"modifiers\": [{\"stat\": \"hp\", \"value\": \"ehp\"}]}]}"
+    },
+    {
+      "id": "condition-scope",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"strength * 10\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}], \"items\": [{\"id\": \"x\", \"modifiers\": [{\"stat\": \"hp\", \"value\": 1, \"when\": \"ehp > 0\"}]}]}"
+    },
+    {
+      "id": "upgrade-expression",
+      "input": "{\"stats\": [{\"id\": \"strength\", \"kind\": \"primary\", \"base\": 10, \"min\": 0, \"max\": 99}, {\"id\": \"hp\", \"kind\": \"derived\", \"formula\": \"strength * 10\"}, {\"id\": \"ehp\", \"kind\": \"derived\", \"formula\": \"hp * 2\"}], \"accountUpgrades\": [{\"id\": \"watch\", \"maxRank\": 10, \"modifiersPerRank\": [{\"stat\": \"hp\", \"op\": \"override\", \"value\": \"1\", \"when\": \"1\"}]}]}"
+    },
+    {
+      "id": "bad-root-array",
+      "input": "[]"
+    },
+    {
+      "id": "bad-root-scalar",
+      "input": "true"
+    },
+    {
+      "id": "bad-number-type",
+      "input": "{\"stats\":[{\"base\":\"10\"}]}"
+    },
+    {
+      "id": "bad-int-overflow",
+      "input": "{\"schemaVersion\":9223372036854775808}"
+    },
+    {
+      "id": "bad-modifier-bucket",
+      "input": "{\"items\":[{\"modifiers\":[{\"bucket\":\"Bad\",\"value\":1}]}]}"
+    },
+    {
+      "id": "preview-upgrade-null",
+      "input": "{\"activeSkills\":[{\"upgrade\":null}]}"
+    },
+    {
+      "id": "preview-upgrade-missing-rank",
+      "input": "{\"activeSkills\":[{\"upgrade\":{}}]}"
+    },
+    {
+      "id": "preview-missing-formula",
+      "input": "{\"activeSkills\":[{\"previewOutputs\":[{\"id\":\"x\",\"name\":\"X\"}]}]}"
+    },
+    {
+      "id": "valid-point-null-number",
+      "input": "{\"curves\":{\"x\":[[null,2],[2,3]]}}"
+    },
+    {
+      "id": "order-multiple-modifiers",
+      "input": "{\"stats\":[{\"id\":\"strength\",\"kind\":\"primary\",\"base\":10,\"min\":0,\"max\":99},{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"strength * 10\"},{\"id\":\"ehp\",\"kind\":\"derived\",\"formula\":\"hp * 2\"}],\"items\":[{\"id\":\"z\",\"occupies\":[\"missing\"],\"effectsRequireContext\":{},\"modifiers\":[{\"stat\":\"hp\",\"value\":\"missing\",\"when\":\"ehp\",\"requiresContext\":{}},{\"stat\":\"strength\",\"value\":1}]},{\"id\":\"a\",\"modifiers\":[{\"stat\":\"hp\",\"value\":\"hp\",\"requiresContext\":{}}]}]}"
+    },
+    {
+      "id": "order-upgrades",
+      "input": "{\"stats\":[{\"id\":\"strength\",\"kind\":\"primary\",\"base\":10,\"min\":0,\"max\":99},{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"strength * 10\"},{\"id\":\"ehp\",\"kind\":\"derived\",\"formula\":\"hp * 2\"}],\"accountUpgrades\":[{\"id\":\"watch\",\"maxRank\":-1,\"modifiersPerRank\":[{\"stat\":\"strength\",\"value\":\"missing\",\"when\":\"ehp\",\"op\":\"override\",\"requiresContext\":{}}]}]}"
+    },
+    {
+      "id": "order-numeric-groups",
+      "input": "{\"numericContextInputs\":[{\"id\":\"Bad\",\"name\":\"\",\"min\":0,\"max\":1,\"group\":\"g\"},{\"id\":\"Bad\",\"name\":\"\",\"min\":0,\"max\":1,\"step\":0}]}"
+    },
+    {
+      "id": "order-skills",
+      "input": "{\"stats\":[{\"id\":\"strength\",\"kind\":\"primary\",\"base\":10,\"min\":0,\"max\":99},{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"strength * 10\"},{\"id\":\"ehp\",\"kind\":\"derived\",\"formula\":\"hp * 2\"}],\"activeSkills\":[{\"id\":\"s\",\"modifiers\":[{\"stat\":\"strength\",\"value\":1,\"requiresContext\":{}}],\"previewOutputs\":[{\"id\":\"x\",\"name\":\"\",\"formula\":\"missing\",\"format\":\"typo\"}]}]}"
+    },
+    {
+      "id": "order-specializations",
+      "input": "{\"stats\":[{\"id\":\"strength\",\"kind\":\"primary\",\"base\":10,\"min\":0,\"max\":99},{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"strength * 10\"},{\"id\":\"ehp\",\"kind\":\"derived\",\"formula\":\"hp * 2\"}],\"specializations\":[{\"id\":\"s\",\"budgets\":[{\"id\":\"b\",\"parentId\":\"b\",\"points\":-1}],\"nodes\":[{\"id\":\"n\",\"cost\":-1,\"tier\":-1,\"budgetId\":\"bad\",\"prerequisites\":[\"n\"],\"modifiers\":[{\"stat\":\"strength\",\"value\":1,\"requiresContext\":{}}]}]}]}"
+    },
+    {
+      "id": "attribute-prototype-range",
+      "input": "{\"stats\":[{\"id\":\"strength\",\"kind\":\"primary\",\"base\":10,\"min\":0,\"max\":99},{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"strength * 10\"},{\"id\":\"ehp\",\"kind\":\"derived\",\"formula\":\"hp * 2\"}],\"attributes\":[{\"id\":\"a\",\"stat\":\"hp\",\"min\":0,\"max\":10,\"prototypeMin\":20,\"prototypeMax\":15}]}"
+    },
+    {
+      "id": "attribute-choice-range",
+      "input": "{\"stats\":[{\"id\":\"strength\",\"kind\":\"primary\",\"base\":10,\"min\":0,\"max\":99},{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"strength * 10\"},{\"id\":\"ehp\",\"kind\":\"derived\",\"formula\":\"hp * 2\"}],\"attributes\":[{\"id\":\"a\",\"stat\":\"hp\",\"min\":0,\"max\":10}],\"items\":[{\"id\":\"i\",\"attributeSlots\":[{\"id\":\"s\",\"choices\":[{\"attributeId\":\"a\",\"min\":20,\"step\":0}]}]}]}"
+    },
+    {
+      "id": "empty-choice-slots",
+      "input": "{\"items\":[{\"id\":\"i\",\"modSlots\":[{\"id\":\"m\"}],\"talentSlots\":[{\"id\":\"t\"}]}]}"
+    },
+    {
+      "id": "ally-expressions",
+      "input": "{\"stats\":[{\"id\":\"strength\",\"kind\":\"primary\",\"base\":10,\"min\":0,\"max\":99},{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"strength * 10\"},{\"id\":\"ehp\",\"kind\":\"derived\",\"formula\":\"hp * 2\"}],\"talents\":[{\"id\":\"t\",\"allyEffects\":[{\"id\":\"effect\",\"stack\":\"\",\"name\":\"\",\"modifiers\":[{\"stat\":\"strength\",\"op\":\"inc\",\"value\":\"missing\",\"when\":\"1\"}]}]}]}"
+    },
+    {
+      "id": "prototype-bad-rules",
+      "input": "{\"stats\":[{\"id\":\"strength\",\"kind\":\"primary\",\"base\":10,\"min\":0,\"max\":99},{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"strength * 10\"},{\"id\":\"ehp\",\"kind\":\"derived\",\"formula\":\"hp * 2\"}],\"prototype\":{\"normalizeInput\":\"bad\",\"countStat\":\"missing\",\"augments\":[{\"id\":\"a\",\"stat\":\"strength\",\"levels\":0}]}}"
+    },
+    {
+      "id": "preview-bad-kind",
+      "input": "{\"activeSkills\":[{\"id\":\"s\",\"previewOutputs\":[{\"id\":\"x\",\"name\":\"X\",\"formula\":\"1\",\"kind\":\"typo\",\"format\":\"typo\",\"headline\":true}]}]}"
+    },
+    {
+      "id": "skill-local-format",
+      "input": "{\"activeSkills\":[{\"id\":\"s\",\"modSlots\":[{\"id\":\"a\",\"name\":\"A\",\"choices\":[{\"id\":\"one\",\"name\":\"One\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"format\":\"integer\"},{\"id\":\"two\",\"name\":\"Two\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"format\":\"percent\"}]}]}]}"
+    },
+    {
+      "id": "sim-buff-duration",
+      "input": "{\"talents\":[{\"id\":\"t\"}],\"simTriggers\":[{\"talent\":\"t\",\"kind\":\"buff\",\"key\":\"active\",\"on\":\"hit\"}]}"
+    },
+    {
+      "id": "sim-cycle-phases",
+      "input": "{\"talents\":[{\"id\":\"t\"}],\"simTriggers\":[{\"talent\":\"t\",\"kind\":\"cycle\",\"key\":\"cycle\",\"phases\":[{\"until\":2,\"value\":\"first\"},{\"until\":1,\"value\":\"\"}]}]}"
+    },
+    {
+      "id": "sim-status-unknown",
+      "input": "{\"talents\":[{\"id\":\"t\"}],\"simTriggers\":[{\"talent\":\"t\",\"kind\":\"status\",\"status\":\"missing\"}]}"
+    },
+    {
+      "id": "sim-skill-outputs",
+      "input": "{\"activeSkills\":[{\"id\":\"s\"}],\"simSkills\":[{\"skill\":\"s\",\"rate\":\"bad\",\"window\":\"missing\",\"status\":\"typo\"}]}"
+    },
+    {
+      "id": "layout-duplicate-colors",
+      "input": "{\"layout\":{\"attributeCategories\":[{\"id\":\"x\",\"color\":\"bad\"},{\"id\":\"x\",\"color\":\"bad\"}],\"rarities\":[{\"id\":\"x\",\"color\":\"bad\"},{\"id\":\"x\",\"color\":\"bad\"}]}}"
+    },
+    {
+      "id": "layout-assumption-reference",
+      "input": "{\"layout\":{\"assumptionSections\":[{\"name\":\"X\",\"default\":true},{\"name\":\"X\"}]},\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":1,\"section\":\"missing\"}]}"
+    },
+    {
+      "id": "layout-mixed",
+      "input": "{\"stats\":[{\"id\":\"strength\",\"kind\":\"primary\",\"base\":10,\"min\":0,\"max\":99},{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"strength * 10\"},{\"id\":\"ehp\",\"kind\":\"derived\",\"formula\":\"hp * 2\"}],\"slots\":[{\"id\":\"s\"}],\"layout\":{\"slotGroups\":[{\"name\":\"Group\",\"columns\":-1,\"slots\":[\"s\",\"s\"],\"compareStats\":[\"missing\"]}],\"headline\":[{\"stat\":\"hp\"},{\"stat\":\"hp\"}],\"summary\":[{\"name\":\"Stats\",\"stats\":[\"hp\"],\"conditional\":[\"hp\"]}]}}"
+    },
+    {
+      "id": "artwork-bad-registry",
+      "input": "{\"artwork\":{\"sources\":[{\"id\":\"\"},{\"id\":\"\"}],\"assets\":[{\"id\":\"a\",\"path\":\"assets/a\",\"kind\":\"image\",\"sha256\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"sourceId\":\"missing\"}]}}"
+    },
+    {
+      "id": "null-numeric-min",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":null,\"max\":1}]}"
+    },
+    {
+      "id": "wrong-numeric-step",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":1,\"step\":\"1\"}]}"
+    },
+    {
+      "id": "null-preview-name",
+      "input": "{\"activeSkills\":[{\"previewOutputs\":[{\"id\":\"x\",\"name\":null,\"formula\":\"1\"}]}]}"
+    },
+    {
+      "id": "repeated-string-null",
+      "input": "{\"id\":\"first\",\"id\":null}"
+    },
+    {
+      "id": "repeated-array-replaces",
+      "input": "{\"slots\":[{\"id\":\"first\"}],\"slots\":[{\"id\":\"last\"}]}"
+    },
+    {
+      "id": "repeated-progression-null",
+      "input": "{\"progression\":{\"startingLevel\":5},\"progression\":null}"
+    },
+    {
+      "id": "custom-bucket-value-order",
+      "input": "{\"items\":[{\"modifiers\":[{\"value\":null,\"bucket\":\"Bad\"}]}]}"
+    },
+    {
+      "id": "wrong-skill-mod-type",
+      "input": "{\"activeSkills\":[{\"modSlots\":[{\"id\":\"s\",\"name\":\"S\",\"choices\":[{\"id\":\"c\",\"name\":\"C\",\"input\":\"skill_mod_x\",\"min\":\"0\",\"max\":1}]}]}]}"
+    },
+    {
+      "id": "wrong-progression-type",
+      "input": "{\"progression\":{\"startingLevel\":\"1\"}}"
+    },
+    {
+      "id": "unknown-json-wrong-type",
+      "input": "{\"future\":{\"unsupported\":[null,false]}}"
+    },
+    {
+      "id": "duplicate-invalid-array-then-valid",
+      "input": "{\"stats\":false,\"stats\":[]}"
+    },
+    {
+      "id": "duplicate-null-scalar-then-valid",
+      "input": "{\"id\":null,\"id\":\"last\"}"
+    },
+    {
+      "id": "manual-numeric-uppercase-optional",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":1,\"STEP\":0}]}"
+    },
+    {
+      "id": "manual-numeric-last-value",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":false,\"min\":0,\"max\":1}]}"
+    },
+    {
+      "id": "manual-preview-uppercase-optional",
+      "input": "{\"activeSkills\":[{\"id\":\"s\",\"previewOutputs\":[{\"id\":\"x\",\"name\":\"X\",\"formula\":\"1\",\"FORMAT\":\"bad\"}]}]}"
+    },
+    {
+      "id": "invalid-build-output-skips-formula",
+      "input": "{\"buildOutputs\":[{\"id\":\"Bad\",\"name\":\"\",\"formula\":\"missing\",\"format\":\"typo\"}]}"
+    },
+    {
+      "id": "invalid-preview-formula-skips-when",
+      "input": "{\"activeSkills\":[{\"id\":\"s\",\"previewOutputs\":[{\"id\":\"x\",\"name\":\"X\",\"formula\":\"1+\",\"when\":\"missing\"}]}]}"
+    },
+    {
+      "id": "attribute-count-stat",
+      "input": "{\"attributes\":[{\"id\":\"a\",\"stat\":\"missing\",\"min\":0,\"max\":1,\"countStat\":\"absent\"}]}"
+    },
+    {
+      "id": "valid-slot-catalog-order",
+      "input": "{\"slots\":[{\"id\":\"z\",\"name\":\"A\"},{\"id\":\"a\",\"name\":\"Z\"}]}"
+    },
+    {
+      "id": "decoder-numeric-id-missing",
+      "input": "{\"numericContextInputs\":[{\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-id-null",
+      "input": "{\"numericContextInputs\":[{\"id\":null,\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-id-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":false,\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-id-number",
+      "input": "{\"numericContextInputs\":[{\"id\":3,\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-id-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"wrong\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-id-array",
+      "input": "{\"numericContextInputs\":[{\"id\":[],\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-id-object",
+      "input": "{\"numericContextInputs\":[{\"id\":{},\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-name-missing",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-name-null",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":null,\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-name-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":false,\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-name-number",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":3,\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-name-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"wrong\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-name-array",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":[],\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-name-object",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":{},\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-description-missing",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-description-null",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":null,\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-description-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":false,\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-description-number",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":3,\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-description-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"wrong\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-description-array",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":[],\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-description-object",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":{},\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-min-missing",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-min-null",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":null,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-min-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":false,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-min-number",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":3,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-min-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":\"wrong\",\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-min-array",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":[],\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-min-object",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":{},\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-max-missing",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-max-null",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":null,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-max-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":false,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-max-number",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":3,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-max-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":\"wrong\",\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-max-array",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":[],\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-max-object",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":{},\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-step-missing",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-step-null",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":null,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-step-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":false,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-step-number",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":3,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-step-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":\"wrong\",\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-step-array",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":[],\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-step-object",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":{},\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-default-missing",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-default-null",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":null,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-default-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":false,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-default-number",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":3,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-default-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":\"wrong\",\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-default-array",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":[],\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-default-object",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":{},\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-global-missing",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-global-null",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":null,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-global-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-global-number",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":3,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-global-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":\"wrong\",\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-global-array",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":[],\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-global-object",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":{},\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-options-missing",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-options-null",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":null,\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-options-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":false,\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-options-number",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":3,\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-options-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":\"wrong\",\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-options-array",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[],\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-options-object",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":{},\"group\":\"\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-group-missing",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-group-null",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":null,\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-group-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":false,\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-group-number",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":3,\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-group-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"wrong\",\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-group-array",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":[],\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-group-object",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":{},\"groupName\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-groupName-missing",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-groupName-null",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":null,\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-groupName-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":false,\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-groupName-number",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":3,\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-groupName-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"wrong\",\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-groupName-array",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":[],\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-groupName-object",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":{},\"section\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-section-missing",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\"}]}"
+    },
+    {
+      "id": "decoder-numeric-section-null",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":null}]}"
+    },
+    {
+      "id": "decoder-numeric-section-bool",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":false}]}"
+    },
+    {
+      "id": "decoder-numeric-section-number",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":3}]}"
+    },
+    {
+      "id": "decoder-numeric-section-string",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":\"wrong\"}]}"
+    },
+    {
+      "id": "decoder-numeric-section-array",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":[]}]}"
+    },
+    {
+      "id": "decoder-numeric-section-object",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"description\":\"Description\",\"min\":0,\"max\":2,\"step\":1,\"default\":0,\"global\":false,\"options\":[{\"value\":0,\"label\":\"Off\"},{\"value\":1,\"label\":\"One\"},{\"value\":2,\"label\":\"Two\"}],\"group\":\"\",\"groupName\":\"\",\"section\":{}}]}"
+    },
+    {
+      "id": "decoder-preview-id-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-id-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":null,\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-id-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":false,\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-id-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":3,\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-id-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"wrong\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-id-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":[],\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-id-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":{},\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-name-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-name-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":null,\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-name-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":false,\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-name-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":3,\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-name-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"wrong\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-name-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":[],\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-name-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":{},\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-description-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-description-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":null,\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-description-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":false,\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-description-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":3,\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-description-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"wrong\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-description-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":[],\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-description-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":{},\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-when-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-when-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":null,\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-when-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":false,\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-when-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":3,\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-when-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"wrong\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-when-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":[],\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-when-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":{},\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-formula-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-formula-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":null,\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-formula-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":false,\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-formula-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":3,\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-formula-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"wrong\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-formula-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":[],\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-formula-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":{},\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-kind-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-kind-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":null,\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-kind-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":false,\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-kind-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":3,\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-kind-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"wrong\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-kind-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":[],\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-kind-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":{},\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-headline-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-headline-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":null,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-headline-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-headline-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":3,\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-headline-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":\"wrong\",\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-headline-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":[],\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-headline-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":{},\"format\":\"decimal\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-format-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false}]}]}"
+    },
+    {
+      "id": "decoder-preview-format-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":null}]}]}"
+    },
+    {
+      "id": "decoder-preview-format-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":false}]}]}"
+    },
+    {
+      "id": "decoder-preview-format-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":3}]}]}"
+    },
+    {
+      "id": "decoder-preview-format-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":\"wrong\"}]}]}"
+    },
+    {
+      "id": "decoder-preview-format-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":[]}]}]}"
+    },
+    {
+      "id": "decoder-preview-format-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"previewOutputs\":[{\"id\":\"value\",\"name\":\"Value\",\"description\":\"Description\",\"when\":\"1\",\"formula\":\"1\",\"kind\":\"damage\",\"headline\":false,\"format\":{}}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-id-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-id-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":null,\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-id-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":false,\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-id-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":3,\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-id-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"wrong\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-id-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":[],\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-id-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":{},\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-name-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-name-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":null,\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-name-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":false,\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-name-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":3,\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-name-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"wrong\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-name-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":[],\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-name-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":{},\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-description-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-description-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":null,\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-description-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":false,\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-description-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":3,\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-description-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"wrong\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-description-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":[],\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-description-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":{},\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-input-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-input-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":null,\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-input-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":false,\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-input-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":3,\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-input-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"wrong\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-input-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":[],\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-input-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":{},\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-min-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-min-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":null,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-min-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":false,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-min-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":3,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-min-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":\"wrong\",\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-min-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":[],\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-min-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":{},\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-max-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-max-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":null,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-max-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":false,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-max-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":3,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-max-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":\"wrong\",\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-max-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":[],\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-max-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":{},\"step\":0.1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-step-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-step-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":null,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-step-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":false,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-step-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":3,\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-step-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":\"wrong\",\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-step-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":[],\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-step-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":{},\"format\":\"decimal\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-format-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-format-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":null,\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-format-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":false,\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-format-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":3,\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-format-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"wrong\",\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-format-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":[],\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-format-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":{},\"statName\":\"Power\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-statName-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-statName-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":null}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-statName-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":false}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-statName-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":3}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-statName-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":\"wrong\"}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-statName-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":[]}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-mod-statName-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"description\":\"Description\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"statName\":{}}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-id-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-id-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":null,\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-id-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":false,\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-id-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":3,\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-id-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"wrong\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-id-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":[],\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-id-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":{},\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-name-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-name-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":null,\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-name-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":false,\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-name-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":3,\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-name-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"wrong\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-name-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":[],\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-name-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":{},\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-choices-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\"}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-choices-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":null}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-choices-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":false}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-choices-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":3}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-choices-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":\"wrong\"}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-choices-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[]}]}]}"
+    },
+    {
+      "id": "decoder-skill-slot-choices-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":{}}]}]}"
+    },
+    {
+      "id": "decoder-attribute-id-missing",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-id-null",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":null,\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-id-bool",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":false,\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-id-number",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":3,\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-id-string",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"wrong\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-id-array",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":[],\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-id-object",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":{},\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-name-missing",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-name-null",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":null,\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-name-bool",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":false,\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-name-number",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":3,\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-name-string",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"wrong\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-name-array",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":[],\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-name-object",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":{},\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-stat-missing",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-stat-null",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":null,\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-stat-bool",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":false,\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-stat-number",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":3,\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-stat-string",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"wrong\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-stat-array",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":[],\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-stat-object",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":{},\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-min-missing",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-min-null",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":null,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-min-bool",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":false,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-min-number",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":3,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-min-string",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":\"wrong\",\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-min-array",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":[],\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-min-object",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":{},\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-max-missing",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-max-null",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":null,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-max-bool",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":false,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-max-number",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":3,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-max-string",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":\"wrong\",\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-max-array",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":[],\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-max-object",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":{},\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-step-missing",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-step-null",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":null,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-step-bool",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":false,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-step-number",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":3,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-step-string",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":\"wrong\",\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-step-array",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":[],\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-step-object",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":{},\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-bucket-missing",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-bucket-null",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":null,\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-bucket-bool",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":false,\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-bucket-number",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":3,\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-bucket-string",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"wrong\",\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-bucket-array",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":[],\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-bucket-object",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":{},\"format\":\"decimal\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-format-missing",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-format-null",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":null,\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-format-bool",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":false,\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-format-number",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":3,\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-format-string",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"wrong\",\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-format-array",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":[],\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-format-object",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":{},\"op\":\"inc\"}]}"
+    },
+    {
+      "id": "decoder-attribute-op-missing",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\"}]}"
+    },
+    {
+      "id": "decoder-attribute-op-null",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":null}]}"
+    },
+    {
+      "id": "decoder-attribute-op-bool",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":false}]}"
+    },
+    {
+      "id": "decoder-attribute-op-number",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":3}]}"
+    },
+    {
+      "id": "decoder-attribute-op-string",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":\"wrong\"}]}"
+    },
+    {
+      "id": "decoder-attribute-op-array",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":[]}]}"
+    },
+    {
+      "id": "decoder-attribute-op-object",
+      "input": "{\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"0\"}],\"attributes\":[{\"id\":\"attribute\",\"name\":\"Attribute\",\"stat\":\"hp\",\"min\":0,\"max\":1,\"step\":0.1,\"bucket\":\"pool\",\"format\":\"decimal\",\"op\":{}}]}"
+    },
+    {
+      "id": "decoder-active-skill-id-missing",
+      "input": "{\"activeSkills\":[{\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-id-null",
+      "input": "{\"activeSkills\":[{\"id\":null,\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-id-bool",
+      "input": "{\"activeSkills\":[{\"id\":false,\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-id-number",
+      "input": "{\"activeSkills\":[{\"id\":3,\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-id-string",
+      "input": "{\"activeSkills\":[{\"id\":\"wrong\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-id-array",
+      "input": "{\"activeSkills\":[{\"id\":[],\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-id-object",
+      "input": "{\"activeSkills\":[{\"id\":{},\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-family-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-family-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":null,\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-family-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":false,\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-family-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":3,\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-family-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"wrong\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-family-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":[],\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-family-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":{},\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-upgrade-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-upgrade-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":null,\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-upgrade-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":false,\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-upgrade-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":3,\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-upgrade-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":\"wrong\",\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-upgrade-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":[],\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-upgrade-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-previewOutputs-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-previewOutputs-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":null,\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-previewOutputs-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":false,\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-previewOutputs-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":3,\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-previewOutputs-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":\"wrong\",\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-previewOutputs-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-previewOutputs-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":{},\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-modSlots-missing",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-modSlots-null",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":null}]}"
+    },
+    {
+      "id": "decoder-active-skill-modSlots-bool",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":false}]}"
+    },
+    {
+      "id": "decoder-active-skill-modSlots-number",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":3}]}"
+    },
+    {
+      "id": "decoder-active-skill-modSlots-string",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":\"wrong\"}]}"
+    },
+    {
+      "id": "decoder-active-skill-modSlots-array",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":[]}]}"
+    },
+    {
+      "id": "decoder-active-skill-modSlots-object",
+      "input": "{\"activeSkills\":[{\"id\":\"skill\",\"family\":\"family\",\"upgrade\":{\"name\":\"Rank\",\"maxRank\":10},\"previewOutputs\":[],\"modSlots\":{}}]}"
+    },
+    {
+      "id": "syntax-empty",
+      "input": ""
+    },
+    {
+      "id": "syntax-whitespace",
+      "input": " \n\t"
+    },
+    {
+      "id": "syntax-multiline-eof",
+      "input": "{\n \"stats\": ["
+    },
+    {
+      "id": "syntax-trailing-comma",
+      "input": "{\"id\":\"x\",}"
+    },
+    {
+      "id": "syntax-trailing-value",
+      "input": "{} {}"
+    },
+    {
+      "id": "syntax-invalid-character",
+      "input": "{\"id\": @}"
+    },
+    {
+      "id": "syntax-unterminated-string",
+      "input": "{\"id\":\"x}"
+    },
+    {
+      "id": "syntax-bad-escape",
+      "input": "{\"id\":\"\\q\"}"
+    },
+    {
+      "id": "syntax-bad-number",
+      "input": "{\"schemaVersion\":01}"
+    },
+    {
+      "id": "syntax-bad-exponent",
+      "input": "{\"schemaVersion\":1e}"
+    },
+    {
+      "id": "syntax-missing-colon",
+      "input": "{\"id\" \"x\"}"
+    },
+    {
+      "id": "syntax-missing-comma",
+      "input": "{\"id\":\"x\" \"name\":\"X\"}"
+    },
+    {
+      "id": "syntax-bad-literal",
+      "input": "{\"id\":tru}"
+    },
+    {
+      "id": "syntax-unescaped-newline",
+      "input": "{\"id\":\"x\ny\"}"
+    },
+    {
+      "id": "boundary-primary-fractional",
+      "input": "{\"stats\":[{\"id\":\"x\",\"kind\":\"primary\",\"base\":10.25,\"min\":2.5,\"max\":1.5}]}"
+    },
+    {
+      "id": "boundary-primary-scientific",
+      "input": "{\"stats\":[{\"id\":\"x\",\"kind\":\"primary\",\"base\":10000000,\"min\":1000000,\"max\":0}]}"
+    },
+    {
+      "id": "boundary-curve-small",
+      "input": "{\"curves\":{\"x\":[[0.00001,0],[0.000001,1]]}}"
+    },
+    {
+      "id": "boundary-upgrade-safe-max",
+      "input": "{\"accountUpgrades\":[{\"id\":\"x\",\"maxRank\":9007199254740991}]}"
+    },
+    {
+      "id": "boundary-upgrade-over-safe",
+      "input": "{\"accountUpgrades\":[{\"id\":\"x\",\"maxRank\":9007199254740992}]}"
+    },
+    {
+      "id": "boundary-integer-decimal",
+      "input": "{\"schemaVersion\":1.0}"
+    },
+    {
+      "id": "boundary-integer-exponent",
+      "input": "{\"schemaVersion\":1e0}"
+    },
+    {
+      "id": "boundary-double-max",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":1.7976931348623157e308}]}"
+    },
+    {
+      "id": "boundary-step-underflow",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"X\",\"min\":0,\"max\":1,\"step\":1e-400}]}"
+    },
+    {
+      "id": "boundary-curve-number-overflow",
+      "input": "{\"curves\":{\"x\":[[1e400,0],[1,0]]}}"
+    },
+    {
+      "id": "boundary-curve-wrong-type",
+      "input": "{\"curves\":{\"x\":[true]}}"
+    },
+    {
+      "id": "boundary-curve-string-number",
+      "input": "{\"curves\":{\"x\":[[\"1\",0],[1,0]]}}"
+    },
+    {
+      "id": "boundary-emoji-reference",
+      "input": "{\"items\":[{\"id\":\"item\",\"occupies\":[\"\\ud83d\\udee1\"]}]}"
+    },
+    {
+      "id": "boundary-control-reference",
+      "input": "{\"items\":[{\"id\":\"item\",\"occupies\":[\"\\u0000\\b\\f\\n\\r\\t\"]}]}"
+    },
+    {
+      "id": "boundary-surrogate-name",
+      "input": "{\"slots\":[{\"id\":\"x\",\"name\":\"\\ud800\"}]}"
+    },
+    {
+      "id": "boundary-surrogate-numeric-name",
+      "input": "{\"numericContextInputs\":[{\"id\":\"x\",\"name\":\"\\ud800\",\"min\":0,\"max\":1}]}"
+    },
+    {
+      "id": "boundary-valid-unknown-depth",
+      "input": "{\"future\":[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]}"
+    },
+    {
+      "id": "boundary-invalid-max-depth",
+      "input": "{\"future\":[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]}"
+    },
+    {
+      "id": "syntax-array-trailing-comma",
+      "input": "{\"stats\":[{},]}"
+    },
+    {
+      "id": "syntax-array-missing-comma",
+      "input": "{\"stats\":[{} {}]}"
+    },
+    {
+      "id": "syntax-empty-key",
+      "input": "{1:2}"
+    },
+    {
+      "id": "syntax-string-invalid-unicode",
+      "input": "{\"id\":\"\\u12xz\"}"
+    },
+    {
+      "id": "syntax-string-unicode-eof",
+      "input": "{\"id\":\"\\u12"
+    },
+    {
+      "id": "syntax-number-invalid-fraction",
+      "input": "{\"schemaVersion\":1.}"
+    },
+    {
+      "id": "syntax-number-invalid-negative",
+      "input": "{\"schemaVersion\":-x}"
+    },
+    {
+      "id": "syntax-top-level-extra",
+      "input": "{} false"
+    },
+    {
+      "id": "syntax-root-unclosed-array",
+      "input": "[\n {\n \"x\": 1}\n"
+    },
+    {
+      "id": "syntax-string-literal-cr",
+      "input": "{\"id\":\"x\ry\"}"
+    },
+    {
+      "id": "root-id-null",
+      "input": "{\"id\":null}"
+    },
+    {
+      "id": "root-id-bool",
+      "input": "{\"id\":false}"
+    },
+    {
+      "id": "root-id-number",
+      "input": "{\"id\":3}"
+    },
+    {
+      "id": "root-id-string",
+      "input": "{\"id\":\"wrong\"}"
+    },
+    {
+      "id": "root-id-array",
+      "input": "{\"id\":[]}"
+    },
+    {
+      "id": "root-id-object",
+      "input": "{\"id\":{}}"
+    },
+    {
+      "id": "root-name-null",
+      "input": "{\"name\":null}"
+    },
+    {
+      "id": "root-name-bool",
+      "input": "{\"name\":false}"
+    },
+    {
+      "id": "root-name-number",
+      "input": "{\"name\":3}"
+    },
+    {
+      "id": "root-name-string",
+      "input": "{\"name\":\"wrong\"}"
+    },
+    {
+      "id": "root-name-array",
+      "input": "{\"name\":[]}"
+    },
+    {
+      "id": "root-name-object",
+      "input": "{\"name\":{}}"
+    },
+    {
+      "id": "root-schemaVersion-null",
+      "input": "{\"schemaVersion\":null}"
+    },
+    {
+      "id": "root-schemaVersion-bool",
+      "input": "{\"schemaVersion\":false}"
+    },
+    {
+      "id": "root-schemaVersion-number",
+      "input": "{\"schemaVersion\":3}"
+    },
+    {
+      "id": "root-schemaVersion-string",
+      "input": "{\"schemaVersion\":\"wrong\"}"
+    },
+    {
+      "id": "root-schemaVersion-array",
+      "input": "{\"schemaVersion\":[]}"
+    },
+    {
+      "id": "root-schemaVersion-object",
+      "input": "{\"schemaVersion\":{}}"
+    },
+    {
+      "id": "root-version-null",
+      "input": "{\"version\":null}"
+    },
+    {
+      "id": "root-version-bool",
+      "input": "{\"version\":false}"
+    },
+    {
+      "id": "root-version-number",
+      "input": "{\"version\":3}"
+    },
+    {
+      "id": "root-version-string",
+      "input": "{\"version\":\"wrong\"}"
+    },
+    {
+      "id": "root-version-array",
+      "input": "{\"version\":[]}"
+    },
+    {
+      "id": "root-version-object",
+      "input": "{\"version\":{}}"
+    },
+    {
+      "id": "root-gameVersion-null",
+      "input": "{\"gameVersion\":null}"
+    },
+    {
+      "id": "root-gameVersion-bool",
+      "input": "{\"gameVersion\":false}"
+    },
+    {
+      "id": "root-gameVersion-number",
+      "input": "{\"gameVersion\":3}"
+    },
+    {
+      "id": "root-gameVersion-string",
+      "input": "{\"gameVersion\":\"wrong\"}"
+    },
+    {
+      "id": "root-gameVersion-array",
+      "input": "{\"gameVersion\":[]}"
+    },
+    {
+      "id": "root-gameVersion-object",
+      "input": "{\"gameVersion\":{}}"
+    },
+    {
+      "id": "root-description-null",
+      "input": "{\"description\":null}"
+    },
+    {
+      "id": "root-description-bool",
+      "input": "{\"description\":false}"
+    },
+    {
+      "id": "root-description-number",
+      "input": "{\"description\":3}"
+    },
+    {
+      "id": "root-description-string",
+      "input": "{\"description\":\"wrong\"}"
+    },
+    {
+      "id": "root-description-array",
+      "input": "{\"description\":[]}"
+    },
+    {
+      "id": "root-description-object",
+      "input": "{\"description\":{}}"
+    },
+    {
+      "id": "root-progression-null",
+      "input": "{\"progression\":null}"
+    },
+    {
+      "id": "root-progression-bool",
+      "input": "{\"progression\":false}"
+    },
+    {
+      "id": "root-progression-number",
+      "input": "{\"progression\":3}"
+    },
+    {
+      "id": "root-progression-string",
+      "input": "{\"progression\":\"wrong\"}"
+    },
+    {
+      "id": "root-progression-array",
+      "input": "{\"progression\":[]}"
+    },
+    {
+      "id": "root-progression-object",
+      "input": "{\"progression\":{}}"
+    },
+    {
+      "id": "root-stats-null",
+      "input": "{\"stats\":null}"
+    },
+    {
+      "id": "root-stats-bool",
+      "input": "{\"stats\":false}"
+    },
+    {
+      "id": "root-stats-number",
+      "input": "{\"stats\":3}"
+    },
+    {
+      "id": "root-stats-string",
+      "input": "{\"stats\":\"wrong\"}"
+    },
+    {
+      "id": "root-stats-array",
+      "input": "{\"stats\":[]}"
+    },
+    {
+      "id": "root-stats-object",
+      "input": "{\"stats\":{}}"
+    },
+    {
+      "id": "root-attributes-null",
+      "input": "{\"attributes\":null}"
+    },
+    {
+      "id": "root-attributes-bool",
+      "input": "{\"attributes\":false}"
+    },
+    {
+      "id": "root-attributes-number",
+      "input": "{\"attributes\":3}"
+    },
+    {
+      "id": "root-attributes-string",
+      "input": "{\"attributes\":\"wrong\"}"
+    },
+    {
+      "id": "root-attributes-array",
+      "input": "{\"attributes\":[]}"
+    },
+    {
+      "id": "root-attributes-object",
+      "input": "{\"attributes\":{}}"
+    },
+    {
+      "id": "root-mods-null",
+      "input": "{\"mods\":null}"
+    },
+    {
+      "id": "root-mods-bool",
+      "input": "{\"mods\":false}"
+    },
+    {
+      "id": "root-mods-number",
+      "input": "{\"mods\":3}"
+    },
+    {
+      "id": "root-mods-string",
+      "input": "{\"mods\":\"wrong\"}"
+    },
+    {
+      "id": "root-mods-array",
+      "input": "{\"mods\":[]}"
+    },
+    {
+      "id": "root-mods-object",
+      "input": "{\"mods\":{}}"
+    },
+    {
+      "id": "root-talents-null",
+      "input": "{\"talents\":null}"
+    },
+    {
+      "id": "root-talents-bool",
+      "input": "{\"talents\":false}"
+    },
+    {
+      "id": "root-talents-number",
+      "input": "{\"talents\":3}"
+    },
+    {
+      "id": "root-talents-string",
+      "input": "{\"talents\":\"wrong\"}"
+    },
+    {
+      "id": "root-talents-array",
+      "input": "{\"talents\":[]}"
+    },
+    {
+      "id": "root-talents-object",
+      "input": "{\"talents\":{}}"
+    },
+    {
+      "id": "root-activeSkills-null",
+      "input": "{\"activeSkills\":null}"
+    },
+    {
+      "id": "root-activeSkills-bool",
+      "input": "{\"activeSkills\":false}"
+    },
+    {
+      "id": "root-activeSkills-number",
+      "input": "{\"activeSkills\":3}"
+    },
+    {
+      "id": "root-activeSkills-string",
+      "input": "{\"activeSkills\":\"wrong\"}"
+    },
+    {
+      "id": "root-activeSkills-array",
+      "input": "{\"activeSkills\":[]}"
+    },
+    {
+      "id": "root-activeSkills-object",
+      "input": "{\"activeSkills\":{}}"
+    },
+    {
+      "id": "root-activeSkillSlots-null",
+      "input": "{\"activeSkillSlots\":null}"
+    },
+    {
+      "id": "root-activeSkillSlots-bool",
+      "input": "{\"activeSkillSlots\":false}"
+    },
+    {
+      "id": "root-activeSkillSlots-number",
+      "input": "{\"activeSkillSlots\":3}"
+    },
+    {
+      "id": "root-activeSkillSlots-string",
+      "input": "{\"activeSkillSlots\":\"wrong\"}"
+    },
+    {
+      "id": "root-activeSkillSlots-array",
+      "input": "{\"activeSkillSlots\":[]}"
+    },
+    {
+      "id": "root-activeSkillSlots-object",
+      "input": "{\"activeSkillSlots\":{}}"
+    },
+    {
+      "id": "root-buildOutputs-null",
+      "input": "{\"buildOutputs\":null}"
+    },
+    {
+      "id": "root-buildOutputs-bool",
+      "input": "{\"buildOutputs\":false}"
+    },
+    {
+      "id": "root-buildOutputs-number",
+      "input": "{\"buildOutputs\":3}"
+    },
+    {
+      "id": "root-buildOutputs-string",
+      "input": "{\"buildOutputs\":\"wrong\"}"
+    },
+    {
+      "id": "root-buildOutputs-array",
+      "input": "{\"buildOutputs\":[]}"
+    },
+    {
+      "id": "root-buildOutputs-object",
+      "input": "{\"buildOutputs\":{}}"
+    },
+    {
+      "id": "root-specializations-null",
+      "input": "{\"specializations\":null}"
+    },
+    {
+      "id": "root-specializations-bool",
+      "input": "{\"specializations\":false}"
+    },
+    {
+      "id": "root-specializations-number",
+      "input": "{\"specializations\":3}"
+    },
+    {
+      "id": "root-specializations-string",
+      "input": "{\"specializations\":\"wrong\"}"
+    },
+    {
+      "id": "root-specializations-array",
+      "input": "{\"specializations\":[]}"
+    },
+    {
+      "id": "root-specializations-object",
+      "input": "{\"specializations\":{}}"
+    },
+    {
+      "id": "root-curves-null",
+      "input": "{\"curves\":null}"
+    },
+    {
+      "id": "root-curves-bool",
+      "input": "{\"curves\":false}"
+    },
+    {
+      "id": "root-curves-number",
+      "input": "{\"curves\":3}"
+    },
+    {
+      "id": "root-curves-string",
+      "input": "{\"curves\":\"wrong\"}"
+    },
+    {
+      "id": "root-curves-array",
+      "input": "{\"curves\":[]}"
+    },
+    {
+      "id": "root-curves-object",
+      "input": "{\"curves\":{}}"
+    },
+    {
+      "id": "root-slots-null",
+      "input": "{\"slots\":null}"
+    },
+    {
+      "id": "root-slots-bool",
+      "input": "{\"slots\":false}"
+    },
+    {
+      "id": "root-slots-number",
+      "input": "{\"slots\":3}"
+    },
+    {
+      "id": "root-slots-string",
+      "input": "{\"slots\":\"wrong\"}"
+    },
+    {
+      "id": "root-slots-array",
+      "input": "{\"slots\":[]}"
+    },
+    {
+      "id": "root-slots-object",
+      "input": "{\"slots\":{}}"
+    },
+    {
+      "id": "root-items-null",
+      "input": "{\"items\":null}"
+    },
+    {
+      "id": "root-items-bool",
+      "input": "{\"items\":false}"
+    },
+    {
+      "id": "root-items-number",
+      "input": "{\"items\":3}"
+    },
+    {
+      "id": "root-items-string",
+      "input": "{\"items\":\"wrong\"}"
+    },
+    {
+      "id": "root-items-array",
+      "input": "{\"items\":[]}"
+    },
+    {
+      "id": "root-items-object",
+      "input": "{\"items\":{}}"
+    },
+    {
+      "id": "root-sets-null",
+      "input": "{\"sets\":null}"
+    },
+    {
+      "id": "root-sets-bool",
+      "input": "{\"sets\":false}"
+    },
+    {
+      "id": "root-sets-number",
+      "input": "{\"sets\":3}"
+    },
+    {
+      "id": "root-sets-string",
+      "input": "{\"sets\":\"wrong\"}"
+    },
+    {
+      "id": "root-sets-array",
+      "input": "{\"sets\":[]}"
+    },
+    {
+      "id": "root-sets-object",
+      "input": "{\"sets\":{}}"
+    },
+    {
+      "id": "root-scenarios-null",
+      "input": "{\"scenarios\":null}"
+    },
+    {
+      "id": "root-scenarios-bool",
+      "input": "{\"scenarios\":false}"
+    },
+    {
+      "id": "root-scenarios-number",
+      "input": "{\"scenarios\":3}"
+    },
+    {
+      "id": "root-scenarios-string",
+      "input": "{\"scenarios\":\"wrong\"}"
+    },
+    {
+      "id": "root-scenarios-array",
+      "input": "{\"scenarios\":[]}"
+    },
+    {
+      "id": "root-scenarios-object",
+      "input": "{\"scenarios\":{}}"
+    },
+    {
+      "id": "root-skills-null",
+      "input": "{\"skills\":null}"
+    },
+    {
+      "id": "root-skills-bool",
+      "input": "{\"skills\":false}"
+    },
+    {
+      "id": "root-skills-number",
+      "input": "{\"skills\":3}"
+    },
+    {
+      "id": "root-skills-string",
+      "input": "{\"skills\":\"wrong\"}"
+    },
+    {
+      "id": "root-skills-array",
+      "input": "{\"skills\":[]}"
+    },
+    {
+      "id": "root-skills-object",
+      "input": "{\"skills\":{}}"
+    },
+    {
+      "id": "root-accountUpgrades-null",
+      "input": "{\"accountUpgrades\":null}"
+    },
+    {
+      "id": "root-accountUpgrades-bool",
+      "input": "{\"accountUpgrades\":false}"
+    },
+    {
+      "id": "root-accountUpgrades-number",
+      "input": "{\"accountUpgrades\":3}"
+    },
+    {
+      "id": "root-accountUpgrades-string",
+      "input": "{\"accountUpgrades\":\"wrong\"}"
+    },
+    {
+      "id": "root-accountUpgrades-array",
+      "input": "{\"accountUpgrades\":[]}"
+    },
+    {
+      "id": "root-accountUpgrades-object",
+      "input": "{\"accountUpgrades\":{}}"
+    },
+    {
+      "id": "root-numericContextInputs-null",
+      "input": "{\"numericContextInputs\":null}"
+    },
+    {
+      "id": "root-numericContextInputs-bool",
+      "input": "{\"numericContextInputs\":false}"
+    },
+    {
+      "id": "root-numericContextInputs-number",
+      "input": "{\"numericContextInputs\":3}"
+    },
+    {
+      "id": "root-numericContextInputs-string",
+      "input": "{\"numericContextInputs\":\"wrong\"}"
+    },
+    {
+      "id": "root-numericContextInputs-array",
+      "input": "{\"numericContextInputs\":[]}"
+    },
+    {
+      "id": "root-numericContextInputs-object",
+      "input": "{\"numericContextInputs\":{}}"
+    },
+    {
+      "id": "root-theme-null",
+      "input": "{\"theme\":null}"
+    },
+    {
+      "id": "root-theme-bool",
+      "input": "{\"theme\":false}"
+    },
+    {
+      "id": "root-theme-number",
+      "input": "{\"theme\":3}"
+    },
+    {
+      "id": "root-theme-string",
+      "input": "{\"theme\":\"wrong\"}"
+    },
+    {
+      "id": "root-theme-array",
+      "input": "{\"theme\":[]}"
+    },
+    {
+      "id": "root-theme-object",
+      "input": "{\"theme\":{}}"
+    },
+    {
+      "id": "root-artwork-null",
+      "input": "{\"artwork\":null}"
+    },
+    {
+      "id": "root-artwork-bool",
+      "input": "{\"artwork\":false}"
+    },
+    {
+      "id": "root-artwork-number",
+      "input": "{\"artwork\":3}"
+    },
+    {
+      "id": "root-artwork-string",
+      "input": "{\"artwork\":\"wrong\"}"
+    },
+    {
+      "id": "root-artwork-array",
+      "input": "{\"artwork\":[]}"
+    },
+    {
+      "id": "root-artwork-object",
+      "input": "{\"artwork\":{}}"
+    },
+    {
+      "id": "root-prototype-null",
+      "input": "{\"prototype\":null}"
+    },
+    {
+      "id": "root-prototype-bool",
+      "input": "{\"prototype\":false}"
+    },
+    {
+      "id": "root-prototype-number",
+      "input": "{\"prototype\":3}"
+    },
+    {
+      "id": "root-prototype-string",
+      "input": "{\"prototype\":\"wrong\"}"
+    },
+    {
+      "id": "root-prototype-array",
+      "input": "{\"prototype\":[]}"
+    },
+    {
+      "id": "root-prototype-object",
+      "input": "{\"prototype\":{}}"
+    },
+    {
+      "id": "root-simTriggers-null",
+      "input": "{\"simTriggers\":null}"
+    },
+    {
+      "id": "root-simTriggers-bool",
+      "input": "{\"simTriggers\":false}"
+    },
+    {
+      "id": "root-simTriggers-number",
+      "input": "{\"simTriggers\":3}"
+    },
+    {
+      "id": "root-simTriggers-string",
+      "input": "{\"simTriggers\":\"wrong\"}"
+    },
+    {
+      "id": "root-simTriggers-array",
+      "input": "{\"simTriggers\":[]}"
+    },
+    {
+      "id": "root-simTriggers-object",
+      "input": "{\"simTriggers\":{}}"
+    },
+    {
+      "id": "root-simSkills-null",
+      "input": "{\"simSkills\":null}"
+    },
+    {
+      "id": "root-simSkills-bool",
+      "input": "{\"simSkills\":false}"
+    },
+    {
+      "id": "root-simSkills-number",
+      "input": "{\"simSkills\":3}"
+    },
+    {
+      "id": "root-simSkills-string",
+      "input": "{\"simSkills\":\"wrong\"}"
+    },
+    {
+      "id": "root-simSkills-array",
+      "input": "{\"simSkills\":[]}"
+    },
+    {
+      "id": "root-simSkills-object",
+      "input": "{\"simSkills\":{}}"
+    },
+    {
+      "id": "root-layout-null",
+      "input": "{\"layout\":null}"
+    },
+    {
+      "id": "root-layout-bool",
+      "input": "{\"layout\":false}"
+    },
+    {
+      "id": "root-layout-number",
+      "input": "{\"layout\":3}"
+    },
+    {
+      "id": "root-layout-string",
+      "input": "{\"layout\":\"wrong\"}"
+    },
+    {
+      "id": "root-layout-array",
+      "input": "{\"layout\":[]}"
+    },
+    {
+      "id": "root-layout-object",
+      "input": "{\"layout\":{}}"
+    },
+    {
+      "id": "alias-slot-id-override",
+      "input": "{\"activeSkills\":[{\"modSlots\":[{\"id\":\"good\",\"ID\":\"Bad\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "alias-mod-id-override",
+      "input": "{\"activeSkills\":[{\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"good\",\"ID\":\"Bad\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "alias-mod-format-null",
+      "input": "{\"activeSkills\":[{\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"id\":\"mod\",\"name\":\"Mod\",\"input\":\"skill_mod_x\",\"min\":0,\"max\":1,\"FORMAT\":null}]}]}]}"
+    },
+    {
+      "id": "alias-bucket-uppercase",
+      "input": "{\"items\":[{\"modifiers\":[{\"stat\":\"hp\",\"BUCKET\":\"Bad\",\"value\":1}]}]}"
+    },
+    {
+      "id": "alias-family-error-id",
+      "input": "{\"activeSkills\":[{\"ID\":\"skill\",\"family\":null}]}"
+    },
+    {
+      "id": "array-string-element",
+      "input": "{\"items\":[{\"occupies\":[false]}]}"
+    },
+    {
+      "id": "array-plain-object-element",
+      "input": "{\"simTriggers\":[false]}"
+    },
+    {
+      "id": "array-custom-object-element",
+      "input": "{\"stats\":[false]}"
+    },
+    {
+      "id": "array-plain-nested-field",
+      "input": "{\"activeSkillSlots\":[{\"choices\":[false]}]}"
+    },
+    {
+      "id": "map-value-type",
+      "input": "{\"items\":[{\"requirements\":{\"x\":false}}]}"
+    },
+    {
+      "id": "custom-multi-field-order",
+      "input": "{\"activeSkills\":[{\"modSlots\":[{\"id\":\"slot\",\"name\":\"Slot\",\"choices\":[{\"name\":false,\"input\":\"skill_mod_x\",\"min\":0,\"max\":1}]}]}]}"
+    },
+    {
+      "id": "boundary-surrogate-property-name",
+      "input": "{\"\\ud800\":true}"
+    },
+    {
+      "id": "boundary-surrogate-curve-name",
+      "input": "{\"curves\":{\"\\ud800\":[[0,0],[1,1]]},\"stats\":[{\"id\":\"hp\",\"kind\":\"derived\",\"formula\":\"curve('\\ud800',1)\"}]}"
+    }
+  ]
+}

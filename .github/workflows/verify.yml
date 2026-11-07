@@ -1,0 +1,27 @@
+name: Verify
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Restore, format, build and test
+        shell: pwsh
+        run: ./scripts/verify.ps1
+      - name: Portable package and native window smoke
+        shell: pwsh
+        run: ./packaging/package.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-x64-c1-smoke
+          path: |
+            artifacts/*.zip
+            artifacts/*.sha256

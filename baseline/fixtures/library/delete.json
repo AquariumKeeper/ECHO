@@ -1,0 +1,25 @@
+{
+  "args": [
+    "library",
+    "delete",
+    "--library",
+    "library.json",
+    "--id",
+    "from-share"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "library delete",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": {
+      "id": "from-share"
+    }
+  }
+}

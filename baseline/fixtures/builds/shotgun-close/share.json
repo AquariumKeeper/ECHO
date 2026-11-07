@@ -1,0 +1,203 @@
+{
+  "args": [
+    "build",
+    "share",
+    "--input",
+    "shotgun-close.json"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "build share",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "document": {
+      "schemaVersion": 1,
+      "build": {
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "level": 40,
+        "allocations": {},
+        "equipment": {
+          "backpack": "backpack_heartbreaker_backpack",
+          "chest": "chest_heartbreaker_chest",
+          "gloves": "gloves_heartbreaker_gloves",
+          "holster": "holster_grupo_sombra_s_a_holster",
+          "knees": "knees_ceska_vyroba_s_r_o_kneepads",
+          "mask": "mask_heartbreaker_mask",
+          "primary_weapon": "primary_weapon_acs_12",
+          "secondary_weapon": "secondary_weapon_police_m4",
+          "sidearm": ""
+        },
+        "attributeRolls": {
+          "backpack": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "chest": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "gloves": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "holster": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "knees": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "mask": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "primary_weapon": {
+            "core_1": {
+              "attributeId": "shotgun_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "damage_to_armor_weapon_core",
+              "value": 0.12
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          },
+          "secondary_weapon": {
+            "core_1": {
+              "attributeId": "assault_rifle_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "health_damage_weapon_core",
+              "value": 0.21
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          }
+        },
+        "modSelections": {
+          "backpack": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "chest": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "mask": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "primary_weapon": {
+            "optics": "weapon_mod_optics_small_rds_scope",
+            "underbarrel": "weapon_mod_underbarrel_short_grip"
+          },
+          "secondary_weapon": {
+            "magazine": "weapon_mod_magazine_tactical_5_56_mag",
+            "muzzle": "weapon_mod_muzzle_large_suppressor_5_56",
+            "optics": "weapon_mod_optics_acog_scope_4x",
+            "underbarrel": "weapon_mod_underbarrel_short_grip"
+          }
+        },
+        "modRolls": {
+          "backpack": {
+            "mod_1": 0.06
+          },
+          "chest": {
+            "mod_1": 0.06
+          },
+          "mask": {
+            "mod_1": 0.06
+          }
+        },
+        "talentSelections": {
+          "backpack": {
+            "talent": "gear_talent_cold"
+          },
+          "chest": {
+            "talent": "gear_talent_max_bpm"
+          },
+          "primary_weapon": {
+            "talent": "weapon_talent_close_personal"
+          },
+          "secondary_weapon": {
+            "talent": "weapon_talent_ranger"
+          }
+        },
+        "activeSkillSelections": {
+          "skill_slot_1": "skill_bulwark_shield",
+          "skill_slot_2": "skill_reviver_hive"
+        },
+        "skillUpgrades": {},
+        "skillMods": {},
+        "specializationId": "survivalist",
+        "specializationNodeSelections": [],
+        "activeScenarios": {},
+        "allocatedSkills": {},
+        "accountUpgrades": {},
+        "equipmentUpgrades": {},
+        "meta": {
+          "name": "shotgun-close",
+          "notes": ""
+        }
+      }
+    },
+    "diagnostics": [],
+    "result": {
+      "code": "3FbRbus2DP0XPiuB47VdkT_Y6-5jERCMzNlCZMkgZfe2hf99kO30Jm2TO6wDOtw365DnhEekiDzcG6jc4NTFgCUYeLrX39blqht4XRbl3WpTrMrbtTaOfaUrfaRO1xswN4V52JkHaEkP2DBJ2gvTgQUzAgZsw5rOIxMEBvZkDx3ZN7wjCgZqHwfW8_CMgYEmek0sWEvfRdTY7oVQkXAJgIFDYFa0rAfC4UniPicIRsyBjioFA524luQJH5m6GJCs4ib7V7YxVCeRLnpnGdsbMKH3fjf53pmXVxuwfQEbhXGTvyglcfs-8R8VbIGkjYI1k2BOAQMD-Z5hu_m9KIpiNNC6EOUj6vLzDYXKu1DPIlP2D5ViXdyP43LZ_4M6liZ9fSHHWfjiSo4a5Sc0xmWefxEv03r4Yivj2-d_7W61ianuA1bUUs3HrXBeW7He3OZnmD19cD8LNUWcG3VJo7zm7oLIe3934_h-jV2dHlXqfUJxf3n-jM-GyafmJwrl5r9yOZoXaGP1Z_ReYXu-kNtYZfkp8WQ_nsPHWTxFc3GxuqQHVlxyljw2LqFtKFhe5ixWcLqJ_ynhTQ0_zX8_uLFLzuqP-c9KM4bakvcolaLa2OU29KFi2ZMI-3PGSQC1iZKwFtfBhVFqqaZnF_hc44hiIjubuMXbO2ypBgNt__zs3xImDD1Jzah91wmrRploYK45Ixvr2RTefP83vkYDiTyH9K7VMwxbmNo0n9BGf97fD7Na-o77rv24T6-Mpbqjso_K2LFoDOQvXfgFslCoWWB-C_nSB_52cMt70PyF6mOaRnc-7nv_SHLA-R8dmNOs8jVLeHADCzZu4FxSiBV_Y882uRgUtg87A9qxdeTdM2VwWnTay-AG8k5TZi2rc2V9VAYDsPt7AA"
+    }
+  }
+}

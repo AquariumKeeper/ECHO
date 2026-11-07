@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "example.minimal-slots",
+  "name": "Minimal slots — format example",
+  "version": "1",
+  "author": "Character Planner contributors",
+  "gamePackId": "division_2",
+  "description": "A single solid orange pixel for format and installer testing; not release artwork.",
+  "credits": [
+    {
+      "author": "2026 Character Planner contributors",
+      "license": "MIT",
+      "licenseFile": "licenses/LICENSE.txt"
+    }
+  ],
+  "assets": [
+    {
+      "id": "placeholder",
+      "path": "assets/placeholder.png",
+      "sha256": "1fed3796b58ab5c115f031c565826ee0ade2d486a8b0886a3fde048afbbcb76d"
+    }
+  ],
+  "bindings": {
+    "icons": {
+      "slots": {
+        "mask": "placeholder"
+      }
+    }
+  }
+}

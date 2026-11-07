@@ -1,0 +1,29 @@
+{
+  "id":"talent_copy_contract","name":"Talent copy contract","schemaVersion":1,"version":"1",
+  "progression":{"startingLevel":1,"maxLevel":10,"startingPoints":0,"pointsPerLevel":0},
+  "stats":[{"id":"power","name":"Power","kind":"primary","base":10,"min":0,"max":99},{"id":"damage","name":"Damage","kind":"derived","formula":"100"},{"id":"other","name":"Other","kind":"derived","formula":"0"}],
+  "numericContextInputs":[{"id":"stacks","name":"Stacks","min":0,"max":10,"step":1,"default":2}],
+  "slots":[{"id":"main","name":"Main","acceptTags":["weapon"]},{"id":"off","name":"Off","acceptTags":["weapon"]},{"id":"chest","name":"Chest","acceptTags":["gear"]},{"id":"head","name":"Head","acceptTags":["gear"]}],
+  "items":[
+    {"id":"target_weapon","name":"Target weapon","tags":["weapon","type_rifle"],"occupies":["main"],"effectsRequireContext":{"weapon_slot":"main"},"talentSlots":[{"id":"talent","name":"Talent","choices":["target","copy"]}]},
+    {"id":"source_weapon","name":"Source weapon","tags":["weapon","type_rifle"],"occupies":["off"],"effectsRequireContext":{"weapon_slot":"off"},"talentSlots":[{"id":"talent","name":"Talent","choices":["source","excluded","copy"]}]},
+    {"id":"copier","name":"Copier gear","tags":["gear"],"occupies":["chest"],"effectsRequireContext":{"mode":"on"},"talentSlots":[{"id":"talent","name":"Talent","choices":["copy"]}]},
+    {"id":"disabled_copier","name":"Disabled copier gear","tags":["gear"],"occupies":["chest"],"effectsRequireContext":{"mode":"off"},"talentSlots":[{"id":"talent","name":"Talent","choices":["copy"]}]},
+    {"id":"second_copier","name":"Second copier","tags":["gear"],"occupies":["head"],"talentSlots":[{"id":"talent","name":"Talent","choices":["copy"]}]},
+    {"id":"shotgun","name":"Shotgun","tags":["weapon","type_shotgun"],"occupies":["off"],"effectsRequireContext":{"weapon_slot":"off"},"talentSlots":[{"id":"talent","name":"Talent","choices":["source"]}]},
+    {"id":"exotic_source","name":"Exotic source","tags":["weapon","type_rifle","exotic"],"occupies":["off"],"effectsRequireContext":{"weapon_slot":"off"},"talentSlots":[{"id":"talent","name":"Talent","choices":["source"]}]},
+    {"id":"exotic_target","name":"Exotic target","tags":["weapon","type_rifle","exotic"],"occupies":["main"],"effectsRequireContext":{"weapon_slot":"main"},"talentSlots":[{"id":"talent","name":"Talent","choices":["target"]}]},
+    {"id":"inactive_source","name":"Inactive source","tags":["weapon","type_rifle"],"occupies":["off"],"requirements":{"power":20},"talentSlots":[{"id":"talent","name":"Talent","choices":["source"]}]},
+    {"id":"inactive_copier","name":"Inactive copier","tags":["gear"],"occupies":["chest"],"requirements":{"power":20},"talentSlots":[{"id":"talent","name":"Talent","choices":["copy"]}]},
+    {"id":"dual_source","name":"Dual source","tags":["weapon","type_rifle"],"occupies":["off"],"effectsRequireContext":{"weapon_slot":"off"},"talentSlots":[{"id":"talent","name":"Talent","choices":["source"]},{"id":"extra","name":"Extra","choices":["other_source"]}]}
+  ],
+  "talents":[
+    {"id":"target","name":"Target talent","modifiers":[{"stat":"damage","op":"flat","value":2}]},
+    {"id":"source","name":"Source talent","setPieceCredit":1,"modifiers":[{"stat":"damage","op":"flat","value":"context_value('stacks') + 3"},{"stat":"damage","op":"flat","value":7,"whileHolstered":true},{"stat":"other","op":"flat","value":11,"requiresContext":{"weapon_slot":"off"}}]},
+    {"id":"copy","name":"Abridged","copiesTalent":{"from":"off","to":"main","sameTagPrefix":"type_","excludeTags":["exotic"],"excludeTalents":["excluded"]},"modifiers":[{"stat":"damage","op":"flat","value":1}]},
+    {"id":"excluded","name":"Excluded talent","modifiers":[{"stat":"damage","op":"flat","value":9}]},
+    {"id":"other_source","name":"Other source talent","modifiers":[{"stat":"damage","op":"flat","value":4}]},
+    {"id":"forbidden","name":"Forbidden talent","modifiers":[]}
+  ],
+  "sets":[{"id":"set","name":"Set","items":["target_weapon"],"bonuses":[{"pieces":2,"modifiers":[{"stat":"damage","op":"flat","value":20,"when":"has_talent('source')"}]}]}]
+}

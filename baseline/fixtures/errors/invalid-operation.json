@@ -1,0 +1,26 @@
+{
+  "args": [
+    "build",
+    "apply",
+    "--input",
+    "striker-rifle.json",
+    "--operations",
+    "-"
+  ],
+  "stdin": "[{\"kind\": \"equipment\", \"slot\": \"chest\", \"id\": \"primary_weapon_police_m4\"}]",
+  "exitCode": 3,
+  "response": {
+    "apiVersion": 1,
+    "command": "build apply",
+    "ok": false,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "error": {
+      "code": "invalid-operations",
+      "message": "operation 1 (equipment): item \"primary_weapon_police_m4\" cannot be equipped in primary slot \"chest\""
+    }
+  }
+}

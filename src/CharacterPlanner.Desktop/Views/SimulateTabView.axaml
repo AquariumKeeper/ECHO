@@ -1,0 +1,213 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CharacterPlanner.Desktop.ViewModels" xmlns:views="using:CharacterPlanner.Desktop.Views"
+             x:Class="CharacterPlanner.Desktop.Views.SimulateTabView" x:DataType="vm:EditorViewModel">
+  <ScrollViewer DataContext="{Binding Simulate}">
+    <StackPanel x:DataType="vm:SimulateViewModel" Spacing="8" MaxWidth="720" HorizontalAlignment="Left">
+      <TextBlock Name="SimulateStatus" Text="{Binding Status}" AutomationProperties.LiveSetting="Polite" TextWrapping="Wrap" Classes="label" Classes.error="{Binding HasProblem}" />
+      <Grid ColumnDefinitions="Auto,240" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+        <TextBlock Text="Fight length (s)" VerticalAlignment="Center" />
+        <TextBox Grid.Column="1" Name="FightLengthBox" Text="{Binding FightLength}" AutomationProperties.Name="Fight length (s)" />
+        <TextBlock Grid.Row="1" Text="Fights" VerticalAlignment="Center" />
+        <TextBox Grid.Row="1" Grid.Column="1" Name="FightsBox" Text="{Binding Fights}" AutomationProperties.Name="Fights" />
+        <TextBlock Grid.Row="2" Text="Weapon swaps" VerticalAlignment="Center" />
+        <ComboBox Grid.Row="2" Grid.Column="1" Name="SwapsPicker" ItemsSource="{Binding SwapOptions}" SelectedItem="{Binding Swaps}"
+                  HorizontalAlignment="Stretch" AutomationProperties.Name="Weapon swaps" />
+        <TextBlock Grid.Row="3" Text="Swap time (s)" VerticalAlignment="Center" />
+        <TextBox Grid.Row="3" Grid.Column="1" Name="SwapTimeBox" Text="{Binding SwapTime}" AutomationProperties.Name="Swap time (s)" />
+        <TextBlock Grid.Row="4" Text="Target distance (m)" VerticalAlignment="Center" />
+        <TextBox Grid.Row="4" Grid.Column="1" Name="DistanceBox" Text="{Binding Distance}" PlaceholderText="none"
+                 AutomationProperties.Name="Target distance (m)" />
+        <TextBlock Grid.Row="5" Text="Seed" VerticalAlignment="Center" />
+        <TextBox Grid.Row="5" Grid.Column="1" Name="SeedBox" Text="{Binding Seed}" AutomationProperties.Name="Simulation seed" />
+        <TextBlock Grid.Row="6" Text="Swap weapon" VerticalAlignment="Center" />
+        <ComboBox Grid.Row="6" Grid.Column="1" Name="SwapWeaponPicker" ItemsSource="{Binding SwapWeapons}" SelectedItem="{Binding SwapWeapon}"
+                  HorizontalAlignment="Stretch" AutomationProperties.Name="Swap weapon">
+          <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:Choice"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBlock Grid.Row="7" Text="Trophy pickup delay (s)" VerticalAlignment="Center" />
+        <TextBox Grid.Row="7" Grid.Column="1" Name="PickupDelayBox" Text="{Binding PickupDelay}" AutomationProperties.Name="Trophy pickup delay (s)"
+                 ToolTip.Tip="Seconds from a kill until its trophy is collected (Kill Confirmed)" />
+        <TextBlock Grid.Row="8" Text="Trophies collected (%)" VerticalAlignment="Center" />
+        <TextBox Grid.Row="8" Grid.Column="1" Name="PickupChanceBox" Text="{Binding PickupChance}" AutomationProperties.Name="Trophies collected (%)"
+                 ToolTip.Tip="The share of dropped trophies collected at all (Kill Confirmed)" />
+        <TextBlock Grid.Row="9" Text="Targets to clear" VerticalAlignment="Center" />
+        <TextBox Grid.Row="9" Grid.Column="1" Name="ClearKillsBox" Text="{Binding ClearKills}" PlaceholderText="none"
+                 AutomationProperties.Name="Targets to clear"
+                 ToolTip.Tip="Report how long each fight takes to kill this many targets; fights keep their full length" />
+        <TextBlock Grid.Row="10" Text="Peek time (s)" VerticalAlignment="Center" />
+        <TextBox Grid.Row="10" Grid.Column="1" Name="PeekSecondsBox" Text="{Binding PeekSeconds}" PlaceholderText="none"
+                 AutomationProperties.Name="Peek time (s)"
+                 ToolTip.Tip="A cover cycle: seconds peeking from cover to shoot in each cycle. Set this and the cover time, or neither" />
+        <TextBlock Grid.Row="11" Text="Cover time (s)" VerticalAlignment="Center" />
+        <TextBox Grid.Row="11" Grid.Column="1" Name="CoverSecondsBox" Text="{Binding CoverSeconds}" PlaceholderText="none"
+                 AutomationProperties.Name="Cover time (s)"
+                 ToolTip.Tip="Seconds fully behind cover in each cycle: no shooting, a reload if the magazine isn't full (not when swapping when empty), enemy fire blocked" />
+        <TextBlock Grid.Row="12" Text="Hit chance while peeking (% of normal)" VerticalAlignment="Center" />
+        <TextBox Grid.Row="12" Grid.Column="1" Name="PeekHitPercentBox" Text="{Binding PeekHitPercent}" PlaceholderText="none"
+                 AutomationProperties.Name="Hit chance while peeking (% of normal)"
+                 ToolTip.Tip="The share of the normal enemy hit chance that lands while peeking. Needed with incoming fire, with no default: this is your assumption" />
+        <TextBlock Grid.Row="13" Text="Enemies at once" VerticalAlignment="Center" />
+        <TextBox Grid.Row="13" Grid.Column="1" Name="EnemiesAtOnceBox" Text="{Binding EnemiesAtOnce}" PlaceholderText="one at a time"
+                 AutomationProperties.Name="Enemies at once"
+                 ToolTip.Tip="How many enemies fire at you together, 2 to 10. You shoot one at a time; the others keep firing, and the next joins as one dies. Needs incoming fire and talent triggers, with Enemies Attacking at 1" />
+        <TextBlock Grid.Row="14" Text="Time on each enemy (s)" VerticalAlignment="Center" />
+        <TextBox Grid.Row="14" Grid.Column="1" Name="FocusSecondsBox" Text="{Binding FocusSeconds}" PlaceholderText="until it dies"
+                 AutomationProperties.Name="Time on each enemy (s)"
+                 ToolTip.Tip="With Enemies at once: how long you shoot an enemy, 0.1 to 60 seconds, before moving to the next one still alive, which takes 1 s more. Enemies keep what's on them, so burns and bleeds keep ticking on those you left. A move waits for a reload and, in cover, for the next peek. With no default: this is your assumption about how you play" />
+        <TextBlock Grid.Row="15" Text="Armor kits" VerticalAlignment="Center" />
+        <TextBox Grid.Row="15" Grid.Column="1" Name="ArmorKitsBox" Text="{Binding ArmorKits}" PlaceholderText="none"
+                 AutomationProperties.Name="Armor kits"
+                 ToolTip.Tip="The armor kits you carry, 1 to 10, with no refills. A kit stops your weapon while it's used, and hits make that longer; going down cancels it. Needs incoming fire and talent triggers, and Use a kit below. A build with Survivalist, Firewall or Hackstep Protocol, which replace the kit, is refused" />
+        <TextBlock Grid.Row="16" Text="Use a kit below (% armor)" VerticalAlignment="Center" />
+        <TextBox Grid.Row="16" Grid.Column="1" Name="ArmorKitAtPercentBox" Text="{Binding ArmorKitAtPercent}" PlaceholderText="none"
+                 AutomationProperties.Name="Use a kit below (% armor)"
+                 ToolTip.Tip="A kit is used when armor is below this share of its maximum, 1 to 100, at the weapon's next decision. With a cover cycle it waits for cover, ahead of that phase's reload. Needed with kits, with no default: this is your assumption" />
+      </Grid>
+      <StackPanel Spacing="4" IsVisible="{Binding HasTargetProfiles}">
+        <TextBlock Text="Mixed targets" Classes="label" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <ComboBox Name="TargetProfilePicker" ItemsSource="{Binding TargetProfiles}" SelectedItem="{Binding SequenceProfile}" Width="360"
+                    AutomationProperties.Name="Target profile to add">
+            <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:Choice"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+          </ComboBox>
+          <Button Name="AddTargetButton" Content="Add target" Command="{Binding AddTargetCommand}" />
+          <Button Name="RemoveLastTargetButton" Content="Remove last" Command="{Binding RemoveLastTargetCommand}" />
+          <Button Name="ClearTargetsButton" Content="Clear" Command="{Binding ClearTargetsCommand}" />
+        </StackPanel>
+        <TextBlock Name="TargetSequenceText" Text="{Binding TargetSequenceText}" TextWrapping="Wrap" Classes="label" AutomationProperties.LiveSetting="Polite" />
+      </StackPanel>
+      <StackPanel Spacing="4">
+        <TextBlock Text="Target distances (m)" Classes="label" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBox Name="DistanceEntryBox" Text="{Binding DistanceEntry}" Width="120" PlaceholderText="metres" AutomationProperties.Name="Target distance to add (m)" />
+          <Button Name="AddDistanceButton" Content="Add distance" Command="{Binding AddDistanceCommand}" />
+          <Button Name="RemoveLastDistanceButton" Content="Remove last" Command="{Binding RemoveLastDistanceCommand}" />
+          <Button Name="ClearDistancesButton" Content="Clear" Command="{Binding ClearDistancesCommand}" />
+        </StackPanel>
+        <TextBlock Name="TargetDistancesText" Text="{Binding TargetDistancesText}" TextWrapping="Wrap" Classes="label" AutomationProperties.LiveSetting="Polite" />
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Spacing="16">
+        <RadioButton Name="RandomFightsButton" GroupName="SimulateMode" Content="Random fights" IsChecked="{Binding RandomFights}" />
+        <RadioButton Name="AverageFightButton" GroupName="SimulateMode" Content="Average fight" IsChecked="{Binding AverageFight}" />
+      </StackPanel>
+      <CheckBox Name="IncomingBox" Content="{x:Static vm:SimulateViewModel.IncomingLabel}" IsChecked="{Binding Incoming}" />
+      <CheckBox Content="Drive talent triggers" IsChecked="{Binding DriveBuffs}" />
+      <CheckBox Content="Include damaging skills" IsChecked="{Binding IncludeSkills}" />
+      <CheckBox Content="Include frontal shield" IsChecked="{Binding IncludeShield}" />
+      <CheckBox Name="EnemiesShrinkBox" Content="Enemies run out" IsChecked="{Binding EnemiesShrink}"
+                ToolTip.Tip="With Enemies at once: Targets to clear says how many enemies there are in all. The next joins until none are left, then fire falls with each kill" />
+      <CheckBox Name="CaptureEventsBox" Content="Capture first-fight events" IsChecked="{Binding CaptureEvents}" />
+      <StackPanel Orientation="Horizontal" Spacing="8">
+      <Button Name="RunSimulationButton" Content="Run Simulation" Classes="accent" Command="{Binding RunCommand}" />
+      <Button Name="CancelSimulationButton" Content="Cancel" Command="{Binding CancelCommand}" />
+      </StackPanel>
+      <ProgressBar Name="SimulationProgress" Minimum="0" Maximum="1" Value="{Binding Progress}" AutomationProperties.Name="Simulation progress" />
+      <TextBlock Text="Changing the build or options clears the result and cancels a running simulation." TextWrapping="Wrap" Classes="label" />
+      <TextBlock Name="SimulationResults" Text="{Binding ResultText}" TextWrapping="Wrap" />
+      <Expander Name="DpsDistributions" Header="DPS distributions" IsVisible="{Binding Distributions.HasRows}" HorizontalContentAlignment="Stretch">
+        <StackPanel Spacing="12">
+          <TextBlock Name="DistributionNote" Text="{Binding Distributions.Note}" TextWrapping="Wrap" Classes="label" />
+          <ItemsControl Name="DistributionRows" ItemsSource="{Binding Distributions.Rows}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:SimulationSummaryRow"><views:SimulationSummaryView /></DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Expander>
+      <Expander Name="IncomingReportPanel" Header="Incoming damage and recovery" IsVisible="{Binding IncomingReport.HasData}" HorizontalContentAlignment="Stretch">
+        <StackPanel Spacing="12">
+          <TextBlock Name="IncomingReportNote" Text="{Binding IncomingReport.Note}" TextWrapping="Wrap" Classes="label" />
+          <ItemsControl Name="IncomingReadings" ItemsSource="{Binding IncomingReport.Readings}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:SimulationReading">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="0,0,0,4">
+                  <TextBlock Text="{Binding Label}" TextWrapping="Wrap" /><TextBlock Grid.Column="1" Text="{Binding Value}" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <TextBlock Name="UnobservedIncomingEvents" Text="{Binding IncomingReport.Unobserved}" TextWrapping="Wrap" />
+          <ItemsControl Name="IncomingTimings" ItemsSource="{Binding IncomingReport.Timings}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:SimulationSummaryRow"><views:SimulationSummaryView /></DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Expander>
+      <Expander Name="UptimeReportPanel" Header="Uptime and state readings" IsVisible="{Binding UptimeReport.HasResult}" HorizontalContentAlignment="Stretch">
+        <StackPanel Spacing="12">
+          <TextBlock Name="UptimeReportNote" Text="{Binding UptimeReport.Note}" TextWrapping="Wrap" Classes="label" />
+          <TextBlock Name="UptimeEmpty" Text="{Binding UptimeReport.EmptyMessage}" TextWrapping="Wrap" />
+          <ItemsControl Name="UptimeSections" ItemsSource="{Binding UptimeReport.Sections}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:SimulationUptimeSection">
+                <StackPanel Spacing="6" Margin="0,0,0,12">
+                  <TextBlock Text="{Binding Name}" Classes="heading" />
+                  <TextBlock Text="{Binding Note}" TextWrapping="Wrap" Classes="label" />
+                  <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel MinWidth="600">
+                      <Grid Name="UptimeHeader" ColumnDefinitions="280,80,80,100,*" ColumnSpacing="4">
+                        <TextBlock Text="Reading / value" /><TextBlock Grid.Column="1" Text="Seconds" />
+                        <TextBlock Grid.Column="2" Text="Time share" /><TextBlock Grid.Column="3" Text="Mean stacks" />
+                      </Grid>
+                      <ListBox Name="UptimeRows" Padding="0" BorderThickness="0" ItemsSource="{Binding Rows}" MaxHeight="320" AutomationProperties.Name="{Binding Name}">
+                        <ListBox.Styles><Style Selector="ListBoxItem"><Setter Property="HorizontalContentAlignment" Value="Stretch" /><Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0" /><Setter Property="BorderThickness" Value="0" /></Style></ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                          <DataTemplate x:DataType="vm:SimulationUptimeRow">
+                            <Grid Name="UptimeCells" ColumnDefinitions="280,80,80,100,*" ColumnSpacing="4">
+                              <TextBlock Text="{Binding Label}" TextWrapping="Wrap" /><TextBlock Grid.Column="1" Text="{Binding Time}" />
+                              <TextBlock Grid.Column="2" Text="{Binding Share}" /><TextBlock Grid.Column="3" Text="{Binding Stacks}" />
+                            </Grid>
+                          </DataTemplate>
+                        </ListBox.ItemTemplate>
+                      </ListBox>
+                    </StackPanel>
+                  </ScrollViewer>
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Expander>
+      <Expander Name="EventReportPanel" Header="First-fight events" IsVisible="{Binding EventReport.HasCapture}" HorizontalContentAlignment="Stretch">
+        <StackPanel Spacing="8">
+          <TextBlock Name="EventReportNote" Text="{Binding EventReport.Note}" TextWrapping="Wrap" Classes="label" />
+          <TextBlock Name="EventReportEmpty" Text="{Binding EventReport.EmptyMessage}" TextWrapping="Wrap" />
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <StackPanel MinWidth="600">
+              <Grid Name="EventHeader" ColumnDefinitions="90,180,130,100,*" ColumnSpacing="4">
+                <TextBlock Text="Time (s)" /><TextBlock Grid.Column="1" Text="Event" />
+                <TextBlock Grid.Column="2" Text="Source slot" /><TextBlock Grid.Column="3" Text="Amount" />
+              </Grid>
+              <ListBox Name="EventRows" Padding="0" BorderThickness="0" ItemsSource="{Binding EventReport.Rows}" MaxHeight="360" AutomationProperties.Name="First-fight events">
+                <ListBox.Styles><Style Selector="ListBoxItem"><Setter Property="HorizontalContentAlignment" Value="Stretch" /><Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0" /><Setter Property="BorderThickness" Value="0" /></Style></ListBox.Styles>
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:SimulationEventRow">
+                    <Grid Name="EventCells" ColumnDefinitions="90,180,130,100,*" ColumnSpacing="4">
+                      <TextBlock Text="{Binding Time}" /><TextBlock Grid.Column="1" Text="{Binding Kind}" TextWrapping="Wrap" />
+                      <TextBlock Grid.Column="2" Text="{Binding Slot}" TextWrapping="Wrap" /><TextBlock Grid.Column="3" Text="{Binding Amount}" />
+                    </Grid>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </StackPanel>
+          </ScrollViewer>
+        </StackPanel>
+      </Expander>
+      <StackPanel Name="TimelinePanel" IsVisible="{Binding HasTimeline}" Spacing="8">
+        <TextBlock Text="Damage over time" Classes="heading" />
+        <TextBlock Text="Mean total DPS by interval (weapon + included skills). A fractional tail is combined with the preceding interval." TextWrapping="Wrap" Classes="label" />
+        <views:SimulationTimelineChart Name="DamageTimeline" Series="{Binding Timeline}" SelectedIndex="{Binding SelectedTimelineIndex, Mode=TwoWay}"
+            Height="240" MinWidth="320" BarBrush="{DynamicResource DivisionAccent}" AxisBrush="{DynamicResource DivisionMuted}" SelectionBrush="{DynamicResource DivisionValue}"
+            AutomationProperties.Name="Damage timeline" AutomationProperties.HelpText="Left and Right select intervals. Home and End select the first and last. The interval picker provides the same data." />
+        <TextBlock Text="Inspect interval" />
+        <views:TimelineIntervalPicker Name="TimelineIntervalPicker" ItemsSource="{Binding Timeline.Bins}" SelectedIndex="{Binding SelectedTimelineIndex, Mode=TwoWay}" AutomationProperties.Name="Timeline interval">
+          <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:SimulationTimelineBin"><TextBlock Text="{Binding Interval}" /></DataTemplate></ComboBox.ItemTemplate>
+        </views:TimelineIntervalPicker>
+        <TextBlock Name="TimelineDetails" Text="{Binding TimelineDetails}" TextWrapping="Wrap" />
+      </StackPanel>
+      <TextBlock IsVisible="{Binding TimelineUnavailable}" Text="Damage timeline unavailable for this result." />
+      <Expander Header="Model limits"><TextBlock Name="SimulationLimits" Text="{Binding Limitations}" TextWrapping="Wrap" /></Expander>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

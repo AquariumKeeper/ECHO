@@ -1,0 +1,7 @@
+__pycache__/
+**/bin/
+**/obj/
+artifacts/
+/temp/
+.vs/
+TestResults/

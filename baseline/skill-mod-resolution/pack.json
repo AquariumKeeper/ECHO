@@ -1,0 +1,21 @@
+{
+  "id":"skill_mod_contract","name":"Skill mod contract","schemaVersion":1,"version":"1",
+  "progression":{"startingLevel":1,"maxLevel":10,"startingPoints":0,"pointsPerLevel":0},
+  "stats":[{"id":"damage","name":"Damage","kind":"derived","formula":"100"}],
+  "activeSkillSlots":[{"id":"one","name":"One","choices":["modded","other","plain","overflow"]},{"id":"two","name":"Two","choices":["modded","other","plain"]}],
+  "activeSkills":[
+    {"id":"modded","name":"Modded","family":"turret","upgrade":{"name":"Grade","maxRank":3},
+     "modSlots":[
+       {"id":"a","name":"A","choices":[{"id":"damage_mod","name":"Damage mod","input":"skill_mod_damage","min":0,"max":1,"step":0.1}]},
+       {"id":"b","name":"B","choices":[{"id":"damage_mod_b","name":"Damage mod B","input":"skill_mod_damage","min":0,"max":1,"step":0.1}]},
+       {"id":"c","name":"C","choices":[{"id":"shield_mod","name":"Shield mod","input":"skill_mod_shield","min":0,"max":10,"step":1}]}],
+     "previewOutputs":[{"id":"rate","name":"Rate","formula":"damage * (1 + skill_mod_damage) * (1 + skill_upgrade_rank * 0.1)","kind":"rate","headline":true},{"id":"shield","name":"Shield","formula":"skill_mod_shield","kind":"shield"}]},
+    {"id":"other","name":"Other","family":"drone","modSlots":[{"id":"a","name":"A","choices":[{"id":"other_mod","name":"Other mod","input":"skill_mod_damage","min":0,"max":1,"step":0.1}]}],"previewOutputs":[{"id":"rate","name":"Rate","formula":"damage * (1 + skill_mod_damage)","kind":"rate","headline":true}]},
+    {"id":"plain","name":"Plain","previewOutputs":[{"id":"rate","name":"Rate","formula":"damage"}]},
+    {"id":"overflow","name":"Overflow","modSlots":[
+      {"id":"a","name":"A","choices":[{"id":"large","name":"Large","input":"skill_mod_damage","min":-1e308,"max":1e308}]},
+      {"id":"b","name":"B","choices":[{"id":"large","name":"Large","input":"skill_mod_damage","min":-1e308,"max":1e308}]},
+      {"id":"c","name":"C","choices":[{"id":"large","name":"Large","input":"skill_mod_damage","min":-1e308,"max":1e308}]}],
+      "previewOutputs":[{"id":"value","name":"Value","formula":"skill_mod_damage"}]}
+  ]
+}

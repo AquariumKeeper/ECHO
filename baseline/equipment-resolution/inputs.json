@@ -1,0 +1,33 @@
+{
+  "version":1,
+  "defaults": {
+    "equipment":{"main":"weapon"},
+    "attributeRolls":{"main":{"core":{"attributeId":"damage_attr","value":4}}},
+    "modSelections":{"main":{"socket":"ranged"}},
+    "modRolls":{"main":{"socket":3}},
+    "talentSelections":{"main":{"talent":"talent"}}
+  },
+  "cases":[
+    {"id":"configured-active","context":{"weapon_slot":"main","stacks":"2"}},
+    {"id":"configured-holstered","context":{"weapon_slot":"off","stacks":"2"}},
+    {"id":"minimum-roll","attributeRolls":{"main":{"core":{"attributeId":"damage_attr","value":2}}},"context":{"weapon_slot":"main"}},
+    {"id":"maximum-roll","attributeRolls":{"main":{"core":{"attributeId":"damage_attr","value":8}}},"context":{"weapon_slot":"main"}},
+    {"id":"off-step-roll","attributeRolls":{"main":{"core":{"attributeId":"damage_attr","value":3}}},"context":{"weapon_slot":"main"}},
+    {"id":"attribute-out-of-range","attributeRolls":{"main":{"core":{"attributeId":"damage_attr","value":10}}},"context":{"weapon_slot":"main"}},
+    {"id":"unknown-attribute","attributeRolls":{"main":{"core":{"attributeId":"missing","value":4}}},"context":{"weapon_slot":"main"}},
+    {"id":"attribute-not-allowed","attributeRolls":{"main":{"core":{"attributeId":"other_attr","value":4}}},"context":{"weapon_slot":"main"}},
+    {"id":"attribute-unconfigured","attributeRolls":{},"context":{"weapon_slot":"main"}},
+    {"id":"mod-unconfigured","modSelections":{},"modRolls":{},"context":{"weapon_slot":"main"}},
+    {"id":"mod-roll-unconfigured","modRolls":{},"context":{"weapon_slot":"main"}},
+    {"id":"mod-roll-invalid","modRolls":{"main":{"socket":11}},"context":{"weapon_slot":"main"}},
+    {"id":"mod-roll-without-mod","modSelections":{},"context":{"weapon_slot":"main"}},
+    {"id":"fixed-mod-with-roll","modSelections":{"main":{"socket":"fixed"}},"context":{"weapon_slot":"main"}},
+    {"id":"unknown-mod","modSelections":{"main":{"socket":"missing"}},"context":{"weapon_slot":"main"}},
+    {"id":"mod-not-allowed","modSelections":{"main":{"socket":"forbidden_mod"}},"context":{"weapon_slot":"main"}},
+    {"id":"talent-unconfigured","talentSelections":{},"context":{"weapon_slot":"main"}},
+    {"id":"unknown-talent","talentSelections":{"main":{"talent":"missing"}},"context":{"weapon_slot":"main"}},
+    {"id":"talent-not-allowed","talentSelections":{"main":{"talent":"forbidden_talent"}},"context":{"weapon_slot":"main"}},
+    {"id":"unknown-slots","attributeRolls":{"main":{"z":{"attributeId":"damage_attr","value":4},"a":{"attributeId":"damage_attr","value":4}}},"modSelections":{"main":{"z":"ranged"}},"modRolls":{"main":{"a":3}},"talentSelections":{"main":{"z":"talent","a":"talent"}},"context":{"weapon_slot":"main"}},
+    {"id":"holstered-invalid-configuration","attributeRolls":{"main":{"core":{"attributeId":"damage_attr","value":3}}},"modRolls":{"main":{"socket":11}},"context":{"weapon_slot":"off"}}
+  ]
+}

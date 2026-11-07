@@ -1,0 +1,1384 @@
+{
+  "version": 1,
+  "reference": {
+    "commit": "8af53b234b58362de383af5eabfe63a581eea589",
+    "release": "0.1.0-beta.6",
+    "zipSha256": "aebe374db4d7b391fbca9ae81b32b26b969c071ab599349fb14821530899b479",
+    "inputsSha256": "ba9d707da372442940bc902db32a45333790518abaad72612cd6311e169a33b3",
+    "packSha256": "1b0d5009807e757d08a4473ba5c1e0ba861f2a49459261edd063accb2f67120a",
+    "args": [
+      "--json",
+      "--pack",
+      "pack.json",
+      "build",
+      "resolve",
+      "--input",
+      "-",
+      "--context",
+      "context.json"
+    ],
+    "inputEncoding": "utf-8"
+  },
+  "cases": [
+    {
+      "id": "combined-and-shields",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "build_output_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "skill",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "build_output_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "build_output_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "skill",
+              "two": "other"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 110
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 110,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "skill",
+                    "name": "Skill"
+                  },
+                  "op": "flat",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "skill",
+              "outputs": [
+                {
+                  "when": "context_value('show')",
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 220,
+                  "formula": "context_value('preview_bad') ? max() : damage * 2",
+                  "inputs": {
+                    "damage": 110
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "id": "other_rate",
+                  "name": "Other rate",
+                  "format": "decimal",
+                  "value": 999,
+                  "formula": "999",
+                  "inputs": {},
+                  "kind": "rate"
+                },
+                {
+                  "when": "context_value('show')",
+                  "id": "shield_a",
+                  "name": "Shield A",
+                  "format": "decimal",
+                  "value": 10,
+                  "formula": "10",
+                  "inputs": {},
+                  "kind": "shield"
+                },
+                {
+                  "when": "context_value('show')",
+                  "id": "shield_b",
+                  "name": "Shield B",
+                  "format": "decimal",
+                  "value": 20,
+                  "formula": "20",
+                  "inputs": {},
+                  "kind": "shield"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 5,
+                  "formula": "5",
+                  "inputs": {},
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "buildOutputs": [
+            {
+              "id": "combined",
+              "name": "Combined",
+              "description": "Character plus skill rates",
+              "format": "decimal",
+              "value": 335
+            },
+            {
+              "id": "shielded",
+              "name": "Shielded",
+              "format": "integer",
+              "value": 140
+            },
+            {
+              "id": "risky",
+              "name": "Risky",
+              "format": "decimal",
+              "value": 225
+            }
+          ],
+          "assumptions": [
+            {
+              "id": "show",
+              "kind": "numeric",
+              "name": "Show",
+              "default": 1,
+              "min": 0,
+              "max": 1,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "skill",
+                  "id": "skill",
+                  "name": "Skill",
+                  "slot": "one"
+                }
+              ]
+            },
+            {
+              "id": "preview_bad",
+              "kind": "numeric",
+              "name": "Bad preview",
+              "default": 0,
+              "min": 0,
+              "max": 1,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "skill",
+                  "id": "skill",
+                  "name": "Skill",
+                  "slot": "one"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "other": "Other",
+            "skill": "Skill"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "empty-slots",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "build_output_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {},
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "build_output_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "build_output_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {},
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          },
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "Two has no selected active skill",
+            "subject": "two"
+          }
+        ],
+        "result": {
+          "stats": {
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {},
+          "buildOutputs": [
+            {
+              "id": "combined",
+              "name": "Combined",
+              "description": "Character plus skill rates",
+              "format": "decimal",
+              "value": 100
+            },
+            {
+              "id": "shielded",
+              "name": "Shielded",
+              "format": "integer",
+              "value": 100
+            },
+            {
+              "id": "risky",
+              "name": "Risky",
+              "format": "decimal",
+              "value": 0
+            }
+          ],
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "one-slot",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "build_output_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "skill"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "build_output_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "build_output_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "skill"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "Two has no selected active skill",
+            "subject": "two"
+          }
+        ],
+        "result": {
+          "stats": {
+            "damage": 110
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 110,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "skill",
+                    "name": "Skill"
+                  },
+                  "op": "flat",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "skill",
+              "outputs": [
+                {
+                  "when": "context_value('show')",
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 220,
+                  "formula": "context_value('preview_bad') ? max() : damage * 2",
+                  "inputs": {
+                    "damage": 110
+                  },
+                  "kind": "rate"
+                },
+                {
+                  "id": "other_rate",
+                  "name": "Other rate",
+                  "format": "decimal",
+                  "value": 999,
+                  "formula": "999",
+                  "inputs": {},
+                  "kind": "rate"
+                },
+                {
+                  "when": "context_value('show')",
+                  "id": "shield_a",
+                  "name": "Shield A",
+                  "format": "decimal",
+                  "value": 10,
+                  "formula": "10",
+                  "inputs": {},
+                  "kind": "shield"
+                },
+                {
+                  "when": "context_value('show')",
+                  "id": "shield_b",
+                  "name": "Shield B",
+                  "format": "decimal",
+                  "value": 20,
+                  "formula": "20",
+                  "inputs": {},
+                  "kind": "shield"
+                }
+              ]
+            }
+          },
+          "buildOutputs": [
+            {
+              "id": "combined",
+              "name": "Combined",
+              "description": "Character plus skill rates",
+              "format": "decimal",
+              "value": 330
+            },
+            {
+              "id": "shielded",
+              "name": "Shielded",
+              "format": "integer",
+              "value": 140
+            },
+            {
+              "id": "risky",
+              "name": "Risky",
+              "format": "decimal",
+              "value": 220
+            }
+          ],
+          "assumptions": [
+            {
+              "id": "show",
+              "kind": "numeric",
+              "name": "Show",
+              "default": 1,
+              "min": 0,
+              "max": 1,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "skill",
+                  "id": "skill",
+                  "name": "Skill",
+                  "slot": "one"
+                }
+              ]
+            },
+            {
+              "id": "preview_bad",
+              "kind": "numeric",
+              "name": "Bad preview",
+              "default": 0,
+              "min": 0,
+              "max": 1,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "skill",
+                  "id": "skill",
+                  "name": "Skill",
+                  "slot": "one"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "skill": "Skill"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "other-slot",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "build_output_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "build_output_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "build_output_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "two": "other"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [
+          {
+            "severity": "warning",
+            "code": "active-skill-unconfigured",
+            "message": "One has no selected active skill",
+            "subject": "one"
+          }
+        ],
+        "result": {
+          "stats": {
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 5,
+                  "formula": "5",
+                  "inputs": {},
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "buildOutputs": [
+            {
+              "id": "combined",
+              "name": "Combined",
+              "description": "Character plus skill rates",
+              "format": "decimal",
+              "value": 105
+            },
+            {
+              "id": "shielded",
+              "name": "Shielded",
+              "format": "integer",
+              "value": 100
+            },
+            {
+              "id": "risky",
+              "name": "Risky",
+              "format": "decimal",
+              "value": 5
+            }
+          ],
+          "names": {
+            "other": "Other"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "unmarked-rate-is-not-headline",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "build_output_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "plain",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "build_output_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "build_output_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "plain",
+              "two": "other"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 100
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 100,
+              "clamped": false,
+              "contributions": []
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "plain",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 999,
+                  "formula": "999",
+                  "inputs": {},
+                  "kind": "rate"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 5,
+                  "formula": "5",
+                  "inputs": {},
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "buildOutputs": [
+            {
+              "id": "combined",
+              "name": "Combined",
+              "description": "Character plus skill rates",
+              "format": "decimal",
+              "value": 105
+            },
+            {
+              "id": "shielded",
+              "name": "Shielded",
+              "format": "integer",
+              "value": 100
+            },
+            {
+              "id": "risky",
+              "name": "Risky",
+              "format": "decimal",
+              "value": 5
+            }
+          ],
+          "names": {
+            "other": "Other",
+            "plain": "Plain"
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "hidden-previews",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "build_output_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "skill",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "show": "0"
+      },
+      "exitCode": 0,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": true,
+        "pack": {
+          "id": "build_output_contract",
+          "version": "1"
+        },
+        "document": {
+          "schemaVersion": 1,
+          "build": {
+            "packId": "build_output_contract",
+            "packVersion": "1",
+            "level": 1,
+            "allocations": {},
+            "equipment": {},
+            "attributeRolls": {},
+            "modSelections": {},
+            "modRolls": {},
+            "talentSelections": {},
+            "activeSkillSelections": {
+              "one": "skill",
+              "two": "other"
+            },
+            "skillUpgrades": {},
+            "skillMods": {},
+            "specializationId": "",
+            "specializationNodeSelections": [],
+            "activeScenarios": {},
+            "allocatedSkills": {},
+            "accountUpgrades": {},
+            "equipmentUpgrades": {},
+            "meta": {
+              "name": "New Build",
+              "notes": ""
+            }
+          }
+        },
+        "context": {
+          "show": "0"
+        },
+        "diagnostics": [],
+        "result": {
+          "stats": {
+            "damage": 110
+          },
+          "primary": {},
+          "breakdowns": {
+            "damage": {
+              "base": 100,
+              "final": 110,
+              "clamped": false,
+              "contributions": [
+                {
+                  "source": {
+                    "kind": "active-skill",
+                    "id": "skill",
+                    "name": "Skill"
+                  },
+                  "op": "flat",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          "activeSkillPreviews": {
+            "one": {
+              "skillId": "skill",
+              "outputs": [
+                {
+                  "id": "other_rate",
+                  "name": "Other rate",
+                  "format": "decimal",
+                  "value": 999,
+                  "formula": "999",
+                  "inputs": {},
+                  "kind": "rate"
+                }
+              ]
+            },
+            "two": {
+              "skillId": "other",
+              "outputs": [
+                {
+                  "id": "rate",
+                  "name": "Rate",
+                  "format": "decimal",
+                  "value": 5,
+                  "formula": "5",
+                  "inputs": {},
+                  "kind": "rate"
+                }
+              ]
+            }
+          },
+          "buildOutputs": [
+            {
+              "id": "combined",
+              "name": "Combined",
+              "description": "Character plus skill rates",
+              "format": "decimal",
+              "value": 115
+            },
+            {
+              "id": "shielded",
+              "name": "Shielded",
+              "format": "integer",
+              "value": 110
+            },
+            {
+              "id": "risky",
+              "name": "Risky",
+              "format": "decimal",
+              "value": 5
+            }
+          ],
+          "assumptions": [
+            {
+              "id": "show",
+              "kind": "numeric",
+              "name": "Show",
+              "value": "0",
+              "default": 1,
+              "min": 0,
+              "max": 1,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "skill",
+                  "id": "skill",
+                  "name": "Skill",
+                  "slot": "one"
+                }
+              ]
+            },
+            {
+              "id": "preview_bad",
+              "kind": "numeric",
+              "name": "Bad preview",
+              "default": 0,
+              "min": 0,
+              "max": 1,
+              "step": 1,
+              "sources": [
+                {
+                  "kind": "skill",
+                  "id": "skill",
+                  "name": "Skill",
+                  "slot": "one"
+                }
+              ]
+            }
+          ],
+          "names": {
+            "other": "Other",
+            "skill": "Skill"
+          },
+          "unconditional": {
+            "reset": [
+              "show"
+            ],
+            "stats": {},
+            "buildOutputs": [
+              {
+                "id": "combined",
+                "name": "Combined",
+                "description": "Character plus skill rates",
+                "format": "decimal",
+                "value": 335
+              },
+              {
+                "id": "shielded",
+                "name": "Shielded",
+                "format": "integer",
+                "value": 140
+              },
+              {
+                "id": "risky",
+                "name": "Risky",
+                "format": "decimal",
+                "value": 225
+              }
+            ]
+          },
+          "points": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          },
+          "skillPoints": {
+            "total": 0,
+            "spent": 0,
+            "remaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "preview-failure",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "build_output_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "skill",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "preview_bad": "1"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "build_output_contract",
+          "version": "1"
+        },
+        "context": {
+          "preview_bad": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "active-skill-preview-eval",
+            "message": "Could not evaluate Skill Rate: formula returned a non-finite value",
+            "subject": "one.rate"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "build-output-failure",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "build_output_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "skill",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "output_bad": "1"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "build_output_contract",
+          "version": "1"
+        },
+        "context": {
+          "output_bad": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "build-output-eval",
+            "message": "Could not evaluate Risky: formula returned a non-finite value",
+            "subject": "risky"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "preview-before-build-error",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "build_output_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "skill",
+            "two": "other"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {
+        "preview_bad": "1",
+        "output_bad": "1"
+      },
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "build_output_contract",
+          "version": "1"
+        },
+        "context": {
+          "output_bad": "1",
+          "preview_bad": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "active-skill-preview-eval",
+            "message": "Could not evaluate Skill Rate: formula returned a non-finite value",
+            "subject": "one.rate"
+          },
+          {
+            "severity": "error",
+            "code": "build-output-eval",
+            "message": "Could not evaluate Risky: formula returned a non-finite value",
+            "subject": "risky"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    },
+    {
+      "id": "rejected-family-zero",
+      "document": {
+        "schemaVersion": 1,
+        "build": {
+          "packId": "build_output_contract",
+          "packVersion": "1",
+          "level": 1,
+          "allocations": {},
+          "equipment": {},
+          "attributeRolls": {},
+          "modSelections": {},
+          "modRolls": {},
+          "talentSelections": {},
+          "activeSkillSelections": {
+            "one": "skill",
+            "two": "skill"
+          },
+          "skillUpgrades": {},
+          "skillMods": {},
+          "specializationId": "",
+          "specializationNodeSelections": [],
+          "activeScenarios": {},
+          "allocatedSkills": {},
+          "accountUpgrades": {},
+          "equipmentUpgrades": {},
+          "meta": {
+            "name": "New Build",
+            "notes": ""
+          }
+        }
+      },
+      "context": {},
+      "exitCode": 3,
+      "response": {
+        "apiVersion": 1,
+        "command": "build resolve",
+        "ok": false,
+        "pack": {
+          "id": "build_output_contract",
+          "version": "1"
+        },
+        "diagnostics": [
+          {
+            "severity": "error",
+            "code": "duplicate-active-skill-family",
+            "message": "Skill can't be equipped alongside Skill: both are one variants",
+            "subject": "two"
+          }
+        ],
+        "error": {
+          "code": "invalid-build",
+          "message": "build or context failed validation"
+        }
+      }
+    }
+  ]
+}

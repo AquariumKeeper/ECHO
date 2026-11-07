@@ -1,0 +1,545 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "minimal",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "null-root",
+      "input": "null"
+    },
+    {
+      "id": "array-root",
+      "input": "[]"
+    },
+    {
+      "id": "number-root",
+      "input": "1"
+    },
+    {
+      "id": "string-root",
+      "input": "\"x\""
+    },
+    {
+      "id": "root-schemaVersion-2",
+      "input": "{\"schemaVersion\":2,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "root-schemaVersion-None",
+      "input": "{\"schemaVersion\":null,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "root-schemaVersion-1",
+      "input": "{\"schemaVersion\":\"1\",\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "root-build-None",
+      "input": "{\"schemaVersion\":1,\"build\":null}"
+    },
+    {
+      "id": "root-build-[]",
+      "input": "{\"schemaVersion\":1,\"build\":[]}"
+    },
+    {
+      "id": "missing-schemaVersion",
+      "input": "{\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "missing-build",
+      "input": "{\"schemaVersion\":1}"
+    },
+    {
+      "id": "missing-packId",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "packId-None",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":null,\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "packId-",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"\",\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "packId-True",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":true,\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "packId-[]",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":[],\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "packId-{}",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":{},\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "missing-packVersion",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"level\":1}}"
+    },
+    {
+      "id": "packVersion-None",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":null,\"level\":1}}"
+    },
+    {
+      "id": "packVersion-",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"\",\"level\":1}}"
+    },
+    {
+      "id": "packVersion-True",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":true,\"level\":1}}"
+    },
+    {
+      "id": "packVersion-[]",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":[],\"level\":1}}"
+    },
+    {
+      "id": "packVersion-{}",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":{},\"level\":1}}"
+    },
+    {
+      "id": "missing-level",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\"}}"
+    },
+    {
+      "id": "level-None",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":null}}"
+    },
+    {
+      "id": "level-",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":\"\"}}"
+    },
+    {
+      "id": "level-True",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":true}}"
+    },
+    {
+      "id": "level-[]",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":[]}}"
+    },
+    {
+      "id": "level-{}",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":{}}}"
+    },
+    {
+      "id": "level-1.5",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1.5}}"
+    },
+    {
+      "id": "level-1e+30",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1e+30}}"
+    },
+    {
+      "id": "level-int64-max",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":9223372036854775807}}"
+    },
+    {
+      "id": "level-int64-min",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":-9223372036854775808}}"
+    },
+    {
+      "id": "level-int64-overflow",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":9223372036854775808}}"
+    },
+    {
+      "id": "retained-level-0",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":0}}"
+    },
+    {
+      "id": "retained-level--1",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":-1}}"
+    },
+    {
+      "id": "unknown-root",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1},\"extra\":1}"
+    },
+    {
+      "id": "unknown-build",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"Level\":1}}"
+    },
+    {
+      "id": "unknown-meta",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":{\"Name\":\"x\"}}}"
+    },
+    {
+      "id": "null-allocations",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocations\":null}}"
+    },
+    {
+      "id": "null-equipment",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipment\":null}}"
+    },
+    {
+      "id": "null-attributeRolls",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"attributeRolls\":null}}"
+    },
+    {
+      "id": "null-modSelections",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modSelections\":null}}"
+    },
+    {
+      "id": "null-modRolls",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modRolls\":null}}"
+    },
+    {
+      "id": "null-talentSelections",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"talentSelections\":null}}"
+    },
+    {
+      "id": "null-activeSkillSelections",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"activeSkillSelections\":null}}"
+    },
+    {
+      "id": "null-skillUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":null}}"
+    },
+    {
+      "id": "null-skillMods",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":null}}"
+    },
+    {
+      "id": "null-accountUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"accountUpgrades\":null}}"
+    },
+    {
+      "id": "null-equipmentUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":null}}"
+    },
+    {
+      "id": "null-prototypes",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":null}}"
+    },
+    {
+      "id": "null-activeScenarios",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"activeScenarios\":null}}"
+    },
+    {
+      "id": "null-allocatedSkills",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocatedSkills\":null}}"
+    },
+    {
+      "id": "null-specializationNodeSelections",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"specializationNodeSelections\":null}}"
+    },
+    {
+      "id": "null-party",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":null}}"
+    },
+    {
+      "id": "null-meta",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":null}}"
+    },
+    {
+      "id": "null-meta-values",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":{\"name\":null,\"notes\":null}}}"
+    },
+    {
+      "id": "null-string-values",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipment\":{\"unknown\":null}}}"
+    },
+    {
+      "id": "null-number-values",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocations\":{\"unknown\":null}}}"
+    },
+    {
+      "id": "null-set-values",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"activeScenarios\":{\"unknown\":null}}}"
+    },
+    {
+      "id": "unknown-set-record-field",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"activeScenarios\":{\"unknown\":{\"x\":1}}}}"
+    },
+    {
+      "id": "invalid-set-value",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"activeScenarios\":{\"unknown\":true}}}"
+    },
+    {
+      "id": "null-nested-mod-map",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modSelections\":{\"unknown\":null}}}"
+    },
+    {
+      "id": "null-nested-attribute-map",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"attributeRolls\":{\"unknown\":null}}}"
+    },
+    {
+      "id": "null-attribute-record",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"attributeRolls\":{\"unknown\":{\"core\":null}}}}"
+    },
+    {
+      "id": "record-skillUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":{\"skillId\":\"s\",\"rank\":0}}}}"
+    },
+    {
+      "id": "null-record-skillUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":null}}}"
+    },
+    {
+      "id": "null-required-skillUpgrades-skillId",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":{\"skillId\":null,\"rank\":0}}}}"
+    },
+    {
+      "id": "null-required-skillUpgrades-rank",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":{\"skillId\":\"s\",\"rank\":null}}}}"
+    },
+    {
+      "id": "unknown-record-skillUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":{\"skillId\":\"s\",\"rank\":0,\"extra\":0}}}}"
+    },
+    {
+      "id": "record-equipmentUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":{\"itemId\":\"i\",\"rank\":0}}}}"
+    },
+    {
+      "id": "null-record-equipmentUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":null}}}"
+    },
+    {
+      "id": "null-required-equipmentUpgrades-itemId",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":{\"itemId\":null,\"rank\":0}}}}"
+    },
+    {
+      "id": "null-required-equipmentUpgrades-rank",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":{\"itemId\":\"i\",\"rank\":null}}}}"
+    },
+    {
+      "id": "unknown-record-equipmentUpgrades",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":{\"itemId\":\"i\",\"rank\":0,\"extra\":0}}}}"
+    },
+    {
+      "id": "record-prototypes",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":\"i\",\"augment\":\"\",\"level\":0}}}}"
+    },
+    {
+      "id": "null-record-prototypes",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":null}}}"
+    },
+    {
+      "id": "null-required-prototypes-itemId",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":null,\"augment\":\"\",\"level\":0}}}}"
+    },
+    {
+      "id": "null-required-prototypes-augment",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":\"i\",\"augment\":null,\"level\":0}}}}"
+    },
+    {
+      "id": "null-required-prototypes-level",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":\"i\",\"augment\":\"\",\"level\":null}}}}"
+    },
+    {
+      "id": "unknown-record-prototypes",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":\"i\",\"augment\":\"\",\"level\":0,\"extra\":0}}}}"
+    },
+    {
+      "id": "record-skillMods",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":{}}}}}"
+    },
+    {
+      "id": "null-record-skillMods",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":null}}}"
+    },
+    {
+      "id": "null-required-skillMods-skillId",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":null,\"mods\":{}}}}}"
+    },
+    {
+      "id": "null-required-skillMods-mods",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":null}}}}"
+    },
+    {
+      "id": "unknown-record-skillMods",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":{},\"extra\":0}}}}"
+    },
+    {
+      "id": "skill-mod-roll",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":{\"socket\":{\"modId\":\"m\",\"value\":0}}}}}}"
+    },
+    {
+      "id": "null-skill-mod-roll",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":{\"socket\":null}}}}}"
+    },
+    {
+      "id": "null-mod-roll-value",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"unknown\":{\"skillId\":\"s\",\"mods\":{\"socket\":{\"modId\":\"m\",\"value\":null}}}}}}"
+    },
+    {
+      "id": "large-account-rank",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"accountUpgrades\":{\"unknown\":1099511627776}}}"
+    },
+    {
+      "id": "large-item-rank",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipmentUpgrades\":{\"unknown\":{\"itemId\":\"i\",\"rank\":1099511627776}}}}"
+    },
+    {
+      "id": "large-skill-rank",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"unknown\":{\"skillId\":\"s\",\"rank\":1099511627776}}}}"
+    },
+    {
+      "id": "large-prototype-level",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"prototypes\":{\"unknown\":{\"itemId\":\"i\",\"augment\":\"\",\"level\":1099511627776}}}}"
+    },
+    {
+      "id": "party-valid",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"effects\":[{\"id\":\"missing\",\"values\":{\"damage\":1},\"active\":true}]}]}}"
+    },
+    {
+      "id": "party-null-member",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[null]}}"
+    },
+    {
+      "id": "party-missing-effects",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\"}]}}"
+    },
+    {
+      "id": "party-null-effects",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"effects\":null}]}}"
+    },
+    {
+      "id": "party-blank-name",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"  \",\"effects\":[]}]}}"
+    },
+    {
+      "id": "party-duplicate-names",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\" Ally \",\"effects\":[]},{\"name\":\"ALLY\",\"effects\":[]}]}}"
+    },
+    {
+      "id": "party-negative-armor",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"armor\":-1,\"effects\":[]}]}}"
+    },
+    {
+      "id": "party-duplicate-effects",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"effects\":[{\"id\":\"x\",\"values\":{},\"active\":true},{\"id\":\"x\",\"values\":{},\"active\":false}]}]}}"
+    },
+    {
+      "id": "party-four-members",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"0\",\"effects\":[]},{\"name\":\"1\",\"effects\":[]},{\"name\":\"2\",\"effects\":[]},{\"name\":\"3\",\"effects\":[]}]}}"
+    },
+    {
+      "id": "unicode-notes",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":{\"name\":\"Name\",\"notes\":\"Unicode \\ud83d\\ude00 <&> \\u2028\"}}}"
+    },
+    {
+      "id": "duplicate-root",
+      "input": "{\"schemaVersion\":1,\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}}"
+    },
+    {
+      "id": "duplicate-escaped",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"\\u006cevel\":1}}"
+    },
+    {
+      "id": "duplicate-unknown",
+      "input": "{\"extra\":{\"x\":1,\"x\":2}}"
+    },
+    {
+      "id": "trailing",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1}} {}"
+    },
+    {
+      "id": "empty",
+      "input": ""
+    },
+    {
+      "id": "malformed",
+      "input": "{\"schemaVersion\":!}"
+    },
+    {
+      "id": "truncated",
+      "input": "{\"schemaVersion\":1"
+    },
+    {
+      "id": "unpaired-surrogate",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":{\"notes\":\"\\ud800\"}}}"
+    },
+    {
+      "id": "unpaired-map-key",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocations\":{\"\\ud800\":0}}}"
+    },
+    {
+      "id": "alloc-number-string",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocations\":{\"x\":\"bad\"}}}"
+    },
+    {
+      "id": "equipment-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"equipment\":{\"x\":2}}}"
+    },
+    {
+      "id": "allocation-overflow",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"allocations\":{\"x\":1e999}}}"
+    },
+    {
+      "id": "attribute-string-id",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"attributeRolls\":{\"slot\":{\"core\":{\"attributeId\":2,\"value\":1}}}}}"
+    },
+    {
+      "id": "attribute-string-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"attributeRolls\":{\"slot\":{\"core\":{\"attributeId\":\"a\",\"value\":\"bad\"}}}}}"
+    },
+    {
+      "id": "skill-rank-string",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"slot\":{\"skillId\":\"s\",\"rank\":\"bad\"}}}}"
+    },
+    {
+      "id": "skill-id-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"slot\":{\"skillId\":2,\"rank\":1}}}}"
+    },
+    {
+      "id": "mod-roll-string",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modRolls\":{\"slot\":{\"socket\":\"bad\"}}}}"
+    },
+    {
+      "id": "mod-string-id",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modSelections\":{\"slot\":{\"socket\":2}}}}"
+    },
+    {
+      "id": "nested-mod-map-array",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"modSelections\":{\"slot\":[]}}}"
+    },
+    {
+      "id": "skill-mod-string-value",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"slot\":{\"skillId\":\"s\",\"mods\":{\"socket\":{\"modId\":\"m\",\"value\":\"bad\"}}}}}}"
+    },
+    {
+      "id": "skill-mod-map-array",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"slot\":{\"skillId\":\"s\",\"mods\":[]}}}}"
+    },
+    {
+      "id": "specialization-array-element",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"specializationNodeSelections\":[2]}}"
+    },
+    {
+      "id": "party-name-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":2,\"effects\":[]}]}}"
+    },
+    {
+      "id": "party-armor-string",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"armor\":\"bad\",\"effects\":[]}]}}"
+    },
+    {
+      "id": "party-value-string",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"effects\":[{\"id\":\"x\",\"values\":{\"stat\":\"bad\"},\"active\":true}]}]}}"
+    },
+    {
+      "id": "party-active-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"party\":[{\"name\":\"Ally\",\"effects\":[{\"id\":\"x\",\"values\":{},\"active\":2}]}]}}"
+    },
+    {
+      "id": "meta-name-number",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"meta\":{\"name\":2}}}"
+    },
+    {
+      "id": "exponent-integer",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillUpgrades\":{\"slot\":{\"skillId\":\"s\",\"rank\":1e1}}}}"
+    },
+    {
+      "id": "empty-skill-id",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"slot\":{\"skillId\":\"\",\"mods\":{}}}}}"
+    },
+    {
+      "id": "empty-mod-id",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"slot\":{\"skillId\":\"s\",\"mods\":{\"a\":{\"modId\":\"\",\"value\":0}}}}}}"
+    },
+    {
+      "id": "empty-mod-slot",
+      "input": "{\"schemaVersion\":1,\"build\":{\"packId\":\"ashen_vale\",\"packVersion\":\"0.1.0\",\"level\":1,\"skillMods\":{\"slot\":{\"skillId\":\"s\",\"mods\":{\"\":{\"modId\":\"m\",\"value\":0}}}}}}"
+    }
+  ]
+}

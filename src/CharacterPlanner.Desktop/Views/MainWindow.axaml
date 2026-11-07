@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+        xmlns:views="using:CharacterPlanner.Desktop.Views"
+        x:Class="CharacterPlanner.Desktop.Views.MainWindow" x:DataType="vm:MainViewModel"
+        Title="{Binding Title}" Icon="/Assets/application.ico" Width="1360" Height="820" MinWidth="1000" MinHeight="620">
+  <!-- On the window, so they work wherever focus is, including before anything in the editor has it. -->
+  <Window.KeyBindings>
+    <KeyBinding Gesture="Ctrl+Z" Command="{Binding Editor.UndoCommand}" />
+    <KeyBinding Gesture="Ctrl+Y" Command="{Binding Editor.RedoCommand}" />
+    <KeyBinding Gesture="Ctrl+S" Command="{Binding Editor.SaveCommand}" />
+  </Window.KeyBindings>
+  <Panel Margin="8">
+    <!-- While the pack loads, or when it can't: what's happening. -->
+    <StackPanel Spacing="8" IsVisible="{Binding Editor, Converter={x:Static ObjectConverters.IsNull}}" Margin="16">
+      <TextBlock Text="Character Planner" FontSize="26" FontWeight="SemiBold" />
+      <TextBlock Name="StatusText" Text="{Binding Status}" Classes="label" AutomationProperties.LiveSetting="Polite" />
+      <TextBlock Name="ErrorText" Text="{Binding Error}" Classes="error" AutomationProperties.LiveSetting="Assertive" MaxWidth="720" HorizontalAlignment="Left"
+                 IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}" />
+    </StackPanel>
+    <!-- Empty until the pack has loaded. -->
+    <ContentControl Name="Editor" Content="{Binding Editor}">
+      <ContentControl.ContentTemplate>
+        <DataTemplate x:DataType="vm:EditorViewModel">
+          <views:EditorView />
+        </DataTemplate>
+      </ContentControl.ContentTemplate>
+    </ContentControl>
+  </Panel>
+</Window>

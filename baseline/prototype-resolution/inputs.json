@@ -1,0 +1,33 @@
+{
+  "version":1,
+  "defaults":{
+    "equipment":{"main":"weapon"},"accountUpgrades":{"watch":1},"equipmentUpgrades":{"main":{"itemId":"weapon","rank":2}},
+    "prototypes":{"main":{"itemId":"weapon","augment":"entropy","level":3}},
+    "attributeRolls":{"main":{"core":{"attributeId":"damage_attr","value":16},"fallback":{"attributeId":"fallback_attr","value":10},"skill":{"attributeId":"skill_attr","value":1}}}
+  },
+  "cases":[
+    {"id":"prototype-active","context":{"weapon_slot":"main"}},
+    {"id":"normalized","context":{"weapon_slot":"main","normalized":"1"}},
+    {"id":"normalized-exponent","context":{"weapon_slot":"main","normalized":"1e0"}},
+    {"id":"no-augment","prototypes":{"main":{"itemId":"weapon","augment":"","level":0}},"context":{"weapon_slot":"main"}},
+    {"id":"unknown-augment","prototypes":{"main":{"itemId":"weapon","augment":"missing","level":3}},"context":{"weapon_slot":"main"}},
+    {"id":"augment-level-zero","prototypes":{"main":{"itemId":"weapon","augment":"entropy","level":0}},"context":{"weapon_slot":"main"}},
+    {"id":"augment-level-excess","prototypes":{"main":{"itemId":"weapon","augment":"entropy","level":4}},"context":{"weapon_slot":"main"}},
+    {"id":"augment-level-one","prototypes":{"main":{"itemId":"weapon","augment":"entropy","level":1}},"context":{"weapon_slot":"main"}},
+    {"id":"stale-binding","prototypes":{"main":{"itemId":"helm","augment":"entropy","level":1}},"context":{"weapon_slot":"main"}},
+    {"id":"empty-binding","equipment":{},"equipmentUpgrades":{},"context":{"weapon_slot":"main"}},
+    {"id":"unknown-item","equipment":{"main":"missing"},"equipmentUpgrades":{},"prototypes":{"main":{"itemId":"missing","augment":"entropy","level":1}},"context":{"weapon_slot":"main"}},
+    {"id":"unknown-slot","prototypes":{"z_missing":{"itemId":"weapon","augment":"entropy","level":1},"a_missing":{"itemId":"weapon","augment":"entropy","level":1}},"context":{"weapon_slot":"main"}},
+    {"id":"excluded-tag","equipment":{"main":"exotic"},"equipmentUpgrades":{},"attributeRolls":{},"prototypes":{"main":{"itemId":"exotic","augment":"entropy","level":1}},"context":{"weapon_slot":"main"}},
+    {"id":"ineligible-slot","equipment":{"off":"off_weapon"},"equipmentUpgrades":{},"attributeRolls":{},"prototypes":{"off":{"itemId":"off_weapon","augment":"entropy","level":1}},"context":{"weapon_slot":"off"}},
+    {"id":"inactive-item","equipment":{"main":"blocked"},"equipmentUpgrades":{},"attributeRolls":{},"prototypes":{"main":{"itemId":"blocked","augment":"entropy","level":1}},"context":{"weapon_slot":"main"}},
+    {"id":"gated-item","context":{"weapon_slot":"off"}},
+    {"id":"below-prototype-range","attributeRolls":{"main":{"core":{"attributeId":"damage_attr","value":10},"fallback":{"attributeId":"fallback_attr","value":10},"skill":{"attributeId":"skill_attr","value":1}}},"context":{"weapon_slot":"main"}},
+    {"id":"off-prototype-step","attributeRolls":{"main":{"core":{"attributeId":"damage_attr","value":13},"fallback":{"attributeId":"fallback_attr","value":10},"skill":{"attributeId":"skill_attr","value":1}}},"context":{"weapon_slot":"main"}},
+    {"id":"normalized-invalid-roll","attributeRolls":{"main":{"core":{"attributeId":"damage_attr","value":4},"fallback":{"attributeId":"fallback_attr","value":10},"skill":{"attributeId":"skill_attr","value":1}}},"context":{"weapon_slot":"main","normalized":"1"}},
+    {"id":"ordinary-ranges","prototypes":{},"attributeRolls":{"main":{"core":{"attributeId":"damage_attr","value":6},"fallback":{"attributeId":"fallback_attr","value":8},"skill":{"attributeId":"skill_attr","value":1}}},"context":{"weapon_slot":"main"}},
+    {"id":"two-active-prototypes","equipment":{"main":"weapon","head":"helm"},"prototypes":{"main":{"itemId":"weapon","augment":"entropy","level":3},"head":{"itemId":"helm","augment":"entropy","level":1}},"context":{"weapon_slot":"main"}},
+    {"id":"gear-active-weapon-gated","equipment":{"main":"weapon","head":"helm"},"prototypes":{"main":{"itemId":"weapon","augment":"entropy","level":3},"head":{"itemId":"helm","augment":"entropy","level":1}},"context":{"weapon_slot":"off"}},
+    {"id":"wrong-primary-slot","equipment":{"head":"weapon"},"equipmentUpgrades":{},"attributeRolls":{},"prototypes":{"head":{"itemId":"weapon","augment":"entropy","level":1}},"context":{"weapon_slot":"main"}}
+  ]
+}

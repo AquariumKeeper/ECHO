@@ -1,0 +1,238 @@
+{
+  "args": [
+    "catalog",
+    "list",
+    "skills"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog list",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": [
+      {
+        "id": "skill_achilles_pulse",
+        "name": "Achilles Pulse",
+        "family": "pulse"
+      },
+      {
+        "id": "skill_airburst_seeker_mine",
+        "name": "Airburst Seeker Mine",
+        "family": "seeker_mine"
+      },
+      {
+        "id": "skill_artificer_hive",
+        "name": "Artificer Hive",
+        "family": "hive"
+      },
+      {
+        "id": "skill_artillery_turret",
+        "name": "Artillery Turret",
+        "family": "turret"
+      },
+      {
+        "id": "skill_assault_turret",
+        "name": "Assault Turret",
+        "family": "turret"
+      },
+      {
+        "id": "skill_banshee_pulse",
+        "name": "Banshee Pulse",
+        "family": "pulse"
+      },
+      {
+        "id": "skill_blinder_firefly",
+        "name": "Blinder Firefly",
+        "family": "firefly"
+      },
+      {
+        "id": "skill_bombardier_drone",
+        "name": "Bombardier Drone",
+        "family": "drone"
+      },
+      {
+        "id": "skill_booster_hive",
+        "name": "Booster Hive",
+        "family": "hive"
+      },
+      {
+        "id": "skill_bulwark_shield",
+        "name": "Bulwark Shield",
+        "family": "shield"
+      },
+      {
+        "id": "skill_burn_sticky_bomb",
+        "name": "Burn Sticky Bomb",
+        "family": "sticky_bomb"
+      },
+      {
+        "id": "skill_burster_firefly",
+        "name": "Burster Firefly",
+        "family": "firefly"
+      },
+      {
+        "id": "skill_cluster_seeker_mine",
+        "name": "Cluster Seeker Mine",
+        "family": "seeker_mine"
+      },
+      {
+        "id": "skill_crusader_shield",
+        "name": "Crusader Shield",
+        "family": "shield"
+      },
+      {
+        "id": "skill_decoy",
+        "name": "Decoy",
+        "family": "decoy"
+      },
+      {
+        "id": "skill_defender_drone",
+        "name": "Defender Drone",
+        "family": "drone"
+      },
+      {
+        "id": "skill_deflector_shield",
+        "name": "Deflector Shield",
+        "family": "shield"
+      },
+      {
+        "id": "skill_demolisher_firefly",
+        "name": "Demolisher Firefly",
+        "family": "firefly"
+      },
+      {
+        "id": "skill_emp_sticky_bomb",
+        "name": "EMP Sticky Bomb",
+        "description": "Damage to eligible electronics is unavailable: the community workbook provides no numeric damage baseline for this variant. Disruption is not a damage number.",
+        "family": "sticky_bomb"
+      },
+      {
+        "id": "skill_explosive_seeker_mine",
+        "name": "Explosive Seeker Mine",
+        "family": "seeker_mine"
+      },
+      {
+        "id": "skill_explosive_sticky_bomb",
+        "name": "Explosive Sticky Bomb",
+        "family": "sticky_bomb"
+      },
+      {
+        "id": "skill_firestarter_chem_launcher",
+        "name": "Firestarter Chem Launcher",
+        "family": "chem_launcher"
+      },
+      {
+        "id": "skill_fixer_drone",
+        "name": "Fixer Drone",
+        "family": "drone"
+      },
+      {
+        "id": "skill_fortified_smart_cover",
+        "name": "Fortified Smart Cover",
+        "family": "smart_cover"
+      },
+      {
+        "id": "skill_incinerator_turret",
+        "name": "Incinerator Turret",
+        "family": "turret"
+      },
+      {
+        "id": "skill_jammer_pulse",
+        "name": "Jammer Pulse",
+        "description": "Damage to eligible electronics is unavailable: the community workbook provides no numeric damage baseline for this variant. Disruption is not a damage number.",
+        "family": "pulse"
+      },
+      {
+        "id": "skill_mender_seeker_mine",
+        "name": "Mender Seeker Mine",
+        "family": "seeker_mine"
+      },
+      {
+        "id": "skill_oxidizer_chem_launcher",
+        "name": "Oxidizer Chem Launcher",
+        "family": "chem_launcher"
+      },
+      {
+        "id": "skill_precision_smart_cover",
+        "name": "Precision Smart Cover",
+        "family": "smart_cover"
+      },
+      {
+        "id": "skill_reinforcer_chem_launcher",
+        "name": "Reinforcer Chem Launcher",
+        "family": "chem_launcher"
+      },
+      {
+        "id": "skill_remote_pulse",
+        "name": "Remote Pulse",
+        "family": "pulse"
+      },
+      {
+        "id": "skill_repair_trap",
+        "name": "Repair Trap",
+        "family": "trap"
+      },
+      {
+        "id": "skill_restorer_hive",
+        "name": "Restorer Hive",
+        "family": "hive"
+      },
+      {
+        "id": "skill_reviver_hive",
+        "name": "Reviver Hive",
+        "family": "hive"
+      },
+      {
+        "id": "skill_riot_foam_chem_launcher",
+        "name": "Riot Foam Chem Launcher",
+        "family": "chem_launcher"
+      },
+      {
+        "id": "skill_scanner_pulse",
+        "name": "Scanner Pulse",
+        "family": "pulse"
+      },
+      {
+        "id": "skill_shock_trap",
+        "name": "Shock Trap",
+        "family": "trap"
+      },
+      {
+        "id": "skill_shrapnel_trap",
+        "name": "Shrapnel Trap",
+        "family": "trap"
+      },
+      {
+        "id": "skill_sniper_turret",
+        "name": "Sniper Turret",
+        "family": "turret"
+      },
+      {
+        "id": "skill_stinger_hive",
+        "name": "Stinger Hive",
+        "family": "hive"
+      },
+      {
+        "id": "skill_striker_drone",
+        "name": "Striker Drone",
+        "family": "drone"
+      },
+      {
+        "id": "skill_striker_shield",
+        "name": "Striker Shield",
+        "family": "shield"
+      },
+      {
+        "id": "skill_tactician_drone",
+        "name": "Tactician Drone",
+        "family": "drone"
+      }
+    ]
+  }
+}

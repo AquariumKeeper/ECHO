@@ -1,0 +1,20 @@
+{
+  "args": [
+    "session",
+    "inspect",
+    "--session-dir",
+    "no-sessions"
+  ],
+  "stdin": null,
+  "exitCode": 4,
+  "response": {
+    "apiVersion": 1,
+    "command": "session inspect",
+    "ok": false,
+    "diagnostics": [],
+    "error": {
+      "code": "session-unavailable",
+      "message": "no available local session"
+    }
+  }
+}

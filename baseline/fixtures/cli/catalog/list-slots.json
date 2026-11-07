@@ -1,0 +1,84 @@
+{
+  "args": [
+    "catalog",
+    "list",
+    "slots"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog list",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": [
+      {
+        "id": "backpack",
+        "name": "Backpack",
+        "accepts": [
+          "gear"
+        ]
+      },
+      {
+        "id": "chest",
+        "name": "Chest",
+        "accepts": [
+          "gear"
+        ]
+      },
+      {
+        "id": "gloves",
+        "name": "Gloves",
+        "accepts": [
+          "gear"
+        ]
+      },
+      {
+        "id": "holster",
+        "name": "Holster",
+        "accepts": [
+          "gear"
+        ]
+      },
+      {
+        "id": "knees",
+        "name": "Kneepads",
+        "accepts": [
+          "gear"
+        ]
+      },
+      {
+        "id": "mask",
+        "name": "Mask",
+        "accepts": [
+          "gear"
+        ]
+      },
+      {
+        "id": "primary_weapon",
+        "name": "Primary Weapon",
+        "accepts": [
+          "weapon"
+        ]
+      },
+      {
+        "id": "secondary_weapon",
+        "name": "Secondary Weapon",
+        "accepts": [
+          "weapon"
+        ]
+      },
+      {
+        "id": "sidearm",
+        "name": "Sidearm",
+        "accepts": [
+          "weapon"
+        ]
+      }
+    ]
+  }
+}

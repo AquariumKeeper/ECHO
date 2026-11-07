@@ -1,0 +1,118 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+             xmlns:views="using:CharacterPlanner.Desktop.Views"
+             xmlns:library="using:CharacterPlanner.Application.Library"
+             x:Class="CharacterPlanner.Desktop.Views.EditorView" x:DataType="vm:EditorViewModel">
+  <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="8">
+
+    <!-- The top bar, as the Go app's (pack name, About, the build tools), with this app's library controls. -->
+    <Border Classes="panel" Padding="8">
+      <WrapPanel ItemSpacing="8" LineSpacing="8">
+        <TextBlock Text="{Binding PackName}" FontWeight="Bold" VerticalAlignment="Center" />
+        <Button Name="AboutButton" Content="About" Click="OnAbout" />
+        <Button Name="ArtworkButton" Content="Artwork" Click="OnArtwork" IsEnabled="{Binding ArtworkManager, Converter={x:Static ObjectConverters.IsNotNull}}" />
+        <Separator Classes="vertical" />
+        <Button Content="New Build" Command="{Binding NewBuildCommand}" />
+        <TextBox Name="BuildNameBox" Text="{Binding BuildName}" Width="240" PlaceholderText="Build name"
+                 AutomationProperties.Name="Build name">
+          <TextBox.KeyBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding RenameCommand}" />
+          </TextBox.KeyBindings>
+        </TextBox>
+        <Button Content="Rename" Command="{Binding RenameCommand}" />
+        <Button Name="UndoButton" Content="Undo" Command="{Binding UndoCommand}" ToolTip.Tip="Undo (Ctrl+Z)" />
+        <Button Name="RedoButton" Content="Redo" Command="{Binding RedoCommand}" ToolTip.Tip="Redo (Ctrl+Y)" />
+        <Button Name="ShareButton" Content="Share" Click="OnShare" />
+        <Button Name="ImportButton" Content="Import" Click="OnImport" />
+        <Button Name="CompareButton" Content="Compare" Click="OnCompare" />
+        <Button Name="SaveButton" Content="Save" Command="{Binding SaveCommand}" ToolTip.Tip="Save (Ctrl+S)" />
+        <Button Content="Save as new" Command="{Binding SaveAsNewCommand}" />
+        <ComboBox Name="LibraryPicker" ItemsSource="{Binding SavedBuilds}" SelectedItem="{Binding SelectedSavedBuild}" PlaceholderText="Saved builds" Width="260"
+                  AutomationProperties.Name="Saved builds">
+          <ComboBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:SavedBuild">
+              <StackPanel>
+                <TextBlock Text="{Binding Name}" />
+                <TextBlock Text="{Binding Detail}" Classes="caption" />
+                <TextBlock Text="{Binding Entry.Problem}" Classes="error" FontSize="12"
+                           IsVisible="{Binding Entry.Problem, Converter={x:Static ObjectConverters.IsNotNull}}" />
+              </StackPanel>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button Name="OpenSavedButton" Content="Open" Command="{Binding OpenCommand}" CommandParameter="{Binding SelectedSavedBuild.Entry}" />
+        <Button Name="RenameSavedButton" Content="Rename saved" Command="{Binding RenameSavedCommand}" CommandParameter="{Binding SelectedSavedBuild.Entry}"
+                ToolTip.Tip="Rename the chosen saved build" />
+        <Button Name="DeleteSavedButton" Content="Delete saved" Command="{Binding DeleteSavedCommand}" CommandParameter="{Binding SelectedSavedBuild.Entry}"
+                ToolTip.Tip="Delete the chosen saved build" />
+        <Button Content="Refresh" Command="{Binding RefreshLibraryCommand}" />
+        <TextBlock Text="Unsaved changes" Classes="label" VerticalAlignment="Center" IsVisible="{Binding IsDirty}" />
+      </WrapPanel>
+    </Border>
+
+    <TextBlock Grid.Row="1" Name="MessageText" Text="{Binding Message}" Classes="error" AutomationProperties.LiveSetting="Assertive"
+               IsVisible="{Binding Message, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+    <!-- The headline figures, above every tab (G339): the weapon in hand, then the pack's figures. -->
+    <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+      <StackPanel Name="HeadlineStrip" Orientation="Horizontal" Spacing="8">
+        <Border Classes="figure">
+          <StackPanel Spacing="2">
+            <TextBlock Text="Active weapon" Classes="caption" />
+            <TextBlock Name="ActiveWeaponText" Text="{Binding ActiveWeaponText}" FontWeight="Bold" />
+          </StackPanel>
+        </Border>
+        <ItemsControl ItemsSource="{Binding Headline}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" Spacing="8" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:FigureViewModel">
+              <Border Classes="figure" IsVisible="{Binding IsVisible}">
+                <StackPanel Spacing="2">
+                  <TextBlock Text="{Binding Label}" Classes="caption" TextWrapping="Wrap" MaxWidth="200" />
+                  <TextBlock Text="{Binding Value}" Classes="figure" Classes.message="{Binding IsMessage}" Classes.up="{Binding IsUp}" Classes.down="{Binding IsDown}" TextWrapping="Wrap" MaxWidth="200" />
+                  <TextBlock Text="{Binding Detail}" Classes="caption" TextWrapping="Wrap" MaxWidth="200" IsVisible="{Binding HasDetail}" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+
+    <TabControl Grid.Row="3" Name="Tabs">
+      <TabItem Header="Build" Name="BuildTab">
+        <views:BuildTabView />
+      </TabItem>
+      <TabItem Header="Stats" Name="StatsTab">
+        <views:StatsTabView />
+      </TabItem>
+      <TabItem Header="Assumptions" Name="AssumptionsTab">
+        <views:AssumptionsTabView />
+      </TabItem>
+      <TabItem Header="Party" Name="PartyTab">
+        <views:PartyTabView />
+      </TabItem>
+      <TabItem Header="Simulate" Name="SimulateTab">
+        <views:SimulateTabView />
+      </TabItem>
+      <TabItem Header="Notes" Name="NotesTab">
+        <views:NotesTabView />
+      </TabItem>
+    </TabControl>
+
+    <!-- The diagnostics strip (Go's banner): errors one a line, warnings collapsed by kind; it scrolls past two lines. -->
+    <ScrollViewer Grid.Row="4" Name="DiagnosticsStrip" MaxHeight="76" IsVisible="{Binding HasDiagnostics}">
+      <ItemsControl ItemsSource="{Binding Diagnostics}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:DiagnosticLine">
+            <TextBlock Text="{Binding Text}" TextWrapping="Wrap" Classes.error="{Binding IsError}" Classes.warning="{Binding !IsError}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

@@ -1,0 +1,1097 @@
+{
+  "args": [
+    "catalog",
+    "list",
+    "mods"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "catalog list",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": [
+      {
+        "id": "armor_on_kill_gear_mod",
+        "name": "Armor on Kill Mod"
+      },
+      {
+        "id": "bleed_resistance_gear_mod",
+        "name": "Bleed Resistance Mod"
+      },
+      {
+        "id": "blind_deaf_resistance_gear_mod",
+        "name": "Blind/Deaf Resistance Mod"
+      },
+      {
+        "id": "burn_resistance_gear_mod",
+        "name": "Burn Resistance Mod"
+      },
+      {
+        "id": "critical_hit_chance_gear_mod",
+        "name": "Critical Hit Chance Mod"
+      },
+      {
+        "id": "critical_hit_damage_gear_mod",
+        "name": "Critical Hit Damage Mod"
+      },
+      {
+        "id": "disorient_resistance_gear_mod",
+        "name": "Disorient Resistance Mod"
+      },
+      {
+        "id": "disrupt_resistance_gear_mod",
+        "name": "Disrupt Resistance Mod"
+      },
+      {
+        "id": "ensnare_resistance_gear_mod",
+        "name": "Ensnare Resistance Mod"
+      },
+      {
+        "id": "headshot_damage_gear_mod",
+        "name": "Headshot Damage Mod"
+      },
+      {
+        "id": "incoming_repairs_gear_mod",
+        "name": "Incoming Repairs Mod"
+      },
+      {
+        "id": "protection_from_elites_gear_mod",
+        "name": "Protection from Elites Mod"
+      },
+      {
+        "id": "pulse_resistance_gear_mod",
+        "name": "Pulse Resistance Mod"
+      },
+      {
+        "id": "repair_skills_gear_mod",
+        "name": "Repair Skills Mod"
+      },
+      {
+        "id": "shock_resistance_gear_mod",
+        "name": "Shock Resistance Mod"
+      },
+      {
+        "id": "skill_duration_gear_mod",
+        "name": "Skill Duration Mod"
+      },
+      {
+        "id": "skill_haste_gear_mod",
+        "name": "Skill Haste Mod"
+      },
+      {
+        "id": "weapon_mod_magazine_agitator_magazine",
+        "name": "Agitator Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_balanced_spring_5_56_mag",
+        "name": "Balanced Spring 5.56 Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_barbed_grip_magazine",
+        "name": "Barbed Grip Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_bee_s_speed",
+        "name": "Bee's Speed"
+      },
+      {
+        "id": "weapon_mod_magazine_bellows",
+        "name": "Bellows"
+      },
+      {
+        "id": "weapon_mod_magazine_bittersweet_magazine",
+        "name": "Bittersweet Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_bullet_eyrie",
+        "name": "Bullet Eyrie"
+      },
+      {
+        "id": "weapon_mod_magazine_caduceus_magazine",
+        "name": "Caduceus Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_calibrated_link",
+        "name": "Calibrated Link"
+      },
+      {
+        "id": "weapon_mod_magazine_chameleon_activcamo",
+        "name": "Chameleon ActivCamo"
+      },
+      {
+        "id": "weapon_mod_magazine_chatterbox_magazine",
+        "name": "Chatterbox Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_compensated_integrated_spring",
+        "name": "Compensated Integrated Spring"
+      },
+      {
+        "id": "weapon_mod_magazine_counter_clockwise_tubular_spring",
+        "name": "Counter-Clockwise Tubular Spring"
+      },
+      {
+        "id": "weapon_mod_magazine_death_s_hand",
+        "name": "Death's Hand"
+      },
+      {
+        "id": "weapon_mod_magazine_deauthentication_frame",
+        "name": "Deauthentication Frame"
+      },
+      {
+        "id": "weapon_mod_magazine_diamondback_lever",
+        "name": "Diamondback Lever"
+      },
+      {
+        "id": "weapon_mod_magazine_engraved_drum",
+        "name": "Engraved Drum"
+      },
+      {
+        "id": "weapon_mod_magazine_extended_45_acp_mag",
+        "name": "Extended .45 ACP Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_extended_9mm_mag",
+        "name": "Extended 9mm Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_extended_pistol_mag",
+        "name": "Extended Pistol Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_fafnir_magazine",
+        "name": "Fafnir Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_field_pistol_mag",
+        "name": "Field Pistol Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_flexible_tubular_spring",
+        "name": "Flexible tubular Spring"
+      },
+      {
+        "id": "weapon_mod_magazine_force_feed_45_acp_mag",
+        "name": "Force Feed .45 ACP Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_gluttonous_magazines",
+        "name": "Gluttonous Magazines"
+      },
+      {
+        "id": "weapon_mod_magazine_hard_tubular_spring",
+        "name": "Hard Tubular Spring"
+      },
+      {
+        "id": "weapon_mod_magazine_harness_buckle_magazine",
+        "name": "Harness Buckle Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_heavy_spring_9mm_mag",
+        "name": "Heavy Spring 9mm Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_home_s_magazine",
+        "name": "Home's Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_infantry_5_56_mag",
+        "name": "Infantry 5.56 Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_insulated_magazine",
+        "name": "Insulated Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_large_pouch",
+        "name": "Large Pouch"
+      },
+      {
+        "id": "weapon_mod_magazine_large_pouch_gunner_mag",
+        "name": "Large Pouch (Gunner mag)"
+      },
+      {
+        "id": "weapon_mod_magazine_liberty_grip",
+        "name": "Liberty Grip"
+      },
+      {
+        "id": "weapon_mod_magazine_light_extended_5_56_mag",
+        "name": "Light Extended 5.56 Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_light_extended_7_62_mag",
+        "name": "Light Extended 7.62 Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_lightweight_marksman_mag",
+        "name": "Lightweight Marksman Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_mag_of_holding",
+        "name": "Mag of Holding"
+      },
+      {
+        "id": "weapon_mod_magazine_mended_marksman_mag",
+        "name": "Mended Marksman Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_merciless_magazine",
+        "name": "Merciless Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_modified_feed_system",
+        "name": "Modified Feed System"
+      },
+      {
+        "id": "weapon_mod_magazine_mosquito_magazine",
+        "name": "Mosquito Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_nemesis_bolt",
+        "name": "Nemesis Bolt"
+      },
+      {
+        "id": "weapon_mod_magazine_nimble_link_belt",
+        "name": "Nimble Link Belt"
+      },
+      {
+        "id": "weapon_mod_magazine_non_disruptive_link",
+        "name": "Non-Disruptive Link"
+      },
+      {
+        "id": "weapon_mod_magazine_overbalanced_integrated_spring",
+        "name": "Overbalanced Integrated Spring"
+      },
+      {
+        "id": "weapon_mod_magazine_oversized_45_acp_mag",
+        "name": "Oversized .45 ACP Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_oversized_9mm_mag",
+        "name": "Oversized 9mm Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_pakhan_magazine",
+        "name": "Pakhan Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_plagued_magazine",
+        "name": "Plagued Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_police_pistol_mag",
+        "name": "Police Pistol Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_precision_7_62_mag",
+        "name": "Precision 7.62 Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_precision_feeding_45_mag",
+        "name": "Precision Feeding .45 Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_prima_donna_magazine",
+        "name": "Prima Donna Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_riot_magazine",
+        "name": "Riot Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_ruthless_magazine",
+        "name": "Ruthless Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_sacrum_magazine",
+        "name": "Sacrum Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_segmented_9mm_mag",
+        "name": "Segmented 9mm Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_serpent_magazine",
+        "name": "Serpent Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_short_spring_45_acp_mag",
+        "name": "Short Spring .45 ACP Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_shroud_magazine",
+        "name": "Shroud Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_simulation_magazine",
+        "name": "Simulation Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_speed_loading_revolver_drum",
+        "name": "Speed Loading Revolver Drum"
+      },
+      {
+        "id": "weapon_mod_magazine_stiff_integrated_spring",
+        "name": "Stiff Integrated Spring"
+      },
+      {
+        "id": "weapon_mod_magazine_strega_magazine",
+        "name": "Strega Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_sturdy_extended_5_56_mag",
+        "name": "Sturdy Extended 5.56 Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_sturdy_extended_7_62_mag",
+        "name": "Sturdy Extended 7.62 Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_sturdy_marksman_mag",
+        "name": "Sturdy Marksman Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_tactical_5_56_mag",
+        "name": "Tactical 5.56 Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_tactical_small_pouch",
+        "name": "Tactical Small Pouch"
+      },
+      {
+        "id": "weapon_mod_magazine_tempest_magazine",
+        "name": "Tempest Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_tension_spring_magazine",
+        "name": "Tension Spring Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_thin_7_62_mag",
+        "name": "Thin 7.62 Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_tightly_packed_marksman_mag",
+        "name": "Tightly Packed Marksman Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_tuned_tension_spring",
+        "name": "Tuned-tension Spring"
+      },
+      {
+        "id": "weapon_mod_magazine_underbalanced_integrated_spring",
+        "name": "Underbalanced Integrated Spring"
+      },
+      {
+        "id": "weapon_mod_magazine_venom_glands",
+        "name": "Venom Glands"
+      },
+      {
+        "id": "weapon_mod_magazine_vertigo_magazine",
+        "name": "Vertigo Magazine"
+      },
+      {
+        "id": "weapon_mod_magazine_voltage_generator",
+        "name": "Voltage Generator"
+      },
+      {
+        "id": "weapon_mod_magazine_weighted_7_62_mag",
+        "name": "Weighted 7.62 Mag"
+      },
+      {
+        "id": "weapon_mod_magazine_well_oiled_machine",
+        "name": "Well-Oiled Machine"
+      },
+      {
+        "id": "weapon_mod_magazine_whiplash_magazine",
+        "name": "Whiplash Magazine"
+      },
+      {
+        "id": "weapon_mod_muzzle_aculeus",
+        "name": "Aculeus"
+      },
+      {
+        "id": "weapon_mod_muzzle_agitator_muzzle",
+        "name": "Agitator Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_bee_s_purpose",
+        "name": "Bee's Purpose"
+      },
+      {
+        "id": "weapon_mod_muzzle_caduceus_muzzle",
+        "name": "Caduceus Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_carbon_steel_muzzle",
+        "name": "Carbon Steel Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_chameleon_dampener",
+        "name": "Chameleon Dampener"
+      },
+      {
+        "id": "weapon_mod_muzzle_chatterbox_muzzle",
+        "name": "Chatterbox Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_compensator_45",
+        "name": "Compensator .45"
+      },
+      {
+        "id": "weapon_mod_muzzle_compensator_5_56",
+        "name": "Compensator 5.56"
+      },
+      {
+        "id": "weapon_mod_muzzle_compensator_7_62",
+        "name": "Compensator 7.62"
+      },
+      {
+        "id": "weapon_mod_muzzle_compensator_9mm",
+        "name": "Compensator 9mm"
+      },
+      {
+        "id": "weapon_mod_muzzle_death_s_maw",
+        "name": "Death's Maw"
+      },
+      {
+        "id": "weapon_mod_muzzle_devouring_maw",
+        "name": "Devouring Maw"
+      },
+      {
+        "id": "weapon_mod_muzzle_diamondback_ornamentation",
+        "name": "Diamondback Ornamentation"
+      },
+      {
+        "id": "weapon_mod_muzzle_discharge_electrode",
+        "name": "Discharge Electrode"
+      },
+      {
+        "id": "weapon_mod_muzzle_doctor_s_perseverance",
+        "name": "Doctor's Perseverance"
+      },
+      {
+        "id": "weapon_mod_muzzle_dragon_horns",
+        "name": "Dragon Horns"
+      },
+      {
+        "id": "weapon_mod_muzzle_engraved_muzzle",
+        "name": "Engraved Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_flash_hider_45",
+        "name": "Flash Hider .45"
+      },
+      {
+        "id": "weapon_mod_muzzle_flash_hider_5_56",
+        "name": "Flash Hider 5.56"
+      },
+      {
+        "id": "weapon_mod_muzzle_flash_hider_7_62",
+        "name": "Flash Hider 7.62"
+      },
+      {
+        "id": "weapon_mod_muzzle_flash_hider_9mm",
+        "name": "Flash Hider 9mm"
+      },
+      {
+        "id": "weapon_mod_muzzle_gold_plated_muzzle",
+        "name": "Gold Plated Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_jagged_beak",
+        "name": "Jagged Beak"
+      },
+      {
+        "id": "weapon_mod_muzzle_jagged_muzzle",
+        "name": "Jagged Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_large_suppressor_5_56",
+        "name": "Large Suppressor 5.56"
+      },
+      {
+        "id": "weapon_mod_muzzle_large_suppressor_7_62",
+        "name": "Large Suppressor 7.62"
+      },
+      {
+        "id": "weapon_mod_muzzle_liberty_customs",
+        "name": "Liberty Customs"
+      },
+      {
+        "id": "weapon_mod_muzzle_loud_vent_brake_45",
+        "name": "Loud Vent Brake .45"
+      },
+      {
+        "id": "weapon_mod_muzzle_loud_vent_brake_5_56",
+        "name": "Loud Vent Brake 5.56"
+      },
+      {
+        "id": "weapon_mod_muzzle_loud_vent_brake_7_62",
+        "name": "Loud Vent Brake 7.62"
+      },
+      {
+        "id": "weapon_mod_muzzle_loud_vent_brake_9mm",
+        "name": "Loud Vent Brake 9mm"
+      },
+      {
+        "id": "weapon_mod_muzzle_mayhem_s_muzzle",
+        "name": "Mayhem's Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_merciless_muzzle",
+        "name": "Merciless Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_mosquito_muzzle",
+        "name": "Mosquito Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_muzzle_brake_45",
+        "name": "Muzzle Brake .45"
+      },
+      {
+        "id": "weapon_mod_muzzle_muzzle_brake_5_56",
+        "name": "Muzzle Brake 5.56"
+      },
+      {
+        "id": "weapon_mod_muzzle_muzzle_brake_7_62",
+        "name": "Muzzle Brake 7.62"
+      },
+      {
+        "id": "weapon_mod_muzzle_muzzle_brake_9mm",
+        "name": "Muzzle Brake 9mm"
+      },
+      {
+        "id": "weapon_mod_muzzle_nemesis_barrel",
+        "name": "Nemesis Barrel"
+      },
+      {
+        "id": "weapon_mod_muzzle_omega_5_56_rifle_suppressor",
+        "name": "Omega 5.56 Rifle Suppressor"
+      },
+      {
+        "id": "weapon_mod_muzzle_omega_7_62_rifle_suppresor",
+        "name": "Omega 7.62 Rifle Suppresor"
+      },
+      {
+        "id": "weapon_mod_muzzle_osprey_45_suppressor",
+        "name": "Osprey 45 Suppressor"
+      },
+      {
+        "id": "weapon_mod_muzzle_osprey_9_suppressor",
+        "name": "Osprey 9 Suppressor"
+      },
+      {
+        "id": "weapon_mod_muzzle_overcharged_muzzle",
+        "name": "Overcharged Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_overclock_muzzle",
+        "name": "Overclock Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_oxpecker_muzzle",
+        "name": "Oxpecker Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_pakhan_muzzle",
+        "name": "Pakhan Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_plagued_muzzle",
+        "name": "Plagued Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_prima_donna_muzzle",
+        "name": "Prima Donna Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_punctuating_barrel",
+        "name": "Punctuating Barrel"
+      },
+      {
+        "id": "weapon_mod_muzzle_qdc_sound_suppressor",
+        "name": "QDC Sound Suppressor"
+      },
+      {
+        "id": "weapon_mod_muzzle_sacrum_muzzle",
+        "name": "Sacrum Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_sawtooth_muzzle",
+        "name": "Sawtooth Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_shroud_muzzle",
+        "name": "Shroud Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_small_suppressor_45",
+        "name": "Small Suppressor .45"
+      },
+      {
+        "id": "weapon_mod_muzzle_small_suppressor_9mm",
+        "name": "Small Suppressor 9mm"
+      },
+      {
+        "id": "weapon_mod_muzzle_strega_muzzle",
+        "name": "Strega Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_tempest_muzzle",
+        "name": "Tempest Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_velocity_amplifier",
+        "name": "Velocity Amplifier"
+      },
+      {
+        "id": "weapon_mod_muzzle_vertigo_muzzle",
+        "name": "Vertigo Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_weather_resistant_muzzle",
+        "name": "Weather-Resistant Muzzle"
+      },
+      {
+        "id": "weapon_mod_muzzle_wrapped_suppressor",
+        "name": "Wrapped Suppressor"
+      },
+      {
+        "id": "weapon_mod_optics_acog_scope_4x",
+        "name": "Acog Scope (4x)"
+      },
+      {
+        "id": "weapon_mod_optics_agitator_scope",
+        "name": "Agitator Scope"
+      },
+      {
+        "id": "weapon_mod_optics_anti_glint_coated_sight",
+        "name": "Anti-Glint Coated Sight"
+      },
+      {
+        "id": "weapon_mod_optics_ar_scope",
+        "name": "AR Scope"
+      },
+      {
+        "id": "weapon_mod_optics_ballistic_rail",
+        "name": "Ballistic Rail"
+      },
+      {
+        "id": "weapon_mod_optics_bee_s_focus",
+        "name": "Bee's Focus"
+      },
+      {
+        "id": "weapon_mod_optics_bittersweet_scope",
+        "name": "Bittersweet Scope"
+      },
+      {
+        "id": "weapon_mod_optics_built_in_scope_8x",
+        "name": "Built-in Scope (8x)"
+      },
+      {
+        "id": "weapon_mod_optics_c79_scope_3_4x",
+        "name": "C79 Scope (3.4x)"
+      },
+      {
+        "id": "weapon_mod_optics_caduceus_optics",
+        "name": "Caduceus Optics"
+      },
+      {
+        "id": "weapon_mod_optics_chameleon_optics",
+        "name": "Chameleon Optics"
+      },
+      {
+        "id": "weapon_mod_optics_clean_cut_optics",
+        "name": "Clean Cut Optics"
+      },
+      {
+        "id": "weapon_mod_optics_conductive_focal",
+        "name": "Conductive Focal"
+      },
+      {
+        "id": "weapon_mod_optics_conductor_rail",
+        "name": "Conductor Rail"
+      },
+      {
+        "id": "weapon_mod_optics_cqbss_scope_8x",
+        "name": "CQBSS Scope (8x)"
+      },
+      {
+        "id": "weapon_mod_optics_damaged_optics",
+        "name": "Damaged Optics"
+      },
+      {
+        "id": "weapon_mod_optics_diamondback_dot_sight",
+        "name": "Diamondback Dot Sight"
+      },
+      {
+        "id": "weapon_mod_optics_digital_scope",
+        "name": "Digital Scope"
+      },
+      {
+        "id": "weapon_mod_optics_doctor_s_sight",
+        "name": "Doctor's Sight"
+      },
+      {
+        "id": "weapon_mod_optics_eagle_eye_sight",
+        "name": "Eagle Eye Sight"
+      },
+      {
+        "id": "weapon_mod_optics_exps3_holo_sight",
+        "name": "EXPS3 Holo Sight"
+      },
+      {
+        "id": "weapon_mod_optics_fafnir_optics",
+        "name": "Fafnir Optics"
+      },
+      {
+        "id": "weapon_mod_optics_fire_select_scope",
+        "name": "Fire Select Scope"
+      },
+      {
+        "id": "weapon_mod_optics_gaze_of_death",
+        "name": "Gaze of Death"
+      },
+      {
+        "id": "weapon_mod_optics_gr9_built_in_scope_8x",
+        "name": "GR9 Built-in scope (8x)"
+      },
+      {
+        "id": "weapon_mod_optics_infinity_sights",
+        "name": "Infinity Sights"
+      },
+      {
+        "id": "weapon_mod_optics_judgement_s_glare",
+        "name": "Judgement's Glare"
+      },
+      {
+        "id": "weapon_mod_optics_liberty_sight",
+        "name": "Liberty Sight"
+      },
+      {
+        "id": "weapon_mod_optics_lightning_sight",
+        "name": "Lightning Sight"
+      },
+      {
+        "id": "weapon_mod_optics_low_reflex_sight",
+        "name": "Low Reflex Sight"
+      },
+      {
+        "id": "weapon_mod_optics_merciless_optics",
+        "name": "Merciless Optics"
+      },
+      {
+        "id": "weapon_mod_optics_modified_optics",
+        "name": "Modified Optics"
+      },
+      {
+        "id": "weapon_mod_optics_n_552_holo_sight",
+        "name": "552 Holo Sight"
+      },
+      {
+        "id": "weapon_mod_optics_nemesis_digital_scope",
+        "name": "Nemesis Digital Scope"
+      },
+      {
+        "id": "weapon_mod_optics_open_iron_sights",
+        "name": "Open Iron Sights"
+      },
+      {
+        "id": "weapon_mod_optics_outcast_optics",
+        "name": "Outcast Optics"
+      },
+      {
+        "id": "weapon_mod_optics_oxpecker_optic",
+        "name": "Oxpecker Optic"
+      },
+      {
+        "id": "weapon_mod_optics_pakhan_optic",
+        "name": "Pakhan Optic"
+      },
+      {
+        "id": "weapon_mod_optics_predatory_optics",
+        "name": "Predatory Optics"
+      },
+      {
+        "id": "weapon_mod_optics_prima_donna_scope",
+        "name": "Prima Donna Scope"
+      },
+      {
+        "id": "weapon_mod_optics_pro_red_dot_sight",
+        "name": "PRO Red Dot Sight"
+      },
+      {
+        "id": "weapon_mod_optics_quick_sight",
+        "name": "Quick Sight"
+      },
+      {
+        "id": "weapon_mod_optics_reflex_sight",
+        "name": "Reflex Sight"
+      },
+      {
+        "id": "weapon_mod_optics_rugged_mini_reflex_sight",
+        "name": "Rugged Mini Reflex Sight"
+      },
+      {
+        "id": "weapon_mod_optics_russian_red_dot_sight",
+        "name": "Russian Red dot Sight"
+      },
+      {
+        "id": "weapon_mod_optics_sacrum_sight",
+        "name": "Sacrum Sight"
+      },
+      {
+        "id": "weapon_mod_optics_shroud_scope",
+        "name": "Shroud Scope"
+      },
+      {
+        "id": "weapon_mod_optics_small_rds_scope",
+        "name": "Small RDS Scope"
+      },
+      {
+        "id": "weapon_mod_optics_starlight_receptors",
+        "name": "Starlight Receptors"
+      },
+      {
+        "id": "weapon_mod_optics_streamlined_iron_sights",
+        "name": "Streamlined Iron Sights"
+      },
+      {
+        "id": "weapon_mod_optics_strega_optic",
+        "name": "Strega Optic"
+      },
+      {
+        "id": "weapon_mod_optics_t2_micro_red_dot_sight",
+        "name": "T2 Micro Red Dot Sight"
+      },
+      {
+        "id": "weapon_mod_optics_underboss_optics",
+        "name": "Underboss Optics"
+      },
+      {
+        "id": "weapon_mod_optics_unid_custom_russian_sight",
+        "name": "Unid Custom Russian Sight"
+      },
+      {
+        "id": "weapon_mod_optics_vertigo_optics",
+        "name": "Vertigo Optics"
+      },
+      {
+        "id": "weapon_mod_optics_vx1_scope_12x",
+        "name": "VX1 Scope  (12x)"
+      },
+      {
+        "id": "weapon_mod_optics_weighted_iron_sights",
+        "name": "Weighted Iron Sights"
+      },
+      {
+        "id": "weapon_mod_optics_whiplash_optics",
+        "name": "Whiplash Optics"
+      },
+      {
+        "id": "weapon_mod_underbarrel_angled_grip",
+        "name": "Angled Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_barbed_frame",
+        "name": "Barbed Frame"
+      },
+      {
+        "id": "weapon_mod_underbarrel_bee_s_strength",
+        "name": "Bee's Strength"
+      },
+      {
+        "id": "weapon_mod_underbarrel_bighorn_horn_grip",
+        "name": "Bighorn Horn Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_bittersweet_underbarrel",
+        "name": "Bittersweet Underbarrel"
+      },
+      {
+        "id": "weapon_mod_underbarrel_caduceus_underbarrel",
+        "name": "Caduceus Underbarrel"
+      },
+      {
+        "id": "weapon_mod_underbarrel_caution_tape",
+        "name": "Caution Tape"
+      },
+      {
+        "id": "weapon_mod_underbarrel_chameleon_grip",
+        "name": "Chameleon Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_chatterbox_canister",
+        "name": "Chatterbox Canister"
+      },
+      {
+        "id": "weapon_mod_underbarrel_chelae_grip",
+        "name": "Chelae Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_compact_coupled_laser_pointer",
+        "name": "Compact Coupled Laser Pointer"
+      },
+      {
+        "id": "weapon_mod_underbarrel_compact_coupled_small_laser_pointer",
+        "name": "Compact Coupled Small  Laser Pointer"
+      },
+      {
+        "id": "weapon_mod_underbarrel_diamondback_grip",
+        "name": "Diamondback Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_dielectric_safety_grip",
+        "name": "Dielectric Safety Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_doctor_s_grip",
+        "name": "Doctor's Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_dropkick_grip",
+        "name": "Dropkick Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_fafnir_underbarrel",
+        "name": "Fafnir Underbarrel"
+      },
+      {
+        "id": "weapon_mod_underbarrel_fearless_frame",
+        "name": "Fearless Frame"
+      },
+      {
+        "id": "weapon_mod_underbarrel_fortified_grip",
+        "name": "Fortified Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_ghillie_frame",
+        "name": "Ghillie Frame"
+      },
+      {
+        "id": "weapon_mod_underbarrel_handstop",
+        "name": "Handstop"
+      },
+      {
+        "id": "weapon_mod_underbarrel_hardened_grip",
+        "name": "Hardened Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_helve_underbarrel",
+        "name": "Helve Underbarrel"
+      },
+      {
+        "id": "weapon_mod_underbarrel_insulated_grip",
+        "name": "Insulated Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_kiss_of_death",
+        "name": "Kiss of Death"
+      },
+      {
+        "id": "weapon_mod_underbarrel_laser_pointer",
+        "name": "Laser Pointer"
+      },
+      {
+        "id": "weapon_mod_underbarrel_light_heavy_duty_grip",
+        "name": "Light Heavy-Duty Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_loop_grip",
+        "name": "Loop Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_merciless_grip",
+        "name": "Merciless Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_nemesis_bipod",
+        "name": "Nemesis Bipod"
+      },
+      {
+        "id": "weapon_mod_underbarrel_oxpecker_underbarrel",
+        "name": "Oxpecker Underbarrel"
+      },
+      {
+        "id": "weapon_mod_underbarrel_pakhan_underbarrel",
+        "name": "Pakhan Underbarrel"
+      },
+      {
+        "id": "weapon_mod_underbarrel_prima_donna_underbarrel",
+        "name": "Prima Donna Underbarrel"
+      },
+      {
+        "id": "weapon_mod_underbarrel_ruthless_grip",
+        "name": "Ruthless Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_sacrum_underbarrel",
+        "name": "Sacrum Underbarrel"
+      },
+      {
+        "id": "weapon_mod_underbarrel_scales",
+        "name": "Scales"
+      },
+      {
+        "id": "weapon_mod_underbarrel_senate_grip",
+        "name": "Senate Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_short_grip",
+        "name": "Short Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_shroud_underbarrel",
+        "name": "Shroud Underbarrel"
+      },
+      {
+        "id": "weapon_mod_underbarrel_small_laser_pointer",
+        "name": "Small Laser Pointer"
+      },
+      {
+        "id": "weapon_mod_underbarrel_solid_gold_bipod",
+        "name": "Solid Gold Bipod"
+      },
+      {
+        "id": "weapon_mod_underbarrel_stunner",
+        "name": "Stunner"
+      },
+      {
+        "id": "weapon_mod_underbarrel_tactical_short_grip",
+        "name": "Tactical Short Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_talon_grip",
+        "name": "Talon Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_trigger_mechanism",
+        "name": "Trigger Mechanism"
+      },
+      {
+        "id": "weapon_mod_underbarrel_vertical_grip",
+        "name": "Vertical Grip"
+      },
+      {
+        "id": "weapon_mod_underbarrel_vertigo_underbarrel",
+        "name": "Vertigo Underbarrel"
+      },
+      {
+        "id": "weapon_mod_underbarrel_whiplash_underbarrel",
+        "name": "Whiplash Underbarrel"
+      },
+      {
+        "id": "weapon_mod_underbarrel_wolf_s_claw",
+        "name": "Wolf's Claw"
+      }
+    ]
+  }
+}

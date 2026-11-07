@@ -1,0 +1,379 @@
+{
+  "args": [
+    "build",
+    "simulate",
+    "--input",
+    "shotgun-close.json",
+    "--incoming",
+    "--iterations",
+    "500",
+    "--seed",
+    "1",
+    "--context",
+    "sim-context.json"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "build simulate",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "document": {
+      "schemaVersion": 1,
+      "build": {
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "level": 40,
+        "allocations": {},
+        "equipment": {
+          "backpack": "backpack_heartbreaker_backpack",
+          "chest": "chest_heartbreaker_chest",
+          "gloves": "gloves_heartbreaker_gloves",
+          "holster": "holster_grupo_sombra_s_a_holster",
+          "knees": "knees_ceska_vyroba_s_r_o_kneepads",
+          "mask": "mask_heartbreaker_mask",
+          "primary_weapon": "primary_weapon_acs_12",
+          "secondary_weapon": "secondary_weapon_police_m4",
+          "sidearm": ""
+        },
+        "attributeRolls": {
+          "backpack": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "chest": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "gloves": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "holster": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "knees": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "mask": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "primary_weapon": {
+            "core_1": {
+              "attributeId": "shotgun_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "damage_to_armor_weapon_core",
+              "value": 0.12
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          },
+          "secondary_weapon": {
+            "core_1": {
+              "attributeId": "assault_rifle_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "health_damage_weapon_core",
+              "value": 0.21
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          }
+        },
+        "modSelections": {
+          "backpack": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "chest": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "mask": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "primary_weapon": {
+            "optics": "weapon_mod_optics_small_rds_scope",
+            "underbarrel": "weapon_mod_underbarrel_short_grip"
+          },
+          "secondary_weapon": {
+            "magazine": "weapon_mod_magazine_tactical_5_56_mag",
+            "muzzle": "weapon_mod_muzzle_large_suppressor_5_56",
+            "optics": "weapon_mod_optics_acog_scope_4x",
+            "underbarrel": "weapon_mod_underbarrel_short_grip"
+          }
+        },
+        "modRolls": {
+          "backpack": {
+            "mod_1": 0.06
+          },
+          "chest": {
+            "mod_1": 0.06
+          },
+          "mask": {
+            "mod_1": 0.06
+          }
+        },
+        "talentSelections": {
+          "backpack": {
+            "talent": "gear_talent_cold"
+          },
+          "chest": {
+            "talent": "gear_talent_max_bpm"
+          },
+          "primary_weapon": {
+            "talent": "weapon_talent_close_personal"
+          },
+          "secondary_weapon": {
+            "talent": "weapon_talent_ranger"
+          }
+        },
+        "activeSkillSelections": {
+          "skill_slot_1": "skill_bulwark_shield",
+          "skill_slot_2": "skill_reviver_hive"
+        },
+        "skillUpgrades": {},
+        "skillMods": {},
+        "specializationId": "survivalist",
+        "specializationNodeSelections": [],
+        "activeScenarios": {},
+        "allocatedSkills": {},
+        "accountUpgrades": {},
+        "equipmentUpgrades": {},
+        "meta": {
+          "name": "shotgun-close",
+          "notes": ""
+        }
+      }
+    },
+    "context": {
+      "enemy_difficulty": "4",
+      "enemy_target": "2",
+      "weapon_slot": "primary_weapon"
+    },
+    "diagnostics": [],
+    "result": {
+      "mode": "random",
+      "iterations": 500,
+      "duration": 60,
+      "seed": 1,
+      "retargetDelay": 1,
+      "target": true,
+      "dps": {
+        "mean": 453377.5753011428,
+        "stdDev": 33470.21161065989,
+        "min": 357497.3221829766,
+        "p5": 392643.3297077225,
+        "p50": 451628.494387021,
+        "p95": 512562.66048273176,
+        "max": 573293.0541160615
+      },
+      "weaponDps": {
+        "mean": 453377.5753011428,
+        "stdDev": 33470.21161065989,
+        "min": 357497.3221829766,
+        "p5": 392643.3297077225,
+        "p50": 451628.494387021,
+        "p95": 512562.66048273176,
+        "max": 573293.0541160615
+      },
+      "skillDps": {
+        "mean": 0,
+        "stdDev": 0,
+        "min": 0,
+        "p5": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "kills": {
+        "mean": 5.252,
+        "stdDev": 0.5103880876352823,
+        "min": 4,
+        "p5": 5,
+        "p50": 5,
+        "p95": 6,
+        "max": 7
+      },
+      "timeToKill": {
+        "mean": 6.890545767082164,
+        "stdDev": 0.7344738622365894,
+        "min": 5.671508379888257,
+        "p5": 6.271508379888253,
+        "p50": 6.6715083798882535,
+        "p95": 8.543016759776602,
+        "max": 9.34301675977652
+      },
+      "shotsFired": 141.664,
+      "reloads": 6.76,
+      "incoming": {
+        "timeToArmorBreak": {
+          "mean": 38.2799999999999,
+          "stdDev": 2.963684193702179,
+          "min": 30.239999999999917,
+          "p5": 33.599999999999916,
+          "p50": 38.159999999999954,
+          "p95": 43.44,
+          "max": 48.48000000000004
+        },
+        "armorBreaks": 1,
+        "downed": 1,
+        "timeToDown": {
+          "mean": 44.54207999999998,
+          "stdDev": 3.240671361554598,
+          "min": 35.27999999999993,
+          "p5": 39.599999999999966,
+          "p50": 44.400000000000006,
+          "p95": 50.16000000000005,
+          "max": 55.4400000000001
+        },
+        "damageTaken": 1969275,
+        "repaired": 0,
+        "expectedTimeToArmorBreak": 38.08264462809917
+      },
+      "swaps": 0,
+      "timeline": [
+        1063584.9122316178,
+        1265623.732355884,
+        745343.0428794147,
+        901618.0410735005,
+        0,
+        185445.67022293914,
+        543705.0545012035,
+        521204.8235381517,
+        1048157.6114394887,
+        1008690.7107641174,
+        551634.7786720727,
+        0,
+        539674.4400916966,
+        822773.8617950906,
+        351086.3785688863,
+        872439.0108895375,
+        1062093.5762353207,
+        202358.499814844,
+        0,
+        752570.7970532313,
+        898800.5591790158,
+        686987.4587075158,
+        432906.6362966372,
+        964314.4166764857,
+        0,
+        212144.08674035524,
+        1011203.1423418315,
+        909546.9740351952,
+        857698.2691672428,
+        456623.18001475564,
+        308656.97377315996,
+        107131.30553649836,
+        622251.8921152797,
+        1030018.5683963296,
+        951704.6824567434,
+        849823.4966075085,
+        289055.9665125272,
+        69476.13702370848,
+        381970.2193909369,
+        523649.15260879835,
+        835516.2519873463,
+        852149.6748205207,
+        605258.7718342654,
+        92423.53731727874,
+        62244.67875933188,
+        294427.83013650787,
+        131328.24249316374,
+        120910.1961707214,
+        116466.8036372083,
+        48366.040275579966,
+        1007.0930620099999,
+        11148.702429031662,
+        18259.770368086996,
+        8347.77796690853,
+        2439.87342061,
+        391.21368241999994,
+        0,
+        0,
+        0,
+        0
+      ],
+      "triggers": [],
+      "skills": [
+        {
+          "slot": "skill_slot_1",
+          "skill": "skill_bulwark_shield",
+          "perUse": false,
+          "uses": 0,
+          "dps": 0
+        },
+        {
+          "slot": "skill_slot_2",
+          "skill": "skill_reviver_hive",
+          "perUse": false,
+          "uses": 0,
+          "dps": 0
+        }
+      ],
+      "states": 1,
+      "expected": {
+        "practicalReloadCycleDps": 613231.8517628544,
+        "skillDps": 0,
+        "buildDps": 613231.8517628544,
+        "practicalShotsToKill": 24.175728339916457
+      }
+    }
+  }
+}

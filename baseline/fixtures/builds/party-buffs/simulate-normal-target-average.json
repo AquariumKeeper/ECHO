@@ -1,0 +1,412 @@
+{
+  "args": [
+    "build",
+    "simulate",
+    "--input",
+    "party-buffs.json",
+    "--incoming",
+    "--average",
+    "--context",
+    "sim-context.json"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "build simulate",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "document": {
+      "schemaVersion": 1,
+      "build": {
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "level": 40,
+        "allocations": {},
+        "equipment": {
+          "backpack": "backpack_grupo_sombra_s_a_backpack",
+          "chest": "chest_grupo_sombra_s_a_chest",
+          "gloves": "gloves_grupo_sombra_s_a_gloves",
+          "holster": "holster_grupo_sombra_s_a_holster",
+          "knees": "knees_grupo_sombra_s_a_kneepads",
+          "mask": "mask_grupo_sombra_s_a_mask",
+          "primary_weapon": "primary_weapon_police_m4",
+          "secondary_weapon": "",
+          "sidearm": ""
+        },
+        "attributeRolls": {
+          "backpack": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "chest": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "gloves": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "holster": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "knees": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "mask": {
+            "core_1": {
+              "attributeId": "armor_gear_core",
+              "value": 170000
+            },
+            "minor_1": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            },
+            "minor_2": {
+              "attributeId": "weapon_handling_gear_minor",
+              "value": 0.08
+            }
+          },
+          "primary_weapon": {
+            "core_1": {
+              "attributeId": "assault_rifle_damage_weapon_core",
+              "value": 0.15
+            },
+            "core_2": {
+              "attributeId": "health_damage_weapon_core",
+              "value": 0.21
+            },
+            "minor_1": {
+              "attributeId": "damage_to_armor_weapon_minor",
+              "value": 0.06
+            }
+          }
+        },
+        "modSelections": {
+          "backpack": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "chest": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "mask": {
+            "mod_1": "critical_hit_chance_gear_mod"
+          },
+          "primary_weapon": {
+            "magazine": "weapon_mod_magazine_tactical_5_56_mag",
+            "muzzle": "weapon_mod_muzzle_large_suppressor_5_56",
+            "optics": "weapon_mod_optics_acog_scope_4x",
+            "underbarrel": "weapon_mod_underbarrel_short_grip"
+          }
+        },
+        "modRolls": {
+          "backpack": {
+            "mod_1": 0.06
+          },
+          "chest": {
+            "mod_1": 0.06
+          },
+          "mask": {
+            "mod_1": 0.06
+          }
+        },
+        "talentSelections": {
+          "backpack": {
+            "talent": "gear_talent_combined_arms"
+          },
+          "chest": {
+            "talent": "gear_talent_explosive_delivery"
+          },
+          "primary_weapon": {
+            "talent": "weapon_talent_breadbasket"
+          }
+        },
+        "activeSkillSelections": {},
+        "skillUpgrades": {},
+        "skillMods": {},
+        "specializationId": "",
+        "specializationNodeSelections": [],
+        "activeScenarios": {},
+        "allocatedSkills": {},
+        "accountUpgrades": {},
+        "equipmentUpgrades": {},
+        "party": [
+          {
+            "name": "Shield teammate",
+            "code": "zFfLbuPIDv0XrhXD9u10-uYPejGbacwqCAi6REuE66FhlZw4gf99UHokUvyYGfQ0uncu6vDosPiSH1arAkrZS5TgcQ0FHL7E_y3WN82eF-vl-vPNanmzvl3EWtiW8SY-URMXKyg-LYuHx-IBHMUdGko1aZQIBZiaY8JtaH2pB9y09ol0h50VCtiQ2TVkdieA8QEUUNmw53iC6M1QQB1sTKwngMEOBew8dwTPGLFROrBCAY2KIz3gE1MTPG5p6yXbI5vgy8kT3onDiDb4CmOSTlOUkkldJ7NtcBOC6x89dtfwWLy-hQb3r2CCMq7yL0pJZdMm_lrCPZC6oFgxKWYIFLAn2zLcr-6Wy-XyWIATH_Sc6yCuJl9a8VVP0qHfWZaL5ZfjccjBL6BjSNnPFzKWxs9X0pXmD9JRpmBy1U-Kfvr20XP9fRHkjv9BAYg3weX3KzckGi_oWF8LpX-9csWelVIea-dYPv1_fXs8fpwK1-KKdUhV67EkRxWPw2Ie4nKxus39l2vsjLbBNQXsVV7iWF-7pAskJ7e0_Hw8nk63axE60l105FFla_l7Aq2ZynxfVzlWi9XqPwy0n9D_IoMns3zCubr7ldJ4LF6B_2ylcezTH02lVHZjNfOH8vdgbT7NNpALZX5r5z9ZCHPz2MpTa895iQ-MShJDFmtJaGryhof-CiVMV88_dfig4W_xpw3rqKIX8fw-xzLXaB0W_dsZCghNEhPn8N42ggdEAa0vWTekynaOnzwYnabYC533JmLGNVpHBpuDLlF84kopcYmxUfEVFODalxf70b2zoSWtGGPbNMoxBsU7_Ly-Hi2ZUGE0oWH89Ay5ixJZ9ukk-70Z7qHLXH_CRoPhGFF5K571MEv_WQ9xjYY95-QkViEbpxVw1mUvRkIb0RyM5fP5f_MbAhw8S6UqeIy4UaZUX0rJBe-GdcsmoZKvWGE-YC74bJRe2EPfr2RMaD92K5kke_62k6FjY_6F0YbUNddwTCo7Vuy_uaGYotZvKIqRWpswtaqcskAfSv7Glk1eehHuH2Aryk9kLZbcWM6FpPmbOWISzruleEcwOpQz9lRLRInoDsNWGCCPg6zfhlkx1zicv5aX5L4Pma3k0kbHudclumEWDAup8pzEoJLY2VDMy6cObcxdMXEg5wJuwvMUm3dMyr2RPoBda5NgCmFOfXd7zBnsdc_TFxs2QlZeuu-KjmS8qJyA4Q_JTayFbQkFwONfAwA",
+            "effects": []
+          },
+          {
+            "name": "Overwatch teammate",
+            "armor": 1000000,
+            "effects": [
+              {
+                "id": "overwatch",
+                "values": {
+                  "total_skill_damage": 0.12,
+                  "total_weapon_damage": 0.12
+                },
+                "active": true
+              }
+            ]
+          }
+        ],
+        "meta": {
+          "name": "party-buffs",
+          "notes": ""
+        }
+      }
+    },
+    "context": {
+      "enemy_difficulty": "4",
+      "enemy_target": "2",
+      "weapon_slot": "primary_weapon"
+    },
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "code": "active-skill-unconfigured",
+        "message": "Skill 1 has no selected active skill",
+        "subject": "skill_slot_1"
+      },
+      {
+        "severity": "warning",
+        "code": "active-skill-unconfigured",
+        "message": "Skill 2 has no selected active skill",
+        "subject": "skill_slot_2"
+      },
+      {
+        "severity": "warning",
+        "code": "specialization-unconfigured",
+        "message": "No specialization is selected"
+      }
+    ],
+    "result": {
+      "mode": "average",
+      "iterations": 1,
+      "duration": 60,
+      "retargetDelay": 1,
+      "target": true,
+      "dps": {
+        "mean": 493516.69774413295,
+        "stdDev": 0,
+        "min": 493516.69774413295,
+        "p5": 493516.69774413295,
+        "p50": 493516.69774413295,
+        "p95": 493516.69774413295,
+        "max": 493516.69774413295
+      },
+      "weaponDps": {
+        "mean": 493516.69774413295,
+        "stdDev": 0,
+        "min": 493516.69774413295,
+        "p5": 493516.69774413295,
+        "p50": 493516.69774413295,
+        "p95": 493516.69774413295,
+        "max": 493516.69774413295
+      },
+      "skillDps": {
+        "mean": 0,
+        "stdDev": 0,
+        "min": 0,
+        "p5": 0,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "kills": {
+        "mean": 6,
+        "stdDev": 0,
+        "min": 6,
+        "p5": 6,
+        "p50": 6,
+        "p95": 6,
+        "max": 6
+      },
+      "timeToKill": {
+        "mean": 6.0599439775910255,
+        "stdDev": 0.3996110279117233,
+        "min": 5.166386554621846,
+        "p5": 5.166386554621846,
+        "p50": 6.238655462184861,
+        "p95": 6.238655462184866,
+        "max": 6.238655462184866
+      },
+      "shotsFired": 360,
+      "reloads": 12,
+      "incoming": {
+        "timeToArmorBreak": {
+          "mean": 38.399999999999956,
+          "stdDev": 0,
+          "min": 38.399999999999956,
+          "p5": 38.399999999999956,
+          "p50": 38.399999999999956,
+          "p95": 38.399999999999956,
+          "max": 38.399999999999956
+        },
+        "armorBreaks": 1,
+        "downed": 1,
+        "timeToDown": {
+          "mean": 44.64000000000001,
+          "stdDev": 0,
+          "min": 44.64000000000001,
+          "p5": 44.64000000000001,
+          "p50": 44.64000000000001,
+          "p95": 44.64000000000001,
+          "max": 44.64000000000001
+        },
+        "damageTaken": 1969275,
+        "repaired": 0,
+        "expectedTimeToArmorBreak": 38.08264462809917
+      },
+      "swaps": 0,
+      "timeline": [
+        1009515.064544,
+        1212571.076892,
+        64055.5244,
+        965554.8063100092,
+        1152370.9699039997,
+        307652.51444266114,
+        128111.0488,
+        523333.634348,
+        1212571.076892,
+        600909.6692020091,
+        408740.71838599996,
+        1384161.323622,
+        453892.48524266115,
+        459278.10994800006,
+        64055.5244,
+        1046667.268696,
+        1230545.259184009,
+        0,
+        1048540.5906359999,
+        862633.2036286611,
+        459278.109948,
+        128111.0488,
+        817348.491344,
+        987067.793750009,
+        597390.2807179999,
+        524270.29531799996,
+        1198253.936614661,
+        64055.5244,
+        854500.6954959999,
+        128111.0488,
+        982611.744296,
+        1337947.0360860091,
+        0,
+        1079250.9845039998,
+        265242.92291066103,
+        945459.540144,
+        64055.5244,
+        854500.695496,
+        1082770.3729880091,
+        524270.295318,
+        524270.29531799996,
+        716393.2328286611,
+        651444.683148,
+        689237.442544,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "triggers": [
+        {
+          "key": "breadbasket_stacks",
+          "kind": "stacks",
+          "talents": [
+            "weapon_talent_breadbasket"
+          ],
+          "mean": 0.9781512605041999,
+          "unit": "stacks",
+          "triggered": 189
+        },
+        {
+          "key": "combined_arms_active",
+          "kind": "buff",
+          "talents": [
+            "gear_talent_combined_arms"
+          ],
+          "mean": 0.773641456582632,
+          "unit": "share",
+          "triggered": 252
+        }
+      ],
+      "skills": [],
+      "states": 5,
+      "expected": {
+        "practicalReloadCycleDps": 521309.39380475244,
+        "skillDps": 0,
+        "buildDps": 521309.39380475244,
+        "practicalShotsToKill": 73.59105612881497
+      }
+    }
+  }
+}

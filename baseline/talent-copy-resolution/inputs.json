@@ -1,0 +1,26 @@
+{
+  "version":1,
+  "defaults":{"equipment":{"main":"target_weapon","off":"source_weapon","chest":"copier"},"talentSelections":{"main":{"talent":"target"},"off":{"talent":"source"},"chest":{"talent":"copy"}}},
+  "defaultContext":{"weapon_slot":"main","mode":"on","stacks":"2"},
+  "cases":[
+    {"id":"copy-holstered-source"},
+    {"id":"source-selected-target-gated","context":{"weapon_slot":"off"}},
+    {"id":"copier-gated","context":{"mode":"off"}},
+    {"id":"different-weapon-type","equipment":{"main":"target_weapon","off":"shotgun","chest":"copier"}},
+    {"id":"excluded-source-tag","equipment":{"main":"target_weapon","off":"exotic_source","chest":"copier"}},
+    {"id":"excluded-target-tag","equipment":{"main":"exotic_target","off":"source_weapon","chest":"copier"}},
+    {"id":"excluded-talent","talentSelections":{"main":{"talent":"target"},"off":{"talent":"excluded"},"chest":{"talent":"copy"}}},
+    {"id":"missing-source","equipment":{"main":"target_weapon","chest":"copier"}},
+    {"id":"missing-target","equipment":{"off":"source_weapon","chest":"copier"}},
+    {"id":"missing-copier","equipment":{"main":"target_weapon","off":"source_weapon"}},
+    {"id":"inactive-source","equipment":{"main":"target_weapon","off":"inactive_source","chest":"copier"}},
+    {"id":"inactive-copier","equipment":{"main":"target_weapon","off":"source_weapon","chest":"inactive_copier"}},
+    {"id":"unconfigured-source-talent","talentSelections":{"main":{"talent":"target"},"chest":{"talent":"copy"}}},
+    {"id":"unknown-source-talent","talentSelections":{"main":{"talent":"target"},"off":{"talent":"missing"},"chest":{"talent":"copy"}}},
+    {"id":"forbidden-source-talent","talentSelections":{"main":{"talent":"target"},"off":{"talent":"forbidden"},"chest":{"talent":"copy"}}},
+    {"id":"copying-copy-is-single-pass","talentSelections":{"main":{"talent":"target"},"off":{"talent":"copy"},"chest":{"talent":"copy"}}},
+    {"id":"two-copiers","equipment":{"main":"target_weapon","off":"source_weapon","chest":"copier","head":"second_copier"},"talentSelections":{"main":{"talent":"target"},"off":{"talent":"source"},"chest":{"talent":"copy"},"head":{"talent":"copy"}}},
+    {"id":"two-source-talents","equipment":{"main":"target_weapon","off":"dual_source","chest":"copier"},"talentSelections":{"main":{"talent":"target"},"off":{"talent":"source","extra":"other_source"},"chest":{"talent":"copy"}}},
+    {"id":"formula-assumption","context":{"stacks":"8"}}
+  ]
+}

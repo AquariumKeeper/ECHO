@@ -1,0 +1,24 @@
+* text=auto eol=lf
+
+# Captured fixtures are compared byte for byte (see baseline/fixtures/INDEX.txt).
+baseline/fixtures/** -text
+
+# Preserve the frozen data bytes and their baseline SHA-256 values.
+data/packs/** -text
+baseline/pack-validation/** -text
+baseline/resolution/** -text
+baseline/equipment-resolution/** -text
+baseline/upgrade-resolution/** -text
+baseline/prototype-resolution/** -text
+baseline/talent-copy-resolution/** -text
+baseline/specialization-resolution/** -text
+baseline/active-skill-resolution/** -text
+baseline/skill-mod-resolution/** -text
+baseline/build-output-resolution/** -text
+baseline/party-resolution/** -text
+baseline/document-json/** -text
+baseline/share-encoding/** -text
+
+# Producer evidence and frozen conversion references retain their exact supplied bytes.
+data/deliveries/** -text
+data/references/** -text

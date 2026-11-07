@@ -1,0 +1,71 @@
+{
+  "args": [
+    "library",
+    "list",
+    "--library",
+    "library.json"
+  ],
+  "stdin": null,
+  "exitCode": 0,
+  "response": {
+    "apiVersion": 1,
+    "command": "library list",
+    "ok": true,
+    "pack": {
+      "id": "division_2",
+      "version": "y8s3.2-pve.2026-10-25.shields-swaps.1"
+    },
+    "diagnostics": [],
+    "result": [
+      {
+        "id": "foundry-shield",
+        "name": "foundry-shield",
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "savedAt": "2026-10-25T00:00:00Z"
+      },
+      {
+        "id": "from-share",
+        "name": "striker-rifle",
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "savedAt": "2026-10-25T00:00:00Z"
+      },
+      {
+        "id": "hard-wired-skills",
+        "name": "hard-wired-skills",
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "savedAt": "2026-10-25T00:00:00Z"
+      },
+      {
+        "id": "party-buffs",
+        "name": "party-buffs",
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "savedAt": "2026-10-25T00:00:00Z"
+      },
+      {
+        "id": "prototype-gear",
+        "name": "prototype-gear",
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "savedAt": "2026-10-25T00:00:00Z"
+      },
+      {
+        "id": "shotgun-close",
+        "name": "shotgun-close",
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "savedAt": "2026-10-25T00:00:00Z"
+      },
+      {
+        "id": "striker-rifle",
+        "name": "striker-rifle",
+        "packId": "division_2",
+        "packVersion": "y8s3.2-pve.2026-10-25.shields-swaps.1",
+        "savedAt": "2026-10-25T00:00:00Z"
+      }
+    ]
+  }
+}

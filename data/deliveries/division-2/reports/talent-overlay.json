@@ -1,0 +1,113 @@
+{
+  "ok": true,
+  "format": "shade-tech.planner-talent-rule-candidate",
+  "version": 1,
+  "implementation_sha256": "964aa21fa25a2778621bb1dc4c99e14d448d67cd2e768c7ab5ce3cfdf19f5e30",
+  "base_manifest_sha256": "fc3e3cb0fe4e13a5b8128d3a027031197a068a1b5f6d2376f6eef7ec5077f0ab",
+  "overlay_plan_sha256": "d3ab37ff0041900f0ab2116c49a8687e93609b55d35c55277eaca2166a868828",
+  "evidence_packet_sha256": "39cc370ee5567e39413c6d0cbcafd198a49381e9aec3ad963fc236e6a2963231",
+  "pack_manifest_sha256": "dbec840e49a1cae8cbfcd1369af9a40469552b948732a1f599352872376d4b00",
+  "candidate_version": "y8s3.3-pve.2026-11-07.r73.candidate.1",
+  "changes": [
+    {
+      "document": "simulation.json",
+      "collection": "triggers",
+      "op": "replace",
+      "match": {
+        "talent": "weapon_talent_future_perfect",
+        "key": "future_perfect_overcharge_active"
+      },
+      "before": {
+        "talent": "weapon_talent_future_perfect",
+        "key": "future_perfect_overcharge_active",
+        "on": "kill",
+        "kind": "buff",
+        "duration": 15,
+        "every": 90,
+        "whileStatAtLeast": {
+          "stat": "overcharged_skill_tier",
+          "value": 6
+        }
+      },
+      "after": {
+        "talent": "weapon_talent_future_perfect",
+        "key": "future_perfect_overcharge_active",
+        "on": "kill",
+        "kind": "buff",
+        "duration": 15,
+        "every": 90,
+        "everyGroup": "future_perfect_overcharge",
+        "whileStatAtLeast": {
+          "stat": "overcharged_skill_tier",
+          "value": 6
+        }
+      },
+      "evidence_paths": [
+        "sources/warlock_talent_weapon_kills_grant_skill_tier.mtalent",
+        "sources/warlock_talent_weapon_kills_grant_skill_tier_perfect.mtalent",
+        "sources/warlock_talentrule_weapon_kills_grant_skill_tier.mtalentrules",
+        "sources/warlock_talentrule_weapon_kills_grant_skill_tier_overcharge.mtalentrules",
+        "sources/talent.fruit",
+        "docs/R73_SOURCE_REVIEW.md"
+      ],
+      "rationale": "Both talents add one sub-rule to the player, so their 90 s is one cooldown (R72, R73).",
+      "position": 154
+    },
+    {
+      "document": "simulation.json",
+      "collection": "triggers",
+      "op": "replace",
+      "match": {
+        "talent": "weapon_talent_future_perfection",
+        "key": "future_perfect_overcharge_active"
+      },
+      "before": {
+        "talent": "weapon_talent_future_perfection",
+        "key": "future_perfect_overcharge_active",
+        "on": "kill",
+        "kind": "buff",
+        "duration": 15,
+        "every": 90,
+        "whileStatAtLeast": {
+          "stat": "overcharged_skill_tier",
+          "value": 6
+        }
+      },
+      "after": {
+        "talent": "weapon_talent_future_perfection",
+        "key": "future_perfect_overcharge_active",
+        "on": "kill",
+        "kind": "buff",
+        "duration": 15,
+        "every": 90,
+        "everyGroup": "future_perfect_overcharge",
+        "whileStatAtLeast": {
+          "stat": "overcharged_skill_tier",
+          "value": 6
+        }
+      },
+      "evidence_paths": [
+        "sources/warlock_talent_weapon_kills_grant_skill_tier.mtalent",
+        "sources/warlock_talent_weapon_kills_grant_skill_tier_perfect.mtalent",
+        "sources/warlock_talentrule_weapon_kills_grant_skill_tier.mtalentrules",
+        "sources/warlock_talentrule_weapon_kills_grant_skill_tier_overcharge.mtalentrules",
+        "sources/talent.fruit",
+        "docs/R73_SOURCE_REVIEW.md"
+      ],
+      "rationale": "Both talents add one sub-rule to the player, so their 90 s is one cooldown (R72, R73).",
+      "position": 155
+    }
+  ],
+  "exclusions": [
+    "How two bonuses on one attribute combine is not established; the two talents are never active together.",
+    "Whether the Overcharge sub-rule stays on the player after a weapon swap is not established."
+  ],
+  "evidence_files_verified": 11,
+  "assets_sha256_unchanged": true,
+  "presentation_and_share_bytes_unchanged": true,
+  "talent_modifiers_unchanged": true,
+  "stats_unchanged": true,
+  "consumer_accepted": false,
+  "runtime_verified": false,
+  "evidence_is_runtime_proof": false
+}
