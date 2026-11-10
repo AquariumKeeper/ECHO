@@ -9,7 +9,9 @@ namespace CharacterPlanner.Simulation;
 /// while the status is still active extends its deadline and keeps the amount and the cadence (R61), even across a tick
 /// that fell due after the old deadline. Ticks land strictly before the current deadline.
 /// Talent debuffs (Toxic Delivery) tick here too: their event starts one on the current target that spreads its total over
-/// one tick per period, the last at the end of its duration; while it runs the event neither restarts nor stacks it.
+/// one tick per period, the last at the end of its duration. A rule's event starts another only while fewer than its
+/// <see cref="SimTalentDamageDefinition.MaxStacks"/> run on the target (one by default: a running debuff is neither
+/// restarted nor stacked); each runs on its own schedule. Ties tick statuses first, then by rule order, then in the order they started.
 /// </summary>
 public sealed class StatusDamageState
 {
@@ -22,10 +24,16 @@ public sealed class StatusDamageState
     private readonly double[] applied;
     private int due = -1;
     private readonly ImmutableArray<SimTalentDamageDefinition> talents;
-    // Each talent debuff's start (NaN while it isn't on the target), ticks taken and per-tick damage.
-    private readonly double[] talentStart;
-    private readonly int[] talentTaken;
-    private readonly double[] talentAmount;
+    // The talent debuffs running on the target, in the order they started: each one's rule, start, ticks taken and per-tick damage.
+    private readonly List<Debuff> running = [];
+
+    private sealed class Debuff(int rule, double start, double amount)
+    {
+        public int Rule { get; } = rule;
+        public double Start { get; } = start;
+        public double Amount { get; } = amount;
+        public int Taken { get; set; }
+    }
 
     public StatusDamageState(IEnumerable<SimStatusDamageDefinition> rules, IEnumerable<SimTalentDamageDefinition>? talents = null)
     {
@@ -33,11 +41,8 @@ public sealed class StatusDamageState
         this.rules = [.. rules];
         this.talents = [.. talents ?? []];
         if (this.talents.Any(rule => !double.IsFinite(rule.Period) || rule.Period <= 0 || !double.IsFinite(rule.Duration) || rule.Duration < rule.Period ||
-            Math.Abs(rule.Duration / rule.Period - Math.Round(rule.Duration / rule.Period)) > 1e-9 || rule.On.Length == 0 || rule.Total.Length == 0))
-        { throw new SimulationException("talent-damage-invalid", "Talent damage needs an event, a total and a period that divides its duration"); }
-        talentStart = Enumerable.Repeat(double.NaN, this.talents.Length).ToArray();
-        talentTaken = new int[this.talents.Length];
-        talentAmount = new double[this.talents.Length];
+            Math.Abs(rule.Duration / rule.Period - Math.Round(rule.Duration / rule.Period)) > 1e-9 || rule.On.Length == 0 || rule.Total.Length == 0 || rule.MaxStacks < 1))
+        { throw new SimulationException("talent-damage-invalid", "Talent damage needs an event, a total, a period that divides its duration and at least one stack"); }
         if (this.rules.Any(rule => !Damaging.Contains(rule.Status) || !double.IsFinite(rule.Period) || rule.Period <= 0) ||
             this.rules.Select(rule => rule.Status).Distinct(StringComparer.Ordinal).Count() != this.rules.Length)
         { throw new SimulationException("status-damage-invalid", "Status damage needs one rule per burning or bleeding status and a positive period"); }
@@ -54,14 +59,15 @@ public sealed class StatusDamageState
 
     private int Ticks(int talent) => (int)Math.Round(talents[talent].Duration / talents[talent].Period);
 
-    // A status's scheduled tick, or a talent debuff's next tick computed from its start and index so it doesn't drift.
-    private double Next(int index) => index < rules.Length ? next[index] :
-        double.IsNaN(talentStart[index - rules.Length]) ? double.NaN :
-        talentStart[index - rules.Length] + (talentTaken[index - rules.Length] + 1) * talents[index - rules.Length].Period;
+    // A status's scheduled tick (index below the rules' count), or a running debuff's next tick computed from its start and
+    // ticks taken so it doesn't drift.
+    private double Next(int index) => index < rules.Length ? next[index] : Next(running[index - rules.Length]);
+
+    private double Next(Debuff debuff) => debuff.Start + (debuff.Taken + 1) * talents[debuff.Rule].Period;
 
     /// <summary>
-    /// An event for these talents starts each matching talent debuff not already on the target, taking its total from the
-    /// resolved stats; returns whether any started. Without a living target nothing starts.
+    /// An event for these talents starts each matching talent debuff that has room for another stack on the target, taking
+    /// its total from the resolved stats; returns whether any started. Without a living target nothing starts.
     /// </summary>
     public bool StartTalents(string eventName, double time, IReadOnlySet<string>? eligibleTalents, IReadOnlyDictionary<string, double> totals, bool targetPresent)
     {
@@ -70,12 +76,11 @@ public sealed class StatusDamageState
         for (var index = 0; index < talents.Length; index++)
         {
             var rule = talents[index];
-            if (rule.On != eventName || !targetPresent || !double.IsNaN(talentStart[index]) || eligibleTalents is not null && !eligibleTalents.Contains(rule.Talent)) { continue; }
+            if (rule.On != eventName || !targetPresent || eligibleTalents is not null && !eligibleTalents.Contains(rule.Talent) ||
+                running.Count(debuff => debuff.Rule == index) >= rule.MaxStacks) { continue; }
             var total = totals[rule.Total];
             if (!double.IsFinite(total) || total < 0) { throw new SimulationException("talent-damage-invalid", $"Invalid {rule.Total} total damage"); }
-            talentStart[index] = time;
-            talentTaken[index] = 0;
-            talentAmount[index] = total / Ticks(index);
+            running.Add(new(index, time, total / Ticks(index)));
             started = true;
         }
         if (started) { FindDue(); }
@@ -85,7 +90,7 @@ public sealed class StatusDamageState
     /// <summary>A dead or replaced target takes its talent debuffs with it.</summary>
     public void ResetTalents()
     {
-        Array.Fill(talentStart, double.NaN);
+        running.Clear();
         FindDue();
     }
 
@@ -127,12 +132,11 @@ public sealed class StatusDamageState
         if (due < 0 || Next(due) != time) { throw new InvalidOperationException("No status tick is due at that time"); }
         if (due >= rules.Length)
         {
-            var talent = due - rules.Length;
+            var debuff = running[due - rules.Length];
             // The last tick lands at the end of the duration; the debuff then ends.
-            if (++talentTaken[talent] >= Ticks(talent)) { talentStart[talent] = double.NaN; }
-            var damage = talentAmount[talent];
+            if (++debuff.Taken >= Ticks(debuff.Rule)) { running.RemoveAt(due - rules.Length); }
             FindDue();
-            return (talents[talent].Talent, damage, true);
+            return (talents[debuff.Rule].Talent, debuff.Amount, true);
         }
         var index = due;
         var following = time + rules[index].Period;
@@ -149,10 +153,12 @@ public sealed class StatusDamageState
         {
             if (next[index] < until[index] && (due < 0 || next[index] < Next(due))) { due = index; }
         }
-        for (var talent = 0; talent < talents.Length; talent++)
+        for (var position = 0; position < running.Count; position++)
         {
-            var at = Next(rules.Length + talent);
-            if (!double.IsNaN(at) && (due < 0 || at < Next(due))) { due = rules.Length + talent; }
+            // Ties go to a status first, then to the talent rule listed first, then to the debuff started first.
+            var at = Next(running[position]);
+            if (due < 0 || at < Next(due) || at == Next(due) && due >= rules.Length && running[position].Rule < running[due - rules.Length].Rule)
+            { due = rules.Length + position; }
         }
     }
 }

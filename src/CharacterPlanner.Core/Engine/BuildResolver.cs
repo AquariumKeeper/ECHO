@@ -88,11 +88,12 @@ public static class BuildResolver
         diagnostics.AddRange(outputs.Diagnostics);
         return new(loadout, calculation, assumptions, finalTags, finalSelectedTags, sets.ActiveSets, previews.Previews, outputs.Outputs, diagnostics.ToImmutable())
         {
-            ReadAssumptions = ReadsOf(compiled, build, loadout, batches, activeSkillsSelection)
+            ReadAssumptions = ReadsOf(compiled, build, loadout, batches, activeSkillsSelection, equipment.SelectedTalents)
         };
     }
 
-    private static ImmutableHashSet<string> ReadsOf(CompiledPackExpressions compiled, BuildSnapshot build, ResolvedLoadout loadout, IEnumerable<ModifierBatch> batches, SelectedActiveSkills skills)
+    private static ImmutableHashSet<string> ReadsOf(CompiledPackExpressions compiled, BuildSnapshot build, ResolvedLoadout loadout, IEnumerable<ModifierBatch> batches, SelectedActiveSkills skills,
+        ImmutableHashSet<string> talents)
     {
         var pack = compiled.Pack;
         var reads = ImmutableHashSet.CreateBuilder<string>(StringComparer.Ordinal);
@@ -124,6 +125,8 @@ public static class BuildResolver
         if (pack.Prototype is { NormalizeInput.Length: > 0 } prototype && loadout.Equipped.Any(entry => PrototypeRules.IsPrototype(pack, build, entry.SlotId, entry.Item)))
         { reads.Add(prototype.NormalizeInput); }
         reads.UnionWith(pack.NumericContextInputs.Where(input => input.Global).Select(input => input.ID));
+        // A selected talent's fight rule that requires a selector (Calculated: in_cover) reads it, so the user sees what turns it on.
+        reads.UnionWith(pack.Simulation.Triggers.Where(rule => rule.RequiresContext is not null && talents.Contains(rule.Talent)).SelectMany(rule => rule.RequiresContext!.Keys));
         reads.Remove(GamePack.WeaponSlotSelector);
         return reads.ToImmutable();
     }

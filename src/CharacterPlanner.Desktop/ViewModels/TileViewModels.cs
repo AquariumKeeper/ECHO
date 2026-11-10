@@ -43,6 +43,10 @@ public sealed class TileViewModel : ViewModelBase
     /// <summary>The rarity's colour for the accent bar and tint, or "" for none.</summary>
     public string Accent { get => accent; private set { if (SetProperty(ref accent, value)) { OnPropertyChanged(nameof(HasAccent)); } } }
     public bool HasAccent => Accent.Length > 0;
+    /// <summary>The item is Prototype: its accent is Prototype purple and the card carries circuit traces.</summary>
+    public bool IsPrototype { get; private set => SetProperty(ref field, value); }
+    /// <summary>What seeds the tile's circuit traces, so each card's pattern is its own and stays put.</summary>
+    public string Seed => Caption;
     /// <summary>The colours of the item's configured attributes' categories, in attribute-slot order.</summary>
     public ImmutableArray<string> Dots { get => dots; private set => SetProperty(ref dots, value); }
     public ItemArt Art { get => art; private set => SetProperty(ref art, value); }
@@ -59,8 +63,9 @@ public sealed class TileViewModel : ViewModelBase
     public string SelectionStatus => IsSelected ? "Selected" : "";
 
     internal void Show(string title, string subtitle = "", bool muted = false, string accent = "", ImmutableArray<string> dots = default,
-        ItemArt? art = null, string talentName = "", string? talentIcon = null, IRelayCommand? talentCommand = null)
+        ItemArt? art = null, string talentName = "", string? talentIcon = null, IRelayCommand? talentCommand = null, bool prototype = false)
     {
+        IsPrototype = prototype;
         TalentCommand = talentCommand;
         OnPropertyChanged(nameof(TalentCommand));
         (Title, Subtitle, IsMuted, Accent) = (title, subtitle, muted, accent);
@@ -80,6 +85,10 @@ public interface IItemSummary
     string HeaderCaption { get; }
     string Accent { get; }
     bool HasAccent { get; }
+    /// <summary>Whether the item is Prototype, for the header's circuit traces.</summary>
+    bool IsPrototype { get; }
+    /// <summary>What seeds the header's circuit traces.</summary>
+    string Seed { get; }
     ItemArt Art { get; }
     bool HasArt { get; }
     ImmutableArray<CompareValue> CoreStats { get; }
@@ -96,6 +105,8 @@ public sealed record CandidateViewModel(string Title, string HeaderCaption, stri
     ImmutableArray<CompareValue> CoreStats, ImmutableArray<string> BrandBonuses, IRelayCommand EquipCommand, ImmutableArray<CardLine> Card) : IItemSummary
 {
     public bool HasAccent => Accent.Length > 0;
+    public bool IsPrototype => false;
+    public string Seed => Title;
     public bool HasArt => !Art.IsEmpty;
     public bool HasMarker => Marker.Length > 0;
     public bool HasCoreStats => !CoreStats.IsEmpty;

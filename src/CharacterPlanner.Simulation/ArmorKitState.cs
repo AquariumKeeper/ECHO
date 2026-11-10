@@ -10,6 +10,7 @@ internal sealed class ArmorKitState(SimArmorKit kit, int carried, double atPerce
 {
     // Hits arrive on computed times, so "a whole extension later" allows for rounding.
     private const double Tolerance = 1e-9;
+    private readonly int capacity = carried;
     private int left = carried;
     private double started;
     private double nextExtension;
@@ -37,6 +38,12 @@ internal sealed class ArmorKitState(SimArmorKit kit, int carried, double atPerce
         nextExtension = at + kit.ExtendSeconds;
         Ends = extended;
         return extended;
+    }
+
+    /// <summary>Gives back one kit, never above the number carried (Efficient).</summary>
+    public void Refund()
+    {
+        if (left < capacity) { left++; }
     }
 
     /// <summary>Spends the kit whose use just ended, returning the share of max armor it repairs.</summary>

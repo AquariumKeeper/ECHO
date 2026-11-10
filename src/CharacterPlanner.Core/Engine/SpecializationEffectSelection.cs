@@ -100,4 +100,77 @@ public static class SpecializationRules
         }
         return true;
     }
+
+    /// <summary>
+    /// What allocating a node takes, as a passive tree's path: its unallocated prerequisites, transitively, then the
+    /// node itself, each after what it requires. It looks through allocated prerequisites too, so a missing tier behind
+    /// an allocated but inactive one joins the path. Empty when the node is already allocated.
+    /// </summary>
+    public static ImmutableArray<SpecializationNodeDefinition> PathTo(SpecializationDefinition specialization, SpecializationNodeDefinition node, IEnumerable<string> allocated)
+    {
+        ArgumentNullException.ThrowIfNull(specialization);
+        ArgumentNullException.ThrowIfNull(node);
+        var selected = allocated.ToHashSet(StringComparer.Ordinal);
+        if (selected.Contains(node.ID)) { return []; }
+        var nodes = specialization.Nodes.GroupBy(entry => entry.ID, StringComparer.Ordinal).ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
+        var path = ImmutableArray.CreateBuilder<SpecializationNodeDefinition>();
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        void Visit(SpecializationNodeDefinition current)
+        {
+            if (!visited.Add(current.ID)) { return; }
+            foreach (var id in current.Prerequisites)
+            { if (nodes.GetValueOrDefault(id) is { } prerequisite) { Visit(prerequisite); } }
+            if (!selected.Contains(current.ID)) { path.Add(current); }
+        }
+        Visit(node);
+        return path.ToImmutable();
+    }
+
+    /// <summary>Whether a whole path fits: each budget, and each parent budget, has room for what the path charges it.</summary>
+    public static bool CanAllocatePath(SpecializationDefinition specialization, IEnumerable<SpecializationNodeDefinition> path, SpecializationStatus status)
+    {
+        ArgumentNullException.ThrowIfNull(specialization);
+        ArgumentNullException.ThrowIfNull(path);
+        ArgumentNullException.ThrowIfNull(status);
+        var budgets = specialization.Budgets.GroupBy(budget => budget.ID, StringComparer.Ordinal).ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
+        var charged = new Dictionary<string, long>(StringComparer.Ordinal);
+        var any = false;
+        foreach (var node in path)
+        {
+            any = true;
+            var visited = new HashSet<string>(StringComparer.Ordinal);
+            for (var id = node.BudgetID; id.Length > 0;)
+            {
+                if (budgets.GetValueOrDefault(id) is not { } budget || !visited.Add(id)) { return false; }
+                charged[id] = charged.GetValueOrDefault(id) + node.Cost;
+                if (status.Spent.GetValueOrDefault(id) + charged[id] > budget.Points) { return false; }
+                id = budget.ParentID;
+            }
+        }
+        return any;
+    }
+
+    /// <summary>The allocated nodes that need a node, directly or through others: what deallocating it also removes.</summary>
+    public static ImmutableArray<SpecializationNodeDefinition> Dependents(SpecializationDefinition specialization, SpecializationNodeDefinition node, IEnumerable<string> allocated)
+    {
+        ArgumentNullException.ThrowIfNull(specialization);
+        ArgumentNullException.ThrowIfNull(node);
+        var selected = allocated.ToHashSet(StringComparer.Ordinal);
+        var removed = new HashSet<string>(StringComparer.Ordinal) { node.ID };
+        var dependents = ImmutableArray.CreateBuilder<SpecializationNodeDefinition>();
+        for (var grew = true; grew;)
+        {
+            grew = false;
+            foreach (var entry in specialization.Nodes)
+            {
+                if (selected.Contains(entry.ID) && !removed.Contains(entry.ID) && entry.Prerequisites.Any(removed.Contains))
+                {
+                    removed.Add(entry.ID);
+                    dependents.Add(entry);
+                    grew = true;
+                }
+            }
+        }
+        return dependents.ToImmutable();
+    }
 }

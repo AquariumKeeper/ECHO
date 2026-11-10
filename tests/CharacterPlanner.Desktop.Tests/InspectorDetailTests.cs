@@ -100,7 +100,9 @@ public sealed class InspectorDetailTests : IDisposable
     [InlineData("gear_talent_abridged", "No eligible source")]
     [InlineData("gear_talent_ablative_nano_plating", "Party projection")]
     [InlineData("gear_talent_resolved", "Pack combat rules exist")]
-    [InlineData("gear_talent_perfect_tag_team", "No modeled effect")]
+    [InlineData("gear_talent_perfect_tag_team", "Pack combat rules exist")]
+    [InlineData("gear_talent_perfect_calculated", "Pack combat rules exist")]
+    [InlineData("gear_talent_bewildered", "No modeled effect")]
     public async Task CandidateCardsDescribeIndirectAndMissingModels(string talentId, string expected)
     {
         var item = TestPack.Division.Pack.Items.First(item => item.TalentSlots.Any(slot => slot.Choices.Contains(talentId)));

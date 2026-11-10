@@ -1265,6 +1265,82 @@ public sealed partial class IncomingFightTests
     }
 
     [Fact]
+    public void AKeptKitIsntSpent()
+    {
+        // Efficient's shape, always kept: two kits carried, and the fight goes on using them where it ran out after two.
+        var kept = Buff("armor_kit") with { Grant = "armor_kit_refund", GrantAmount = 1 };
+        Assert.Equal(2, Run(KitRule(Buff("armor_kit")), Kits(30, kits: 2)).Incoming!.ArmorKitsUsed);
+        var result = Run(KitRule(kept), Kits(30, kits: 2));
+        Assert.True(result.Incoming!.ArmorKitsUsed > 2, $"{result.Incoming.ArmorKitsUsed} kits used");
+        Assert.Equal(result.Incoming.ArmorKitsUsed, Times(result, DummyEventKind.ArmorKitUsed).Length);
+    }
+
+    [Fact]
+    public void AKitIsKeptAtTheRulesChance()
+    {
+        // Efficient's 50%: over 20 fights the kits used fall between the two kits carried and the fight that keeps every one.
+        var kept = Buff("armor_kit") with { Grant = "armor_kit_refund", GrantAmount = 1 };
+        var fights = Kits(30, kits: 2) with { Iterations = 20 };
+        var always = Run(KitRule(kept), fights).Incoming!.ArmorKitsUsed;
+        var half = Run(KitRule(kept with { Chance = 0.5 }), fights).Incoming!.ArmorKitsUsed;
+        Assert.True(half > 2 && half < always, $"{half} of {always}");
+    }
+
+    [Fact]
+    public void ARuleTakesNoPartBeforeItsActiveAfter()
+    {
+        // Efficient's activation delay: kept on every use, but only from 31 s, past this 30 s fight, the two kits carried are all it has.
+        var kept = Buff("armor_kit") with { Grant = "armor_kit_refund", GrantAmount = 1 };
+        var all = Run(KitRule(kept), Kits(30, kits: 2));
+        Assert.Equal(2, Run(KitRule(kept with { ActiveAfter = 31 }), Kits(30, kits: 2)).Incoming!.ArmorKitsUsed);
+        // From partway through, the uses before then are spent, and those after kept.
+        var used = Times(all, DummyEventKind.ArmorKitUsed);
+        Assert.True(used.Length > 3, string.Join(", ", used));
+        var late = Run(KitRule(kept with { ActiveAfter = used[1] + 0.001 }), Kits(30, kits: 2));
+        var lateUsed = Times(late, DummyEventKind.ArmorKitUsed);
+        // The first two are spent with nothing kept; the third, if any, can only come from a refund after the delay.
+        Assert.Equal(used.Take(2), lateUsed.Take(2));
+        Assert.True(lateUsed.Length < used.Length, $"{lateUsed.Length} of {used.Length}");
+        // The rule's own uptime starts only once it's active.
+        Assert.True(late.TimedTriggerUptime["buff"].Seconds < all.TimedTriggerUptime["buff"].Seconds);
+        // A kit refund's amount can't come from a stat, even one at 1.
+        var statRefund = kept with { GrantAmount = 0, GrantAmountStat = "character_armor" };
+        Assert.Equal("trigger-unsupported", Assert.Throws<SimulationException>(() => Run(KitRule(statRefund, ("character_armor", "1")), Kits(9))).Code);
+    }
+
+    [Fact]
+    public void AGrantsAmountCanComeFromAStat()
+    {
+        // Gunner's kit armor with Efficient's factor: the share is a stat's value, 0.5 of 30 max armor, as the same fixed share gives.
+        static (CompiledPackExpressions, BuildSnapshot) WithShare((CompiledPackExpressions Pack, BuildSnapshot Build) fixture, string formula)
+        {
+            var rules = fixture.Pack.Pack with { Stats = [.. fixture.Pack.Pack.Stats, fixture.Pack.Pack.Stats[0] with { ID = "kit_share", Name = "Kit share", Formula = formula }] };
+            return (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled), fixture.Build);
+        }
+        var granting = Buff("armor_kit") with { Grant = "temporary_armor", GrantDuration = 10 };
+        var fixedShare = Run(KitRule(granting with { GrantAmount = 0.5 }), Kits(9));
+        var fromStat = Run(WithShare(KitRule(granting with { GrantAmountStat = "kit_share" }), "0.25 * (1 + 1)"), Kits(9));
+        double[] Granted(DummyFightResult result) => [.. result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.BonusArmorGranted).Select(e => e.Damage)];
+        Assert.Equal([15d], Granted(fixedShare));
+        Assert.Equal(Granted(fixedShare), Granted(fromStat));
+        // A value outside the grant's limits is refused as the fight starts.
+        Assert.Equal("trigger-unsupported", Assert.Throws<SimulationException>(() => Run(WithShare(KitRule(granting with { GrantAmountStat = "kit_share" }), "1.5"), Kits(9))).Code);
+    }
+
+    [Fact]
+    public void AKitRefundNeverRaisesTheKitsAboveTheNumberCarried()
+    {
+        var state = new ArmorKitState(new() { Repair = 1, UseSeconds = 1, ExtendSeconds = 0, MaxUseSeconds = 1 }, 1, 50);
+        // With none spent there's nothing to give back, so the one kit carried is still the last.
+        state.Refund();
+        state.Start(0);
+        state.Finish();
+        Assert.False(state.Wanted(0));
+        state.Refund();
+        Assert.True(state.Wanted(0));
+    }
+
+    [Fact]
     public void AKitCutShortFiresNothing()
     {
         // Going down during the use cancels it, so no talent reacts.
@@ -2329,6 +2405,21 @@ public sealed partial class IncomingFightTests
         Assert.Equal(new[] { 10d, 20d }, result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot).Select(e => e.Damage));
         var damaged = Run(ShieldFixture(rule: Buff("damaged")), Options with { Duration = 1.5, IncludeShield = true, DriveSimpleBuffs = true });
         Assert.Equal(new[] { 10d, 10d }, damaged.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot).Select(e => e.Damage));
+    }
+
+    [Fact]
+    public void ACooldownGrantBringsABrokenShieldBackSooner()
+    {
+        // A 5-point shield with a 10 s cooldown breaks on the first enemy hit. A rule on each shot takes 3 s off a running cooldown.
+        double[] Raised(SimTriggerDefinition rule) => [.. Run(ShieldFixture(capacity: "5", cooldown: "10", rule: rule), Options with { Duration = 20, IncludeShield = true, DriveSimpleBuffs = true })
+            .FirstFightEvents.Where(e => e.Kind == DummyEventKind.ShieldRaised).Select(e => e.Time)];
+        var plain = Raised(Buff("shot") with { Duration = 0.1 });
+        var cut = Raised(Buff("shot") with { Duration = 0.1, Grant = "skill_cooldown_seconds", GrantAmount = 3 });
+        Assert.Equal(0, plain[0]);
+        Assert.Equal(0, cut[0]);
+        Assert.True(plain.Length >= 2, string.Join(", ", plain));
+        // Shots come each second, so the cooldown runs down 4 s a second and the shield comes back well before 10 s after the break.
+        Assert.True(cut[1] < plain[1] - 5, $"{string.Join(", ", cut)} vs {string.Join(", ", plain)}");
     }
 
     [Fact]

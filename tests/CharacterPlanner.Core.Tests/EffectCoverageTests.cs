@@ -72,9 +72,12 @@ public sealed class EffectCoverageTests
     // Aces & Eights (Dead Man's Hand) its set preview and the card simulation it omits.
     [InlineData("gear_talent_ablative_nano_plating", "party-projection", "partial")]
     [InlineData("gear_talent_dead_man_s_hand", "set-bonuses", "partial")]
-    // Resolved has had a combat rule since the Resolved candidate (R36); Perfect Tag Team still has none.
+    // Resolved has had a combat rule since the Resolved candidate (R36), Perfect Tag Team since R76 and Perfect Calculated since R80, partly;
+    // Perfect Efficient since R85; Bewildered still has none.
     [InlineData("gear_talent_resolved", "authored-combat-rules", "complete")]
-    [InlineData("gear_talent_perfect_tag_team", "", "unmodeled")]
+    [InlineData("gear_talent_perfect_tag_team", "authored-combat-rules", "partial")]
+    [InlineData("gear_talent_perfect_calculated", "authored-combat-rules", "partial")]
+    [InlineData("gear_talent_bewildered", "", "unmodeled")]
     public void CommittedPackNamedEffectsHaveEvidenceBackedChannels(string id, string channel, string audit)
     {
         var pack = GameMaths.Division.Compiled.Pack;

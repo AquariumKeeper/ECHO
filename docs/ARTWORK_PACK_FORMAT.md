@@ -54,7 +54,11 @@ ArtworkPackInstaller performs those additional checks before publishing a revisi
 `bindings` has three optional maps, each empty when absent:
 
 - `icons`: group to game object ID to local asset ID. Supported groups are
-  `slots`, `talents`, `skills`, `specializations` and `nodes`.
+  `slots`, `talents`, `skills`, `specializations` and `nodes`. A `nodes` key is
+  a specialization node ID (one tier, such as `gunner_incessant_tier_1`). The
+  inspector shows each tier's icon; the tree view shows one icon per perk card,
+  from the first of its tiers that has one, so binding tier 1 is enough. The
+  tree's middle box shows the specialization's image, or else its icon.
 - `itemArt`: item ID to `{image?, icon?}`. At least one nonnull asset reference
   is required. An absent/null layer inherits. An empty asset reference is an
   error, rather than an instruction to erase a lower layer.
@@ -193,7 +197,7 @@ canceled operation's completion without polling. `DisposeAsync` also drains owne
 backend work when a caller needs to release store locks before cleanup.
 
 Appearance refresh updates tiles, item/skill/talent inspectors, specialization
-images/nodes, an open item picker and Compare Talents without issuing an edit or
+images/nodes, the specialization tree's cards and middle box, an open item picker and Compare Talents without issuing an edit or
 restarting resolution/simulation. Item picker art is observable on stable rows,
 so updating images preserves its highlighted row and candidate preview.
 

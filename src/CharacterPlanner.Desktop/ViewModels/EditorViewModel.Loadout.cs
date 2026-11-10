@@ -205,7 +205,8 @@ public sealed partial class EditorViewModel
         var rarity = EntryOf(item).Rarity;
         var subtitle = new[] { rarity?.Name ?? "", Configurable(item) ? ConfigSummary(build, slotId, item) : "" }.Where(text => text.Length > 0);
         var dots = AttributeDots(build, slotId, item);
-        tile.Show(item.Name, string.Join(" · ", subtitle), accent: rarity?.Color ?? "", dots: dots, art: Artwork.Item(item.ID, slotId),
+        var prototype = PrototypeRules.IsPrototype(Pack, build, slotId, item);
+        tile.Show(item.Name, string.Join(" · ", subtitle), accent: PrototypeStyle.Accent(prototype, rarity?.Color ?? "", PrototypeStyle.Color(Pack)), dots: dots, art: Artwork.Item(item.ID, slotId), prototype: prototype,
             talentName: talent?.Name ?? "", talentIcon: talent is null ? null : Artwork.Icon("talents", talent.ID),
             talentCommand: talentSlot is null ? null : new CommunityToolkit.Mvvm.Input.RelayCommand(() => CompareTalents(slotId, talentSlot.ID)));
     }

@@ -15,6 +15,12 @@ The CLI does the same in JSON, and can drive a running desktop window. Results a
 estimates from community data; [Attribution](docs/ATTRIBUTION.md) lists the sources and
 what the planner doesn't model.
 
+## Feedback
+
+Report problems or numbers that look wrong in [Issues](https://github.com/AquariumKeeper/ECHO/issues).
+Say which build and which numbers, and attach `errors.log` from
+`%LOCALAPPDATA%\CharacterPlanner\alpha` if the window reported a failure.
+
 ## Building
 
 Windows x64 with the .NET SDK pinned in [global.json](global.json). Package versions are

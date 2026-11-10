@@ -44,7 +44,7 @@ public sealed class SlotViewModel : ViewModelBase, IItemSummary
             .Select(editor.EntryOf)];
         BrowseCommand = new RelayCommand(() => editor.Browse(this));
         UnequipCommand = new RelayCommand(() => editor.Apply(EquipmentOperation.Cleared(Id)), () => IsEquipped);
-        headerCaption = Name;
+        headerCaption = rarityCaption = Name;
         Augments = editor.Pack.Prototype is { } definition ? [NoAugment, .. definition.Augments.Select(entry => new Choice(entry.ID, entry.Name))] : [];
     }
 
@@ -69,6 +69,10 @@ public sealed class SlotViewModel : ViewModelBase, IItemSummary
     public string HeaderCaption { get => headerCaption; private set => SetProperty(ref headerCaption, value); }
     public string Accent { get; private set { if (SetProperty(ref field, value)) { OnPropertyChanged(nameof(HasAccent)); } } } = "";
     public bool HasAccent => Accent.Length > 0;
+    /// <summary>What seeds the header's circuit traces: the slot, as its tile's.</summary>
+    public string Seed => Name;
+    private string rarityCaption = "";
+    private string rarityAccent = "";
     public ItemArt Art { get; private set { if (SetProperty(ref field, value)) { OnPropertyChanged(nameof(HasArt)); } } } = ItemArt.None;
     public bool HasArt => !Art.IsEmpty;
     public bool IsEquipped => itemId.Length > 0;
@@ -182,8 +186,8 @@ public sealed class SlotViewModel : ViewModelBase, IItemSummary
             UpgradeDescription = item?.Upgrade?.Description ?? "";
             var entry = item is null ? null : editor.EntryOf(item);
             Title = item?.Name ?? (id.Length == 0 ? "Empty" : Choice.Unknown(id).Name);
-            HeaderCaption = entry?.Rarity is { } rarity ? $"{Name} · {rarity.Name}" : Name;
-            Accent = entry?.Rarity?.Color ?? "";
+            rarityCaption = entry?.Rarity is { } rarity ? $"{Name} · {rarity.Name}" : Name;
+            rarityAccent = entry?.Rarity?.Color ?? "";
             Art = item is null ? ItemArt.None : editor.Artwork.Item(item.ID, Id);
             var configurable = item is not null && item.AttributeSlots.Length + item.ModSlots.Length + item.TalentSlots.Length > 0 || item?.Upgrade is not null;
             Hint = item is null ? "Choose an item to equip in this slot." : configurable ? "" : "This item has no attributes, mods, or talents to configure.";
@@ -208,6 +212,10 @@ public sealed class SlotViewModel : ViewModelBase, IItemSummary
         var selection = build.Prototypes.GetValueOrDefault(Id);
         var active = selection is not null && selection.ItemId == id && id.Length > 0;
         IsPrototype = active;
+        // A Prototype item's header turns Prototype purple and says so; the tile does the same.
+        HeaderCaption = active ? rarityCaption + " · Prototype" : rarityCaption;
+        Accent = PrototypeStyle.Accent(active, rarityAccent, PrototypeStyle.Color(editor.Pack));
+        OnPropertyChanged(nameof(Seed));
         Augment = active && selection!.Augment.Length > 0 ? Listed(Augments, selection.Augment, list => Augments = list) : NoAugment;
         var definition = active ? editor.Pack.Prototype?.Augments.FirstOrDefault(entry => entry.ID == selection!.Augment) : null;
         Levels = definition is null ? [] : [.. Enumerable.Range(1, (int)definition.Levels).Select(number => new Choice(number.ToString(CultureInfo.InvariantCulture), number.ToString(CultureInfo.CurrentCulture)))];

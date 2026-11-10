@@ -34,6 +34,9 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
 
     public EditorViewModel? Editor { get => editor; private set => SetProperty(ref editor, value); }
 
+    // An unexpected failure reported while the pack was still loading, for the editor to show.
+    private string? pendingReport;
+
     /// <param name="loaded">Called with the pack once it has loaded, before the editor shows; the app applies its theme.</param>
     /// <param name="assumptionSets">The saved assumption sets (F45); without a store the Assumptions tab has no set bar.</param>
     /// <param name="goLibrary">The one-time import of the Go app's library, run before the library is listed; none in tests that don't need it.</param>
@@ -109,6 +112,12 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
                 if (disposed) { Editor.ArtworkManager?.Dispose(); return; }
             }
             if (artworkProblem is not null) { Editor.Message = Editor.Message is null ? artworkProblem : Editor.Message + "\n" + artworkProblem; }
+            // A failure reported while loading follows the startup messages, so the loading page's hiding doesn't lose it.
+            if (pendingReport is { } report)
+            {
+                Editor.Message = Editor.Message is null ? report : Editor.Message + "\n" + report;
+                pendingReport = null;
+            }
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
@@ -122,6 +131,17 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             Error = $"The planner couldn't start: {exception.Message}";
             Status = "The pack couldn't be loaded.";
         }
+    }
+
+    /// <summary>
+    /// Shows an unexpected failure (F94): as the editor's message once it's open. Before, on the loading page, and the editor
+    /// takes it over when it opens, so it isn't lost when that page hides.
+    /// </summary>
+    public void ReportUnexpected(string message)
+    {
+        if (Editor is { } open) { open.Message = message; return; }
+        pendingReport = message;
+        Status = message;
     }
 
     /// <summary>Disposes the editor, including one a load still in progress creates afterwards.</summary>

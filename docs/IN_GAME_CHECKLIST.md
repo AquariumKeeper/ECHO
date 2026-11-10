@@ -3,7 +3,7 @@
 The planner's numbers come from sources that sometimes disagree.
 One reading on the item card or stats screen usually
 settles it. Values below are for the bundled pack
-(`y8s3.3-pve.2026-11-07.r73.candidate.1`).
+(`y8s3.3-pve.2026-11-08.r86.candidate.1`).
 
 ## How to report a reading
 
@@ -162,6 +162,22 @@ and what you were shooting at.
   nobody has measured it yet.
 
 ## Newly modeled talents
+
+- **Plague of the Outcasts:** with Pestilence, put stacks on one enemy and count its
+  damage numbers per second. The game hard-codes the tick, and the planner assumes one
+  a second. Then kill it beside another enemy: does that one show the same stacks, and
+  do they run a full 10 s or what was left? The planner doesn't pass stacks on yet.
+- **Tag Team:** with a skill on cooldown, hit an enemy with a skill, then shoot it, and
+  note the cooldown before and after (6 s off, 12 s for Perfect). Then hit it with a skill
+  again within 4 s and keep shooting. The game places no new mark during those 4 s, while
+  the planner lets a mark wait for them.
+- **Skilled:** with a turret or hive out, get a kill with it and watch the cooldown once it
+  ends. By the source, the game banks the reset and applies it 1 s after the cooldown starts,
+  as the planner now does (R83). Also: a Sticky Bomb whose blast kills should come back about
+  1 s after it lands, a quarter of the time (30% with Perfect Skilled).
+- **Calculated:** with a skill 30 s from ready on a 60 s cooldown, get a kill from cover
+  and read the new time. 24 s left means 10% of the full cooldown; 27 s means 10% of what
+  was left. The game data doesn't say.
 
 - **Perfect Empathic Resolve:** after repairing yourself, read your weapon damage
   bonus at a known Skill Tier. The planner gives 2.3% plus 2.333% per tier

@@ -38,6 +38,75 @@ public sealed class SkillDamageScheduleTests
         return [.. times];
     }
 
+    // The impacts of a fight in which cooldowns are cut at the given times, before any event at or after each.
+    private static double[] Shortened(SkillDamageSchedule schedule, double duration, params (double At, double Share, double Seconds)[] cuts)
+    {
+        // As in a fight that drives buffs, each use is read as it deploys, so the ones to come aren't made yet.
+        var stream = schedule.Fights(duration, [], TestContext.Current.CancellationToken).NewFight();
+        stream.Read = (slot, _) => schedule.For(slot);
+        var pending = new Queue<(double At, double Share, double Seconds)>(cuts.OrderBy(cut => cut.At));
+        var times = new List<double>();
+        while (true)
+        {
+            var next = stream.Next;
+            if (pending.Count > 0 && (next is null || pending.Peek().At < next.Time))
+            {
+                var cut = pending.Dequeue();
+                stream.Shorten(cut.At, cut.Share, cut.Seconds);
+                continue;
+            }
+            if (next is null) { break; }
+            if (next.Kind == SkillDamageKind.Deployment) { stream.Deploy(); }
+            else if (stream.Take() is { Kind: SkillDamageKind.Impact } impact) { times.Add(impact.Time); }
+        }
+        return [.. times];
+    }
+
+    [Fact]
+    public void ACooldownCutTakesSecondsOrAShareOfItAndNeverEndsBeforeNow()
+    {
+        // A 10 s cooldown: uses at 0, 10 and 20.
+        Assert.Equal([0d, 10, 20], Shortened(Schedule(cooldown: 10), 25));
+        // 4 s off at 3 s brings the next to 6 s, and the one after follows the full cooldown from it.
+        Assert.Equal([0d, 6, 16], Shortened(Schedule(cooldown: 10), 25, (3, 0, 4)));
+        // A quarter of the cooldown is 2.5 s.
+        Assert.Equal([0d, 7.5, 17.5], Shortened(Schedule(cooldown: 10), 25, (3, 0.25, 0)));
+        // A reset is the whole cooldown, and the skill deploys at once.
+        Assert.Equal([0d, 3, 13, 23], Shortened(Schedule(cooldown: 10), 25, (3, 1, 0)));
+        // A cut at the moment of a use leaves the cooldown that use starts.
+        Assert.Equal([0d, 10, 20], Shortened(Schedule(cooldown: 10), 25, (10, 1, 0)));
+        // More than what's left ends it now: 30 s off at 9 s deploys at 9 s.
+        Assert.Equal([0d, 9, 19], Shortened(Schedule(cooldown: 10), 25, (9, 0, 30)));
+        Assert.Equal("skill-cooldown-invalid", Assert.Throws<SimulationException>(() => Shortened(Schedule(cooldown: 10), 25, (3, -1, 0))).Code);
+        // A stream that makes its uses ahead can't have them cut.
+        Assert.Throws<InvalidOperationException>(() => Schedule(cooldown: 10).Fights(25, [], TestContext.Current.CancellationToken).NewFight().Shorten(3, 1, 0));
+    }
+
+    [Fact]
+    public void ACooldownFromAUsesEndCantEndBeforeTheUseDoes()
+    {
+        // 10 s from the end of a 2 s use: uses at 0, 12 and 24. A reset during the use waits for its end at 2 s.
+        Assert.Equal([0d, 12, 24], Shortened(Schedule(fromEnd: true, cooldown: 10), 30));
+        Assert.Equal([0d, 2, 14, 26], Shortened(Schedule(fromEnd: true, cooldown: 10), 30, (1, 1, 0)));
+        // After the use, a reset is now; a share is of the cooldown, not of the cooldown and the use.
+        Assert.Equal([0d, 5, 17, 29], Shortened(Schedule(fromEnd: true, cooldown: 10), 30, (5, 1, 0)));
+        Assert.Equal([0d, 7, 19], Shortened(Schedule(fromEnd: true, cooldown: 10), 30, (5, 0.5, 0)));
+    }
+
+    [Fact]
+    public void ACutBringsAStockedSkillsNextChargeSooner()
+    {
+        // Three charges at 0, 1 and 2 s, then one back each 10 s from 10 s.
+        Assert.Equal([0d, 1, 2, 10, 20, 30], Shortened(Stocked(3), 35));
+        // 4 s off at 5 s: the charge due at 10 s is back at 6 s, and the next 10 s after that.
+        Assert.Equal([0d, 1, 2, 6, 16, 26], Shortened(Stocked(3), 35, (5, 0, 4)));
+        // A reset brings one charge back now, not the whole stock.
+        Assert.Equal([0d, 1, 2, 5, 15, 25], Shortened(Stocked(3), 35, (5, 1, 0)));
+        // With charges held the cut still brings the next charge sooner, and the interval holds: 0.25 s off at 0.5 s leaves the next use at
+        // 1 s, and the charge due at 10 s comes back at 9.75 s.
+        Assert.Equal([0d, 1, 2, 9.75, 19.75, 29.75], Shortened(Stocked(3), 35, (0.5, 0, 0.25)));
+    }
+
     [Fact]
     public void AStockSpendsItsChargesAtItsIntervalThenFollowsTheCooldown()
     {

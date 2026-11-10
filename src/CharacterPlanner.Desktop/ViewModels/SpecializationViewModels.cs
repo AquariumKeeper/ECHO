@@ -25,6 +25,7 @@ public sealed class SpecializationViewModel : ViewModelBase
     internal SpecializationViewModel(EditorViewModel editor)
     {
         this.editor = editor;
+        Tree = new SpecializationTreeViewModel(editor);
         var names = editor.Pack.Specializations.GroupBy(specialization => specialization.Name, StringComparer.Ordinal).Where(group => group.Count() > 1).Select(group => group.Key).ToHashSet(StringComparer.Ordinal);
         Choices = [Choice.None, .. editor.Pack.Specializations.Select(specialization => new Choice(specialization.ID,
             names.Contains(specialization.Name) ? $"{specialization.Name} ({specialization.ID})" : specialization.Name))];
@@ -53,6 +54,9 @@ public sealed class SpecializationViewModel : ViewModelBase
     /// <summary>Each budget as "Name: spent / total points".</summary>
     public ImmutableArray<string> Budgets { get => budgets; private set => SetProperty(ref budgets, value); }
     public ImmutableArray<SpecializationNodeViewModel> Nodes { get => nodes; private set => SetProperty(ref nodes, value); }
+    /// <summary>The same tree drawn as a graph, for its own window; it follows every change to the build.</summary>
+    public SpecializationTreeViewModel Tree { get; }
+    public bool HasTree => shown is not null;
 
     /// <summary>The specialization and its root budgets' points, for a heading ("Gunner · 45 / 165 points").</summary>
     public string Summary { get => summary; private set => SetProperty(ref summary, value); }
@@ -63,6 +67,7 @@ public sealed class SpecializationViewModel : ViewModelBase
         Image = shown is null ? null : editor.Artwork.SpecializationImage(shown.ID);
         foreach (var name in new[] { nameof(Icon), nameof(Image), nameof(HasImage) }) { OnPropertyChanged(name); }
         foreach (var node in Nodes) { node.RefreshArtwork(editor); }
+        Tree.RefreshArtwork();
     }
 
     internal void Refresh(BuildSnapshot build)
@@ -77,9 +82,10 @@ public sealed class SpecializationViewModel : ViewModelBase
             // Go's heading icon and the specialization's large image, where the pack has them.
             Icon = specialization is null ? null : editor.Artwork.Icon("specializations", specialization.ID);
             Image = specialization is null ? null : editor.Artwork.SpecializationImage(specialization.ID);
-            foreach (var name in new[] { nameof(Icon), nameof(Image), nameof(HasImage), nameof(Title) }) { OnPropertyChanged(name); }
+            foreach (var name in new[] { nameof(Icon), nameof(Image), nameof(HasImage), nameof(Title), nameof(HasTree) }) { OnPropertyChanged(name); }
             Nodes = specialization is null ? [] : [.. specialization.Nodes.Select(node => new SpecializationNodeViewModel(editor, specialization, node))];
         }
+        Tree.Show(specialization, build);
         if (specialization is null)
         {
             Budgets = [];

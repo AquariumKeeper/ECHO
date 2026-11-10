@@ -425,6 +425,7 @@ internal sealed record TalentDamageWire
     [JsonPropertyName("total")] public required string Total { get; init; }
     [JsonPropertyName("duration")] public required double Duration { get; init; }
     [JsonPropertyName("period")] public required double Period { get; init; }
+    [JsonPropertyName("maxStacks")] public int? MaxStacks { get; init; }
 }
 
 internal sealed record StatusDamageWire
@@ -447,6 +448,8 @@ internal sealed record TriggerWire
     [JsonPropertyName("refresh")] public bool? Refresh { get; init; }
     [JsonPropertyName("every")] public double? Every { get; init; }
     [JsonPropertyName("everyGroup")] public string? EveryGroup { get; init; }
+    [JsonPropertyName("chance")] public double? Chance { get; init; }
+    [JsonPropertyName("requires")] public Dictionary<string, string>? Requires { get; init; }
     [JsonPropertyName("cooldownFromEnd")] public bool? CooldownFromEnd { get; init; }
     [JsonPropertyName("resetOn")] public string? ResetOn { get; init; }
     [JsonPropertyName("alsoResetOn")] public string? AlsoResetOn { get; init; }
@@ -479,6 +482,9 @@ internal sealed record TriggerWire
     [JsonPropertyName("grantAmount")] public double? GrantAmount { get; init; }
     [JsonPropertyName("grantDuration")] public double? GrantDuration { get; init; }
     [JsonPropertyName("grantInstances")] public string? GrantInstances { get; init; }
+    [JsonPropertyName("grantHoldDelay")] public double? GrantHoldDelay { get; init; }
+    [JsonPropertyName("grantAmountStat")] public string? GrantAmountStat { get; init; }
+    [JsonPropertyName("activeAfter")] public double? ActiveAfter { get; init; }
     [JsonPropertyName("countWindow")] public double? CountWindow { get; init; }
     [JsonPropertyName("maxMagazine")] public double? MaxMagazine { get; init; }
     [JsonPropertyName("whileKey")] public string? WhileKey { get; init; }
@@ -503,7 +509,8 @@ internal sealed record StatGateWire
 internal sealed record GainWire
 {
     [JsonPropertyName("on")] public required string On { get; init; }
-    [JsonPropertyName("gain")] public required long Gain { get; init; }
+    // Optional: a stacks rule's also needs a positive gain (the validator says so), and a status rule's adds one without it.
+    [JsonPropertyName("gain")] public long? Gain { get; init; }
     [JsonPropertyName("count")] public long? Count { get; init; }
 }
 
@@ -557,6 +564,13 @@ internal sealed record LayoutWire
     [JsonPropertyName("assumptionSections")] public List<AssumptionSectionWire>? AssumptionSections { get; init; }
     [JsonPropertyName("attributeCategories")] public List<AttributeCategoryWire>? AttributeCategories { get; init; }
     [JsonPropertyName("rarities")] public List<RarityWire>? Rarities { get; init; }
+    [JsonPropertyName("prototype")] public PrototypeLayoutWire? Prototype { get; init; }
+}
+
+internal sealed record PrototypeLayoutWire
+{
+    [JsonPropertyName("name")] public required string Name { get; init; }
+    [JsonPropertyName("color")] public required string Color { get; init; }
 }
 
 internal sealed record SlotGroupWire

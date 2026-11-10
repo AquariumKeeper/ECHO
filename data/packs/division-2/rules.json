@@ -2171,6 +2171,45 @@
       "name": "Effective Shield Skill Tier",
       "description": "The same, for shields, which count armor cores toward Skill Tier.",
       "formula": "min(7, min(6, max(0, floor(skill_tier + armor_core_count))) + max(0, floor(skill_overcharge)))"
+    },
+    {
+      "id": "plague_of_the_outcasts_debuff_damage",
+      "name": "Plague of the Outcasts Debuff Damage",
+      "description": "Damage of one Plague of the Outcasts debuff over its 10 s: 100% (TalentPlagueOfTheOutcastsCloudDamageModFinal 1.0) of the weapon's damage per pellet. Assumed a body hit, with no critical or headshot damage and no falloff, since the source doesn't say which damage it takes. The talent is hard-coded, so its tick rate is an assumption too.",
+      "format": "integer",
+      "formula": "equipped_weapon_damage / equipped_weapon_pellets"
+    },
+    {
+      "id": "specialization_kit_bonus",
+      "name": "Specialization Kit Bonus",
+      "description": "Increase to the specialization armor kit bonuses, read by the kit rules as (1 + this). Efficient and Perfect Efficient add 100% (MedkitSpecializationEffectivenessModBonus 1.0).",
+      "format": "percent",
+      "formula": "0",
+      "min": 0
+    },
+    {
+      "id": "gunner_hardened_armor_kits_bonus_armor",
+      "name": "Hardened Armor Kits Bonus Armor",
+      "description": "Bonus armor from Hardened Armor Kits, as a share of max armor: 0.3 times (1 + the specialization kit bonus), for 10 s, which the bonus doesn't scale.",
+      "format": "percent",
+      "formula": "0.3 * (1 + specialization_kit_bonus)",
+      "min": 0
+    },
+    {
+      "id": "demolitionist_stimulant_patch_duration",
+      "name": "Stimulant Patch Duration (s)",
+      "description": "How long Stimulant Patch's weapon handling lasts: 15 s times (1 + the specialization kit bonus).",
+      "format": "decimal",
+      "formula": "15 * (1 + specialization_kit_bonus)",
+      "min": 0
+    },
+    {
+      "id": "sharpshooter_emergency_cleanse_duration",
+      "name": "Emergency Cleanse Duration (s)",
+      "description": "How long Emergency Cleanse's resistances last: 20 s times (1 + the specialization kit bonus).",
+      "format": "decimal",
+      "formula": "20 * (1 + specialization_kit_bonus)",
+      "min": 0
     }
   ],
   "curves": {
@@ -10620,6 +10659,51 @@
       ],
       "section": "Talents and gear",
       "description": "Assume the Overcharge from a weapon kill at Skill Tier 6 is active, Overcharge included in the tier. Fights follow it: 15 s of Overcharge, and the next can come 90 s after the grant."
+    },
+    {
+      "id": "tag_team_mark",
+      "name": "Tag Team Mark",
+      "values": [
+        "true"
+      ],
+      "section": "Talents and gear",
+      "description": "Assume the enemy you are shooting carries the mark from your last skill hit. Fights follow it: a skill hit marks, and a weapon hit on the mark spends it."
+    },
+    {
+      "id": "tag_team_cut",
+      "name": "Tag Team Cut",
+      "values": [
+        "true"
+      ],
+      "section": "Talents and gear",
+      "description": "Assume a weapon hit on the mark has just cut your running skill cooldowns. Fights follow it: at most once every 4 s."
+    },
+    {
+      "id": "skilled_reset",
+      "name": "Skilled Reset",
+      "values": [
+        "true"
+      ],
+      "section": "Talents and gear",
+      "description": "Assume a skill kill has just reset your skill cooldowns. Fights follow it: each skill kill has the talent's chance, with no cooldown of its own."
+    },
+    {
+      "id": "calculated_cut",
+      "name": "Calculated Cut",
+      "values": [
+        "true"
+      ],
+      "section": "Talents and gear",
+      "description": "Assume a kill from cover has just cut your running skill cooldowns. Fights follow it when In cover is set."
+    },
+    {
+      "id": "efficient_kept",
+      "name": "Efficient Kit Kept",
+      "values": [
+        "true"
+      ],
+      "section": "Talents and gear",
+      "description": "Assume Efficient has just kept an armor kit. Fights with armor kits follow it: from 10 s into the fight, each kit has the talent's chance to come back."
     }
   ],
   "numericInputs": [
@@ -51003,24 +51087,40 @@
       "name": "Efficient",
       "description": "Using an armor kit has a 50% chance to not consume the armor kit. Specialization armor kit bonuses are increased by 100%. Requires 10 seconds to arm talent",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "Using an armor kit has a 50% chance to not consume the armor kit."
+          "When the kit comes back: the source draws on a kit used (ArmorKitUsedCondition, normal and instant kits); fights draw as its repair lands.",
+          "Survivalist's, Technician's and the flamethrower specialization's kit effects, which the bonus also doubles, aren't in the pack."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
-      }
+        "evidence": "R82_R84_SOURCE_REVIEW.md (Efficient); R85_SOURCE_REVIEW.md"
+      },
+      "modifiers": [
+        {
+          "stat": "specialization_kit_bonus",
+          "op": "flat",
+          "value": 1
+        }
+      ]
     },
     {
       "id": "gear_talent_perfect_efficient",
       "name": "Perfect Efficient",
       "description": "Using an armor kit has a 75% chance to not consume the armor kit. Specialization armor kit bonuses are increased by 100%. Requires 10 seconds to arm talent",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "Using an armor kit has a 75% chance to not consume the armor kit."
+          "When the kit comes back: the source draws on a kit used (ArmorKitUsedCondition, normal and instant kits); fights draw as its repair lands.",
+          "Survivalist's, Technician's and the flamethrower specialization's kit effects, which the bonus also doubles, aren't in the pack."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
-      }
+        "evidence": "R82_R84_SOURCE_REVIEW.md (Efficient); R85_SOURCE_REVIEW.md"
+      },
+      "modifiers": [
+        {
+          "stat": "specialization_kit_bonus",
+          "op": "flat",
+          "value": 1
+        }
+      ]
     },
     {
       "id": "gear_talent_mad_bomber",
@@ -51103,11 +51203,11 @@
       "name": "Skilled",
       "description": "Skill kills have a 25% chance to reset skill cooldowns.",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "Skill kills have a 25% chance to reset skill cooldowns."
+          "Burn and bleed kills: the source's reset counts only kills from skill-family scripts, owned agents and shield ricochets, which by the source's reading leaves status ticks out; fights count them."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R77_SOURCE_REVIEW.md (talent rules v2 and part2); R82_R84_SOURCE_REVIEW.md, the banked reset"
       }
     },
     {
@@ -51115,11 +51215,11 @@
       "name": "Perfect Skilled",
       "description": "Skill kills have a 30% chance to reset skill cooldowns.",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "Skill kills have a 30% chance to reset skill cooldowns."
+          "Burn and bleed kills: the source's reset counts only kills from skill-family scripts, owned agents and shield ricochets, which by the source's reading leaves status ticks out; fights count them."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R77_SOURCE_REVIEW.md (talent rules v2 and part2); R82_R84_SOURCE_REVIEW.md, the banked reset"
       }
     },
     {
@@ -51127,11 +51227,11 @@
       "name": "Tag Team",
       "description": "The last enemy you have damaged with a skill is marked. Dealing weapon damage to that enemy consumes the mark to reduce active cooldowns by 6s.  Cooldown: 4s",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "The last enemy you have damaged with a skill is marked."
+          "The source places no mark during the 4 s cooldown, and keeps the mark when a hit lands with no cooldown running; the rows spend it on any hit."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R74_R76_SOURCE_REVIEW.md (talent skill script)"
       }
     },
     {
@@ -51139,11 +51239,11 @@
       "name": "Perfect Tag Team",
       "description": "The last enemy you have damaged with a skill is marked. Dealing weapon damage to that enemy consumes the mark to reduce active cooldowns by 12s.  Cooldown: 4s",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "The last enemy you have damaged with a skill is marked."
+          "The source places no mark during the 4 s cooldown, and keeps the mark when a hit lands with no cooldown running; the rows spend it on any hit."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R74_R76_SOURCE_REVIEW.md (talent skill script)"
       }
     },
     {
@@ -51846,12 +51946,8 @@
         }
       ],
       "coverage": {
-        "status": "unknown",
-        "evidence": "R35_PRIORITY2_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle)",
-        "omits": [
-          "repair bonus: source parameter 1.5, pack 1.3"
-        ],
-        "settleBy": "the in-game Safeguard tooltip value"
+        "status": "complete",
+        "evidence": "UNMODELED_TALENTS_SOURCE_REVIEW.md, Safeguard (the rule reads the full-armor attribute, 1.3 and 1.6; the 1.5 is an attribute no rule reads)"
       }
     },
     {
@@ -51869,12 +51965,8 @@
         }
       ],
       "coverage": {
-        "status": "unknown",
-        "evidence": "R35_PRIORITY2_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle)",
-        "omits": [
-          "repair bonus: source parameter 1.5 (same as Safeguard in the bundle), pack 1.6"
-        ],
-        "settleBy": "the in-game Perfect Safeguard tooltip value"
+        "status": "complete",
+        "evidence": "UNMODELED_TALENTS_SOURCE_REVIEW.md, Safeguard (the rule reads the full-armor attribute, 1.3 and 1.6; the 1.5 is an attribute no rule reads)"
       }
     },
     {
@@ -52242,11 +52334,11 @@
       "name": "Calculated",
       "description": "Kills from cover reduce skill cooldowns by 10%.",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "Kills from cover reduce skill cooldowns by 10%."
+          "Whether the share is of the full cooldown or of what's left: the source says only a percentage."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R78_R80_SOURCE_REVIEW.md, Calculated"
       }
     },
     {
@@ -52254,11 +52346,11 @@
       "name": "Perfect Calculated",
       "description": "Kills from cover reduce skill cooldowns by 15%.",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "Kills from cover reduce skill cooldowns by 15%."
+          "Whether the share is of the full cooldown or of what's left: the source says only a percentage."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R78_R80_SOURCE_REVIEW.md, Calculated"
       }
     },
     {
@@ -54377,8 +54469,12 @@
         }
       ],
       "coverage": {
-        "status": "complete",
-        "evidence": "R41_REPAIR_TALENT_SOURCE_REVIEW.md; simulation rules on kill and headshot_kill with independent armor_repair grants (R43)"
+        "status": "partial",
+        "omits": [
+          "Kills by owned agents (a turret, drone or hive): the source's kill conditions exclude them (myTriggeredByRuleAgentsOwnedAgents FALSE); fights count every skill's kill.",
+          "Whether a skill's kill counts as the player's (myTriggeredByRuleAgent) isn't in the data; fights count it."
+        ],
+        "evidence": "R41_REPAIR_TALENT_SOURCE_REVIEW.md; simulation rules on kill and headshot_kill with independent armor_repair grants (R43); R82_R84_SOURCE_REVIEW.md and R85_SOURCE_REVIEW.md (skill kills)"
       }
     },
     {
@@ -54404,8 +54500,12 @@
         }
       ],
       "coverage": {
-        "status": "complete",
-        "evidence": "R41_REPAIR_TALENT_SOURCE_REVIEW.md; simulation rules on kill and headshot_kill with independent armor_repair grants (R43)"
+        "status": "partial",
+        "omits": [
+          "Kills by owned agents (a turret, drone or hive): the source's kill conditions exclude them (myTriggeredByRuleAgentsOwnedAgents FALSE); fights count every skill's kill.",
+          "Whether a skill's kill counts as the player's (myTriggeredByRuleAgent) isn't in the data; fights count it."
+        ],
+        "evidence": "R41_REPAIR_TALENT_SOURCE_REVIEW.md; simulation rules on kill and headshot_kill with independent armor_repair grants (R43); R82_R84_SOURCE_REVIEW.md and R85_SOURCE_REVIEW.md (skill kills)"
       }
     },
     {
@@ -54643,10 +54743,12 @@
       ],
       "coverage": {
         "status": "partial",
-        "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; R20_DAMAGE_APPLICATION.md, In-game reading; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md)",
         "omits": [
-          "Damage to Armor on armor ticks (observed for skill burns, untested for talent burns)"
-        ]
+          "Damage to Armor on armor ticks (observed for skill burns, untested for talent burns)",
+          "Kills by owned agents (a turret, drone or hive): the source's kill conditions exclude them (myTriggeredByRuleAgentsOwnedAgents FALSE); fights count every skill's kill.",
+          "Whether a skill's kill counts as the player's (myTriggeredByRuleAgent) isn't in the data; fights count it."
+        ],
+        "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; R20_DAMAGE_APPLICATION.md, In-game reading; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md); R85_SOURCE_REVIEW.md and R86_SOURCE_REVIEW.md (skill kills)"
       }
     },
     {
@@ -54665,10 +54767,12 @@
       ],
       "coverage": {
         "status": "partial",
-        "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md)",
         "omits": [
-          "Damage to Armor on armor ticks (untested for talent burns)"
-        ]
+          "Damage to Armor on armor ticks (untested for talent burns)",
+          "Kills by owned agents (a turret, drone or hive): the source's kill conditions exclude them (myTriggeredByRuleAgentsOwnedAgents FALSE); fights count every skill's kill.",
+          "Whether a skill's kill counts as the player's (myTriggeredByRuleAgent) isn't in the data; fights count it."
+        ],
+        "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md); R85_SOURCE_REVIEW.md and R86_SOURCE_REVIEW.md (skill kills)"
       }
     },
     {
@@ -55938,8 +56042,12 @@
         }
       ],
       "coverage": {
-        "status": "complete",
-        "evidence": "R35_PRIORITY3_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); every source parameter appears in the pack (or as a matching delta); buff refresh reviewed in BUFF_REFRESH_SOURCE_REVIEW.md (no refresh while active)"
+        "status": "partial",
+        "omits": [
+          "Kills by owned agents (a turret, drone or hive): the source's kill conditions exclude them (myTriggeredByRuleAgentsOwnedAgents FALSE); fights count every skill's kill.",
+          "Whether a skill's kill counts as the player's (myTriggeredByRuleAgent) isn't in the data; fights count it."
+        ],
+        "evidence": "R35_PRIORITY3_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); every source parameter appears in the pack (or as a matching delta); buff refresh reviewed in BUFF_REFRESH_SOURCE_REVIEW.md (no refresh while active); R82_R84_SOURCE_REVIEW.md and R85_SOURCE_REVIEW.md (skill kills)"
       }
     },
     {
@@ -55965,8 +56073,12 @@
         }
       ],
       "coverage": {
-        "status": "complete",
-        "evidence": "R35_PRIORITY3_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); every source parameter appears in the pack (or as a matching delta); buff refresh reviewed in BUFF_REFRESH_SOURCE_REVIEW.md (no refresh while active)"
+        "status": "partial",
+        "omits": [
+          "Kills by owned agents (a turret, drone or hive): the source's kill conditions exclude them (myTriggeredByRuleAgentsOwnedAgents FALSE); fights count every skill's kill.",
+          "Whether a skill's kill counts as the player's (myTriggeredByRuleAgent) isn't in the data; fights count it."
+        ],
+        "evidence": "R35_PRIORITY3_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); every source parameter appears in the pack (or as a matching delta); buff refresh reviewed in BUFF_REFRESH_SOURCE_REVIEW.md (no refresh while active); R82_R84_SOURCE_REVIEW.md and R85_SOURCE_REVIEW.md (skill kills)"
       }
     },
     {
@@ -57158,11 +57270,12 @@
       "name": "Plague of the Outcasts",
       "description": "Hits apply a debuff dealing 100% weapon damage over 10s. This stacks up to 50 times. Whenever an enemy dies with this debuff, the stacks are transferred to a nearby enemy within 25m.",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "Hits apply a debuff dealing 100% weapon damage over 10s."
+          "Stacks passing to a nearby enemy within 25 m when the target dies.",
+          "Its tick rate and damage basis: the talent is hard-coded, so the row assumes a 1 s tick and a body hit."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R74_R76_SOURCE_REVIEW.md (talent values; hard-coded settings)"
       }
     },
     {
@@ -70570,7 +70683,7 @@
             {
               "stat": "weapon_handling",
               "op": "flat",
-              "value": 0.3,
+              "value": "0.3 * (1 + specialization_kit_bonus)",
               "requires": {
                 "stimulant_patch_active": "true"
               }
@@ -72627,7 +72740,7 @@
             {
               "stat": "burn_resistance",
               "op": "flat",
-              "value": 0.3,
+              "value": "0.3 * (1 + specialization_kit_bonus)",
               "requires": {
                 "emergency_cleanse_active": "true"
               }
@@ -72635,7 +72748,7 @@
             {
               "stat": "bleed_resistance",
               "op": "flat",
-              "value": 0.3,
+              "value": "0.3 * (1 + specialization_kit_bonus)",
               "requires": {
                 "emergency_cleanse_active": "true"
               }

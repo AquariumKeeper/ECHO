@@ -323,7 +323,7 @@
       {
         "id": "exotic",
         "name": "Exotic",
-        "color": "#FF6F36",
+        "color": "#FF6337",
         "tags": [
           "exotic"
         ]
@@ -353,7 +353,11 @@
           "weapon"
         ]
       }
-    ]
+    ],
+    "prototype": {
+      "name": "Prototype",
+      "color": "#AD78F1"
+    }
   },
   "icons": {
     "slots": {

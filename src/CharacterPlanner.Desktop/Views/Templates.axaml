@@ -27,6 +27,8 @@
   <!-- An item's header in the inspector (the slot's item or the picker's candidate): rarity bar, name, caption, art. -->
   <DataTemplate x:Key="ItemHeader" x:DataType="vm:IItemSummary">
     <Grid ColumnDefinitions="5,*" ColumnSpacing="10">
+      <views:CircuitTraces Grid.ColumnSpan="2" Name="HeaderCircuit" Seed="{Binding Seed}" Stroke="{Binding Accent}" Reach="0.5"
+                           IsVisible="{Binding IsPrototype}" Opacity="0.45" />
       <Border Background="{DynamicResource DivisionMuted}" IsVisible="{Binding !HasAccent}" />
       <Border Background="{Binding Accent}" IsVisible="{Binding HasAccent}" />
       <StackPanel Grid.Column="1" Spacing="2">

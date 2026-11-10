@@ -191,6 +191,8 @@
                      HorizontalAlignment="Left" IsVisible="{Binding HasImage}" />
               <TextBlock Text="{Binding Description}" Classes="label" TextWrapping="Wrap" />
               <ItemsControl ItemsSource="{Binding Budgets}" />
+              <Button Name="OpenTreeButton" Content="Open tree view" Click="OnOpenTree" IsVisible="{Binding HasTree}"
+                      ToolTip.Tip="The tree as a graph: click a node to allocate it with what it needs" />
               <ItemsControl Name="SpecializationNodes" ItemsSource="{Binding Nodes}">
                 <ItemsControl.ItemsPanel>
                   <ItemsPanelTemplate>

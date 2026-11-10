@@ -145,6 +145,7 @@ public static class DummyWeaponSimulator
         EnemyCountState? enemyCounts = null;
         var uncountedKeys = ImmutableArray<string>.Empty;
         var kitlessTalents = ImmutableArray<string>.Empty;
+        var skilllessTalents = ImmutableArray<string>.Empty;
         var statusRules = ImmutableArray<SimTriggerDefinition>.Empty;
         var dotRules = ImmutableArray<SimStatusDamageDefinition>.Empty;
         var talentDamageRules = ImmutableArray<SimTalentDamageDefinition>.Empty;
@@ -230,7 +231,10 @@ public static class DummyWeaponSimulator
             statusRules = [.. groups[nameof(StatusTriggerState)].Where(rule => !countRules.Any(count => count.Key == rule.Key))];
             uncountedKeys = options.EnemiesAtOnce is null ? [.. groups[nameof(EnemyCountState)].Select(rule => rule.Key)
                 .Where(key => !statusRules.Any(rule => rule.Key == key)).Distinct().Order(StringComparer.Ordinal)] : [];
-            buffRules = [.. groups[nameof(TimedBuffState)]];
+            // A rule that requires selector values the fight's context doesn't hold (Calculated outside cover) takes no part.
+            var fightContext = context;
+            buffRules = [.. groups[nameof(TimedBuffState)].Where(rule => rule.RequiresContext is not { } gate ||
+                gate.All(pair => fightContext.GetValueOrDefault(pair.Key, "") == pair.Value))];
             // With no kits, a rule that gains on one steps aside and its talent reads the user's assumption, as counts do one
             // enemy at a time. A talent on gear is no reason to refuse the fight, and the result names it.
             if (options.ArmorKits is null)
@@ -241,6 +245,17 @@ public static class DummyWeaponSimulator
                     .Distinct(StringComparer.Ordinal).Select(id => RuleOwnerName(pack.Pack, id)).Order(StringComparer.Ordinal)];
                 buffRules = [.. buffRules.Where(rule => rule.On != "armor_kit" || !rule.Also.IsEmpty)];
                 statusRules = [.. statusRules.Where(rule => rule.On != "armor_kit" || !rule.Also.IsEmpty)];
+            }
+            // With no skills, a skill's hit or kill never comes. Its rules stay, so their keys stay driven and off unless another event gains
+            // them (Outsider's and Preservation's weapon kills), and never take the user's setting; the result names their talents.
+            if (!options.IncludeSkills)
+            {
+                static bool OnSkill(string name) => name is "skill_hit" or "skill_kill";
+                skilllessTalents = [.. buffRules.Concat(statusRules).Concat(countRules)
+                    .Where(rule => OnSkill(rule.On) || rule.Also.Any(gain => OnSkill(gain.On)) || OnSkill(rule.ResetOn) || OnSkill(rule.AlsoResetOn) || OnSkill(rule.ConsumeOn) || OnSkill(rule.CancelOn))
+                    .Select(rule => rule.Talent)
+                    .Concat(pack.Pack.Simulation.TalentDamage.Where(rule => selected.Contains(rule.Talent) && OnSkill(rule.On)).Select(rule => rule.Talent))
+                    .Distinct(StringComparer.Ordinal).Select(id => RuleOwnerName(pack.Pack, id)).Order(StringComparer.Ordinal)];
             }
             if (phaseRules.Concat(combatRules).Concat(countRules).Concat(statusRules).Concat(buffRules).Any(rule =>
                 options.IncludeIncoming && rule.Key == "makeshift_qualifying_damage"))
@@ -264,11 +279,15 @@ public static class DummyWeaponSimulator
             }
             var supportedEvents = new[] { "shot", "hit", "hit_pellet", "crit", "crit_pellet", "headshot", "body_hit", "unarmored_hit", "kill", "crit_kill", "headshot_kill", "reload", "reload_end", "status_applied", "armor_kit", "pickup", "second" };
             if (options.FocusSeconds is not null) { supportedEvents = [.. supportedEvents, "target_changed"]; }
-            if (options.IncludeSkills) { supportedEvents = [.. supportedEvents, "skill_hit"]; }
+            // Without skills they're never emitted, so their rules simply never fire (named above).
+            supportedEvents = [.. supportedEvents, "skill_hit", "skill_kill"];
             if (options.IncludeIncoming) { supportedEvents = [.. supportedEvents, "damaged", "armor_break"]; }
             if (options.IncludeShield) { supportedEvents = [.. supportedEvents, "shield_break"]; }
             if (options.Rotation is not null) { supportedEvents = [.. supportedEvents, "swap", "swapped", "swap_after_kill"]; }
-            if (statusRules.Concat(countRules).Any(rule => rule.On.Length > 0 && !supportedEvents.Contains(rule.On)))
+            // A skill's kill is already a kill to gear talents, so a gear talent's count naming both would count it twice.
+            if (statusRules.Any(rule => gearTalents.Contains(rule.Talent) && new[] { rule.On }.Concat(rule.Also.Select(gain => gain.On)).ToHashSet(StringComparer.Ordinal).IsSupersetOf(["kill", "skill_kill"])))
+            { throw new SimulationException("trigger-unsupported", "A gear talent's kill already counts a skill's kill, so its count can't name skill_kill as well"); }
+            if (statusRules.Concat(countRules).Any(rule => rule.On.Length > 0 && !supportedEvents.Contains(rule.On) || rule.Also.Any(gain => !supportedEvents.Contains(gain.On))))
             { throw new SimulationException("trigger-event-unsupported", "A status or count rule requires an unimplemented event"); }
             // A single weapon never swaps, so a swap event that only ends, resets or consumes a rule (Frenzy's removal on weapon
             // switch) simply never fires; one that gains still needs rotation.
@@ -603,6 +622,8 @@ public static class DummyWeaponSimulator
             double weaponTotal = 0, skillTotal = 0;
             double skillImpactTotal = 0, skillContinuousTotal = 0;
             var buffs = options.DriveSimpleBuffs ? new TimedBuffState(fightBuffRules, magazines, stats) : null;
+            // Chances draw from their own stream, so a rule with one leaves every other roll as it was.
+            if (buffs is not null) { buffs.Roll = new SimulationRandom(options.Seed, (1UL << 61) | (uint)fight).NextDouble; }
             IReadOnlySet<string> fightTalents = fightBuffRules.Select(rule => rule.Talent).ToHashSet(StringComparer.Ordinal);
             // Selected talents, and the per-weapon copies of one on both rotated weapons.
             IReadOnlySet<string> everyTalent = selected.Concat(fightTalents).ToHashSet(StringComparer.Ordinal);
@@ -670,6 +691,9 @@ public static class DummyWeaponSimulator
             // Swap and reload starts of scheduled rotation actions, fired in time order with the fight's other events.
             // Swap starts, reload starts and, when a rule reads it, reload completions, in time order.
             var actionEvents = new Queue<(double At, WeaponAction Action, bool Swap, bool End)>();
+            // Cooldown grants held while no cooldown ran (Skilled's banked reset), each distinct one once, with the first cooldown start
+            // seen since it was held. The earliest is kept, as a slot's next use replaces what it knows of the last.
+            var holds = new List<(double Share, double Seconds, double Delay, double Since, double Start)>();
             // The next whole second of the fight, when a selected rule counts seconds (Stand Your Ground, Chemical Agent).
             var nextSecond = secondsUsed && 1 < options.Duration ? 1d : double.PositiveInfinity;
             // Targets cycle through the sequence and the distances; each carries its own full pools and distance.
@@ -784,6 +808,37 @@ public static class DummyWeaponSimulator
                 if (armorAmount > 0) { Record(DummyEventKind.ArmorRepaired, armorAmount, at, ""); }
                 if (healthAmount > 0) { Record(DummyEventKind.HealthRepaired, healthAmount, at, ""); }
             }
+            // Every running skill cooldown, the shield's included: a share of each one's own (a reset at 1), or seconds.
+            void CutCooldowns(double at, double share, double seconds)
+            {
+                skills?.Shorten(at, share, seconds);
+                if (shield is not null)
+                {
+                    AdvanceShield(at, queuedRepairs.Rate);
+                    shield.Shorten(share, seconds, at);
+                    AdvanceShield(at, queuedRepairs.Rate);
+                }
+            }
+            // The first cooldown start at or after a time that the fight knows of now: a skill's, or the shield's break.
+            double StartSince(double since)
+            {
+                var start = skills?.CooldownStartSince(since) ?? double.PositiveInfinity;
+                return shield?.BrokenAt >= since ? Math.Min(start, shield.BrokenAt) : start;
+            }
+            // When the next held grant lands: its delay after the first cooldown start since it was held. Called every pass of the fight's
+            // loop, so a start is recorded before a later use of its slot replaces it.
+            double HeldDue()
+            {
+                var due = double.PositiveInfinity;
+                for (var index = 0; index < holds.Count; index++)
+                {
+                    var hold = holds[index];
+                    hold.Start = Math.Min(hold.Start, StartSince(hold.Since));
+                    holds[index] = hold;
+                    due = Math.Min(due, hold.Start + hold.Delay);
+                }
+                return due;
+            }
             // Clearing stacks can grant temporary armor or repair the shield (Full Stop, Liberty or Death).
             void ApplyGrants(double at)
             {
@@ -807,6 +862,23 @@ public static class DummyWeaponSimulator
                             var repair = player.Repair(amount, 0, at);
                             RecordRepair(repair.Armor, 0, at);
                         }
+                    }
+                    else if (grant.Kind is "skill_cooldown" or "skill_cooldown_seconds")
+                    {
+                        var (share, seconds) = grant.Kind == "skill_cooldown" ? (grant.Share, 0d) : (0d, grant.Share);
+                        // With no cooldown running a holding grant waits for the next to start (Skilled's banked reset), one at a time.
+                        if (grant.HoldDelay > 0 && skills?.CooldownRunning(at) != true && shield?.CoolingDown(at) != true)
+                        {
+                            if (!holds.Any(hold => hold.Share == share && hold.Seconds == seconds && hold.Delay == grant.HoldDelay))
+                            { holds.Add((share, seconds, grant.HoldDelay, at, StartSince(at))); }
+                            continue;
+                        }
+                        CutCooldowns(at, share, seconds);
+                    }
+                    else if (grant.Kind == "armor_kit_refund" && kits is not null)
+                    {
+                        // On the armor_kit event the kit just spent comes back, so that use cost none (Efficient).
+                        kits.Refund();
                     }
                     else if (grant.Kind == "shield_repair" && shield is not null)
                     {
@@ -1237,7 +1309,8 @@ public static class DummyWeaponSimulator
                 };
             }
             while (time < options.Duration || skills?.Next is not null || nextEnemy < options.Duration || Ticking()?.Dots!.NextTick < options.Duration ||
-                pickups.Count > 0 && pickups.Peek() < options.Duration || actionEvents.Count > 0 && actionEvents.Peek().At < options.Duration || nextSecond < options.Duration)
+                pickups.Count > 0 && pickups.Peek() < options.Duration || actionEvents.Count > 0 && actionEvents.Peek().At < options.Duration || nextSecond < options.Duration ||
+                HeldDue() < options.Duration)
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 var nextSkill = skills?.Next;
@@ -1248,6 +1321,20 @@ public static class DummyWeaponSimulator
                 // A queued swap or reload start waits for every other event at its time.
                 var nextAction = actionEvents.Count > 0 ? actionEvents.Peek().At : double.PositiveInfinity;
                 var tickBeforeEnemy = nextSkill?.Kind.IsBatch() == true && nextSkillTime == nextEnemy;
+                // A held cooldown grant lands only when nothing else is due by then, so every event at its time comes first.
+                var heldDue = HeldDue();
+                if (heldDue < options.Duration && heldDue < time && heldDue < nextEnemy && heldDue < nextSkillTime && heldDue < nextStatusTick &&
+                    heldDue < nextPickup && heldDue < nextAction && heldDue < nextSecond)
+                {
+                    Spend();
+                    if (!Regenerate(heldDue)) { RefreshWeapon(heldDue); }
+                    var landing = holds.FindIndex(hold => hold.Start + hold.Delay == heldDue);
+                    var (share, seconds, _, _, _) = holds[landing];
+                    holds.RemoveAt(landing);
+                    CutCooldowns(heldDue, share, seconds);
+                    RefreshWeapon(heldDue);
+                    continue;
+                }
                 if (nextEnemy < options.Duration && nextEnemy <= time && nextEnemy <= nextSkillTime && nextEnemy <= nextStatusTick && nextEnemy <= nextPickup && nextEnemy <= nextSecond && nextEnemy <= nextAction && !tickBeforeEnemy)
                 {
                     Spend();
@@ -1480,7 +1567,8 @@ public static class DummyWeaponSimulator
                         // (R41). Doctor Home's kit is, when the target was marked.
                         CreditKill(at, "", () => RepairOnKill(at, weaponBound: false), away);
                         if (!away && options.Rotation?.Mode == WeaponSwapMode.AfterKill) { externalKillPending = true; }
-                        // Like a skill kill, a status kill is credited to gear talents only.
+                        // A status kill is a kill to gear talents only, as a skill's is. It's no skill_kill: by the source a burn or bleed
+                        // tick isn't a skill kill (R77), though a skill's own status ticks in its stream count as one, a known partial.
                         FireStatuses("kill", at, buffWeapon.StatusDurationFactor, gearTalents);
                         if (FireBuffs("kill", at, statuses!.Active(at), gearTalents))
                         { Refill(at); }
@@ -1570,7 +1658,14 @@ public static class DummyWeaponSimulator
                         if (dealt > 0 && entry.Kind == SkillDamageKind.ContinuousWindow && skills.Taken!.Status.Length > 0 && skills.Taken.StatusRate == 0 && !(targeted && target.Dead))
                         { skillStatusApplied = statuses!.ApplyFromSkill(skills.Taken.Status, skills.TakenUntil, entry.Start, entry.Time, rateIsStatus: false); }
                         if (skillStatusApplied && !(targeted && target.Dead)) { EmitSkillEvent("status_applied"); }
-                        if (targeted && target.Dead) { EmitSkillEvent("kill", gearTalents); }
+                        // A skill's kill, its own burn or bleed included, is a kill to gear talents. It's a skill_kill to them and to the weapon
+                        // in hand's talents, so a weapon talent that takes kills from any source names it (R84: Outsider, Ignited and
+                        // Preservation); a holstered weapon's talents aren't active.
+                        if (targeted && target.Dead)
+                        {
+                            EmitSkillEvent("kill", gearTalents);
+                            EmitSkillEvent("skill_kill");
+                        }
                         if (skillRefill) { Refill(entry.Time); }
                     }
                     if (targeted && target.Dead) { ClearTarget(entry.Time); }
@@ -1929,6 +2024,7 @@ public static class DummyWeaponSimulator
                      perTargetFire ? "; the target in play (the arriving one after a kill) sets enemy fire and recovery, and a kill scales the wait for the next attempt to the new cadence" : "")]),
              .. (firstDistance is null && statusRules.Any(rule => rule.Within > 0) ? ["With no fight distance, a status rule's range is taken as met"] : Array.Empty<string>()),
              .. (kitlessTalents.IsEmpty ? Array.Empty<string>() : [$"This fight carries no armor kits, so these read your setting and never react to one: {string.Join(", ", kitlessTalents)}"]),
+             .. (skilllessTalents.IsEmpty ? Array.Empty<string>() : [$"This fight has no skills, so these never react to a skill's hit or kill: {string.Join(", ", skilllessTalents)}"]),
              .. (enemyCounts is null ? Array.Empty<string>() :
                  ["Talents that count enemies read those alive in the group, by each enemy's distance. Enemies don't move, so a count changes only as they die or join; one read on an event holds until that event comes round again, starting from none"]),
              .. (uncountedKeys.IsEmpty ? Array.Empty<string>() : [$"With one enemy at a time these stay as set: {string.Join(", ", uncountedKeys)}. Fights count enemies with several at once"]),

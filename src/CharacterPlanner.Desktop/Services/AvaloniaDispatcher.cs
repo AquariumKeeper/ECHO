@@ -33,4 +33,7 @@ public static class AppPaths
     /// <summary>The app's own data folder: the library, assumption sets, window size and the Go library's import record.</summary>
     public static string Data => AppDataPaths.Folder;
     public static string Artwork => Path.Combine(Data, "artwork-packs");
+
+    /// <summary>Unexpected failures the app caught and stayed open through (F94).</summary>
+    public static string Errors => Path.Combine(Data, "errors.log");
 }

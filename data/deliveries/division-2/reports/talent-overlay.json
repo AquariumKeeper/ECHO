@@ -2,110 +2,228 @@
   "ok": true,
   "format": "shade-tech.planner-talent-rule-candidate",
   "version": 1,
-  "implementation_sha256": "964aa21fa25a2778621bb1dc4c99e14d448d67cd2e768c7ab5ce3cfdf19f5e30",
-  "base_manifest_sha256": "fc3e3cb0fe4e13a5b8128d3a027031197a068a1b5f6d2376f6eef7ec5077f0ab",
-  "overlay_plan_sha256": "d3ab37ff0041900f0ab2116c49a8687e93609b55d35c55277eaca2166a868828",
-  "evidence_packet_sha256": "39cc370ee5567e39413c6d0cbcafd198a49381e9aec3ad963fc236e6a2963231",
-  "pack_manifest_sha256": "dbec840e49a1cae8cbfcd1369af9a40469552b948732a1f599352872376d4b00",
-  "candidate_version": "y8s3.3-pve.2026-11-07.r73.candidate.1",
+  "implementation_sha256": "d13d8b7a1ece6c4efea0527cb0b20a114b5e97c806118a5305f42c4a26a31937",
+  "base_manifest_sha256": "0652247f6ddd43d739dae0bb8bb137620d6837b4e26aca8302ba558ea271df1d",
+  "overlay_plan_sha256": "47b6666ec48c7d140c46fd65d267d65fd092aa337a641ac5bf513464497a8047",
+  "evidence_packet_sha256": "de7f1ac0e90b6f00ca754cc72be71dc678eedc79bfe33315eed967312236a241",
+  "pack_manifest_sha256": "d8ebcca4ad1de18a9a6aec0a23512cdd1ee164c0cd32ab4e100ebb7c58722c28",
+  "candidate_version": "y8s3.3-pve.2026-11-08.r86.candidate.1",
   "changes": [
     {
       "document": "simulation.json",
       "collection": "triggers",
       "op": "replace",
       "match": {
-        "talent": "weapon_talent_future_perfect",
-        "key": "future_perfect_overcharge_active"
+        "talent": "weapon_talent_ignited",
+        "key": "target_burning"
       },
       "before": {
-        "talent": "weapon_talent_future_perfect",
-        "key": "future_perfect_overcharge_active",
+        "talent": "weapon_talent_ignited",
+        "key": "target_burning",
         "on": "kill",
-        "kind": "buff",
-        "duration": 15,
-        "every": 90,
-        "whileStatAtLeast": {
-          "stat": "overcharged_skill_tier",
-          "value": 6
+        "kind": "status",
+        "duration": 7,
+        "count": 4,
+        "status": "burning"
+      },
+      "after": {
+        "talent": "weapon_talent_ignited",
+        "key": "target_burning",
+        "on": "kill",
+        "also": [
+          {
+            "on": "skill_kill",
+            "gain": 1
+          }
+        ],
+        "kind": "status",
+        "duration": 7,
+        "count": 4,
+        "status": "burning"
+      },
+      "evidence_paths": [
+        "sources/talent_weapon_increased_damage_to_burn.mtalent",
+        "sources/talent_weapon_increased_damage_to_burn_perfect.mtalent",
+        "sources/talentrule_weapon_increased_damage_to_burn.mtalentrules",
+        "docs/R86_SOURCE_REVIEW.md"
+      ],
+      "rationale": "\"Kill Stack Counter\" counts a defeat or down from any source toward one count; the burn arms the next SOURCE_PROJECTILE hit (R85, R86).",
+      "position": 75
+    },
+    {
+      "document": "rules.json",
+      "collection": "talents",
+      "op": "replace",
+      "match": {
+        "id": "weapon_talent_ignited"
+      },
+      "before": {
+        "id": "weapon_talent_ignited",
+        "name": "Ignited",
+        "description": "Amplifies +25% weapon damage to burning enemies.  After 4 kills, applies burning to the next enemy you hit.",
+        "modifiers": [
+          {
+            "stat": "weapon_damage_multiplier",
+            "op": "mult",
+            "value": 0.25,
+            "requires": {
+              "target_burning": "true"
+            }
+          }
+        ],
+        "coverage": {
+          "status": "partial",
+          "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; R20_DAMAGE_APPLICATION.md, In-game reading; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md)",
+          "omits": [
+            "Damage to Armor on armor ticks (observed for skill burns, untested for talent burns)"
+          ]
         }
       },
       "after": {
-        "talent": "weapon_talent_future_perfect",
-        "key": "future_perfect_overcharge_active",
-        "on": "kill",
-        "kind": "buff",
-        "duration": 15,
-        "every": 90,
-        "everyGroup": "future_perfect_overcharge",
-        "whileStatAtLeast": {
-          "stat": "overcharged_skill_tier",
-          "value": 6
+        "id": "weapon_talent_ignited",
+        "name": "Ignited",
+        "description": "Amplifies +25% weapon damage to burning enemies.  After 4 kills, applies burning to the next enemy you hit.",
+        "modifiers": [
+          {
+            "stat": "weapon_damage_multiplier",
+            "op": "mult",
+            "value": 0.25,
+            "requires": {
+              "target_burning": "true"
+            }
+          }
+        ],
+        "coverage": {
+          "status": "partial",
+          "omits": [
+            "Damage to Armor on armor ticks (observed for skill burns, untested for talent burns)",
+            "Kills by owned agents (a turret, drone or hive): the source's kill conditions exclude them (myTriggeredByRuleAgentsOwnedAgents FALSE); fights count every skill's kill.",
+            "Whether a skill's kill counts as the player's (myTriggeredByRuleAgent) isn't in the data; fights count it."
+          ],
+          "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; R20_DAMAGE_APPLICATION.md, In-game reading; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md); R85_SOURCE_REVIEW.md and R86_SOURCE_REVIEW.md (skill kills)"
         }
       },
       "evidence_paths": [
-        "sources/warlock_talent_weapon_kills_grant_skill_tier.mtalent",
-        "sources/warlock_talent_weapon_kills_grant_skill_tier_perfect.mtalent",
-        "sources/warlock_talentrule_weapon_kills_grant_skill_tier.mtalentrules",
-        "sources/warlock_talentrule_weapon_kills_grant_skill_tier_overcharge.mtalentrules",
-        "sources/talent.fruit",
-        "docs/R73_SOURCE_REVIEW.md"
+        "sources/talent_weapon_increased_damage_to_burn.mtalent",
+        "sources/talent_weapon_increased_damage_to_burn_perfect.mtalent",
+        "sources/talentrule_weapon_increased_damage_to_burn.mtalentrules",
+        "docs/R86_SOURCE_REVIEW.md"
       ],
-      "rationale": "Both talents add one sub-rule to the player, so their 90 s is one cooldown (R72, R73).",
-      "position": 154
+      "rationale": "Coverage after skill kills (R86).",
+      "position": 231
     },
     {
       "document": "simulation.json",
       "collection": "triggers",
       "op": "replace",
       "match": {
-        "talent": "weapon_talent_future_perfection",
-        "key": "future_perfect_overcharge_active"
+        "talent": "weapon_talent_perfect_ignited",
+        "key": "target_burning"
       },
       "before": {
-        "talent": "weapon_talent_future_perfection",
-        "key": "future_perfect_overcharge_active",
+        "talent": "weapon_talent_perfect_ignited",
+        "key": "target_burning",
         "on": "kill",
-        "kind": "buff",
-        "duration": 15,
-        "every": 90,
-        "whileStatAtLeast": {
-          "stat": "overcharged_skill_tier",
-          "value": 6
+        "kind": "status",
+        "duration": 7,
+        "count": 3,
+        "status": "burning"
+      },
+      "after": {
+        "talent": "weapon_talent_perfect_ignited",
+        "key": "target_burning",
+        "on": "kill",
+        "also": [
+          {
+            "on": "skill_kill",
+            "gain": 1
+          }
+        ],
+        "kind": "status",
+        "duration": 7,
+        "count": 3,
+        "status": "burning"
+      },
+      "evidence_paths": [
+        "sources/talent_weapon_increased_damage_to_burn.mtalent",
+        "sources/talent_weapon_increased_damage_to_burn_perfect.mtalent",
+        "sources/talentrule_weapon_increased_damage_to_burn.mtalentrules",
+        "docs/R86_SOURCE_REVIEW.md"
+      ],
+      "rationale": "\"Kill Stack Counter\" counts a defeat or down from any source toward one count; the burn arms the next SOURCE_PROJECTILE hit (R85, R86).",
+      "position": 76
+    },
+    {
+      "document": "rules.json",
+      "collection": "talents",
+      "op": "replace",
+      "match": {
+        "id": "weapon_talent_perfect_ignited"
+      },
+      "before": {
+        "id": "weapon_talent_perfect_ignited",
+        "name": "Perfect Ignited",
+        "description": "Amplifies +30% weapon damage to burning enemies. After 3 kills, applies burning to the next enemy you hit.",
+        "modifiers": [
+          {
+            "stat": "weapon_damage_multiplier",
+            "op": "mult",
+            "value": 0.3,
+            "requires": {
+              "target_burning": "true"
+            }
+          }
+        ],
+        "coverage": {
+          "status": "partial",
+          "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md)",
+          "omits": [
+            "Damage to Armor on armor ticks (untested for talent burns)"
+          ]
         }
       },
       "after": {
-        "talent": "weapon_talent_future_perfection",
-        "key": "future_perfect_overcharge_active",
-        "on": "kill",
-        "kind": "buff",
-        "duration": 15,
-        "every": 90,
-        "everyGroup": "future_perfect_overcharge",
-        "whileStatAtLeast": {
-          "stat": "overcharged_skill_tier",
-          "value": 6
+        "id": "weapon_talent_perfect_ignited",
+        "name": "Perfect Ignited",
+        "description": "Amplifies +30% weapon damage to burning enemies. After 3 kills, applies burning to the next enemy you hit.",
+        "modifiers": [
+          {
+            "stat": "weapon_damage_multiplier",
+            "op": "mult",
+            "value": 0.3,
+            "requires": {
+              "target_burning": "true"
+            }
+          }
+        ],
+        "coverage": {
+          "status": "partial",
+          "omits": [
+            "Damage to Armor on armor ticks (untested for talent burns)",
+            "Kills by owned agents (a turret, drone or hive): the source's kill conditions exclude them (myTriggeredByRuleAgentsOwnedAgents FALSE); fights count every skill's kill.",
+            "Whether a skill's kill counts as the player's (myTriggeredByRuleAgent) isn't in the data; fights count it."
+          ],
+          "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md); R85_SOURCE_REVIEW.md and R86_SOURCE_REVIEW.md (skill kills)"
         }
       },
       "evidence_paths": [
-        "sources/warlock_talent_weapon_kills_grant_skill_tier.mtalent",
-        "sources/warlock_talent_weapon_kills_grant_skill_tier_perfect.mtalent",
-        "sources/warlock_talentrule_weapon_kills_grant_skill_tier.mtalentrules",
-        "sources/warlock_talentrule_weapon_kills_grant_skill_tier_overcharge.mtalentrules",
-        "sources/talent.fruit",
-        "docs/R73_SOURCE_REVIEW.md"
+        "sources/talent_weapon_increased_damage_to_burn.mtalent",
+        "sources/talent_weapon_increased_damage_to_burn_perfect.mtalent",
+        "sources/talentrule_weapon_increased_damage_to_burn.mtalentrules",
+        "docs/R86_SOURCE_REVIEW.md"
       ],
-      "rationale": "Both talents add one sub-rule to the player, so their 90 s is one cooldown (R72, R73).",
-      "position": 155
+      "rationale": "Coverage after skill kills (R86).",
+      "position": 232
     }
   ],
   "exclusions": [
-    "How two bonuses on one attribute combine is not established; the two talents are never active together.",
-    "Whether the Overcharge sub-rule stays on the player after a weapon swap is not established."
+    "Outsider's rows keep the shared everyGroup: the source doesn't say whether each talent keeps its own state (R86).",
+    "Immobilize and Thunder Strike: the damage type of a skill kill is not established (R84)."
   ],
-  "evidence_files_verified": 11,
+  "evidence_files_verified": 13,
   "assets_sha256_unchanged": true,
   "presentation_and_share_bytes_unchanged": true,
-  "talent_modifiers_unchanged": true,
+  "talent_modifiers_unchanged": false,
   "stats_unchanged": true,
   "consumer_accepted": false,
   "runtime_verified": false,

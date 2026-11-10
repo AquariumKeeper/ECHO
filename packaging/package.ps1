@@ -60,9 +60,8 @@ try {
     if ($LASTEXITCODE) { throw 'Locked restore failed' }
     foreach ($name in @('Desktop', 'Cli')) {
         $output = Join-Path $publish $name
-        # Source paths are mapped and source links off, so stack traces keep their line numbers and a release names no folder, account or commit.
+        # ReleasePackage applies the release debug policy in Directory.Build.props: paths mapped to /_/, no source links.
         $singleFile = @('-p:PublishSingleFile=true', '-p:IncludeNativeLibrariesForSelfExtract=true', '-p:ReleasePackage=true',
-            "-p:PathMap=$root\=/_/", '-p:EnableSourceLink=false', '-p:EnableSourceControlManagerQueries=false',
             "-p:PublishDepsFilePath=$(Join-Path $publish "$name.deps.json")")
         & $Dotnet publish "src/CharacterPlanner.$name/CharacterPlanner.$name.csproj" -c Release -r win-x64 --self-contained true --no-restore -o $output @singleFile
         if ($LASTEXITCODE) { throw "Publish failed: $name" }

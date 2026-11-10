@@ -1174,7 +1174,7 @@ public sealed partial class DummyWeaponSimulatorTests
         var build = BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test_buff");
         var result = Run(pack, build, Context, new() { Duration = 4, Mode = SimulationMode.Random, Iterations = 1, DriveSimpleBuffs = true, CaptureFirstFightEvents = true });
         Assert.Equal(new double[] { 10, 30, 50, 50 }, result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot).Select(e => e.Damage));
-        var unsupported = rules with { Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { Also = [new() { On = "skill_hit", Gain = 1 }] }] } };
+        var unsupported = rules with { Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { Also = [new() { On = "shield_break", Gain = 1 }] }] } };
         var unsupportedPack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(unsupported).Compiled);
         Assert.Equal("trigger-event-unsupported", Assert.Throws<SimulationException>(() => Run(unsupportedPack, build, Context,
             new() { Mode = SimulationMode.Random, Iterations = 1, DriveSimpleBuffs = true })).Code);

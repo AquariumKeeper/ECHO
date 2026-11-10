@@ -1,0 +1,192 @@
+<Window Icon="/Assets/application.ico" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CharacterPlanner.Desktop.ViewModels"
+        xmlns:views="using:CharacterPlanner.Desktop.Views"
+        x:Class="CharacterPlanner.Desktop.Views.SpecializationTreeWindow" x:DataType="vm:SpecializationTreeViewModel"
+        Title="{Binding Title}" Width="1100" Height="900" MinWidth="640" MinHeight="480" WindowStartupLocation="CenterOwner">
+  <Window.Styles>
+    <!-- A perk's card: outlined in the accent once a tier is active, in red while one is inactive, and in the gain
+         colour when the search finds one of its tiers. -->
+    <Style Selector="Border.treecard">
+      <Setter Property="Width" Value="200" />
+      <Setter Property="Height" Value="112" />
+      <Setter Property="CornerRadius" Value="4" />
+      <Setter Property="BorderThickness" Value="2" />
+      <Setter Property="BorderBrush" Value="{DynamicResource DivisionBorder}" />
+      <Setter Property="Background" Value="{DynamicResource DivisionRaised}" />
+      <Setter Property="Padding" Value="8,6" />
+    </Style>
+    <Style Selector="Border.treecard.allocated">
+      <Setter Property="BorderBrush" Value="{DynamicResource DivisionAccent}" />
+    </Style>
+    <Style Selector="Border.treecard.inactive">
+      <Setter Property="BorderBrush" Value="{DynamicResource DivisionError}" />
+    </Style>
+    <Style Selector="Border.treecard.match">
+      <Setter Property="BorderBrush" Value="{DynamicResource DivisionGain}" />
+      <Setter Property="BorderThickness" Value="3" />
+    </Style>
+    <!-- A budget's box over the perks it holds. -->
+    <Style Selector="Border.treebudget">
+      <Setter Property="Width" Value="200" />
+      <Setter Property="Height" Value="112" />
+      <Setter Property="CornerRadius" Value="4" />
+      <Setter Property="BorderThickness" Value="2" />
+      <Setter Property="BorderBrush" Value="{DynamicResource DivisionAccent}" />
+      <Setter Property="Background" Value="{DynamicResource DivisionSurface}" />
+    </Style>
+    <!-- A tier's pip: dim while locked, outlined while it can be allocated, filled once allocated, red when
+         allocated but inactive, yellow while on the previewed path, and thicker when the search finds it. -->
+    <Style Selector="Button.treenode">
+      <Setter Property="Width" Value="32" />
+      <Setter Property="Height" Value="24" />
+      <Setter Property="CornerRadius" Value="3" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="BorderThickness" Value="2" />
+      <Setter Property="BorderBrush" Value="{DynamicResource DivisionBorder}" />
+      <Setter Property="Background" Value="{DynamicResource DivisionSurface}" />
+      <Setter Property="Foreground" Value="{DynamicResource DivisionMuted}" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.treenode.available">
+      <Setter Property="BorderBrush" Value="{DynamicResource DivisionText}" />
+      <Setter Property="Foreground" Value="{DynamicResource DivisionText}" />
+    </Style>
+    <Style Selector="Button.treenode.allocated">
+      <Setter Property="Background" Value="{DynamicResource DivisionAccent}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource DivisionAccent}" />
+      <Setter Property="Foreground" Value="{DynamicResource DivisionBackground}" />
+    </Style>
+    <Style Selector="Button.treenode.inactive">
+      <Setter Property="Background" Value="{DynamicResource DivisionSurface}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource DivisionError}" />
+      <Setter Property="Foreground" Value="{DynamicResource DivisionError}" />
+    </Style>
+    <Style Selector="Button.treenode.onpath">
+      <Setter Property="BorderBrush" Value="{DynamicResource DivisionValue}" />
+      <Setter Property="BorderThickness" Value="3" />
+    </Style>
+    <Style Selector="Button.treenode.match">
+      <Setter Property="BorderThickness" Value="3" />
+    </Style>
+    <Style Selector="Button.treenode.match:not(.onpath)">
+      <Setter Property="BorderBrush" Value="{DynamicResource DivisionGain}" />
+    </Style>
+    <Style Selector="Button.treenode /template/ ContentPresenter">
+      <Setter Property="CornerRadius" Value="3" />
+    </Style>
+    <Style Selector="Button.treenode.allocated:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource DivisionAccent}" />
+    </Style>
+  </Window.Styles>
+  <DockPanel Margin="16">
+    <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+      <ItemsControl ItemsSource="{Binding Budgets}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal" Spacing="24" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+      </ItemsControl>
+      <Grid ColumnDefinitions="*,Auto,Auto,200,Auto" ColumnSpacing="8">
+        <TextBox Name="TreeSearch" Text="{Binding Search}" PlaceholderText="Search perks" AutomationProperties.Name="Search perks" />
+        <TextBlock Grid.Column="1" Text="{Binding Matches}" VerticalAlignment="Center" AutomationProperties.LiveSetting="Polite" />
+        <TextBlock Grid.Column="2" Text="Zoom" VerticalAlignment="Center" Margin="12,0,0,0" />
+        <Slider Grid.Column="3" Name="TreeZoom" Minimum="0.25" Maximum="2" Value="{Binding Zoom}" AutomationProperties.Name="Zoom" />
+        <Button Grid.Column="4" Name="FitButton" Content="Fit" Click="OnFit" ToolTip.Tip="Fit the whole tree in the window" />
+      </Grid>
+      <TextBlock Name="TreeStatus" Text="{Binding Status}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+      <TextBlock Name="TreeRefusal" Text="{Binding Refusal}" Classes="error" TextWrapping="Wrap" IsVisible="{Binding HasRefusal}" />
+    </StackPanel>
+    <Button DockPanel.Dock="Bottom" Name="CloseButton" Content="Close" HorizontalAlignment="Right" Margin="0,8,0,0" Click="OnClose" />
+    <Panel>
+      <TextBlock Text="Select a specialization to plan its tree." IsVisible="{Binding !HasSpecialization}" Classes="label" />
+      <ScrollViewer Name="TreeScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" IsVisible="{Binding HasSpecialization}">
+        <LayoutTransformControl HorizontalAlignment="Center" VerticalAlignment="Center">
+          <LayoutTransformControl.LayoutTransform>
+            <ScaleTransform ScaleX="{Binding Zoom}" ScaleY="{Binding Zoom}" />
+          </LayoutTransformControl.LayoutTransform>
+          <Panel Name="TreeCanvas" Width="{Binding Width}" Height="{Binding Height}">
+            <views:SpecializationTreeLines Edges="{Binding Edges}" />
+            <Canvas>
+              <Border Name="TreeHub" Canvas.Left="{Binding HubLeft}" Canvas.Top="{Binding HubTop}" Width="{Binding HubWidth}" Height="{Binding HubHeight}"
+                      CornerRadius="6" BorderThickness="2" BorderBrush="{DynamicResource DivisionAccent}" Background="{DynamicResource DivisionRaised}">
+                <StackPanel VerticalAlignment="Center" Spacing="4">
+                  <views:IconView Name="TreeHubArt" Source="{Binding HubArt}" Glyph="{x:Static vm:ArtGlyphs.Specialization}" Width="96" Height="96" HorizontalAlignment="Center" />
+                  <TextBlock Text="{Binding HubTitle}" FontWeight="Bold" FontSize="20" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" />
+                  <TextBlock Text="{Binding HubPoints}" FontSize="18" HorizontalAlignment="Center" />
+                </StackPanel>
+              </Border>
+            </Canvas>
+            <ItemsControl Name="TreeBudgets" ItemsSource="{Binding BudgetBoxes}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <Canvas />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemContainerTheme>
+                <ControlTheme TargetType="ContentPresenter" x:DataType="vm:TreeBudgetViewModel">
+                  <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                  <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                </ControlTheme>
+              </ItemsControl.ItemContainerTheme>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:TreeBudgetViewModel">
+                  <Border Classes="treebudget">
+                    <StackPanel VerticalAlignment="Center" Spacing="2">
+                      <TextBlock Text="{Binding Name}" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" />
+                      <TextBlock Text="{Binding Points}" FontSize="16" HorizontalAlignment="Center" />
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsControl Name="TreeCards" ItemsSource="{Binding Cards}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <Canvas />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemContainerTheme>
+                <ControlTheme TargetType="ContentPresenter" x:DataType="vm:TreeCardViewModel">
+                  <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                  <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                </ControlTheme>
+              </ItemsControl.ItemContainerTheme>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:TreeCardViewModel">
+                  <Border Classes="treecard" Classes.allocated="{Binding IsAllocated}" Classes.inactive="{Binding IsInactive}" Classes.match="{Binding IsMatch}">
+                    <DockPanel>
+                      <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Tiers}" Margin="0,0,0,4">
+                        <ItemsControl.ItemsPanel>
+                          <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="4" />
+                          </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate x:DataType="vm:TreeNodeViewModel">
+                            <Button Classes="treenode" Classes.allocated="{Binding IsAllocated}" Classes.inactive="{Binding IsInactive}"
+                                    Classes.available="{Binding IsAvailable}" Classes.onpath="{Binding IsOnPath}" Classes.match="{Binding IsMatch}"
+                                    Command="{Binding ActivateCommand}" ToolTip.Tip="{Binding ToolTip}" AutomationProperties.Name="{Binding AccessibleName}"
+                                    PointerEntered="OnNodeEntered" PointerExited="OnNodeExited" GotFocus="OnNodeFocused" LostFocus="OnNodeUnfocused">
+                              <TextBlock Text="{Binding Tier}" FontWeight="Bold" />
+                            </Button>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                      <TextBlock DockPanel.Dock="Bottom" Text="{Binding Cost}" Classes="caption" />
+                      <DockPanel>
+                        <views:IconView Name="TreeCardArt" DockPanel.Dock="Left" Source="{Binding Icon}" Glyph="{x:Static vm:ArtGlyphs.Node}" Width="36" Height="36" Margin="0,0,8,0" VerticalAlignment="Top" />
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Name}" />
+                      </DockPanel>
+                    </DockPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </Panel>
+        </LayoutTransformControl>
+      </ScrollViewer>
+    </Panel>
+  </DockPanel>
+</Window>

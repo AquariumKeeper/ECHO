@@ -3,6 +3,31 @@ namespace CharacterPlanner.Simulation.Tests;
 public sealed class ShieldStateTests
 {
     [Fact]
+    public void ACutBringsABrokenShieldBackSoonerAndLeavesARaisedOneAlone()
+    {
+        var shield = new ShieldState(100, 0, 10);
+        shield.Advance(0);
+        Assert.True(shield.Apply(100, 0).Broken);
+        shield.Advance(2);
+        // 3 s off: back at 7 s rather than 10 s.
+        shield.Shorten(0, 3, 2);
+        Assert.Null(shield.Advance(6.5).RaisedAt);
+        Assert.Equal(7, shield.Advance(7).RaisedAt);
+        // A raised shield has no cooldown to cut.
+        shield.Shorten(1, 0, 7);
+        Assert.True(shield.IsUp);
+        // A reset, a share of 1, raises it at the next advance, at the time of the cut.
+        Assert.True(shield.Apply(100, 7).Broken);
+        // Not at the moment it broke, though.
+        shield.Shorten(1, 0, 7);
+        Assert.Null(shield.Advance(7).RaisedAt);
+        shield.Advance(8);
+        shield.Shorten(1, 0, 8);
+        Assert.Equal(8, shield.Advance(8).RaisedAt);
+        Assert.Throws<ArgumentOutOfRangeException>(() => shield.Shorten(0, 1, 9));
+    }
+
+    [Fact]
     public void FractionalRefillSnapsToCapacityAndNeverReportsNegativeRepair()
     {
         const double capacity = 966.5643123171955;
@@ -92,5 +117,20 @@ public sealed class ShieldStateTests
         shield.Apply(500, 2);
         Assert.False(shield.IsUp);
         Assert.Equal(0, shield.Repair(10, 2));
+    }
+
+    [Fact]
+    public void AShieldsCooldownRunsFromAfterItsBreakUntilItsReady()
+    {
+        var shield = new ShieldState(100, 0, 10);
+        Assert.False(shield.CoolingDown(0));
+        Assert.True(double.IsNaN(shield.BrokenAt));
+        shield.Advance(2);
+        Assert.True(shield.Apply(100, 2).Broken);
+        Assert.Equal(2, shield.BrokenAt);
+        // Not at the break itself, so a rule on it finds nothing running; then until it's ready at 12.
+        Assert.False(shield.CoolingDown(2));
+        Assert.True(shield.CoolingDown(5));
+        Assert.False(shield.CoolingDown(12));
     }
 }

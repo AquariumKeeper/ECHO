@@ -327,16 +327,16 @@ public static class PackReader
             Triggers = [.. List(simulation.Triggers).Select(trigger => new SimTriggerDefinition
             {
                 Talent = trigger.Talent, Key = trigger.Key, On = trigger.On ?? "", Kind = trigger.Kind, Duration = trigger.Duration ?? 0, Max = trigger.Max ?? 0,
-                Refresh = trigger.Refresh ?? false, Every = trigger.Every ?? 0, EveryGroup = trigger.EveryGroup ?? "", CooldownFromEnd = trigger.CooldownFromEnd ?? false, ResetOn = trigger.ResetOn ?? "", AlsoResetOn = trigger.AlsoResetOn ?? "", ConsumeOn = trigger.ConsumeOn ?? "",
+                Refresh = trigger.Refresh ?? false, Every = trigger.Every ?? 0, EveryGroup = trigger.EveryGroup ?? "", Chance = trigger.Chance ?? 1, RequiresContext = trigger.Requires?.ToImmutableDictionary(StringComparer.Ordinal), CooldownFromEnd = trigger.CooldownFromEnd ?? false, ResetOn = trigger.ResetOn ?? "", AlsoResetOn = trigger.AlsoResetOn ?? "", ConsumeOn = trigger.ConsumeOn ?? "",
                 Phases = [.. List(trigger.Phases).Select(phase => new SimPhase { Until = phase.Until, Value = phase.Value })],
                 Percent = trigger.Percent ?? false, Within = trigger.Within ?? 0, Count = trigger.Count ?? 0, Refill = trigger.Refill ?? false, Gain = trigger.Gain ?? 0,
-                Also = [.. List(trigger.Also).Select(gain => new SimGain { On = gain.On, Gain = gain.Gain, Count = gain.Count ?? 0 })],
+                Also = [.. List(trigger.Also).Select(gain => new SimGain { On = gain.On, Gain = gain.Gain ?? 0, Count = gain.Count ?? 0 })],
                 Decay = trigger.Decay ?? 0, AtLeast = trigger.AtLeast ?? 0, Purge = trigger.Purge ?? false, Status = trigger.Status ?? "", ApplyOnHit = trigger.ApplyOnHit ?? false, GainWhileHolstered = trigger.GainWhileHolstered ?? 0,
                 WhileStatus = trigger.WhileStatus ?? "", Pool = trigger.Pool ?? "", PoolMax = trigger.PoolMax ?? 0,
                 CancelOn = trigger.CancelOn ?? "", CancelFor = trigger.CancelFor ?? 0, Bank = trigger.Bank ?? "",
                 ClearGrant = trigger.ClearGrant ?? "", ClearAmount = trigger.ClearAmount ?? 0, ClearDuration = trigger.ClearDuration ?? 0,
                 WeaponTags = Strings(trigger.WeaponTags), ForceHeadshot = trigger.ForceHeadshot ?? false,
-                Grant = trigger.Grant ?? "", GrantAmount = trigger.GrantAmount ?? 0, GrantDuration = trigger.GrantDuration ?? 0, GrantInstances = trigger.GrantInstances ?? "", CountWindow = trigger.CountWindow ?? 0,
+                Grant = trigger.Grant ?? "", GrantAmount = trigger.GrantAmount ?? 0, GrantDuration = trigger.GrantDuration ?? 0, GrantInstances = trigger.GrantInstances ?? "", GrantHoldDelay = trigger.GrantHoldDelay ?? 0, GrantAmountStat = trigger.GrantAmountStat ?? "", ActiveAfter = trigger.ActiveAfter ?? 0, CountWindow = trigger.CountWindow ?? 0,
                 MaxMagazine = trigger.MaxMagazine ?? 0, WhileKey = trigger.WhileKey ?? "", WhileFull = trigger.WhileFull ?? false,
                 WhileArmorBelow = trigger.WhileArmorBelow ?? 0, DurationStat = trigger.DurationStat ?? "",
                 WhileStatAtLeast = trigger.WhileStatAtLeast is { } gate ? new SimStatGate { Stat = gate.Stat, Value = gate.Value } : null
@@ -353,7 +353,7 @@ public static class PackReader
             })],
             TalentDamage = [.. List(simulation.TalentDamage).Select(damage => new SimTalentDamageDefinition
             {
-                Talent = damage.Talent, On = damage.On, Total = damage.Total, Duration = damage.Duration, Period = damage.Period
+                Talent = damage.Talent, On = damage.On, Total = damage.Total, Duration = damage.Duration, Period = damage.Period, MaxStacks = damage.MaxStacks ?? 1
             })],
             DistanceDefaults = [.. List(simulation.DistanceDefaults).Select(entry => new SimDistanceDefault
             {
@@ -410,7 +410,8 @@ public static class PackReader
                     AssumptionSections = [.. List(layout.AssumptionSections).Select(section => new LayoutAssumptionSection(section.Name, section.Default ?? false))],
                     AttributeCategories = [.. List(layout.AttributeCategories).Select(category => new LayoutAttributeCategory(category.Id, category.Name, category.Color))],
                     Rarities = [.. List(layout.Rarities).Select(rarity => new LayoutRarity
-                    { ID = rarity.Id, Name = rarity.Name, Color = rarity.Color, Tags = Strings(rarity.Tags), TagPrefixes = Strings(rarity.TagPrefixes) })]
+                    { ID = rarity.Id, Name = rarity.Name, Color = rarity.Color, Tags = Strings(rarity.Tags), TagPrefixes = Strings(rarity.TagPrefixes) })],
+                    Prototype = layout.Prototype is { } prototype ? new LayoutPrototype { Name = prototype.Name, Color = prototype.Color } : null
                 } : null,
                 Icons = icons.ToImmutable(),
                 SpecializationImages = (presentation.SpecializationImages ?? new()).ToImmutableDictionary(StringComparer.Ordinal),

@@ -131,7 +131,8 @@ public sealed partial class DummyWeaponSimulatorTests
         // 600 s probe: 99.9% uptime before, 75.0% after.
         var build = Talented("primary_weapon", "primary_weapon_mp5_st", "weapon_talent_outsider");
         Assert.All(CommittedPack().Pack.Simulation.Triggers.Where(trigger => trigger.Key == "outsider_active"), trigger => Assert.Equal(trigger.Duration, trigger.Every));
-        var (committed, before) = Refreshed(build, "outsider_active", trigger => trigger with { Every = 0 });
+        // Before the candidate there was no cooldown, so no shared one either (R85 groups Outsider's rows).
+        var (committed, before) = Refreshed(build, "outsider_active", trigger => trigger with { Every = 0, EveryGroup = "" });
         Assert.True(before.Fraction > 0.95, $"{before.Fraction}");
         Assert.InRange(committed.Fraction, 0.5, 0.9);
     }
@@ -826,7 +827,154 @@ public sealed partial class DummyWeaponSimulatorTests
     public void CommittedHardenedArmorKitsGrantBonusArmor()
     {
         var rule = CommittedPack().Pack.Simulation.Triggers.Single(entry => entry.Talent == "gunner_hardened_armor_kits_tier_1");
-        Assert.Equal(("armor_kit", "temporary_armor", 0.3, 10d), (rule.On, rule.Grant, rule.GrantAmount, rule.GrantDuration));
+        // R85: the share is a stat, 0.3 scaled by the specialization kit bonus; its 10 s isn't.
+        Assert.Equal(("armor_kit", "temporary_armor", 0d, "gunner_hardened_armor_kits_bonus_armor", 10d), (rule.On, rule.Grant, rule.GrantAmount, rule.GrantAmountStat, rule.GrantDuration));
+    }
+
+    // A build with the talent on the first item that offers it.
+    private static BuildSnapshot WithTalent(GamePack pack, BuildSnapshot build, string talent)
+    {
+        var item = pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(talent)));
+        var slot = item.TalentSlots.First(entry => entry.Choices.Contains(talent));
+        return build.WithEquipment(item.Slot, item.ID).WithTalentSelection(item.Slot, slot.ID, talent);
+    }
+
+    [Theory]
+    [InlineData("gear_talent_efficient", 0.5)]
+    [InlineData("gear_talent_perfect_efficient", 0.75)]
+    public void CommittedEfficientKeepsKitsAfterTenSecondsAndDoublesTheKitBonus(string talent, double chance)
+    {
+        // R85: a kit used from 10 s in comes back at the talent's chance, and the specialization kit bonus is 1.
+        var pack = CommittedPack();
+        var rule = Assert.Single(pack.Pack.Simulation.Triggers, entry => entry.Talent == talent);
+        Assert.Equal(("efficient_kept", "armor_kit", 10d, chance, "armor_kit_refund", 1d), (rule.Key, rule.On, rule.ActiveAfter, rule.Chance, rule.Grant, rule.GrantAmount));
+        Assert.Equal("partial", pack.Pack.Talents.Single(entry => entry.ID == talent).Coverage!.Status);
+        var gear = Equip(pack.Pack, "primary_weapon_acr", "mask_badger_tuff_mask", "chest_badger_tuff_chest", "gloves_badger_tuff_gloves", "holster_badger_tuff_holster", "knees_badger_tuff_kneepads");
+        var gunner = WithNode(pack.Pack, gear, "gunner", "gunner_hardened_armor_kits_tier_1");
+        var efficient = WithTalent(pack.Pack, gunner, talent);
+        double Stat(BuildSnapshot build, string stat) => BuildResolver.Resolve(pack, build, Context).Calculation.Stats[stat];
+        Assert.Equal((0d, 0.3), (Stat(gunner, "specialization_kit_bonus"), Stat(gunner, "gunner_hardened_armor_kits_bonus_armor")));
+        Assert.Equal((1d, 0.6), (Stat(efficient, "specialization_kit_bonus"), Stat(efficient, "gunner_hardened_armor_kits_bonus_armor")));
+        Assert.Equal((15d, 30d), (Stat(gunner, "demolitionist_stimulant_patch_duration"), Stat(efficient, "demolitionist_stimulant_patch_duration")));
+        Assert.Equal((20d, 40d), (Stat(gunner, "sharpshooter_emergency_cleanse_duration"), Stat(efficient, "sharpshooter_emergency_cleanse_duration")));
+        // ShadeTech's setup: 60% enemy hits, two kits used below half armor. Kits kept mean more used, and more bonus armor.
+        var context = Context.Add("enemy_target", "1").Add("enemy_difficulty", "1").Add("enemy_hit_rate", "60");
+        DummyFightResult Fight(CompiledPackExpressions fought) => DummyWeaponSimulator.RunAgainstTargets(fought, efficient, context,
+            new() { Duration = 180, Mode = SimulationMode.Random, Iterations = 20, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, ArmorKits = 2, ArmorKitAtPercent = 50 },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var kept = Fight(pack);
+        var spent = Fight(Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        { Simulation = pack.Pack.Simulation with { Triggers = [.. pack.Pack.Simulation.Triggers.Where(entry => entry.Talent != talent)] } }).Compiled));
+        Assert.True(kept.Incoming!.ArmorKitsUsed > spent.Incoming!.ArmorKitsUsed, $"{kept.Incoming.ArmorKitsUsed} vs {spent.Incoming.ArmorKitsUsed}");
+    }
+
+    [Theory]
+    [InlineData("weapon_talent_outsider", "outsider_active")]
+    [InlineData("weapon_talent_perfect_outsider", "outsider_active")]
+    [InlineData("weapon_talent_preservation", "preservation_repair")]
+    [InlineData("weapon_talent_perfect_preservation", "preservation_repair")]
+    public void CommittedWeaponTalentsTakingAnySourcesKillHaveASkillKillRow(string talent, string key)
+    {
+        // R85: beside its kill row, a skill_kill row on the same key; Outsider's rows share one cooldown.
+        var pack = CommittedPack();
+        var rows = pack.Pack.Simulation.Triggers.Where(entry => entry.Talent == talent && entry.Key == key).ToArray();
+        Assert.Contains(rows, entry => entry.On == "kill");
+        Assert.Contains(rows, entry => entry.On == "skill_kill");
+        if (key == "outsider_active") { Assert.All(rows, entry => Assert.Equal("outsider", entry.EveryGroup)); }
+        Assert.Equal("partial", pack.Pack.Talents.Single(entry => entry.ID == talent).Coverage!.Status);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ACountedStatusRulesAlsoAddsToItsOneCount(bool shared)
+    {
+        // Ignited's shape (R86, now the committed row): one kill count of 4 taking weapon and skill kills. Two of each arm the next hit's
+        // burn; as two rules, each with its own count of 4, the same four kills burn nothing. The committed also is stripped first, so
+        // each case builds its own.
+        var pack = CommittedPack();
+        var committed = pack.Pack.Simulation.Triggers.Single(entry => entry.Talent == "weapon_talent_ignited");
+        var ignited = committed with { Also = [] };
+        SimTriggerDefinition[] rules = shared ? [ignited with { Also = [new() { On = "skill_kill" }] }] : [ignited, ignited with { On = "skill_kill" }];
+        var changed = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        { Simulation = pack.Pack.Simulation with { Triggers = [.. pack.Pack.Simulation.Triggers.Where(entry => entry != committed), .. rules] } }).Compiled);
+        var statuses = new StatusTriggerState(changed, rules);
+        statuses.Hold(new TargetStatuses());
+        statuses.Fire("kill", 0);
+        statuses.Fire("skill_kill", 1);
+        statuses.Fire("kill", 2);
+        statuses.Fire("skill_kill", 3);
+        statuses.Fire("hit", 4);
+        Assert.Equal(shared, statuses.Active(4.5).Contains("burning"));
+    }
+
+    [Theory]
+    [InlineData("weapon_talent_ignited", 4)]
+    [InlineData("weapon_talent_perfect_ignited", 3)]
+    public void CommittedIgnitedRowsCountSkillKills(string talent, long count)
+    {
+        // R86: both rows count weapon and skill kills toward one count, and stay partial.
+        var pack = CommittedPack();
+        var row = Assert.Single(pack.Pack.Simulation.Triggers, entry => entry.Talent == talent);
+        var also = Assert.Single(row.Also);
+        Assert.Equal(("kill", count, "skill_kill", 1L, 0L), (row.On, row.Count, also.On, also.Gain, also.Count));
+        Assert.Equal("partial", pack.Pack.Talents.Single(entry => entry.ID == talent).Coverage!.Status);
+    }
+
+    [Fact]
+    public void IgnitedsAlsoCountsASkillsKillsInAFight()
+    {
+        // The committed Ignited row, on an ACR with Cluster Seeker Mine: the mine's kills count too, so it burns longer than without the also.
+        var pack = CommittedPack();
+        var ignited = pack.Pack.Simulation.Triggers.Single(entry => entry.Talent == "weapon_talent_ignited");
+        var changed = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        { Simulation = pack.Pack.Simulation with { Triggers = [.. pack.Pack.Simulation.Triggers.Select(entry => entry == ignited ? entry with { Also = [] } : entry)] } }).Compiled);
+        var build = SixTierCores(pack.Pack, "skill_cluster_seeker_mine").WithTalentSelection("primary_weapon", "talent", "weapon_talent_ignited");
+        var context = Context.Add("enemy_target", "1").Add("enemy_difficulty", "1").Add("enemy_hit_rate", "0");
+        double Burning(CompiledPackExpressions fought) => DummyWeaponSimulator.RunAgainstTargets(fought, build, context,
+            new() { Duration = 120, Mode = SimulationMode.Random, Iterations = 5, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true },
+            cancellationToken: TestContext.Current.CancellationToken).TargetStatusUptime["burning"].Seconds;
+        var counted = Burning(pack);
+        var weaponOnly = Burning(changed);
+        Assert.True(counted > weaponOnly, $"{counted} vs {weaponOnly}");
+    }
+
+    [Fact]
+    public void AGearTalentsCountCantNameASkillsKillTwice()
+    {
+        // A skill's kill is already a kill to gear talents, so on and also naming both would count it twice: refused.
+        var pack = CommittedPack();
+        var ignited = pack.Pack.Simulation.Triggers.Single(entry => entry.Talent == "weapon_talent_ignited");
+        var gearTalent = "gear_talent_skilled";
+        var rule = ignited with { Talent = gearTalent, Also = [new() { On = "skill_kill" }] };
+        var changed = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        { Simulation = pack.Pack.Simulation with { Triggers = [.. pack.Pack.Simulation.Triggers.Where(entry => entry.Talent != gearTalent), rule] } }).Compiled);
+        var build = WithTalent(pack.Pack, SixTierCores(pack.Pack, "skill_cluster_seeker_mine"), gearTalent);
+        Assert.Equal("trigger-unsupported", Assert.Throws<SimulationException>(() => DummyWeaponSimulator.RunAgainstTargets(changed, build, Context,
+            new() { Duration = 10, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true },
+            cancellationToken: TestContext.Current.CancellationToken)).Code);
+    }
+
+    [Fact]
+    public void CommittedPerfectPreservationRepairsOnSkillKills()
+    {
+        // R85, ShadeTech's figures: under full enemy fire, Cluster Seeker Mine's kills repair too (12.55M to 16.12M).
+        var pack = CommittedPack();
+        var talent = "weapon_talent_perfect_preservation";
+        var build = WithTalent(pack.Pack, SixTierCores(pack.Pack, "skill_cluster_seeker_mine"), talent);
+        var context = Context.Add("enemy_target", "1").Add("enemy_difficulty", "1").Add("enemy_hit_rate", "100");
+        DummyFightResult Fight(CompiledPackExpressions fought) => DummyWeaponSimulator.RunAgainstTargets(fought, build, context,
+            new() { Duration = 180, Mode = SimulationMode.Random, Iterations = 20, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var both = Fight(pack);
+        var weaponOnly = Fight(Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        { Simulation = pack.Pack.Simulation with { Triggers = [.. pack.Pack.Simulation.Triggers.Where(entry => !(entry.Talent == talent && entry.On == "skill_kill"))] } }).Compiled));
+        Assert.True(both.Incoming!.ArmorRepaired > weaponOnly.Incoming!.ArmorRepaired, $"{both.Incoming.ArmorRepaired} vs {weaponOnly.Incoming.ArmorRepaired}");
+        // Without skills the skill row never fires, and the fight says so.
+        var plain = DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
+            new() { Duration = 30, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.Contains(plain.Limitations, note => note.StartsWith("This fight has no skills", StringComparison.Ordinal) && note.Contains("Perfect Preservation", StringComparison.Ordinal));
     }
 
     [Theory]
@@ -883,6 +1031,156 @@ public sealed partial class DummyWeaponSimulatorTests
         double Value(BuildSnapshot build) => BuildResolver.Resolve(pack, build, Context).ActiveSkillPreviews["skill_slot_1"].Outputs.Single(entry => entry.Id == output).Value;
         var plain = BuildSnapshot.Create(pack.Pack).WithActiveSkillSelection("skill_slot_1", skill);
         Assert.Equal(Value(plain) * (1 + roll), Value(plain.WithSkillMod("skill_slot_1", skill, slot, new(choice, roll))), 6);
+    }
+
+    [Fact]
+    public void CommittedPlagueStacksItsDebuffInAFight()
+    {
+        // R75: each hit starts a 10 s debuff of a body hit's damage, ticking each second, up to 50 on a target.
+        var pack = CommittedPack();
+        var row = Assert.Single(pack.Pack.Simulation.TalentDamage, rule => rule.Talent == "weapon_talent_plague_of_the_outcasts");
+        Assert.Equal(("hit", 10.0, 1.0, 50), (row.On, row.Duration, row.Period, row.MaxStacks));
+        Assert.Equal("partial", pack.Pack.Talents.Single(talent => talent.ID == row.Talent).Coverage!.Status);
+        var build = Equip(pack.Pack, "primary_weapon_pestilence");
+        var context = Context.Add("enemy_target", "5").Add("enemy_difficulty", "4");
+        DummyFightResult Fight(CompiledPackExpressions fought) => DummyWeaponSimulator.RunAgainstTargets(fought, build, context,
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 3, Seed = 1, DriveSimpleBuffs = true, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var plague = Fight(pack);
+        Assert.True(plague.TalentDps!.Mean > 0);
+        // Stacks: more than one debuff ticks in some second.
+        Assert.Contains(plague.FirstFightEvents.Where(e => e.Kind == DummyEventKind.TalentTick).GroupBy(e => Math.Floor(e.Time)), second => second.Count() > 1);
+        var without = Fight(Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        { Simulation = pack.Pack.Simulation with { TalentDamage = [.. pack.Pack.Simulation.TalentDamage.Where(rule => rule != row)] } }).Compiled));
+        Assert.Null(without.TalentDps);
+        Assert.True(plague.TotalDps!.Mean > without.TotalDps!.Mean);
+    }
+
+    [Theory]
+    [InlineData("gear_talent_tag_team", 6.0)]
+    [InlineData("gear_talent_perfect_tag_team", 12.0)]
+    public void CommittedTagTeamCutsCooldownsInAFight(string talent, double seconds)
+    {
+        // R76: a skill hit marks the enemy and the next weapon hit takes seconds off every running cooldown, at most every 4 s.
+        var pack = CommittedPack();
+        var rules = pack.Pack.Simulation.Triggers.Where(rule => rule.Talent == talent).ToArray();
+        Assert.Equal(["tag_team_mark", "tag_team_cut"], rules.Select(rule => rule.Key));
+        Assert.Equal(("ready", "skill_hit", "hit"), (rules[0].Kind, rules[0].On, rules[0].ConsumeOn));
+        Assert.Equal(("skill_cooldown_seconds", seconds, 4.0, "tag_team_mark"), (rules[1].Grant, rules[1].GrantAmount, rules[1].Every, rules[1].WhileKey));
+        Assert.Equal("partial", pack.Pack.Talents.Single(entry => entry.ID == talent).Coverage!.Status);
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(talent)));
+        var slot = item.TalentSlots.First(entry => entry.Choices.Contains(talent));
+        var build = SixTierCores(pack.Pack, "skill_stinger_hive").WithEquipment(item.Slot, item.ID).WithTalentSelection(item.Slot, slot.ID, talent);
+        // As ShadeTech ran it, with no enemy hits, so the player stays up all fight.
+        var context = Context.Add("enemy_target", "5").Add("enemy_difficulty", "4").Add("enemy_hit_rate", "0");
+        DummyFightResult Fight(CompiledPackExpressions fought) => DummyWeaponSimulator.RunAgainstTargets(fought, build, context,
+            new() { Duration = 180, Mode = SimulationMode.Random, Iterations = 3, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var tagged = Fight(pack);
+        var untagged = Fight(Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        { Simulation = pack.Pack.Simulation with { Triggers = [.. pack.Pack.Simulation.Triggers.Where(rule => rule.Talent != talent)] } }).Compiled));
+        int Deployments(DummyFightResult result) => result.FirstFightEvents.Count(e => e.Kind == DummyEventKind.SkillImpact);
+        Assert.True(tagged.TimedTriggerUptime["tag_team_cut"].Seconds > 0);
+        string Kinds(DummyFightResult result) => string.Join(",", result.FirstFightEvents.Where(e => e.Kind is DummyEventKind.SkillImpact or DummyEventKind.SkillTick).GroupBy(e => e.Kind).Select(g => g.Key + ":" + g.Count() + "@" + string.Join("/", g.Take(6).Select(e => e.Time.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)))));
+        Assert.True(tagged.SkillDps!.Total.Mean > untagged.SkillDps!.Total.Mean, $"{tagged.SkillDps.Total.Mean} vs {untagged.SkillDps.Total.Mean} | {Kinds(tagged)} | {Kinds(untagged)} | down {tagged.Incoming?.TimeToDown?.Mean}");
+        Assert.True(Deployments(tagged) >= Deployments(untagged));
+    }
+
+    [Theory]
+    [InlineData("gear_talent_skilled", 0.25)]
+    [InlineData("gear_talent_perfect_skilled", 0.3)]
+    public void CommittedSkilledResetsCooldownsOnSkillKills(string talent, double chance)
+    {
+        // R77: a skill kill has a chance to reset every skill cooldown. Cluster Seeker Mine's spaced impacts kill after its use has
+        // started its cooldown, so a reset reaches it; ShadeTech's figures show its skill DPS rise.
+        var pack = CommittedPack();
+        var rule = Assert.Single(pack.Pack.Simulation.Triggers, entry => entry.Talent == talent);
+        Assert.Equal(("skilled_reset", "skill_kill", chance, "skill_cooldown", 1.0, 1.0), (rule.Key, rule.On, rule.Chance, rule.Grant, rule.GrantAmount, rule.GrantHoldDelay));
+        Assert.Equal("partial", pack.Pack.Talents.Single(entry => entry.ID == talent).Coverage!.Status);
+        // R83: the banked reset is modeled now, so only the status kills are left out.
+        Assert.DoesNotContain(pack.Pack.Talents.Single(entry => entry.ID == talent).Coverage!.Omits, omit => omit.Contains("banks the reset", StringComparison.Ordinal));
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(talent)));
+        var slot = item.TalentSlots.First(entry => entry.Choices.Contains(talent));
+        var build = SixTierCores(pack.Pack, "skill_cluster_seeker_mine").WithEquipment(item.Slot, item.ID).WithTalentSelection(item.Slot, slot.ID, talent);
+        var context = Context.Add("enemy_target", "5").Add("enemy_difficulty", "4").Add("enemy_hit_rate", "0");
+        DummyFightResult Fight(CompiledPackExpressions fought) => DummyWeaponSimulator.RunAgainstTargets(fought, build, context,
+            new() { Duration = 180, Mode = SimulationMode.Random, Iterations = 20, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var skilled = Fight(pack);
+        var without = Fight(Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        { Simulation = pack.Pack.Simulation with { Triggers = [.. pack.Pack.Simulation.Triggers.Where(entry => entry.Talent != talent)] } }).Compiled));
+        Assert.True(skilled.SkillDps!.Total.Mean > without.SkillDps!.Total.Mean, $"{skilled.SkillDps.Total.Mean} vs {without.SkillDps.Total.Mean}");
+    }
+
+    [Theory]
+    [InlineData("gear_talent_skilled")]
+    [InlineData("gear_talent_perfect_skilled")]
+    public void CommittedSkilledHoldsTheResetForAStickyBombsImpactKill(string talent)
+    {
+        // R83: an Explosive Sticky Bomb kills as its use lands, before its cooldown is running, so the reset is held and lands 1 s after.
+        // ShadeTech's figures show its skill DPS rise; without the hold the start's guard left it alone. At difficulty 1 its blast kills
+        // often enough for every seed to draw resets (at 4 a few fights may draw none).
+        var pack = CommittedPack();
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(talent)));
+        var slot = item.TalentSlots.First(entry => entry.Choices.Contains(talent));
+        var build = SixTierCores(pack.Pack, "skill_explosive_sticky_bomb").WithEquipment(item.Slot, item.ID).WithTalentSelection(item.Slot, slot.ID, talent);
+        var context = Context.Add("enemy_target", "5").Add("enemy_difficulty", "1").Add("enemy_hit_rate", "0");
+        DummyFightResult Fight(CompiledPackExpressions fought) => DummyWeaponSimulator.RunAgainstTargets(fought, build, context,
+            new() { Duration = 180, Mode = SimulationMode.Random, Iterations = 20, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        CompiledPackExpressions With(IEnumerable<SimTriggerDefinition> triggers) => Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        { Simulation = pack.Pack.Simulation with { Triggers = [.. triggers] } }).Compiled);
+        var heldFight = Fight(pack);
+        var held = heldFight.SkillDps!.Total.Mean;
+        var without = Fight(With(pack.Pack.Simulation.Triggers.Where(entry => entry.Talent != talent))).SkillDps!.Total.Mean;
+        var unheld = Fight(With(pack.Pack.Simulation.Triggers.Select(entry => entry.Talent == talent ? entry with { GrantHoldDelay = 0 } : entry))).SkillDps!.Total.Mean;
+        Assert.True(heldFight.TimedTriggerUptime["skilled_reset"].Seconds > 0);
+        Assert.True(held > without, $"{held} vs {without}");
+        Assert.Equal(without, unheld);
+    }
+
+    [Theory]
+    [InlineData("gear_talent_calculated", 0.1)]
+    [InlineData("gear_talent_perfect_calculated", 0.15)]
+    public void CommittedCalculatedCutsCooldownsOnKillsInCover(string talent, double share)
+    {
+        // R80: a kill in cover takes a share of each skill's cooldown off. A cover cycle sets in_cover for the fight; in the open nothing moves.
+        var pack = CommittedPack();
+        var rule = Assert.Single(pack.Pack.Simulation.Triggers, entry => entry.Talent == talent);
+        Assert.Equal(("calculated_cut", "kill", "skill_cooldown", share, "true"), (rule.Key, rule.On, rule.Grant, rule.GrantAmount, rule.RequiresContext!["in_cover"]));
+        Assert.Equal("partial", pack.Pack.Talents.Single(entry => entry.ID == talent).Coverage!.Status);
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(talent)));
+        var slot = item.TalentSlots.First(entry => entry.Choices.Contains(talent));
+        var build = SixTierCores(pack.Pack, "skill_stinger_hive").WithEquipment(item.Slot, item.ID).WithTalentSelection(item.Slot, slot.ID, talent);
+        var context = Context.Add("enemy_target", "5").Add("enemy_difficulty", "4").Add("enemy_hit_rate", "0");
+        var without = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        { Simulation = pack.Pack.Simulation with { Triggers = [.. pack.Pack.Simulation.Triggers.Where(entry => entry.Talent != talent)] } }).Compiled);
+        double SkillDps(CompiledPackExpressions fought, bool cover) => DummyWeaponSimulator.RunAgainstTargets(fought, build, context,
+            new()
+            {
+                Duration = 180,
+                Mode = SimulationMode.Random,
+                Iterations = 20,
+                Seed = 1,
+                DriveSimpleBuffs = true,
+                IncludeIncoming = true,
+                IncludeSkills = true,
+                PeekSeconds = cover ? 3 : null,
+                CoverSeconds = cover ? 1 : null,
+                PeekHitShare = cover ? 1 : null
+            },
+            cancellationToken: TestContext.Current.CancellationToken).SkillDps!.Total.Mean;
+        Assert.True(SkillDps(pack, true) > SkillDps(without, true));
+        Assert.Equal(SkillDps(without, false), SkillDps(pack, false));
+    }
+
+    [Fact]
+    public void CommittedSafeguardIsComplete()
+    {
+        // The unmodeled survey: the talents' rule reads 1.3 (1.6 Perfect) while armor is full, as the pack has it; the bundle's 1.5 is unread.
+        var pack = CommittedPack();
+        Assert.All(new[] { "gear_talent_safeguard", "gear_talent_perfect_safeguard" },
+            id => Assert.Equal("complete", pack.Pack.Talents.Single(talent => talent.ID == id).Coverage!.Status));
     }
 
     [Fact]

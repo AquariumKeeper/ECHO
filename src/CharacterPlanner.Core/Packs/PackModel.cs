@@ -419,6 +419,17 @@ public sealed record SimTriggerDefinition
     /// no rule in its group fired within its own every (Future Perfect and Future Perfection grant one Overcharge per player, R72).
     /// </summary>
     public string EveryGroup { get; init; } = "";
+    /// <summary>
+    /// On a buff or ready rule with an event: the share of the events that pass its gates which fire it (Skilled's 25%), drawn from
+    /// the fight's own seeded chance stream; a failed draw neither counts nor fires. 1, the default, always fires (P13).
+    /// </summary>
+    public double Chance { get; init; } = 1;
+    /// <summary>
+    /// On a buff or ready rule with an event: selector values the fight's context must hold for the rule to take part, as a
+    /// modifier's <c>requires</c> (Calculated: <c>in_cover</c> true, which a cover cycle sets for the whole fight). The
+    /// selectors can't be keys a rule drives, so the fight decides once, at its start (P13).
+    /// </summary>
+    public ImmutableDictionary<string, string>? RequiresContext { get; init; }
     /// <summary>Counts <see cref="Every"/> from the buff being spent by its consumeOn event, not from the gain, and holds it from regaining while it's up.</summary>
     public bool CooldownFromEnd { get; init; }
     public string ResetOn { get; init; } = "";
@@ -476,10 +487,46 @@ public sealed record SimTriggerDefinition
     /// bonus armor for <see cref="GrantDuration"/> seconds), "shield_repair" (that share of the shield's health),
     /// "armor_repair" (that share of max armor, at once or spread evenly over <see cref="GrantDuration"/>) or
     /// "missing_armor_repair" (that share of the armor missing at the event, at once). R41: Preservation, Clutch, Doctor Home.
+    /// "skill_cooldown" takes that share of each skill's own cooldown off every running one, the shield's included (1 is a
+    /// reset), and "skill_cooldown_seconds" takes <see cref="GrantAmount"/> seconds (up to 600) off them; both are instant (P13).
+    /// "armor_kit_refund", only on the armor_kit event, gives back the kit just spent (<see cref="GrantAmount"/> 1), so the use
+    /// that fired it costs none (Efficient, P13).
     /// </summary>
     public string Grant { get; init; } = "";
     public double GrantAmount { get; init; }
     public double GrantDuration { get; init; }
+    /// <summary>
+    /// On a "skill_cooldown" or "skill_cooldown_seconds" grant: when the rule fires with no skill cooldown running, the shield's
+    /// included, the grant is held instead, and applies this many seconds after a skill cooldown next starts (Skilled's banked
+    /// reset, 1 s). Firing again while the same grant is held adds nothing. 0, the default, applies it at once whatever is running (P13).
+    /// </summary>
+    public double GrantHoldDelay { get; init; }
+    /// <summary>The largest <see cref="GrantAmount"/> a grant kind takes: seconds for "skill_cooldown_seconds", a share for the rest.</summary>
+    public static double MaximumGrantAmount(string grant) => grant == "skill_cooldown_seconds" ? 600 : 1;
+    /// <summary>The longest <see cref="GrantHoldDelay"/>, in seconds.</summary>
+    public const double MaximumGrantHoldDelay = 60;
+    /// <summary>
+    /// In place of <see cref="GrantAmount"/>: the grant's amount is this stat's value at the fight's start, within the grant's own
+    /// limits (a specialization kit bonus scaled by Efficient's factor, R82). Not for "armor_kit_refund".
+    /// </summary>
+    public string GrantAmountStat { get; init; } = "";
+    /// <summary>
+    /// On a buff or ready rule with an event: the rule takes no part until this many seconds into the fight, so an event before then
+    /// neither counts nor fires (Efficient's 10 s activation delay, R82). 0, the default, is active from the start.
+    /// </summary>
+    public double ActiveAfter { get; init; }
+    /// <summary>
+    /// Whether a status rule's <see cref="Also"/> is well formed: none, or on a counted rule armed by an event other than a whole
+    /// second and without applyOnHit, each entry another distinct event that adds one (gain left out or 1, no count). A whole second,
+    /// a target's death and a status going on can't count: the first applies at once, the second has no status rule, and the last
+    /// would let a rule count its own applications. Event names are the validator's to check.
+    /// </summary>
+    public static bool StatusAlsoAllowed(SimTriggerDefinition rule) => rule.Also.IsEmpty ||
+        rule.Count > 0 && !rule.ApplyOnHit && rule.On.Length > 0 && rule.On != "second" &&
+        rule.Also.All(gain => gain.On.Length > 0 && gain.On is not ("second" or "target_death" or "status_applied") && gain.On != rule.On && gain.Gain is 0 or 1 && gain.Count == 0) &&
+        rule.Also.Select(gain => gain.On).Distinct(StringComparer.Ordinal).Count() == rule.Also.Length;
+    /// <summary>The latest <see cref="ActiveAfter"/>, in seconds.</summary>
+    public const double MaximumActiveAfter = 600;
     /// <summary>
     /// For an "armor_repair" spread over time: "independent", so each firing starts its own repair beside any running one
     /// (Preservation, R41). Required then; other modes are not defined.
@@ -566,8 +613,8 @@ public sealed record SimStatusDamageDefinition
 
 /// <summary>
 /// Damage a talent deals over time on its own (Toxic Delivery): its event starts a debuff on the current target that spreads
-/// the resolved <see cref="Total"/> stat over one tick per <see cref="Period"/> for <see cref="Duration"/> seconds. While the
-/// debuff runs, the event neither restarts nor stacks it.
+/// the resolved <see cref="Total"/> stat over one tick per <see cref="Period"/> for <see cref="Duration"/> seconds. The event
+/// starts another only while fewer than <see cref="MaxStacks"/> run on the target; at the cap it does nothing.
 /// </summary>
 public sealed record SimTalentDamageDefinition
 {
@@ -576,6 +623,8 @@ public sealed record SimTalentDamageDefinition
     public string Total { get; init; } = "";
     public double Duration { get; init; }
     public double Period { get; init; }
+    /// <summary>How many of this debuff can run on one target at once, each on its own schedule (Plague of the Outcasts' 50); 1 by default.</summary>
+    public int MaxStacks { get; init; } = 1;
 }
 
 /// <summary>
@@ -676,6 +725,15 @@ public sealed record PackLayout
     public ImmutableArray<LayoutAttributeCategory> AttributeCategories { get; init; } = [];
     public ImmutableArray<LayoutRarity> Rarities { get; init; } = [];
     public ImmutableArray<LayoutAssumptionSection> AssumptionSections { get; init; } = [];
+    /// <summary>How a Prototype item shows, beside the rarities (R74): a build choice, not an item tag, so it has no tags.</summary>
+    public LayoutPrototype? Prototype { get; init; }
+}
+
+/// <summary>Prototype quality's name and colour, as the game's loot quality table gives them (R74).</summary>
+public sealed record LayoutPrototype
+{
+    public string Name { get; init; } = "";
+    public string Color { get; init; } = "";
 }
 
 public sealed record ArtworkSource

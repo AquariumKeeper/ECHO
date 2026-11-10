@@ -547,6 +547,65 @@ only to an id that exists in the same collection.
   - Both repair the player in fights with incoming fire, and nothing when the player is
     down. `grantInstances` takes no other value and goes only with a timed
     `armor_repair`.
+- Two more `grant` kinds are new on 2026-11-08 (P13), optional, for skill cooldowns. Both are
+  instant (no `grantDuration` or `grantInstances`) and act on every skill cooldown running
+  at the event, the shield's included:
+  - `skill_cooldown`: `grantAmount` (above 0, up to 1) of each skill's own cooldown comes off
+    what's left of it; 1 is a reset (Skilled; Calculated's 10%).
+  - `skill_cooldown_seconds`: `grantAmount` seconds (above 0, up to 600) come off (Tag Team's 6 s).
+  - A cooldown never ends before the event, and one that runs from a use's end
+    (`cooldownFromEnd`) never ends before that use does. A share is of the cooldown alone, not
+    the use. A stocked skill's next charge comes back sooner, and only that one. A skill not yet
+    used, one ready now, one used at this very moment and a shield that broke at it are untouched,
+    so a rule on a skill's own impact or a shield's break can't redeploy or raise it at once.
+- `grantHoldDelay` is new on 2026-11-08 (P13: Skilled's banked reset), optional, on a `skill_cooldown`
+  or `skill_cooldown_seconds` grant: seconds above 0, up to 60. When the rule fires with no skill
+  cooldown running, the shield's included, the grant isn't applied but held, and it lands this many
+  seconds after a skill cooldown next starts: a turret's or hive's as its use ends, any skill's as it's
+  used, or the shield's as it breaks. With a cooldown running it applies at once, as without the field.
+  Each distinct grant is held once; firing again while the same grant is held adds nothing. A cooldown that starts at
+  the very moment of the event isn't running yet, so a use whose own impact kills holds the reset and
+  takes it that delay later. Without the field, 0, nothing is held.
+- `also` goes on a counted `status` rule from 2026-11-08 (R85: Ignited), optional: each listed event adds one
+  to the rule's one count, beside its `on`, so weapon and skill kills count toward the same fourth. Each entry
+  names another distinct simulator event, not `second`, `target_death` or `status_applied` (a rule would count
+  its own burns), with no `count`, and `gain` left out or 1. The rule needs a `count` on an event other than
+  `second`, and no `applyOnHit`: the status still arms the next hit. A gear talent's count can't name both
+  `kill` and `skill_kill`, since a skill's kill is already a kill to gear talents; a fight refuses it.
+- Two trigger fields are new on 2026-11-08 (P13: Efficient, R82), optional:
+  - `activeAfter`, seconds above 0 up to 600, on a `buff` or `ready` rule with an event: the rule takes
+    no part until that many seconds into the fight, so an event before then neither counts nor fires,
+    and draws no `chance` (Efficient's 10 s activation delay: a kit used before then gets no chance).
+  - `grantAmountStat`, a declared stat, in place of `grantAmount` on any grant but `armor_kit_refund`:
+    the amount is the stat's value at the fight's start, within the grant's own limits, or the fight is
+    refused. With a stat formula such as `0.3 * (1 + kit_bonus)` this scales a specialization kit's grant
+    (Gunner's bonus armor) by Efficient's factor. Kit buff durations already take `durationStat`, and
+    their modifiers take formula values, so the same stat scales those.
+- The `grant` kind `armor_kit_refund` is new on 2026-11-08 (P13: Efficient), optional, only on a rule
+  `on` `armor_kit`, which fires as a kit's repair lands. The kit just spent comes back at once:
+  `grantAmount` 1, with no `grantDuration` or `grantInstances`. With a `chance` the use is free that share
+  of the time. It acts only in fights that carry kits; without them the rule steps aside, as any rule on
+  `armor_kit` does, and the result names its talent.
+- The event `skill_kill` and the field `chance` are new on 2026-11-08 (P13: Skilled), optional:
+  - `skill_kill` fires when a skill's damage kills, its own burn or bleed included, to the gear
+    talents a skill kill already reaches as `kill`. From 2026-11-08 (R84) it also reaches the talents of
+    the weapon in hand, so a weapon talent whose kill rule takes kills from any source (Outsider, Ignited,
+    Preservation) names `skill_kill` too. A holstered weapon's talents aren't active; during a swap the
+    weapon being drawn is the one in hand, as for every event. A burn or bleed tick's kill is a `kill` to
+    gear talents only, and no `skill_kill`, except a skill's own status ticks in its stream. `kill` is
+    unchanged: a weapon talent's `kill` is still only its weapon's. In a fight without skills, from
+    2026-11-08, `skill_kill` and `skill_hit` never come, and their rules run without them: a key they
+    gain stays driven, off unless another event gains it, and never takes the user's setting. The result
+    names the talents with a rule on them.
+  - `chance` (above 0, up to 1; default 1) on a `buff` or `ready` rule with an event: an event that
+    passes the rule's gates fires it with that chance, drawn from the fight's own seeded chance stream,
+    so no other roll moves. A failed draw neither counts nor fires, and the rule's `every` doesn't start.
+- `requires` is new on trigger rules on 2026-11-08 (P13: Calculated), optional, on a `buff` or `ready`
+  rule with an event: selector values, as a modifier's `requires`. The rule takes part only in a fight
+  whose context holds them. A cover cycle sets `in_cover` for the whole fight (ADR 0009), and otherwise
+  the user's setting stands. A key some rule drives can't be required, since the fight decides once, at
+  its start; use `whileKey` for those. A selected talent's required selectors count as read, so the
+  Assumptions tab shows them.
 - More R41 fields are new on 2026-11-02, optional, for Clutch:
   - `whileKey` and `whileFull` now also go on `buff` and `ready` rules with an event, and
     gate them like a status rule. The key must be another rule's, and is read as it stood
@@ -685,6 +744,12 @@ only to an id that exists in the same collection.
     at the end of the duration.
   - The event starts one debuff on the current living target. While it runs, the event
     neither restarts it nor starts a second one; a new target starts without it.
+  - `maxStacks` (new on 2026-11-08, optional, 1 to 100, default 1; P13: Plague of the
+    Outcasts) lets the event start another debuff while fewer than that many run on the
+    target. Each runs its own schedule from its own start, with the total read when it
+    starts; ties tick in the order they started. At the cap the event does nothing, and the
+    running ones keep their schedules. A dead target's debuffs end with it. The writer
+    omits the default.
 
 ## 6. presentation.json
 
@@ -694,7 +759,8 @@ This is read by the desktop app, never by the calculation engine.
 {
   "theme": { "variant": "dark", "colors": { "primary": "#FF8A24", "…": "…" } },
   "layout": { "slotGroups": [ … ], "headline": [ … ], "summary": [ … ],
-              "assumptionSections": [ … ], "attributeCategories": [ … ], "rarities": [ … ] },
+              "assumptionSections": [ … ], "attributeCategories": [ … ], "rarities": [ … ],
+              "prototype": { "name": "Prototype", "color": "#AD78F1" } },
   "icons": { "slots": { "mask": "slot_mask" }, "talents": { }, "skills": { }, "specializations": { }, "nodes": { } },
   "specializationImages": { "demolitionist": "…" },
   "itemArt": { "primary_weapon_acr": { "image": "…", "icon": "…" } },
@@ -709,6 +775,10 @@ This is read by the desktop app, never by the calculation engine.
     ends.
 - Icon and image references that v1 kept on the game objects are collected here,
   keyed by the object's id.
+- `layout.prototype` is new on 2026-11-08 (R74), optional: Prototype quality's `name` and
+  `color`, beside `rarities`. Prototype is a build choice, not an item tag, so it has no tags.
+  The desktop shows a Prototype item in this colour in place of its rarity's; without it, in
+  the app's own `#A35CFF`. The name must not be blank and the colour follows the rule above.
 
 ## 7. share-codes.json
 

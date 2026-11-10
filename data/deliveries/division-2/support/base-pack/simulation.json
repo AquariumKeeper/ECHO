@@ -136,7 +136,8 @@
       "on": "kill",
       "kind": "buff",
       "duration": 10,
-      "every": 10
+      "every": 10,
+      "everyGroup": "outsider"
     },
     {
       "talent": "weapon_talent_perfect_outsider",
@@ -144,7 +145,8 @@
       "on": "kill",
       "kind": "buff",
       "duration": 10,
-      "every": 10
+      "every": 10,
+      "everyGroup": "outsider"
     },
     {
       "talent": "weapon_talent_reformation",
@@ -1368,22 +1370,22 @@
       "kind": "buff",
       "duration": 10,
       "grant": "temporary_armor",
-      "grantAmount": 0.3,
-      "grantDuration": 10
+      "grantDuration": 10,
+      "grantAmountStat": "gunner_hardened_armor_kits_bonus_armor"
     },
     {
       "talent": "demolitionist_stimulant_patch_tier_1",
       "key": "stimulant_patch_active",
       "on": "armor_kit",
       "kind": "buff",
-      "duration": 15
+      "durationStat": "demolitionist_stimulant_patch_duration"
     },
     {
       "talent": "sharpshooter_emergency_cleanse_tier_1",
       "key": "emergency_cleanse_active",
       "on": "armor_kit",
       "kind": "buff",
-      "duration": 20
+      "durationStat": "sharpshooter_emergency_cleanse_duration"
     },
     {
       "talent": "weapon_talent_future_perfect",
@@ -1392,6 +1394,7 @@
       "kind": "buff",
       "duration": 15,
       "every": 90,
+      "everyGroup": "future_perfect_overcharge",
       "whileStatAtLeast": {
         "stat": "overcharged_skill_tier",
         "value": 6
@@ -1404,10 +1407,157 @@
       "kind": "buff",
       "duration": 15,
       "every": 90,
+      "everyGroup": "future_perfect_overcharge",
       "whileStatAtLeast": {
         "stat": "overcharged_skill_tier",
         "value": 6
       }
+    },
+    {
+      "talent": "gear_talent_tag_team",
+      "key": "tag_team_mark",
+      "on": "skill_hit",
+      "kind": "ready",
+      "duration": 600,
+      "consumeOn": "hit"
+    },
+    {
+      "talent": "gear_talent_tag_team",
+      "key": "tag_team_cut",
+      "on": "hit",
+      "kind": "buff",
+      "duration": 0.1,
+      "whileKey": "tag_team_mark",
+      "every": 4,
+      "grant": "skill_cooldown_seconds",
+      "grantAmount": 6
+    },
+    {
+      "talent": "gear_talent_perfect_tag_team",
+      "key": "tag_team_mark",
+      "on": "skill_hit",
+      "kind": "ready",
+      "duration": 600,
+      "consumeOn": "hit"
+    },
+    {
+      "talent": "gear_talent_perfect_tag_team",
+      "key": "tag_team_cut",
+      "on": "hit",
+      "kind": "buff",
+      "duration": 0.1,
+      "whileKey": "tag_team_mark",
+      "every": 4,
+      "grant": "skill_cooldown_seconds",
+      "grantAmount": 12
+    },
+    {
+      "talent": "gear_talent_skilled",
+      "key": "skilled_reset",
+      "on": "skill_kill",
+      "kind": "buff",
+      "duration": 0.1,
+      "chance": 0.25,
+      "grant": "skill_cooldown",
+      "grantAmount": 1,
+      "grantHoldDelay": 1
+    },
+    {
+      "talent": "gear_talent_perfect_skilled",
+      "key": "skilled_reset",
+      "on": "skill_kill",
+      "kind": "buff",
+      "duration": 0.1,
+      "chance": 0.3,
+      "grant": "skill_cooldown",
+      "grantAmount": 1,
+      "grantHoldDelay": 1
+    },
+    {
+      "talent": "gear_talent_calculated",
+      "key": "calculated_cut",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 0.1,
+      "requires": {
+        "in_cover": "true"
+      },
+      "grant": "skill_cooldown",
+      "grantAmount": 0.1
+    },
+    {
+      "talent": "gear_talent_perfect_calculated",
+      "key": "calculated_cut",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 0.1,
+      "requires": {
+        "in_cover": "true"
+      },
+      "grant": "skill_cooldown",
+      "grantAmount": 0.15
+    },
+    {
+      "talent": "gear_talent_efficient",
+      "key": "efficient_kept",
+      "on": "armor_kit",
+      "kind": "buff",
+      "duration": 0.1,
+      "activeAfter": 10,
+      "chance": 0.5,
+      "grant": "armor_kit_refund",
+      "grantAmount": 1
+    },
+    {
+      "talent": "gear_talent_perfect_efficient",
+      "key": "efficient_kept",
+      "on": "armor_kit",
+      "kind": "buff",
+      "duration": 0.1,
+      "activeAfter": 10,
+      "chance": 0.75,
+      "grant": "armor_kit_refund",
+      "grantAmount": 1
+    },
+    {
+      "talent": "weapon_talent_outsider",
+      "key": "outsider_active",
+      "on": "skill_kill",
+      "kind": "buff",
+      "duration": 10,
+      "every": 10,
+      "everyGroup": "outsider"
+    },
+    {
+      "talent": "weapon_talent_perfect_outsider",
+      "key": "outsider_active",
+      "on": "skill_kill",
+      "kind": "buff",
+      "duration": 10,
+      "every": 10,
+      "everyGroup": "outsider"
+    },
+    {
+      "talent": "weapon_talent_preservation",
+      "key": "preservation_repair",
+      "on": "skill_kill",
+      "kind": "buff",
+      "duration": 5,
+      "grant": "armor_repair",
+      "grantAmount": 0.1,
+      "grantDuration": 5,
+      "grantInstances": "independent"
+    },
+    {
+      "talent": "weapon_talent_perfect_preservation",
+      "key": "preservation_repair",
+      "on": "skill_kill",
+      "kind": "buff",
+      "duration": 5,
+      "grant": "armor_repair",
+      "grantAmount": 0.15,
+      "grantDuration": 5,
+      "grantInstances": "independent"
     }
   ],
   "skills": [
@@ -1625,6 +1775,14 @@
       "total": "afterburn_detonation_damage",
       "duration": 0.5,
       "period": 0.5
+    },
+    {
+      "talent": "weapon_talent_plague_of_the_outcasts",
+      "on": "hit",
+      "total": "plague_of_the_outcasts_debuff_damage",
+      "duration": 10,
+      "period": 1,
+      "maxStacks": 50
     }
   ],
   "distanceDefaults": [

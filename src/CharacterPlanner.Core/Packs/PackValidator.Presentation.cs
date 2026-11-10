@@ -110,6 +110,11 @@ public static partial class PackValidator
                     if (!rarities.Add(rarity.ID)) { Error("duplicate-id", path, $"Duplicate rarity id {Q(rarity.ID)}"); }
                     Color(rarity.Color, path + ".color", "Rarity");
                 }
+                if (layout.Prototype is { } prototype)
+                {
+                    Name(prototype.Name, root + ".prototype");
+                    Color(prototype.Color, root + ".prototype.color", "Prototype");
+                }
             }
             // Sections are checked even without a layout: a pack with no layout declares none.
             foreach (var selector in pack.Selectors.Where(selector => selector.Section.Length > 0 && !sections.Contains(selector.Section)))

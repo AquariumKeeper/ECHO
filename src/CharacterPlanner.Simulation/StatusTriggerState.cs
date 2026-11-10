@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using System.Collections.Immutable;
 using CharacterPlanner.Core.Builds;
 using CharacterPlanner.Core.Engine;
@@ -59,6 +60,8 @@ public sealed class StatusTriggerState
     private double observed;
     private (double Time, int Version, ImmutableHashSet<string> Statuses) active = (double.NaN, -1, []);
     private int version;
+    // Each rule's also events, which count toward its one count beside its own (Ignited's skill kills); null with none.
+    private readonly FrozenSet<string>?[] alsoEvents;
 
     public StatusTriggerState(CompiledPackExpressions pack, IEnumerable<SimTriggerDefinition> rules)
     {
@@ -67,13 +70,15 @@ public sealed class StatusTriggerState
         this.pack = pack;
         this.rules = [.. rules];
         counted = new long[this.rules.Length];
+        alsoEvents = [.. this.rules.Select(rule => rule.Also.IsEmpty ? null : rule.Also.Select(gain => gain.On).ToFrozenSet(StringComparer.Ordinal))];
         armedAt = Enumerable.Repeat(double.NaN, this.rules.Length).ToArray();
         lastFired = Enumerable.Repeat(double.NegativeInfinity, this.rules.Length).ToArray();
         foreach (var rule in this.rules)
         {
             var rest = rule with { Talent = "", Key = "", Kind = "", On = "", Status = "", Duration = 0, Count = 0, Every = 0, Within = 0, ApplyOnHit = false, Also = [], Phases = [], WhileKey = "", WhileFull = false };
+            // A counted rule's also adds other events to its one count; each adds one.
             if (rule.Kind != Kind || rule.Key.Length == 0 || rule.Talent.Length == 0 ||
-                !(Names.Contains(rule.Status) || rule.Status == "any") || !rule.Also.IsEmpty || !rule.Phases.IsEmpty || rest != new SimTriggerDefinition() ||
+                !(Names.Contains(rule.Status) || rule.Status == "any") || !SimTriggerDefinition.StatusAlsoAllowed(rule) || !rule.Phases.IsEmpty || rest != new SimTriggerDefinition() ||
                 rule.Count < 0 || !double.IsFinite(rule.Within) || rule.Within < 0 || !double.IsFinite(rule.Duration) || !double.IsFinite(rule.Every) || rule.Every < 0 ||
                 rule.ApplyOnHit && !HitEvents.Contains(rule.On) ||
                 rule.WhileFull && rule.WhileKey.Length == 0 || rule.WhileKey.Length > 0 && rule.On.Length == 0 ||
@@ -92,6 +97,7 @@ public sealed class StatusTriggerState
             { throw new SimulationException("trigger-pack-mismatch", "Status rules must bind to true-only selectors or zero/one numeric readings"); }
             if (selector is not null) { selectorKeys.Add(rule.Key); }
             if (rule.On.Length > 0) { events.Add(rule.On); }
+            foreach (var gain in rule.Also) { events.Add(gain.On); }
             if (rule.On.Length > 0 && !DirectEvents.Contains(rule.On) && !rule.ApplyOnHit) { events.Add("hit"); }
         }
     }
@@ -146,7 +152,7 @@ public sealed class StatusTriggerState
                 updates[rule.Status] = Math.Max(updates.GetValueOrDefault(rule.Status, deadlines.GetValueOrDefault(rule.Status)), until);
                 nextArmed[index] = double.NaN;
             }
-            if (rule.On != eventName || time - nextFired[index] < rule.Every) { continue; }
+            if (rule.On != eventName && alsoEvents[index]?.Contains(eventName) != true || time - nextFired[index] < rule.Every) { continue; }
             if (rule.WhileKey.Length > 0 && gates?.Open(rule.WhileKey, rule.WhileFull) != true) { continue; }
             // A whole second, or the triggering hit of an applyOnHit rule, applies the status at once.
             var direct = DirectEvents.Contains(eventName) || rule.ApplyOnHit;

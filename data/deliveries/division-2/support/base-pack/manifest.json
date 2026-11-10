@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "id": "division_2",
   "name": "The Division 2",
-  "version": "y8s3.3-pve.2026-11-07.r72.candidate.1",
+  "version": "y8s3.3-pve.2026-11-08.r85.candidate.1",
   "gameVersion": "Year 8 Season 3 · Title Update Y8S3.3 (PvE)",
   "description": "Plan a level-40 PvE build for The Division 2. Configure gear, weapons, skills, specialization, SHD Watch and item Expertise to preview armor, health, weapon damage, DPS, skill damage and recovery estimates. Modeled permanent bonuses apply automatically; use Assumptions for conditional effects. Assumptions are view settings and are not saved or shared. Estimates use community references and need live-game verification. Some talents and skill outputs remain unmodeled; combat events, ammunition and PvP normalization are not simulated. Fights reach Overcharge only through talents that grant it, Energize and Future Perfect; other Overcharge is a preview.",
   "capabilities": [
@@ -17,24 +17,24 @@
   ],
   "files": {
     "presentation.json": {
-      "sha256": "b14b9b7de8948c88af6962b53badc23804bf51346160d7f6e4bb9a1f30c0946d",
-      "bytes": 20185
+      "sha256": "ff5c53ebe81229b726e2e427c934d3353e0316f5a960aac6c5682bac78452047",
+      "bytes": 20263
     },
     "provenance.md": {
-      "sha256": "34499502717ba101e5345de71e2f829bf33c6289873024c60413a4b4bba7b9e9",
-      "bytes": 211464
+      "sha256": "1240367de8099b9b8b0c20827ec2cd82bcc214c1d155c673e9027052a2e95f01",
+      "bytes": 218652
     },
     "share-codes.json": {
       "sha256": "7ad28718e2f57edbee9512fcbe778df324b3a931ccccf976efaeeb7fa02c4087",
       "bytes": 209
     },
     "simulation.json": {
-      "sha256": "dfdcd014619a1fa8b69c37c0413ffd19942fe5d05e8ea3bd18773480e11ab111",
-      "bytes": 38833
+      "sha256": "1a1350028e1260f1a4238d647e0bc8eee5fd10420f9ffae6ceb76d0613ab3d92",
+      "bytes": 42818
     },
     "rules.json": {
-      "sha256": "b2b96d66110da2f68d03eb0d04c123cb5b1eefeb77d8c83a9bd431e0d776839f",
-      "bytes": 2554786
+      "sha256": "56b630ab60831cbc9b4fc1d1ca2189f371dd0cd6973cf1a253257240e71588dd",
+      "bytes": 2561094
     }
   },
   "assetsSha256": "5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d"

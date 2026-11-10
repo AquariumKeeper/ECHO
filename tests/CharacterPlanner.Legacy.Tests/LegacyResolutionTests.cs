@@ -38,7 +38,11 @@ public sealed class LegacyResolutionTests
     // Slotted's colour counts, the weapon falloff floor (R42, read only by distance fights) and Doctor Home's kit preview (R43)
     // came later the same day.
     private static readonly ImmutableArray<string> AddedStats = ["status_tick_skill_curve", "burn_tick_damage", "bleed_tick_damage", "toxic_delivery_total_damage",
-        "slotted_offensive_count", "slotted_defensive_count", "slotted_skill_count", "weapon_falloff_floor", "doctor_home_kit_repair_percent", "afterburn_detonation_damage", "apex_protocol_four_piece", "skill_overcharge", "overcharged_skill_tier", "overcharged_shield_tier"];
+        "slotted_offensive_count", "slotted_defensive_count", "slotted_skill_count", "weapon_falloff_floor", "doctor_home_kit_repair_percent", "afterburn_detonation_damage", "apex_protocol_four_piece", "skill_overcharge", "overcharged_skill_tier", "overcharged_shield_tier",
+        // Plague of the Outcasts' debuff total (R75, 2026-11-08), read only by fights.
+        "plague_of_the_outcasts_debuff_damage",
+        // The specialization kit bonus and the three kit values that read it (R85, 2026-11-08); without Efficient they're the old constants.
+        "specialization_kit_bonus", "gunner_hardened_armor_kits_bonus_armor", "demolitionist_stimulant_patch_duration", "sharpshooter_emergency_cleanse_duration"];
     private sealed record Suite(byte[] PackBytes, int Count);
     private static readonly Dictionary<string, Suite> Suites = new(StringComparer.Ordinal)
     {

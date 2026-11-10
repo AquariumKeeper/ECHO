@@ -22,6 +22,9 @@
                     <Grid ColumnDefinitions="5,*,Auto">
                       <!-- The rarity's tint, fading left to right, and the selection's yellow, rising left to right. -->
                       <Border Grid.ColumnSpan="3" Classes="tint" Background="{Binding Accent}" IsVisible="{Binding HasAccent}" />
+                      <!-- A Prototype item's circuit pathways, in its purple, behind the text and art. -->
+                      <views:CircuitTraces Grid.ColumnSpan="3" Name="TileCircuit" Seed="{Binding Seed}" Stroke="{Binding Accent}" Reach="0.45"
+                                           IsVisible="{Binding IsPrototype}" Opacity="0.5" />
                       <Border Grid.ColumnSpan="3" Classes="selection" IsVisible="{Binding IsSelected}" />
                       <Border Classes="accent" Background="{Binding Accent}" IsVisible="{Binding HasAccent}" />
                       <Border Classes="accent" IsVisible="{Binding !HasAccent}" />

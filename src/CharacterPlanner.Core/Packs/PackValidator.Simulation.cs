@@ -5,7 +5,7 @@ public static partial class PackValidator
     private sealed partial class Checker
     {
         private static readonly HashSet<string> Events = ["", "shot", "hit", "body_hit", "headshot", "crit", "kill", "crit_kill", "headshot_kill", "reload", "reload_end",
-            "unarmored_hit", "swap", "swap_after_kill", "armor_break", "damaged", "swapped", "skill_hit", "status_applied", "shield_break", "second", "pickup", "target_death", "crit_pellet", "hit_pellet", "target_changed", "armor_kit"];
+            "unarmored_hit", "swap", "swap_after_kill", "armor_break", "damaged", "swapped", "skill_hit", "status_applied", "shield_break", "second", "pickup", "target_death", "crit_pellet", "hit_pellet", "target_changed", "armor_kit", "skill_kill"];
         private static readonly HashSet<string> Statuses = ["burning", "bleeding", "shocked", "ensnared", "blinded", "disoriented"];
         private static readonly HashSet<string> TriggerKinds = ["buff", "stacks", "status", "magazine", "distance", "pellets", "ready", "lockout", "cycle", "target", "count"];
 
@@ -50,6 +50,17 @@ public static partial class PackValidator
                 else if (rule.EveryGroup.Length > 0 && triggers.Where(other => other.EveryGroup == rule.EveryGroup) is var members &&
                     (members.Select(other => other.Talent).Distinct(StringComparer.Ordinal).Count() < 2 || members.Any(other => other.Every != rule.Every)))
                 { Error("bad-sim-trigger", path + ".everyGroup", "everyGroup needs rules from two or more talents, all with the same every"); }
+                if (!double.IsFinite(rule.Chance) || rule.Chance <= 0 || rule.Chance > 1 || rule.Chance < 1 && (rule.Kind is not ("buff" or "ready") || rule.On.Length == 0))
+                { Error("bad-sim-trigger", path + ".chance", "chance needs a buff or ready rule with an event and a share above 0 up to 1"); }
+                if (rule.RequiresContext is not null)
+                {
+                    if (rule.Kind is not ("buff" or "ready") || rule.On.Length == 0)
+                    { Error("bad-sim-trigger", path + ".requires", "requires needs a buff or ready rule with an event"); }
+                    Requires(rule.RequiresContext, path + ".requires");
+                    // The fight decides once, at its start, so a key some rule changes during it can't gate a rule.
+                    foreach (var key in rule.RequiresContext.Keys.Where(key => triggers.Any(other => other.Key == key)).Order(StringComparer.Ordinal))
+                    { Error("bad-sim-trigger", $"{path}.requires.{key}", $"{Q(key)} is driven by a rule, so it can't gate one; use whileKey"); }
+                }
                 if (rule.WhileStatAtLeast is { } statGate && (rule.Kind is not ("buff" or "ready") || rule.On.Length == 0 || !stats.Contains(statGate.Stat) ||
                     !double.IsFinite(statGate.Value) || rule.WhileKey.Length > 0 || rule.WhileArmorBelow > 0))
                 { Error("bad-sim-trigger", path + ".whileStatAtLeast", "whileStatAtLeast needs a buff or ready rule with an event, a known stat, a finite value and no other gate"); }
@@ -57,6 +68,11 @@ public static partial class PackValidator
                 { Error("bad-sim-trigger", path + ".on", "target_death reaches buff, stacks, ready and lockout rules only"); }
                 if (rule.DurationStat.Length > 0 && (rule.Kind is not ("buff" or "ready") || rule.Duration != 0 || !stats.Contains(rule.DurationStat)))
                 { Error("bad-sim-trigger", path + ".durationStat", "durationStat needs a buff or ready rule without a duration and a declared stat"); }
+                if (rule.GrantAmountStat.Length > 0 && !stats.Contains(rule.GrantAmountStat))
+                { Error("unknown-stat", path + ".grantAmountStat", $"Unknown stat {Q(rule.GrantAmountStat)}"); }
+                if (rule.ActiveAfter != 0 && (rule.Kind is not ("buff" or "ready") || rule.On.Length == 0 || !double.IsFinite(rule.ActiveAfter) ||
+                    rule.ActiveAfter is <= 0 or > SimTriggerDefinition.MaximumActiveAfter))
+                { Error("bad-sim-trigger", path + ".activeAfter", "activeAfter needs a buff or ready rule with an event and a time above 0 up to 600"); }
                 if (!rule.WeaponTags.IsDefaultOrEmpty)
                 {
                     if (rule.Kind is not ("buff" or "stacks" or "ready" or "lockout"))
@@ -169,6 +185,8 @@ public static partial class PackValidator
                 if (!(rule.Period >= MinimumTickPeriod && rule.Period <= MaximumTickPeriod) || !(rule.Duration > 0 && rule.Duration <= 600) ||
                     Math.Abs(ticks - Math.Round(ticks)) > 1e-9)
                 { Error("bad-sim-talent-damage", path + ".period", $"A talent damage period must be from {MinimumTickPeriod} to {MaximumTickPeriod} seconds and divide a duration up to 600"); }
+                if (rule.MaxStacks is < 1 or > MaximumTalentDamageStacks)
+                { Error("bad-sim-talent-damage", path + ".maxStacks", $"A talent debuff's stacks must be from 1 to {MaximumTalentDamageStacks}"); }
             }
         }
 
@@ -225,24 +243,40 @@ public static partial class PackValidator
 
         private static readonly HashSet<string> DamagingStatuses = ["burning", "bleeding"];
         private const double MinimumTickPeriod = 0.01;
+        // Plague of the Outcasts runs 50; the cap keeps a fight's tick queue bounded.
+        private const int MaximumTalentDamageStacks = 100;
         private const double MaximumTickPeriod = 60;
 
         // A grant on firing (Ablative Nano-Plating's temporary armor) uses clearGrant's kinds and limits.
         private static string? GrantError(SimTriggerDefinition r)
         {
+            // A stat's value stands in for the amount; it's checked against the grant's limits as the fight starts.
+            if (r.GrantAmountStat.Length > 0)
+            {
+                if (r.Grant is "" or "armor_kit_refund" || r.GrantAmount != 0)
+                { return "grantAmountStat takes the place of grantAmount, on any grant but armor_kit_refund"; }
+                // Its value is checked against the grant's limits as the fight starts, so the rest is checked at the largest amount.
+                r = r with { GrantAmount = SimTriggerDefinition.MaximumGrantAmount(r.Grant), GrantAmountStat = "" };
+            }
+            // Skilled holds its reset while no cooldown runs; the source's delay is 1 s.
+            if (r.GrantHoldDelay != 0 && !(r.Grant is "skill_cooldown" or "skill_cooldown_seconds" && double.IsFinite(r.GrantHoldDelay) && r.GrantHoldDelay is > 0 and <= SimTriggerDefinition.MaximumGrantHoldDelay))
+            { return "grantHoldDelay needs a skill_cooldown or skill_cooldown_seconds grant and a delay above 0 up to 60"; }
             if (r.Grant.Length == 0)
             { return r.GrantAmount != 0 || r.GrantDuration != 0 || r.GrantInstances.Length > 0 ? "grantAmount, grantDuration and grantInstances need a grant" : null; }
-            if (r.Kind is not ("buff" or "ready") || !double.IsFinite(r.GrantAmount) || r.GrantAmount <= 0 || r.GrantAmount > 1 ||
+            if (r.Kind is not ("buff" or "ready") || !double.IsFinite(r.GrantAmount) || r.GrantAmount <= 0 || r.GrantAmount > SimTriggerDefinition.MaximumGrantAmount(r.Grant) ||
                 !double.IsFinite(r.GrantDuration) || r.GrantDuration < 0 || r.GrantDuration > 600)
-            { return "grant needs a buff or ready rule, an amount above 0 up to 1 and a duration up to 600"; }
+            { return "grant needs a buff or ready rule, an amount above 0 up to 1 (seconds up to 600 for skill_cooldown_seconds) and a duration up to 600"; }
             return r.Grant switch
             {
                 "temporary_armor" => r.GrantDuration > 0 && r.GrantInstances.Length == 0 ? null : "temporary_armor needs a duration and no grantInstances",
-                "shield_repair" or "missing_armor_repair" => r.GrantDuration == 0 && r.GrantInstances.Length == 0 ? null : $"{r.Grant} is instant: no duration or grantInstances",
+                "shield_repair" or "missing_armor_repair" or "skill_cooldown" or "skill_cooldown_seconds" => r.GrantDuration == 0 && r.GrantInstances.Length == 0 ? null : $"{r.Grant} is instant: no duration or grantInstances",
+                // The kit just spent comes back, so the use that fired it costs none (Efficient). Only a kit's own event has one.
+                "armor_kit_refund" => r.On == "armor_kit" && r.GrantAmount == 1 && r.GrantDuration == 0 && r.GrantInstances.Length == 0 ? null
+                    : "armor_kit_refund is one kit at once on armor_kit: grantAmount 1, no duration or grantInstances",
                 // Spread over time, each firing is its own repair (the only stacking the source shows, R41); instant takes none.
                 "armor_repair" => (r.GrantDuration > 0) == (r.GrantInstances == "independent") && r.GrantInstances is "" or "independent" ? null
                     : "armor_repair over a duration needs grantInstances \"independent\"; an instant one takes none",
-                _ => "grant must be temporary_armor, shield_repair, armor_repair or missing_armor_repair"
+                _ => "grant must be temporary_armor, shield_repair, armor_repair, missing_armor_repair, skill_cooldown, skill_cooldown_seconds or armor_kit_refund"
             };
         }
 
@@ -278,10 +312,14 @@ public static partial class PackValidator
             if (r.Count < 0 || r.Count == 1) { return "A count needs two or more events"; }
             if (!double.IsFinite(r.CountWindow) || r.CountWindow < 0 || r.CountWindow > 0 && (r.Count == 0 || r.Kind is not ("buff" or "stacks")))
             { return "countWindow needs a counted buff or stacks rule and a time above 0"; }
-            if ((r.Gain != 0 || r.Also.Length > 0 || r.Decay != 0) && r.Kind != "stacks") { return "Only stacks rules take gain, also or decay"; }
+            // A counted status rule's also adds more events to its one count (Ignited: weapon and skill kills toward the fourth, R85).
+            var statusAlso = r.Kind == "status" && r.Also.Length > 0;
+            if (statusAlso && !(SimTriggerDefinition.StatusAlsoAllowed(r) && r.Also.All(gain => Events.Contains(gain.On))))
+            { return "A status rule's also needs a count on an event other than second, no applyOnHit, and other distinct simulator events, not second, target_death or status_applied, each adding one"; }
+            if ((r.Gain != 0 || r.Also.Length > 0 && !statusAlso || r.Decay != 0) && r.Kind != "stacks") { return "Only stacks rules take gain, also or decay; a counted status rule takes also"; }
             if (r.Gain < 0 || r.Decay < 0) { return "gain and decay can't be negative"; }
             if (r.Decay > 0 && (!r.Refresh || r.Duration <= 0)) { return "Decaying stacks need refresh and a duration"; }
-            if (r.Also.Any(gain => gain.On.Length == 0 || !Events.Contains(gain.On) || gain.Gain <= 0 || gain.Count < 0 || gain.Count == 1))
+            if (!statusAlso && r.Also.Any(gain => gain.On.Length == 0 || !Events.Contains(gain.On) || gain.Gain <= 0 || gain.Count < 0 || gain.Count == 1))
             { return "also needs simulator events with positive gains, and counts of two or more"; }
             if ((r.Pool.Length > 0) != (r.PoolMax > 0) || r.Pool.Length > 0 && r.Kind != "stacks") { return "A pool needs a name and a cap on stacks rules"; }
             if (r.Kind == "distance")

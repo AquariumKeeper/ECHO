@@ -99,6 +99,9 @@ public sealed class SkillEventStream
     private readonly double[] stocks;
     private readonly double[] held;
     private readonly double[] recharges;
+    // Each slot's last use and the plan it deployed with, for shortening its cooldown; NaN and null before its first.
+    private readonly double[] lastUse;
+    private readonly SkillDamageSchedule.Plan?[] lastPlan;
     private int uses;
     private int events;
 
@@ -109,6 +112,78 @@ public sealed class SkillEventStream
         stocks = Enumerable.Repeat(double.NaN, nextUse.Length).ToArray();
         held = new double[nextUse.Length];
         recharges = Enumerable.Repeat(double.PositiveInfinity, nextUse.Length).ToArray();
+        lastUse = Enumerable.Repeat(double.NaN, nextUse.Length).ToArray();
+        lastPlan = new SkillDamageSchedule.Plan?[nextUse.Length];
+    }
+
+    /// <summary>
+    /// Takes time off every skill cooldown running at this time: <paramref name="share"/> of each skill's own cooldown plus
+    /// <paramref name="seconds"/> (a share of 1 is a reset). A cooldown that runs from a use's end can't end before that use
+    /// does, and none ends before now. A stocked skill's next charge comes back sooner, and charges back by now are held. A
+    /// skill not yet used, ready now, or used at this very moment is untouched. Only a stream that reads each use as it deploys has its next uses still to
+    /// make; a fight that drives buffs, the only kind that grants this, always does.
+    /// </summary>
+    internal void Shorten(double at, double share, double seconds)
+    {
+        if (Read is null) { throw new InvalidOperationException("Cooldowns can be cut only in a fight that reads its skills as they deploy"); }
+        if (!double.IsFinite(at) || !double.IsFinite(share) || share < 0 || !double.IsFinite(seconds) || seconds < 0)
+        { throw new SimulationException("skill-cooldown-invalid", "A cooldown reduction must be finite and not negative"); }
+        for (var index = 0; index < nextUse.Length; index++)
+        {
+            // A cooldown that starts at this very moment isn't cut: a use whose own impact resets it (Skilled on a skill kill)
+            // would otherwise deploy again at once, without end.
+            if (lastPlan[index] is not { } plan || lastUse[index] >= at) { continue; }
+            var amount = share * plan.Cooldown + seconds;
+            var earliest = Math.Max(at, lastUse[index] + (plan.Cycle - plan.Cooldown));
+            if (stocks[index] > 1)
+            {
+                if (double.IsFinite(recharges[index]) && recharges[index] > at) { recharges[index] = Math.Max(earliest, recharges[index] - amount); }
+                while (recharges[index] <= at)
+                {
+                    held[index]++;
+                    recharges[index] = held[index] < stocks[index] ? recharges[index] + plan.Cycle : double.PositiveInfinity;
+                }
+                if (nextUse[index] > at) { nextUse[index] = Math.Max(lastUse[index] + plan.StockInterval, held[index] >= 1 ? at : recharges[index]); }
+            }
+            else if (nextUse[index] > at) { nextUse[index] = Math.Max(earliest, nextUse[index] - amount); }
+        }
+        // A deployment already announced may now come sooner.
+        deployment = null;
+        settled = false;
+    }
+
+    // When a slot's cooldown after its last use starts: at the use, or at its end for one that runs from the end.
+    private double CooldownStart(int index, SkillDamageSchedule.Plan plan) => lastUse[index] + (plan.Cycle - plan.Cooldown);
+
+    /// <summary>
+    /// Whether any skill's cooldown is running at this time: one that started before now and hasn't ended, or a stocked skill's
+    /// charge coming back. A cooldown starting at this very moment, and one waiting for its use to end, aren't running yet.
+    /// </summary>
+    internal bool CooldownRunning(double at)
+    {
+        for (var index = 0; index < nextUse.Length; index++)
+        {
+            if (lastPlan[index] is not { } plan) { continue; }
+            if (stocks[index] > 1 ? lastUse[index] < at && double.IsFinite(recharges[index]) && recharges[index] > at
+                : CooldownStart(index, plan) < at && nextUse[index] > at) { return true; }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// The first skill cooldown start at or after <paramref name="since"/> among the uses made so far, or infinity with none: a
+    /// skill still out starts its own at its end, and a use made since starts one (for a stocked skill, at the use).
+    /// </summary>
+    internal double CooldownStartSince(double since)
+    {
+        var first = double.PositiveInfinity;
+        for (var index = 0; index < nextUse.Length; index++)
+        {
+            if (lastPlan[index] is not { } plan) { continue; }
+            var start = stocks[index] > 1 ? lastUse[index] : CooldownStart(index, plan);
+            if (start >= since && start < first) { first = start; }
+        }
+        return first;
     }
 
     /// <summary>
@@ -206,6 +281,7 @@ public sealed class SkillEventStream
     {
         if (++uses > UseLimit) { throw new SimulationException("skill-work-limit", "Too many skill deployments"); }
         var time = nextUse[index];
+        (lastUse[index], lastPlan[index]) = (time, plan);
         if (double.IsNaN(stocks[index]))
         {
             stocks[index] = plan.Stock;

@@ -14,6 +14,7 @@ public sealed class ShieldState
     private readonly double cooldown;
     private double clock;
     private double readyAt;
+    private double brokenAt = double.NaN;
     public double Health { get; private set; }
     public bool IsUp => Health > 0;
     public bool Full => Health == capacity;
@@ -62,6 +63,25 @@ public sealed class ShieldState
 
     public double Capacity => capacity;
 
+    /// <summary>Whether a broken shield's cooldown is running now; one that broke at this very moment hasn't started yet.</summary>
+    public bool CoolingDown(double time) => !IsUp && brokenAt < time && readyAt > time;
+
+    /// <summary>When the shield last broke, NaN before its first break.</summary>
+    public double BrokenAt => brokenAt;
+
+    /// <summary>
+    /// Takes time off a broken shield's cooldown: <paramref name="share"/> of the cooldown plus <paramref name="seconds"/>, ending
+    /// no sooner than now. Advance the shield first, and again after, to raise it if it's ready. A raised shield is untouched, and
+    /// so is one that broke at this very moment, so a rule on its break can't keep it up.
+    /// </summary>
+    public void Shorten(double share, double seconds, double time)
+    {
+        if (!double.IsFinite(time) || time != clock) { throw new ArgumentOutOfRangeException(nameof(time), "Advance the shield before shortening its cooldown"); }
+        if (!double.IsFinite(share) || share < 0 || !double.IsFinite(seconds) || seconds < 0) { throw new ArgumentOutOfRangeException(nameof(share)); }
+        if (IsUp || brokenAt == time) { return; }
+        readyAt = Math.Max(time, readyAt - (share * cooldown + seconds));
+    }
+
     /// <summary>A raised shield absorbs a whole attack; excess raw damage is discarded even when it breaks.</summary>
     public ShieldHit Apply(double rawDamage, double time)
     {
@@ -73,7 +93,7 @@ public sealed class ShieldState
         if (broken && (!double.IsFinite(ready) || ready <= time))
         { throw new SimulationException("time-not-advancing", "Shield cooldown cannot advance time"); }
         Health -= absorbed;
-        if (broken) { readyAt = ready; }
+        if (broken) { (readyAt, brokenAt) = (ready, time); }
         return new(absorbed, broken);
     }
 }

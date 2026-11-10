@@ -30,16 +30,16 @@ public sealed class ProducerDeliveryTests
     [Fact]
     public void AdoptedDeliveryMatchesItsPinnedManifestAndEveryOutput()
     {
-        Assert.Equal("dbec840e49a1cae8cbfcd1369af9a40469552b948732a1f599352872376d4b00", Hash(Path.Combine(Pack, "manifest.json")));
-        Assert.Equal("5b992e453cbab5d9fd86022e922830faf3374e9505e4a82190a01f39958b57dd", Hash(Path.Combine(Delivery, "assembly.json")));
+        Assert.Equal("d8ebcca4ad1de18a9a6aec0a23512cdd1ee164c0cd32ab4e100ebb7c58722c28", Hash(Path.Combine(Pack, "manifest.json")));
+        Assert.Equal("f1e9fc0d964007e2a15975685ea1968b9260075d133a10f27e13210a1fedb37a", Hash(Path.Combine(Delivery, "assembly.json")));
         using var assembly = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Delivery, "assembly.json")));
         Assert.True(assembly.RootElement.GetProperty("complete_pack_assembled").GetBoolean());
         Assert.False(assembly.RootElement.GetProperty("complete_native_source_derivation").GetBoolean());
         var outputs = assembly.RootElement.GetProperty("outputs").EnumerateObject().ToArray();
-        Assert.Equal(37, outputs.Length);
+        Assert.Equal(39, outputs.Length);
         var evidence = outputs.Where(output => output.Name.StartsWith(Evidence, StringComparison.Ordinal)).ToArray();
-        Assert.Equal(12, evidence.Length);
-        Assert.Equal("39cc370ee5567e39413c6d0cbcafd198a49381e9aec3ad963fc236e6a2963231",
+        Assert.Equal(14, evidence.Length);
+        Assert.Equal("de7f1ac0e90b6f00ca754cc72be71dc678eedc79bfe33315eed967312236a241",
             evidence.Single(output => output.Name == Evidence + "packet.json").Value.GetProperty("sha256").GetString());
         var adopted = outputs.Except(evidence).ToArray();
         foreach (var output in adopted)
@@ -64,16 +64,17 @@ public sealed class ProducerDeliveryTests
         using var report = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Delivery, "reports", "talent-overlay.json")));
         var root = report.RootElement;
         Assert.True(root.GetProperty("ok").GetBoolean());
-        Assert.Equal("dbec840e49a1cae8cbfcd1369af9a40469552b948732a1f599352872376d4b00", root.GetProperty("pack_manifest_sha256").GetString());
-        // This sits on the R72 candidate adopted in PR #154.
-        Assert.Equal("fc3e3cb0fe4e13a5b8128d3a027031197a068a1b5f6d2376f6eef7ec5077f0ab", root.GetProperty("base_manifest_sha256").GetString());
+        Assert.Equal("d8ebcca4ad1de18a9a6aec0a23512cdd1ee164c0cd32ab4e100ebb7c58722c28", root.GetProperty("pack_manifest_sha256").GetString());
+        // This sits on the r85 candidate.
+        Assert.Equal("0652247f6ddd43d739dae0bb8bb137620d6837b4e26aca8302ba558ea271df1d", root.GetProperty("base_manifest_sha256").GetString());
         Assert.Equal(Hash(Path.Combine(Delivery, "overlay-plan.json")), root.GetProperty("overlay_plan_sha256").GetString());
-        // R73: everyGroup on Future Perfect's two Overcharge rows.
-        Assert.Equal(2, root.GetProperty("changes").GetArrayLength());
+        // R86: Ignited's two rows with also skill_kill, and their coverage.
+        Assert.Equal(4, root.GetProperty("changes").GetArrayLength());
         Assert.True(root.GetProperty("assets_sha256_unchanged").GetBoolean());
         Assert.True(root.GetProperty("presentation_and_share_bytes_unchanged").GetBoolean());
+        // The report counts a coverage edit on a talent as a talent change.
         Assert.True(root.GetProperty("stats_unchanged").GetBoolean());
-        Assert.True(root.GetProperty("talent_modifiers_unchanged").GetBoolean());
+        Assert.False(root.GetProperty("talent_modifiers_unchanged").GetBoolean());
         Assert.False(root.GetProperty("runtime_verified").GetBoolean());
     }
 
@@ -111,7 +112,7 @@ public sealed class ProducerDeliveryTests
     public void EverySelectorSaysWhatItIsAndWhereItGoes()
     {
         var selectors = JsonNode.Parse(File.ReadAllBytes(Path.Combine(Pack, "rules.json")))!["selectors"]!.AsArray();
-        Assert.Equal(127, selectors.Count);
+        Assert.Equal(132, selectors.Count);
         using var presentation = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Pack, "presentation.json")));
         var sections = presentation.RootElement.GetProperty("layout").GetProperty("assumptionSections")
             .EnumerateArray().Select(section => section.GetProperty("name").GetString()).ToArray();

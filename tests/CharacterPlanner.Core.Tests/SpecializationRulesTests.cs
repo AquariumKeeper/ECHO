@@ -62,4 +62,50 @@ public sealed class SpecializationRulesTests
         var nearlyFull = SpecializationRules.Status(Tree, ["a", "b", "c"]);
         Assert.False(SpecializationRules.CanAllocate(Tree, Node("d"), nearlyFull));
     }
+
+    // A chain e → f → g in the total, for paths and what removing a node takes with it.
+    private static readonly SpecializationDefinition Chain = Tree with
+    {
+        Nodes = [.. Tree.Nodes,
+            new() { ID = "e", Name = "E", BudgetID = "total", Cost = 1 },
+            new() { ID = "f", Name = "F", BudgetID = "total", Cost = 1, Prerequisites = ["e"] },
+            new() { ID = "g", Name = "G", BudgetID = "total", Cost = 1, Prerequisites = ["f"] }]
+    };
+
+    private static SpecializationNodeDefinition Link(string id) => Chain.Nodes.Single(node => node.ID == id);
+
+    [Fact]
+    public void APathIsTheMissingPrerequisitesThenTheNode()
+    {
+        Assert.Equal(["e", "f", "g"], SpecializationRules.PathTo(Chain, Link("g"), []).Select(node => node.ID));
+        Assert.Equal(["f", "g"], SpecializationRules.PathTo(Chain, Link("g"), ["e"]).Select(node => node.ID));
+        Assert.Equal(["e"], SpecializationRules.PathTo(Chain, Link("e"), []).Select(node => node.ID));
+        Assert.Empty(SpecializationRules.PathTo(Chain, Link("g"), ["e", "f", "g"]));
+        // An allocated but inactive prerequisite stays; only what's missing joins the path.
+        Assert.Equal(["e", "g"], SpecializationRules.PathTo(Chain, Link("g"), ["f"]).Select(node => node.ID));
+    }
+
+    [Fact]
+    public void APathFitsOnlyWhenEveryBudgetHasRoomForAllOfIt()
+    {
+        var empty = SpecializationRules.Status(Chain, []);
+        Assert.True(SpecializationRules.CanAllocatePath(Chain, SpecializationRules.PathTo(Chain, Link("b"), []), empty));
+        // a and b fill the hub's 5; d on top of them doesn't fit, though each alone would.
+        Assert.False(SpecializationRules.CanAllocatePath(Chain, [Link("a"), Link("b"), Link("d")], empty));
+        // The total's 10: c (4) and a and b (5) leave 1, so e fits and e → f → g doesn't.
+        var full = SpecializationRules.Status(Chain, ["a", "b", "c"]);
+        Assert.True(SpecializationRules.CanAllocatePath(Chain, SpecializationRules.PathTo(Chain, Link("e"), ["a", "b", "c"]), full));
+        Assert.False(SpecializationRules.CanAllocatePath(Chain, SpecializationRules.PathTo(Chain, Link("g"), ["a", "b", "c"]), full));
+        Assert.False(SpecializationRules.CanAllocatePath(Chain, [], empty));
+    }
+
+    [Fact]
+    public void RemovingANodeTakesTheAllocatedNodesThatNeedIt()
+    {
+        Assert.Equal(["f", "g"], SpecializationRules.Dependents(Chain, Link("e"), ["e", "f", "g", "a"]).Select(node => node.ID));
+        Assert.Equal(["g"], SpecializationRules.Dependents(Chain, Link("f"), ["e", "f", "g"]).Select(node => node.ID));
+        Assert.Empty(SpecializationRules.Dependents(Chain, Link("g"), ["e", "f", "g"]));
+        // Only allocated dependents: g isn't, so removing e takes f alone.
+        Assert.Equal(["f"], SpecializationRules.Dependents(Chain, Link("e"), ["e", "f"]).Select(node => node.ID));
+    }
 }

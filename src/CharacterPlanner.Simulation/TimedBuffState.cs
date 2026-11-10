@@ -7,10 +7,12 @@ using CharacterPlanner.Core.Packs;
 namespace CharacterPlanner.Simulation;
 
 /// <summary>
-/// What clearing stacks grants: <paramref name="Kind"/> "temporary_armor" (<paramref name="Share"/> of max armor, lasting
-/// <paramref name="Duration"/> seconds) or "shield_repair" (<paramref name="Share"/> of the shield's health), at <paramref name="Time"/>.
+/// What clearing stacks or a rule's firing grants at <paramref name="Time"/>: <paramref name="Kind"/> is the pack's grant kind, with
+/// <paramref name="Share"/> its amount and <paramref name="Duration"/> its time, for example "temporary_armor" (a share of max armor
+/// for that long) or "skill_cooldown" (a share of each cooldown). A cooldown grant with a <paramref name="HoldDelay"/> is held while
+/// no cooldown runs, and lands that long after one starts (Skilled).
 /// </summary>
-public sealed record TriggerGrant(string Kind, double Share, double Duration, double Time);
+public sealed record TriggerGrant(string Kind, double Share, double Duration, double Time, double HoldDelay = 0);
 
 /// <summary>Integrated true/nonzero seconds and, for stack keys, the integral of the live stack count.</summary>
 public sealed record TimedTriggerDuration(double Seconds, double? StackSeconds);
@@ -82,13 +84,17 @@ public sealed class TimedBuffState
 
     /// <param name="magazines">Each weapon talent's magazine size, for maxMagazine caps. Without it those caps are the rule's
     /// max, which only suits a read before any event.</param>
-    /// <param name="durations">Stat values at the fight's start, for durationStat. Without them such a rule has no expiry,
-    /// which likewise only suits a read before any event.</param>
+    /// <param name="durations">Stat values at the fight's start, for durationStat and grantAmountStat. Without them such a rule
+    /// has no expiry or no amount, which likewise only suits a read before any event.</param>
+    /// <summary>The fight's chance stream, a draw in [0, 1) each call, for rules with a <see cref="SimTriggerDefinition.Chance"/>.</summary>
+    internal Func<double>? Roll { get; set; }
+
     public TimedBuffState(IEnumerable<SimTriggerDefinition> rules, IReadOnlyDictionary<string, double>? magazines = null,
         IReadOnlyDictionary<string, double>? durations = null)
     {
         ArgumentNullException.ThrowIfNull(rules);
-        this.rules = [.. rules.Select(rule => rule.DurationStat.Length == 0 || durations is null ? rule : rule with { Duration = StatDuration(rule, durations), DurationStat = "" })];
+        this.rules = [.. rules.Select(rule => rule.DurationStat.Length == 0 || durations is null ? rule : rule with { Duration = StatDuration(rule, durations), DurationStat = "" })
+            .Select(rule => rule.GrantAmountStat.Length == 0 || durations is null ? rule : rule with { GrantAmount = StatGrant(rule, durations), GrantAmountStat = "" })];
         gated = this.rules.Any(rule => rule.WhileKey.Length > 0);
         onEnemy = [.. Enumerable.Range(0, this.rules.Length).Where(index => (this.rules[index].ConsumeOn == "target_death" || this.rules[index].ResetOn == "target_death") && this.rules[index].Kind is "buff" or "stacks")];
         caps = new long[this.rules.Length];
@@ -152,13 +158,20 @@ public sealed class TimedBuffState
                 GrantAmount = rule.Kind is "buff" or "ready" ? 0 : rule.GrantAmount,
                 GrantDuration = rule.Kind is "buff" or "ready" ? 0 : rule.GrantDuration,
                 GrantInstances = rule.Kind is "buff" or "ready" ? "" : rule.GrantInstances,
+                GrantHoldDelay = rule.Kind is "buff" or "ready" ? 0 : rule.GrantHoldDelay,
                 // Buff and ready rules may be gated by another key or the player's armor (Clutch), and take a stat's duration.
                 WhileKey = rule.Kind is "buff" or "ready" ? "" : rule.WhileKey,
                 WhileFull = rule.Kind is "buff" or "ready" ? false : rule.WhileFull,
                 WhileArmorBelow = rule.Kind is "buff" or "ready" ? 0 : rule.WhileArmorBelow,
                 WhileStatAtLeast = rule.Kind is "buff" or "ready" ? null : rule.WhileStatAtLeast,
                 DurationStat = rule.Kind is "buff" or "ready" && rule.Duration == 0 ? "" : rule.DurationStat,
-                MaxMagazine = isStack ? 0 : rule.MaxMagazine
+                // A grant's stat is read as the fight starts; until then its amount is unset.
+                GrantAmountStat = rule.Kind is "buff" or "ready" && rule.Grant is not ("" or "armor_kit_refund") && rule.GrantAmount == 0 ? "" : rule.GrantAmountStat,
+                ActiveAfter = rule.Kind is "buff" or "ready" && rule.On.Length > 0 && double.IsFinite(rule.ActiveAfter) && rule.ActiveAfter is >= 0 and <= SimTriggerDefinition.MaximumActiveAfter ? 0 : rule.ActiveAfter,
+                MaxMagazine = isStack ? 0 : rule.MaxMagazine,
+                Chance = rule.Kind is "buff" or "ready" && rule.On.Length > 0 ? 1 : rule.Chance,
+                // The fight has already dropped a rule whose requirements its context doesn't meet.
+                RequiresContext = rule.Kind is "buff" or "ready" && rule.On.Length > 0 ? null : rule.RequiresContext
             };
             if (rule.Kind is not ("buff" or "stacks" or "ready" or "lockout") || rule.Key.Length == 0 || rule.Talent.Length == 0 ||
                 rule.On.Length == 0 && rule.GainWhileHolstered == 0 || !double.IsFinite(rule.GainWhileHolstered) || rule.GainWhileHolstered < 0 ||
@@ -172,14 +185,16 @@ public sealed class TimedBuffState
                 rule.ClearGrant.Length > 0 && !(rule.ClearGrant is "temporary_armor" or "shield_repair" && double.IsFinite(rule.ClearAmount) && rule.ClearAmount is > 0 and <= 1 &&
                     double.IsFinite(rule.ClearDuration) && (rule.ClearGrant == "temporary_armor" ? rule.ClearDuration is > 0 and <= 600 : rule.ClearDuration == 0)) ||
                 rule.ClearGrant.Length == 0 && (rule.ClearAmount != 0 || rule.ClearDuration != 0) ||
-                rule.Grant.Length > 0 && !(double.IsFinite(rule.GrantAmount) && rule.GrantAmount is > 0 and <= 1 && double.IsFinite(rule.GrantDuration) && rule.Grant switch
+                rule.Grant.Length > 0 && !((rule.GrantAmountStat.Length > 0 ? rule.GrantAmount == 0 : double.IsFinite(rule.GrantAmount) && rule.GrantAmount > 0 && rule.GrantAmount <= SimTriggerDefinition.MaximumGrantAmount(rule.Grant)) && double.IsFinite(rule.GrantDuration) && rule.Grant switch
                 {
                     "temporary_armor" => rule.GrantDuration is > 0 and <= 600 && rule.GrantInstances.Length == 0,
-                    "shield_repair" or "missing_armor_repair" => rule.GrantDuration == 0 && rule.GrantInstances.Length == 0,
+                    "shield_repair" or "missing_armor_repair" or "skill_cooldown" or "skill_cooldown_seconds" => rule.GrantDuration == 0 && rule.GrantInstances.Length == 0,
+                    "armor_kit_refund" => rule.On == "armor_kit" && rule.GrantAmount == 1 && rule.GrantDuration == 0 && rule.GrantInstances.Length == 0,
                     "armor_repair" => rule.GrantDuration == 0 ? rule.GrantInstances.Length == 0 : rule.GrantDuration <= 600 && rule.GrantInstances == "independent",
                     _ => false
                 }) ||
                 rule.Grant.Length == 0 && (rule.GrantAmount != 0 || rule.GrantDuration != 0 || rule.GrantInstances.Length > 0) ||
+                rule.GrantHoldDelay != 0 && !(rule.Grant is "skill_cooldown" or "skill_cooldown_seconds" && double.IsFinite(rule.GrantHoldDelay) && rule.GrantHoldDelay is > 0 and <= SimTriggerDefinition.MaximumGrantHoldDelay) ||
                 !double.IsFinite(rule.CountWindow) || rule.CountWindow < 0 || rule.CountWindow > 0 && rule.Count == 0 ||
                 // A counted reset only restarts the count, so only a consume clears a counted rule's stacks.
                 rule.ClearGrant.Length > 0 && (rule.ResetOn.Length == 0 || rule.Count > 0) && rule.ConsumeOn.Length == 0 ||
@@ -361,6 +376,8 @@ public sealed class TimedBuffState
         {
             var rule = rules[index];
             if (eventOwners is not null && !eventOwners.Contains(rule.Talent)) { continue; }
+            // Not yet active (Efficient's activation delay): no event gains, counts, clears or cancels it.
+            if (time < rule.ActiveAfter) { continue; }
             // A weapon event from a weapon without one of the rule's tags, or with no weapon behind it (a skill or status kill),
             // neither gains nor clears it; events that are never a weapon's (second, damaged…) are not filtered.
             if (!rule.WeaponTags.IsDefaultOrEmpty && WeaponEvents.Contains(eventName) && (weaponTags is null || !rule.WeaponTags.Any(weaponTags.Contains))) { continue; }
@@ -419,6 +436,8 @@ public sealed class TimedBuffState
                 !(rule.WhileKey.Length > 0 && gates!.Open(rule.WhileKey, rule.WhileFull) || rule.WhileArmorBelow > 0 && (armorShare ?? 1) < rule.WhileArmorBelow))
             { continue; }
             if (rule.WhileStatAtLeast is { } statGate && !(stats?.GetValueOrDefault(statGate.Stat) >= statGate.Value)) { continue; }
+            // A chance is drawn only for an event that passes the gates; a failed draw neither counts nor fires.
+            if (rule.Chance < 1 && (Roll ?? throw new SimulationException("trigger-chance-unsupported", "A rule with a chance needs the fight's chance stream"))() >= rule.Chance) { continue; }
             if (alternate >= 0 && rule.Also[alternate].Count > 0)
             {
                 if (++nextAlso[index][alternate] < rule.Also[alternate].Count) { continue; }
@@ -438,7 +457,7 @@ public sealed class TimedBuffState
             nextLast[index] = time;
             refill |= rule.Refill;
             // A buff or ready rule's grant comes with each firing (a ready rule on cooldown never gets here).
-            if (rule.Grant.Length > 0) { granted.Add(new(rule.Grant, rule.GrantAmount, rule.GrantDuration, time)); }
+            if (rule.Grant.Length > 0) { granted.Add(new(rule.Grant, rule.GrantAmount, rule.GrantDuration, time, rule.GrantHoldDelay)); }
             if (rule.Kind != "stacks") { nextDeadlines[index] = until; continue; }
             var values = stackUpdates.GetValueOrDefault(rule.Key, stacks[rule.Key]).Where(expiry => expiry > time).ToList();
             var cap = caps[index];
@@ -539,6 +558,14 @@ public sealed class TimedBuffState
         { result[key] = values.Count(expiry => time < expiry).ToString(CultureInfo.InvariantCulture); }
         foreach (var (key, value) in banks) { result[key] = value.ToString(CultureInfo.InvariantCulture); }
         return result.ToImmutable();
+    }
+
+    private static double StatGrant(SimTriggerDefinition rule, IReadOnlyDictionary<string, double> stats)
+    {
+        var most = SimTriggerDefinition.MaximumGrantAmount(rule.Grant);
+        if (rule.Grant is "" or "armor_kit_refund" || rule.GrantAmount != 0 || !stats.TryGetValue(rule.GrantAmountStat, out var amount) || !double.IsFinite(amount) || amount <= 0 || amount > most)
+        { throw new SimulationException("trigger-unsupported", $"grantAmountStat {rule.GrantAmountStat} needs a rule without a grantAmount and a value above 0 up to {most}"); }
+        return amount;
     }
 
     private static double StatDuration(SimTriggerDefinition rule, IReadOnlyDictionary<string, double> durations)

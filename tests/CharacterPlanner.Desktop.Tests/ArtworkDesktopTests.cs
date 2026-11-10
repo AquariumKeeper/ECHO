@@ -463,4 +463,48 @@ public sealed partial class ArtworkDesktopTests
         Assert.True(manager.Details.Length < 5000);
         Assert.Empty(manager.Rows);
     }
+    [AvaloniaFact]
+    public async Task AnArtworkPacksNodeAndSpecializationArtReachesTheTreeCards()
+    {
+        await using var fixture = new Fixture();
+        var (editor, _, _) = fixture.Create();
+        editor.Specialization.Selected = editor.Specialization.Choices.Single(choice => choice.Id == "gunner");
+        var tree = editor.Specialization.Tree;
+        TreeCardViewModel Card(string name) => tree.Cards.Single(card => card.Name == name);
+        Assert.Null(Card("Incessant").Icon);
+        Assert.Null(tree.HubArt);
+
+        // A perk's art can be bound to any of its tiers; the specialization's icon goes to the hub.
+        var backend = new ArtworkPackInstaller(fixture.Store, new ArtworkPngDecoder());
+        var zip = fixture.Zip(new { icons = new { nodes = new Dictionary<string, string> { ["gunner_incessant_tier_2"] = "mask" }, specializations = new { gunner = "mask" } } });
+        var installed = await backend.InstallAsync(zip, TestPack.Division.Pack, cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(installed.Succeeded);
+        var revision = editor.Session.Snapshot.Revision;
+        editor.SetArtwork(new PackArtwork(PackArtwork.None, installed.Installed!));
+        var art = Path.Combine(installed.Installed!.Directory, "assets/mask.png");
+        Assert.Equal(art, Card("Incessant").Icon);
+        Assert.Null(Card("Coupler").Icon);
+        Assert.Equal(art, tree.HubArt);
+        Assert.Equal(revision, editor.Session.Snapshot.Revision);
+
+        // Another specialization and back: the cards are new, and take the art as they're laid out.
+        editor.Specialization.Selected = editor.Specialization.Choices.Single(choice => choice.Id == "technician");
+        Assert.Null(tree.HubArt);
+        editor.Specialization.Selected = editor.Specialization.Choices.Single(choice => choice.Id == "gunner");
+        Assert.Equal(art, Card("Incessant").Icon);
+
+        var window = new SpecializationTreeWindow { DataContext = tree };
+        fixture.Windows.Add(window);
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        var views = window.GetVisualDescendants().OfType<IconView>().Where(view => view.Name == "TreeCardArt").ToList();
+        Assert.Equal(tree.Cards.Length, views.Count);
+        Assert.Single(views, view => view.Source == art);
+        Assert.Equal(art, window.GetVisualDescendants().OfType<IconView>().Single(view => view.Name == "TreeHubArt").Source);
+
+        // Back to no art: the app's own symbols.
+        editor.SetArtwork(PackArtwork.None);
+        Assert.All(tree.Cards, card => Assert.Null(card.Icon));
+        Assert.Null(tree.HubArt);
+    }
 }

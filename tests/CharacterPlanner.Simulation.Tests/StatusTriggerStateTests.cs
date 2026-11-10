@@ -18,7 +18,7 @@ public sealed class StatusTriggerStateTests
     {
         var original = Pack();
         var rules = original.Pack.Simulation.Triggers.Where(rule => rule.Talent is "weapon_talent_ignited" or "weapon_talent_sadist")
-            .Select(rule => rule with { On = "shot", Count = 0 }).ToImmutableArray();
+            .Select(rule => rule with { Also = [], On = "shot", Count = 0 }).ToImmutableArray();
         var pack = original with { Pack = original.Pack with { Simulation = original.Pack.Simulation with { Triggers = rules } } };
         return new StatusTriggerState(pack, rules);
     }
@@ -178,7 +178,7 @@ public sealed class StatusTriggerStateTests
     public void AnArmingRuleWithACooldownArmsAtMostOncePerCooldown()
     {
         var pack = Pack();
-        var rule = pack.Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { On = "shot", Count = 0, Every = 10 };
+        var rule = pack.Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { Also = [], On = "shot", Count = 0, Every = 10 };
         var state = With(rule);
         state.Fire("shot", 0);
         Assert.True(state.Fire("hit", 1));
@@ -191,7 +191,7 @@ public sealed class StatusTriggerStateTests
     [Fact]
     public void ARunningStatusKeepsTheAmountItStartedWith()
     {
-        var rule = Pack().Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { On = "shot", Count = 0, Every = 0, Duration = 5 };
+        var rule = Pack().Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { Also = [], On = "shot", Count = 0, Every = 0, Duration = 5 };
         var state = With(rule);
         var dots = new StatusDamageState([new() { Status = "burning", Tick = "tick", Period = 1 }]);
         state.Fire("shot", 0);
@@ -213,7 +213,7 @@ public sealed class StatusTriggerStateTests
     [Fact]
     public void ASkillsStatusIsOnTheTargetAndStartsNoTicks()
     {
-        var rule = Pack().Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { On = "shot", Count = 0, Every = 0, Duration = 5 };
+        var rule = Pack().Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { Also = [], On = "shot", Count = 0, Every = 0, Duration = 5 };
         var state = With(rule);
         var dots = new StatusDamageState([new() { Status = "burning", Tick = "tick", Period = 1 }]);
         // Going on is an application, and the next batch of that use isn't.
@@ -254,7 +254,7 @@ public sealed class StatusTriggerStateTests
     public void ARateThatOnlyCarriesAStatusLeavesATalentsTicksAlone()
     {
         // A Stinger Hive's rate is its stings, not its bleed, so a talent's status on that enemy still ticks. It isn't a new application.
-        var rule = Pack().Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { On = "shot", Count = 0, Every = 0, Duration = 5 };
+        var rule = Pack().Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { Also = [], On = "shot", Count = 0, Every = 0, Duration = 5 };
         var state = With(rule);
         var dots = new StatusDamageState([new() { Status = "burning", Tick = "tick", Period = 1 }]);
         Assert.True(state.ApplyFromSkill("burning", 4, 0.9, 1, rateIsStatus: false));
@@ -279,7 +279,7 @@ public sealed class StatusTriggerStateTests
     [Fact]
     public void AShorterRateStillCountsBesideALongerCarriedStatus()
     {
-        var rule = Pack().Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { On = "shot", Count = 0, Every = 0, Duration = 5 };
+        var rule = Pack().Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { Also = [], On = "shot", Count = 0, Every = 0, Duration = 5 };
         var state = With(rule);
         var dots = new StatusDamageState([new() { Status = "burning", Tick = "tick", Period = 1 }]);
         state.ApplyFromSkill("burning", 9, 0.9, 1, rateIsStatus: false);
@@ -293,7 +293,7 @@ public sealed class StatusTriggerStateTests
     [Fact]
     public void RefreshingARunningStatusIsNotAnApplication()
     {
-        var rule = Pack().Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { On = "shot", Count = 0, Every = 0, Duration = 5 };
+        var rule = Pack().Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { Also = [], On = "shot", Count = 0, Every = 0, Duration = 5 };
         var state = With(rule);
         state.Fire("shot", 0);
         Assert.True(state.Fire("hit", 1));
@@ -386,7 +386,11 @@ public sealed class StatusTriggerStateTests
         var state = new StatusTriggerState(pack, [rule]);
         for (var count = 0; count < rule.Count; count++) { state.Fire("kill", 0, eligibleTalents: new HashSet<string>()); }
         Assert.False(state.Fire("hit", 1));
-        for (var count = 0; count < rule.Count; count++) { state.Fire("kill", 1); }
+        // Nor through its also (R86): a skill's kill while the weapon is holstered doesn't count.
+        Assert.Equal("skill_kill", Assert.Single(rule.Also).On);
+        for (var count = 0; count < rule.Count; count++) { state.Fire("skill_kill", 1, eligibleTalents: new HashSet<string>()); }
+        Assert.False(state.Fire("hit", 1.5));
+        for (var count = 0; count < rule.Count; count++) { state.Fire("kill", 1.5); }
         Assert.True(state.Fire("hit", 2));
         Assert.Contains("burning", state.Active(2));
     }
@@ -447,7 +451,7 @@ public sealed class StatusTriggerStateTests
     public void AStatusArmedEarlierInTheSameShotAppliesOnlyOnALaterHit()
     {
         var committed = Pack();
-        var rule = committed.Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { On = "shot", Count = 0 };
+        var rule = committed.Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_ignited") with { Also = [], On = "shot", Count = 0 };
         var pack = committed with { Pack = committed.Pack with { Simulation = committed.Pack.Simulation with { Triggers = [.. committed.Pack.Simulation.Triggers, rule] } } };
         var state = new StatusTriggerState(pack, [rule]);
         state.Fire("shot", 1);

@@ -301,6 +301,8 @@ public static class PackWriter
             Refresh = Optional(trigger.Refresh),
             Every = Optional(trigger.Every),
             EveryGroup = Optional(trigger.EveryGroup),
+            Chance = trigger.Chance == 1 ? null : trigger.Chance,
+            Requires = trigger.RequiresContext is null ? null : Sorted(trigger.RequiresContext, value => value) ?? new Dictionary<string, string>(StringComparer.Ordinal),
             CooldownFromEnd = Optional(trigger.CooldownFromEnd),
             ResetOn = Optional(trigger.ResetOn),
             AlsoResetOn = Optional(trigger.AlsoResetOn),
@@ -311,7 +313,7 @@ public static class PackWriter
             Count = Optional(trigger.Count),
             Refill = Optional(trigger.Refill),
             Gain = Optional(trigger.Gain),
-            Also = NullIfEmpty(trigger.Also.Select(gain => new GainWire { On = gain.On, Gain = gain.Gain, Count = Optional(gain.Count) })),
+            Also = NullIfEmpty(trigger.Also.Select(gain => new GainWire { On = gain.On, Gain = Optional(gain.Gain), Count = Optional(gain.Count) })),
             Decay = Optional(trigger.Decay),
             AtLeast = Optional(trigger.AtLeast),
             Purge = Optional(trigger.Purge),
@@ -333,6 +335,9 @@ public static class PackWriter
             GrantAmount = Optional(trigger.GrantAmount),
             GrantDuration = Optional(trigger.GrantDuration),
             GrantInstances = Optional(trigger.GrantInstances),
+            GrantHoldDelay = Optional(trigger.GrantHoldDelay),
+            GrantAmountStat = Optional(trigger.GrantAmountStat),
+            ActiveAfter = Optional(trigger.ActiveAfter),
             CountWindow = Optional(trigger.CountWindow),
             MaxMagazine = Optional(trigger.MaxMagazine),
             WhileKey = Optional(trigger.WhileKey),
@@ -378,7 +383,8 @@ public static class PackWriter
             On = damage.On,
             Total = damage.Total,
             Duration = damage.Duration,
-            Period = damage.Period
+            Period = damage.Period,
+            MaxStacks = damage.MaxStacks == 1 ? null : damage.MaxStacks
         })),
         DistanceDefaults = NullIfEmpty(simulation.DistanceDefaults.Select(entry => new DistanceDefaultWire
         {
@@ -457,7 +463,8 @@ public static class PackWriter
                 AssumptionSections = NullIfEmpty(layout.AssumptionSections.Select(section => new AssumptionSectionWire { Name = section.Name, Default = Optional(section.Default) })),
                 AttributeCategories = NullIfEmpty(layout.AttributeCategories.Select(category => new AttributeCategoryWire { Id = category.ID, Name = category.Name, Color = category.Color })),
                 Rarities = NullIfEmpty(layout.Rarities.Select(rarity => new RarityWire
-                { Id = rarity.ID, Name = rarity.Name, Color = rarity.Color, Tags = Optional(rarity.Tags), TagPrefixes = Optional(rarity.TagPrefixes) }))
+                { Id = rarity.ID, Name = rarity.Name, Color = rarity.Color, Tags = Optional(rarity.Tags), TagPrefixes = Optional(rarity.TagPrefixes) })),
+                Prototype = layout.Prototype is { } prototype ? new PrototypeLayoutWire { Name = prototype.Name, Color = prototype.Color } : null
             } : null,
             Icons = hasIcons ? icons : null,
             SpecializationImages = Sorted(presentation.SpecializationImages, image => image),

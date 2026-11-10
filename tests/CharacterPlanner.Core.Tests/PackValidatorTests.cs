@@ -168,6 +168,36 @@ public sealed class PackValidatorTests
         ["missing armor repair over time"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "missing_armor_repair", GrantAmount = 0.025, GrantDuration = 5 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
         ["temporary armor with instances"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "temporary_armor", GrantAmount = 0.5, GrantDuration = 10, GrantInstances = "independent" }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
         ["instances without grant"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { GrantInstances = "independent" }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["skill cooldown share above one"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "skill_cooldown", GrantAmount = 1.5 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["skill cooldown seconds above 600"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "skill_cooldown_seconds", GrantAmount = 601 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["armor kit refund of half a kit"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "armor_kit_refund", GrantAmount = 0.5 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["grant amount stat with an amount"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "temporary_armor", GrantAmount = 0.3, GrantAmountStat = Pack.Stats[0].ID, GrantDuration = 10 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["grant amount stat on a kit refund"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { On = "armor_kit", Grant = "armor_kit_refund", GrantAmountStat = Pack.Stats[0].ID }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["grant amount stat unknown"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "temporary_armor", GrantAmountStat = "nowhere", GrantDuration = 10 }] } }, "unknown-stat", "simulation.triggers[0].grantAmountStat"),
+        ["active after on stacks"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { ActiveAfter = 10 }] } }, "bad-sim-trigger", "simulation.triggers[0].activeAfter"),
+        ["active after above 600"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { ActiveAfter = 601 }] } }, "bad-sim-trigger", "simulation.triggers[0].activeAfter"),
+        ["status also without a count"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, Also = [new() { On = "skill_kill" }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["status also on its own event"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, Count = 4, Also = [new() { On = Pack.Simulation.Triggers[0].On }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["status also gaining two"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, Count = 4, Also = [new() { On = "skill_kill", Gain = 2 }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["status also with applyOnHit"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, On = "hit", Count = 4, ApplyOnHit = true, Also = [new() { On = "skill_kill" }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["status also with its own count"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, Count = 4, Also = [new() { On = "skill_kill", Count = 2 }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["status also twice"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, Count = 4, Also = [new() { On = "skill_kill" }, new() { On = "skill_kill" }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["status also on a whole second"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, Count = 4, Also = [new() { On = "second" }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["status also on status applied"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, Count = 4, Also = [new() { On = "status_applied" }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["status also on an unknown event"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, Count = 4, Also = [new() { On = "nowhere" }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["status also counted on a whole second"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, On = "second", Count = 4, Also = [new() { On = "kill" }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["hold delay on temporary armor"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "temporary_armor", GrantAmount = 0.5, GrantDuration = 10, GrantHoldDelay = 1 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["hold delay above 60"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "skill_cooldown", GrantAmount = 1, GrantHoldDelay = 61 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["hold delay without a grant"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { GrantHoldDelay = 1 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["armor kit refund on a kill"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { On = "kill", Grant = "armor_kit_refund", GrantAmount = 1 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["armor kit refund over time"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "armor_kit_refund", GrantAmount = 1, GrantDuration = 5 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["skill cooldown over time"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "skill_cooldown", GrantAmount = 0.1, GrantDuration = 5 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
+        ["requires on stacks"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add("overwatch_active", "true") }] } }, "bad-sim-trigger", "simulation.triggers[0].requires"),
+        ["requires unknown selector"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add("nowhere", "true") }] } }, "unknown-selector", "simulation.triggers[0].requires.nowhere"),
+        ["requires a driven key"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add(Pack.Simulation.Triggers[0].Key, "true") }] } }, "bad-sim-trigger", "simulation.triggers[0].requires." + Pack.Simulation.Triggers[0].Key),
+        ["chance zero"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Chance = 0 }] } }, "bad-sim-trigger", "simulation.triggers[0].chance"),
+        ["chance above one"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Chance = 1.5 }] } }, "bad-sim-trigger", "simulation.triggers[0].chance"),
+        ["chance on stacks"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { Chance = 0.25 }] } }, "bad-sim-trigger", "simulation.triggers[0].chance"),
         ["grant without kind"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { GrantAmount = 0.5 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
         ["count window without count"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { CountWindow = 20 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["count window negative"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Count = 3, CountWindow = -1 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
@@ -209,6 +239,8 @@ public sealed class PackValidatorTests
         ["talent damage talent"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = "missing", On = "status_applied", Total = "armor", Duration = 10, Period = 0.5 }] } }, "bad-sim-talent-damage", "simulation.talentDamage[0].talent"),
         ["talent damage event"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = "talent_killer", On = "teleport", Total = "armor", Duration = 10, Period = 0.5 }] } }, "bad-sim-talent-damage", "simulation.talentDamage[0].on"),
         ["talent damage period"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = "talent_killer", On = "status_applied", Total = "armor", Duration = 10, Period = 0.3 }] } }, "bad-sim-talent-damage", "simulation.talentDamage[0].period"),
+        ["talent damage no stacks"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = "talent_killer", On = "hit", Total = "armor", Duration = 10, Period = 0.5, MaxStacks = 0 }] } }, "bad-sim-talent-damage", "simulation.talentDamage[0].maxStacks"),
+        ["talent damage too many stacks"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = "talent_killer", On = "hit", Total = "armor", Duration = 10, Period = 0.5, MaxStacks = 101 }] } }, "bad-sim-talent-damage", "simulation.talentDamage[0].maxStacks"),
         ["talent damage total"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = "talent_killer", On = "status_applied", Total = "missing", Duration = 10, Period = 0.5 }] } }, "unknown-stat", "simulation.talentDamage[0].total"),
         ["cancel event"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { CancelOn = "teleport" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["cancelFor without cancelOn"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { CancelFor = 5 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
@@ -279,6 +311,8 @@ public sealed class PackValidatorTests
         ["layout slot"] = (() => Layout(layout => layout with { SlotGroups = [layout.SlotGroups[0] with { Slots = ["hat"] }] }), "unknown-slot", "presentation.layout.slotGroups[0].slots[0]"),
         ["layout slot twice"] = (() => Layout(layout => layout with { SlotGroups = [layout.SlotGroups[0], layout.SlotGroups[1] with { Slots = ["primary_weapon"] }] }), "duplicate-layout-slot", "presentation.layout.slotGroups[1].slots[0]"),
         ["headline"] = (() => Layout(layout => layout with { Headline = [new() { Stat = "armor", SkillRates = true }] }), "invalid-layout-headline", "presentation.layout.headline[0]"),
+        ["prototype colour"] = (() => Layout(layout => layout with { Prototype = new() { Name = "Prototype", Color = "purple" } }), "bad-color", "presentation.layout.prototype.color"),
+        ["prototype name"] = (() => Layout(layout => layout with { Prototype = new() { Name = " ", Color = "#AD78F1" } }), "empty-name", "presentation.layout.prototype.name"),
         ["headline output"] = (() => Layout(layout => layout with { Headline = [new() { BuildOutput = "missing", Label = "X" }] }), "unknown-build-output", "presentation.layout.headline[0].buildOutput"),
         ["summary stat"] = (() => Layout(layout => layout with { Summary = [new() { Name = "S", Stats = ["missing"] }] }), "unknown-stat", "presentation.layout.summary[0].stats[0]"),
         ["default section"] = (() => Layout(layout => layout with { AssumptionSections = [new("Weapon", false), new("Talents", false)] }), "invalid-assumption-sections", "presentation.layout.assumptionSections"),
@@ -491,6 +525,62 @@ public sealed class PackValidatorTests
         Assert.Empty(result.Diagnostics);
         Assert.Equal(pack.Simulation.TalentDamage, result.Compiled!.Pack.Simulation.TalentDamage);
         Assert.DoesNotContain("talentDamage", System.Text.Encoding.UTF8.GetString(PackWriter.Write(Pack)[PackFiles.Simulation].Span), StringComparison.Ordinal);
+        // One stack is the default, and the writer leaves it out.
+        Assert.Equal(1, result.Compiled.Pack.Simulation.TalentDamage[0].MaxStacks);
+        Assert.DoesNotContain("maxStacks", System.Text.Encoding.UTF8.GetString(PackWriter.Write(pack)[PackFiles.Simulation].Span), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void StackedTalentDamageValidatesAndRoundTrips()
+    {
+        // Plague of the Outcasts' shape: every hit starts a debuff, up to 50 on a target.
+        var pack = Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = "talent_killer", On = "hit", Total = "armor", Duration = 10, Period = 0.5, MaxStacks = 50 }] } };
+        var files = PackWriter.Write(pack);
+        Assert.Contains("\"maxStacks\": 50", System.Text.Encoding.UTF8.GetString(files[PackFiles.Simulation].Span), StringComparison.Ordinal);
+        var result = PackValidator.Load(files);
+        Assert.Empty(result.Diagnostics);
+        Assert.Equal(pack.Simulation.TalentDamage, result.Compiled!.Pack.Simulation.TalentDamage);
+    }
+
+    [Fact]
+    public void ARulesRequiredContextValidatesAndRoundTrips()
+    {
+        // Calculated's shape: a rule that takes part only in a fight whose context holds a selector value.
+        var pack = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add("headshot_mode", "headshot") }] } };
+        var result = PackValidator.Load(PackWriter.Write(pack));
+        Assert.Empty(result.Diagnostics);
+        Assert.Equal("headshot", result.Compiled!.Pack.Simulation.Triggers[0].RequiresContext!["headshot_mode"]);
+        Assert.Null(PackValidator.Load(PackWriter.Write(Pack)).Compiled!.Pack.Simulation.Triggers[0].RequiresContext);
+    }
+
+    [Fact]
+    public void AChanceAndTheSkillKillEventValidateAndRoundTrip()
+    {
+        // Skilled's shape: a skill kill has a 25% chance to reset skill cooldowns.
+        var pack = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { On = "skill_kill", Chance = 0.25, Grant = "skill_cooldown", GrantAmount = 1 }] } };
+        var files = PackWriter.Write(pack);
+        Assert.Contains("\"chance\": 0.25", System.Text.Encoding.UTF8.GetString(files[PackFiles.Simulation].Span), StringComparison.Ordinal);
+        var result = PackValidator.Load(files);
+        Assert.Empty(result.Diagnostics);
+        Assert.Equal((0.25, "skill_kill"), (result.Compiled!.Pack.Simulation.Triggers[0].Chance, result.Compiled.Pack.Simulation.Triggers[0].On));
+        // 1 is the default, and the writer leaves it out.
+        Assert.Equal(1, PackValidator.Load(PackWriter.Write(Pack)).Compiled!.Pack.Simulation.Triggers[0].Chance);
+        Assert.DoesNotContain("\"chance\"", System.Text.Encoding.UTF8.GetString(PackWriter.Write(Pack)[PackFiles.Simulation].Span), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ThePrototypeLayoutValidatesAndRoundTrips()
+    {
+        // R74: the game's loot quality colour for Prototype, beside the rarities.
+        var pack = Layout(layout => layout with { Prototype = new() { Name = "Prototype", Color = "#AD78F1" } });
+        var files = PackWriter.Write(pack);
+        Assert.Contains("\"prototype\"", System.Text.Encoding.UTF8.GetString(files[PackFiles.Presentation].Span), StringComparison.Ordinal);
+        var result = PackValidator.Load(files);
+        Assert.Empty(result.Diagnostics);
+        Assert.Equal(new LayoutPrototype { Name = "Prototype", Color = "#AD78F1" }, result.Compiled!.Pack.Presentation.Layout!.Prototype);
+        // A pack without one writes none, and reads back without one.
+        Assert.DoesNotContain("\"prototype\"", System.Text.Encoding.UTF8.GetString(PackWriter.Write(Pack)[PackFiles.Presentation].Span), StringComparison.Ordinal);
+        Assert.Null(PackValidator.Load(PackWriter.Write(Pack)).Compiled!.Pack.Presentation.Layout!.Prototype);
     }
 
     [Fact]
@@ -506,17 +596,42 @@ public sealed class PackValidatorTests
         var rule = result.Compiled!.Pack.Simulation.Triggers[0];
         Assert.Equal(("temporary_armor", 0.8, 10.0), (rule.Grant, rule.GrantAmount, rule.GrantDuration));
         // R41: Preservation's repair over time, Clutch's share of missing armor and Doctor Home's instant kit.
-        foreach (var (grant, amount, duration, instances) in new[] { ("armor_repair", 0.1, 5.0, "independent"), ("missing_armor_repair", 0.025, 0.0, ""), ("armor_repair", 0.5, 0.0, "") })
+        // P13: a reset (Skilled), a share (Calculated's 10%) and seconds (Tag Team's 6 s) off skill cooldowns, and a kit kept (Efficient).
+        foreach (var (grant, amount, duration, instances) in new[] { ("armor_repair", 0.1, 5.0, "independent"), ("missing_armor_repair", 0.025, 0.0, ""), ("armor_repair", 0.5, 0.0, ""),
+            ("skill_cooldown", 1.0, 0.0, ""), ("skill_cooldown", 0.1, 0.0, ""), ("skill_cooldown_seconds", 6.0, 0.0, ""), ("armor_kit_refund", 1.0, 0.0, "") })
         {
             var repaired = Pack with
             {
-                Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = grant, GrantAmount = amount, GrantDuration = duration, GrantInstances = instances }] }
+                Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { On = grant == "armor_kit_refund" ? "armor_kit" : Pack.Simulation.Triggers[0].On, Grant = grant, GrantAmount = amount, GrantDuration = duration, GrantInstances = instances }] }
             };
             var loaded = PackValidator.Load(PackWriter.Write(repaired));
             Assert.Empty(loaded.Diagnostics);
             var back = loaded.Compiled!.Pack.Simulation.Triggers[0];
             Assert.Equal((grant, amount, duration, instances), (back.Grant, back.GrantAmount, back.GrantDuration, back.GrantInstances));
         }
+        // R85: Ignited's one count taking weapon and skill kills.
+        var ignited = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, Count = 4, Also = [new() { On = "skill_kill" }] }] } };
+        var loadedIgnited = PackValidator.Load(PackWriter.Write(ignited));
+        Assert.Empty(loadedIgnited.Diagnostics);
+        Assert.Equal("skill_kill", Assert.Single(loadedIgnited.Compiled!.Pack.Simulation.Triggers[0].Also).On);
+        // R86: the pack's JSON may leave the status also's gain out, as the schema says; a stacks also without one is refused.
+        var bytes = PackWriter.Write(ignited).ToDictionary(pair => pair.Key, pair => pair.Value);
+        var simulation = System.Text.Encoding.UTF8.GetString(bytes[PackFiles.Simulation].Span);
+        Assert.DoesNotContain("\"gain\"", simulation, StringComparison.Ordinal);
+        Assert.Empty(PackValidator.Load(bytes).Diagnostics);
+        var stacksWithout = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { Also = [new() { On = "headshot" }] }] } };
+        Assert.Contains(PackValidator.Load(PackWriter.Write(stacksWithout)).Diagnostics, entry => entry.Code == "bad-sim-trigger" && entry.Message.Contains("positive gains", StringComparison.Ordinal));
+        // R82: Efficient's activation delay, and a kit grant scaled by a stat.
+        var efficient = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { ActiveAfter = 10, Grant = "temporary_armor", GrantAmountStat = Pack.Stats[0].ID, GrantDuration = 10 }] } };
+        var loadedEfficient = PackValidator.Load(PackWriter.Write(efficient));
+        Assert.Empty(loadedEfficient.Diagnostics);
+        Assert.Equal((10d, Pack.Stats[0].ID), (loadedEfficient.Compiled!.Pack.Simulation.Triggers[0].ActiveAfter, loadedEfficient.Compiled.Pack.Simulation.Triggers[0].GrantAmountStat));
+        // P13: Skilled's banked reset, held until a cooldown starts and landing 1 s after.
+        var holding = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "skill_cooldown", GrantAmount = 1, GrantHoldDelay = 1 }] } };
+        var held = PackValidator.Load(PackWriter.Write(holding));
+        Assert.Empty(held.Diagnostics);
+        Assert.Equal(1, held.Compiled!.Pack.Simulation.Triggers[0].GrantHoldDelay);
+        Assert.DoesNotContain("grantHoldDelay", System.Text.Encoding.UTF8.GetString(PackWriter.Write(pack)[PackFiles.Simulation].Span), StringComparison.Ordinal);
         Assert.DoesNotContain("grantInstances", System.Text.Encoding.UTF8.GetString(PackWriter.Write(pack)[PackFiles.Simulation].Span), StringComparison.Ordinal);
         Assert.DoesNotContain("\"grant", System.Text.Encoding.UTF8.GetString(PackWriter.Write(Pack)[PackFiles.Simulation].Span), StringComparison.Ordinal);
     }

@@ -526,13 +526,13 @@ public sealed class StatusDamageTests
 
     // Toxic Delivery's shape (R38): a status going on starts a debuff that spreads a total (200 here) over 0.5 s ticks for 2 s; while
     // it runs, further applications neither restart nor stack it, which StatusTriggerStateTests pins directly.
-    private static (CompiledPackExpressions Pack, BuildSnapshot Build) TalentDamageFixture(double total = 200)
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) TalentDamageFixture(double total = 200, string on = "status_applied", double duration = 2, int maxStacks = 1)
     {
         var (pack, build) = Fixture();
         var rules = pack.Pack with
         {
             Stats = [.. pack.Pack.Stats, new() { ID = "talent_total", Formula = total.ToString(System.Globalization.CultureInfo.InvariantCulture) }],
-            Simulation = pack.Pack.Simulation with { TalentDamage = [new() { Talent = "test", On = "status_applied", Total = "talent_total", Duration = 2, Period = 0.5 }] }
+            Simulation = pack.Pack.Simulation with { TalentDamage = [new() { Talent = "test", On = on, Total = "talent_total", Duration = duration, Period = 0.5, MaxStacks = maxStacks }] }
         };
         return (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled), build);
     }
@@ -549,6 +549,316 @@ public sealed class StatusDamageTests
         Assert.Equal(4 * 50 / 8.0, result.TalentDps!.Mean);
         Assert.Equal(result.WeaponDps.Mean + result.StatusDps!.Mean + result.TalentDps.Mean, result.TotalDps!.Mean, 9);
         Assert.Contains(result.Limitations, line => line.Contains("Talent debuffs", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void StackedTalentDebuffsEachRunTheirOwnScheduleUpToTheCap()
+    {
+        // Plague of the Outcasts' shape: a hit every second starts a 2.5 s debuff of 200 (five ticks of 40), at most two at once.
+        // Hit 0 starts A (ticks 0.5–2.5) and hit 1 starts B (1.5–3.5). At hit 2 both run, so nothing starts. Hit 3 starts C beside
+        // B (3.5–4.5 before the 5 s end), and hit 4, with B over, starts D (4.5).
+        var stacked = Run(TalentDamageFixture(on: "hit", duration: 2.5, maxStacks: 2), Options with { Duration = 5 });
+        Assert.Equal([0.5, 1, 1.5, 1.5, 2, 2, 2.5, 2.5, 3, 3.5, 3.5, 4, 4.5, 4.5], Times(stacked, DummyEventKind.TalentTick));
+        Assert.All(stacked.FirstFightEvents.Where(e => e.Kind == DummyEventKind.TalentTick), e => Assert.Equal(40, e.Damage));
+        Assert.Equal(14 * 40 / 5.0, stacked.TalentDps!.Mean, 9);
+
+        // One stack, the default, keeps the old rule: A runs out at 2.5, so hits 1 and 2 start nothing and hit 3 starts the next.
+        var single = Run(TalentDamageFixture(on: "hit", duration: 2.5), Options with { Duration = 5 });
+        Assert.Equal([0.5, 1, 1.5, 2, 2.5, 3.5, 4, 4.5], Times(single, DummyEventKind.TalentTick));
+    }
+
+    [Fact]
+    public void TalentTicksDueTogetherGoInRuleOrderWhateverStartedFirst()
+    {
+        // Two talents' debuffs start at the same moment, the second rule's event first: their ticks still go first rule first,
+        // as they did before debuffs could stack.
+        SimTalentDamageDefinition[] talents = [new() { Talent = "first", On = "a", Total = "one", Duration = 1, Period = 0.5 }, new() { Talent = "second", On = "b", Total = "two", Duration = 1, Period = 0.5, MaxStacks = 2 }];
+        var dots = new StatusDamageState([], talents);
+        var totals = new Dictionary<string, double> { ["one"] = 10, ["two"] = 20 };
+        Assert.True(dots.StartTalents("b", 0, null, totals, true));
+        Assert.True(dots.StartTalents("a", 0, null, totals, true));
+        Assert.True(dots.StartTalents("b", 0, null, totals, true));
+        Assert.Equal(["first", "second", "second"], new[] { dots.Take(0.5).Source, dots.Take(0.5).Source, dots.Take(0.5).Source });
+        // A third stack of the second is over its cap.
+        Assert.False(dots.StartTalents("b", 0.5, null, totals, true));
+    }
+
+    // The status fixture's gun, a hit a second, with a skill whose impact of 100 comes every 10 s, and the talent's rule granting a cut
+    // of its cooldown each time it fires.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) CooldownFixture(params SimTriggerDefinition[] rules)
+    {
+        var (pack, _) = Fixture();
+        var changed = pack.Pack with
+        {
+            Selectors = [.. pack.Pack.Selectors, new() { ID = "tag", Name = "Tag", Values = ["true"] }, new() { ID = "mark", Name = "Mark", Values = ["true"] },
+                new() { ID = "in_cover", Name = "In cover", Values = ["true"] }],
+            ActiveSkillSlots = [new() { ID = "skill_slot_1", Name = "Skill", Choices = ["test_skill"] }],
+            ActiveSkills = [new() { ID = "test_skill", Name = "Test", Family = "test", PreviewOutputs = [new() { ID = "impact", Formula = "100" }, new() { ID = "cooldown", Formula = "10" }] }],
+            Simulation = pack.Pack.Simulation with
+            {
+                Triggers = [.. rules.Select(rule => rule with { Talent = "test" })],
+                Skills = [new() { Skill = "test_skill", Impact = "impact", Cooldown = "cooldown" }]
+            }
+        };
+        var compiled = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(changed).Compiled);
+        return (compiled, BuildSnapshot.Create(changed).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test")
+            .WithActiveSkillSelection("skill_slot_1", "test_skill"));
+    }
+
+    [Fact]
+    public void ATalentsGrantCutsTheSkillsRunningCooldown()
+    {
+        var options = Options with { Duration = 25, IncludeSkills = true, IncludeIncoming = true };
+        // Tag Team's shape: each 4 s at most, a hit takes 3 s off. Hits come at 0, 1, 2…, so it fires at 0, 4, 8…
+        var cut = Run(CooldownFixture(new SimTriggerDefinition { Key = "tag", Kind = "buff", On = "hit", Duration = 1, Every = 4, Grant = "skill_cooldown_seconds", GrantAmount = 3 }), options);
+        var impacts = Times(cut, DummyEventKind.SkillImpact);
+        // Without a cut the skill lands at 0, 10 and 20. With it the second comes at 4 at the latest (10, less 3 at 0 and 4).
+        Assert.Equal(0, impacts[0]);
+        Assert.InRange(impacts[1], 4, 7);
+        Assert.True(impacts.Length > 3, string.Join(", ", impacts));
+        // Each gap is the 10 s cooldown, less what the rule's firings in it took off, and never less than the 4 s between them.
+        Assert.All(impacts.Zip(impacts.Skip(1)), pair => Assert.InRange(pair.Second - pair.First, 4, 10));
+
+        // A reset at the same moments deploys the skill each time the rule fires after a use.
+        var reset = Run(CooldownFixture(new SimTriggerDefinition { Key = "tag", Kind = "buff", On = "hit", Duration = 1, Every = 4, Grant = "skill_cooldown", GrantAmount = 1 }), options);
+        Assert.Equal([0d, 4, 8, 12, 16, 20, 24], Times(reset, DummyEventKind.SkillImpact));
+
+        // The same rule without a grant leaves the cooldown alone.
+        var plain = Run(CooldownFixture(new SimTriggerDefinition { Key = "tag", Kind = "buff", On = "hit", Duration = 1, Every = 4 }), options);
+        Assert.Equal([0d, 10, 20], Times(plain, DummyEventKind.SkillImpact));
+
+        // Tag Team's whole shape with existing fields: a skill hit marks the enemy, and the next weapon hit on it spends the mark to take
+        // 6 s off, at most every 4 s. The impact at 0 marks; the hit at 1 cuts the cooldown to 4 s; the use at 4 marks again and the hit
+        // at 5 cuts the next to 8; and so on, a use every 4 s.
+        // A ready rule needs a duration, so the mark lasts the fight unless spent.
+        SimTriggerDefinition[] tagTeam = [new() { Key = "mark", Kind = "ready", On = "skill_hit", Duration = 600 },
+            new() { Key = "tag", Kind = "buff", On = "hit", Duration = 0.1, WhileKey = "mark", Every = 4, Grant = "skill_cooldown_seconds", GrantAmount = 6 }];
+        tagTeam[0] = tagTeam[0] with { ConsumeOn = "hit" };
+        var tagged = Run(CooldownFixture(tagTeam), options);
+        Assert.Equal([0d, 4, 8, 12, 16, 20, 24], Times(tagged, DummyEventKind.SkillImpact));
+        // The rules are valid pack data; this bare test pack's other gaps (names, level) aren't what's checked.
+        var errors = PackValidator.Validate(CooldownFixture(tagTeam).Pack.Pack).Diagnostics.Where(entry => entry.Severity == "error" && entry.Path.StartsWith("simulation", StringComparison.Ordinal)).Select(entry => $"{entry.Code} {entry.Path} {entry.Message}").ToList();
+        Assert.True(errors.Count == 0, string.Join(" | ", errors));
+    }
+
+    // The status fixture with a buff rule on the gun's talent (half a second on each firing), and crits rolled, so a chance's draws
+    // would show in the shots if they shared a stream.
+    private static DummyFightResult ChanceRun(double chance, string on = "hit") => Run(BonusFixture(new() { On = on, Kind = "buff", Duration = 0.5, Chance = chance },
+        ("effective_critical_hit_chance", "0.5"), ("equipped_weapon_critical_damage", "20")), Options with { Duration = 600 });
+
+    [Fact]
+    public void AChanceFiresARuleOnItsShareOfEventsFromItsOwnStream()
+    {
+        // Every shot hits, each giving half a second of the buff when it fires: half a second a shot always; with an even chance about
+        // half that.
+        var always = ChanceRun(1);
+        var hits = always.FirstFightEvents.Count(e => e.Kind == DummyEventKind.Shot);
+        Assert.Equal(hits * 0.5, always.TimedTriggerUptime["bonus"].Seconds, 9);
+        var half = ChanceRun(0.5);
+        Assert.InRange(half.TimedTriggerUptime["bonus"].Seconds, hits * 0.2, hits * 0.3);
+        // The same seed draws the same.
+        Assert.Equal(half.TimedTriggerUptime["bonus"].Seconds, ChanceRun(0.5).TimedTriggerUptime["bonus"].Seconds);
+        // The draws don't touch the weapon's: every shot's crit comes out the same, so only the bonus's damage differs.
+        Shot[] Shots(DummyFightResult result) => [.. result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot).Select(e => new Shot(e.Time, e.Damage > 15))];
+        Assert.Equal(Shots(always), Shots(half));
+        Assert.Contains(Shots(always), shot => shot.Critical);
+    }
+
+    private sealed record Shot(double Time, bool Critical);
+
+    // A gear talent: the fixture's talent moved to a chest piece, which is what a skill kill reaches.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) GearCooldownFixture(string health, params SimTriggerDefinition[] rules)
+    {
+        var (pack, _) = CooldownFixture(rules);
+        var moved = pack.Pack with
+        {
+            Slots = [.. pack.Pack.Slots, new() { ID = "chest", Name = "Chest" }],
+            Items = [pack.Pack.Items[0] with { TalentSlots = [] }, new() { ID = "vest", Name = "Vest", Slot = "chest", TalentSlots = pack.Pack.Items[0].TalentSlots }],
+            Stats = [.. pack.Pack.Stats.Select(stat => stat.ID == "enemy_target_health" ? stat with { Formula = health } : stat)]
+        };
+        var compiled = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(moved).Compiled);
+        return (compiled, BuildSnapshot.Create(moved).WithEquipment("primary_weapon", "gun").WithEquipment("chest", "vest").WithTalentSelection("chest", "talent", "test")
+            .WithActiveSkillSelection("skill_slot_1", "test_skill"));
+    }
+
+    [Fact]
+    public void ASkillKillReachesTheWeaponInHandsTalentsAsSkillKillOnly()
+    {
+        // R84: the gun's own talent, in hand. The impact of 100 kills a 50-health enemy each use, at 0, 10 and 20.
+        var options = Options with { Duration = 25, IncludeSkills = true, IncludeIncoming = true };
+        (CompiledPackExpressions, BuildSnapshot) Killing(SimTriggerDefinition rule)
+        {
+            var (pack, build) = CooldownFixture(rule);
+            var changed = pack.Pack with { Stats = [.. pack.Pack.Stats.Select(stat => stat.ID == "enemy_target_health" ? stat with { Formula = "50" } : stat)] };
+            return (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(changed).Compiled), build);
+        }
+        var rule = new SimTriggerDefinition { Key = "tag", Kind = "buff", On = "skill_kill", Duration = 1 };
+        // Its skill_kill rule fires on each, a second of the buff each.
+        Assert.Equal(3, Run(Killing(rule), options).TimedTriggerUptime["tag"].Seconds, 9);
+        // A kill rule on the same weapon still sees only its weapon's kills. In the first half second only the skill kills, so it doesn't
+        // fire; without skills the gun's own kills fire it.
+        var kill = Run(Killing(rule with { On = "kill" }), options with { Duration = 0.5 });
+        Assert.Equal(1, kill.Kills);
+        Assert.Equal(0, kill.TimedTriggerUptime["tag"].Seconds);
+        Assert.True(Run(Killing(rule with { On = "kill" }), options with { IncludeSkills = false }).TimedTriggerUptime["tag"].Seconds > 0);
+    }
+
+    [Fact]
+    public void WithoutSkillsARuleOnASkillsKillStepsAside()
+    {
+        // Outsider's shape: one key, gained on the weapon's kills and on a skill's. A fight without skills runs, the weapon's kills still
+        // gain it, and the result says the skill rule never reacts. A 50-health enemy dies to the gun's fifth hit.
+        (CompiledPackExpressions, BuildSnapshot) Killing(params SimTriggerDefinition[] rules)
+        {
+            var (pack, build) = CooldownFixture(rules);
+            var changed = pack.Pack with { Stats = [.. pack.Pack.Stats.Select(stat => stat.ID == "enemy_target_health" ? stat with { Formula = "50" } : stat)] };
+            return (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(changed).Compiled), build);
+        }
+        var weapon = new SimTriggerDefinition { Key = "tag", Kind = "buff", On = "kill", Duration = 1 };
+        var options = Options with { Duration = 25, IncludeIncoming = true };
+        var both = Run(Killing(weapon, weapon with { On = "skill_kill" }), options);
+        var alone = Run(Killing(weapon), options);
+        Assert.True(both.TimedTriggerUptime["tag"].Seconds > 0);
+        Assert.Equal(alone.TimedTriggerUptime["tag"].Seconds, both.TimedTriggerUptime["tag"].Seconds);
+        Assert.Equal(alone.WeaponDps.Mean, both.WeaponDps.Mean);
+        Assert.Contains(both.Limitations, note => note.StartsWith("This fight has no skills, so these never react to a skill's hit or kill", StringComparison.Ordinal));
+        Assert.DoesNotContain(alone.Limitations, note => note.StartsWith("This fight has no skills", StringComparison.Ordinal));
+        // A rule that only clears on a skill event is no reason to refuse either, and it's named too.
+        var clearing = Run(Killing(weapon with { ConsumeOn = "skill_hit" }), options);
+        Assert.True(clearing.TimedTriggerUptime["tag"].Seconds > 0);
+        Assert.Contains(clearing.Limitations, note => note.StartsWith("This fight has no skills", StringComparison.Ordinal));
+        // So is a gain through also.
+        Assert.True(Run(Killing(weapon with { Also = [new() { On = "skill_kill", Gain = 1 }] }), options).TimedTriggerUptime["tag"].Seconds > 0);
+        // Spark's shape: a talent's only rule is on a skill event. Its key stays driven, so the user's own setting of it doesn't hold all
+        // fight: no skill hits, so it's never up.
+        var (sparkPack, sparkBuild) = Killing(weapon with { On = "skill_hit" });
+        var spark = DummyWeaponSimulator.RunAgainstTargets(sparkPack, sparkBuild, Context.Add("tag", "true"), options, 0, TestContext.Current.CancellationToken);
+        Assert.Equal(0, spark.TimedTriggerUptime["tag"].Seconds);
+        Assert.Equal(alone.WeaponDps.Mean, spark.WeaponDps.Mean, 9);
+        // With skills the skill rule takes part as before.
+        Assert.DoesNotContain(Run(Killing(weapon, weapon with { On = "skill_kill" }), options with { IncludeSkills = true }).Limitations,
+            note => note.StartsWith("This fight has no skills", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ARuleRequiringCoverTakesPartOnlyInACoveredFight()
+    {
+        // Calculated's shape: hits take 3 s off the cooldown, at most every 4 s, only in cover.
+        var rule = new SimTriggerDefinition
+        {
+            Key = "tag",
+            Kind = "buff",
+            On = "hit",
+            Duration = 0.1,
+            Every = 4,
+            Grant = "skill_cooldown_seconds",
+            GrantAmount = 3,
+            RequiresContext = ImmutableDictionary<string, string>.Empty.Add("in_cover", "true")
+        };
+        var fixture = CooldownFixture(rule);
+        var options = Options with { Duration = 25, IncludeSkills = true, IncludeIncoming = true };
+        // In the open the rule takes no part: the 10 s cooldown stands.
+        Assert.Equal([0d, 10, 20], Times(Run(fixture, options), DummyEventKind.SkillImpact));
+        // A cover cycle sets in_cover for the whole fight, so the cuts bring the second use forward.
+        var covered = Run(fixture, options with { PeekSeconds = 3, CoverSeconds = 1, PeekHitShare = 1 });
+        Assert.InRange(Times(covered, DummyEventKind.SkillImpact)[1], 4, 7);
+        // So does the user's own setting, without a cycle.
+        var set = DummyWeaponSimulator.RunAgainstTargets(fixture.Pack, fixture.Build, Context.Add("in_cover", "true"), options, 0, TestContext.Current.CancellationToken);
+        Assert.InRange(Times(set, DummyEventKind.SkillImpact)[1], 4, 7);
+        // The build reads in_cover, so the assumptions show the user what turns the rule on.
+        Assert.Contains("in_cover", BuildResolver.Resolve(fixture.Pack, fixture.Build, Context).ReadAssumptions);
+        Assert.DoesNotContain("in_cover", BuildResolver.Resolve(fixture.Pack, fixture.Build.WithTalentSelection("primary_weapon", "talent", ""), Context).ReadAssumptions);
+    }
+
+    [Fact]
+    public void ASkillKillFiresSkillKillForGearTalents()
+    {
+        var options = Options with { Duration = 25, IncludeSkills = true, IncludeIncoming = true };
+        var rule = new SimTriggerDefinition { Key = "tag", Kind = "buff", On = "skill_kill", Duration = 1 };
+        // The impact of 100 kills a 50-health enemy each use, at 0, 10 and 20: three skill kills, a second of the buff each.
+        var killing = Run(GearCooldownFixture("50", rule), options);
+        Assert.Equal([0d, 10, 20], Times(killing, DummyEventKind.SkillImpact));
+        Assert.Equal(3, killing.TimedTriggerUptime["tag"].Seconds, 9);
+        // Weapon kills aren't skill kills.
+        var shooting = Run(GearCooldownFixture("5", rule with { On = "skill_kill" }), options with { IncludeSkills = true });
+        Assert.True(shooting.Kills > 3);
+        Assert.Equal(3, shooting.TimedTriggerUptime["tag"].Seconds, 9);
+        // A skill that kills nothing fires nothing.
+        Assert.Equal(0, Run(GearCooldownFixture("100000", rule), options).TimedTriggerUptime.GetValueOrDefault("tag")?.Seconds ?? 0);
+
+        // Skilled's shape, a sure reset on a skill kill: an impact kills as its use deploys, and a cooldown that starts at that very moment
+        // isn't cut, so the uses stay 10 s apart. A known limit: a reset there would only redeploy into the gap before the next enemy.
+        var skilled = Run(GearCooldownFixture("50", rule with { Grant = "skill_cooldown", GrantAmount = 1 }), options);
+        Assert.Equal([0d, 10, 20], Times(skilled, DummyEventKind.SkillImpact));
+    }
+
+    // CooldownFixture's skill as a turret: 20 a second over a 5 s window, its 10 s cooldown starting as the window ends.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) TurretFixture(string health, params SimTriggerDefinition[] rules)
+    {
+        var (pack, _) = GearCooldownFixture(health, rules);
+        var changed = pack.Pack with
+        {
+            ActiveSkills = [pack.Pack.ActiveSkills[0] with { PreviewOutputs = [new() { ID = "rate", Formula = "20" }, new() { ID = "window", Formula = "5" }, new() { ID = "cooldown", Formula = "10" }] }],
+            Simulation = pack.Pack.Simulation with { Skills = [new() { Skill = "test_skill", Rate = "rate", Window = "window", Cooldown = "cooldown", CooldownFromEnd = true }] }
+        };
+        var compiled = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(changed).Compiled);
+        return (compiled, BuildSnapshot.Create(changed).WithEquipment("primary_weapon", "gun").WithEquipment("chest", "vest").WithTalentSelection("chest", "talent", "test")
+            .WithActiveSkillSelection("skill_slot_1", "test_skill"));
+    }
+
+    // Where each of a turret's windows starts: its ticks come every 0.1 s while it's out.
+    private static double[] WindowStarts(DummyFightResult result)
+    {
+        var ticks = Times(result, DummyEventKind.SkillTick);
+        return [.. ticks.Where((at, index) => index == 0 || at - ticks[index - 1] > 0.15)];
+    }
+
+    [Fact]
+    public void AHeldResetWaitsForTheTurretsCooldownToStart()
+    {
+        // Skilled's banked reset: the turret kills while it's out, with no cooldown running, so the reset is held, and lands 1 s after
+        // the turret's cooldown starts at its end. Each window then starts 6 s after the last, where without a reset it's 15 s.
+        var options = Options with { Duration = 40, IncludeSkills = true, IncludeIncoming = true };
+        var reset = new SimTriggerDefinition { Key = "tag", Kind = "buff", On = "skill_kill", Duration = 0.1, Grant = "skill_cooldown", GrantAmount = 1 };
+        Assert.Equal([0.1, 15.1, 30.1], WindowStarts(Run(TurretFixture("50", reset with { Grant = "", GrantAmount = 0 }), options)));
+        var held = Run(TurretFixture("50", reset with { GrantHoldDelay = 1 }), options);
+        Assert.Equal([0.1, 6.1, 12.1, 18.1, 24.1, 30.1, 36.1], WindowStarts(held).Select(at => Math.Round(at, 9)));
+        // Without holding, a reset while it's out brings it back as its window ends, so the windows run on without a gap.
+        var now = Run(TurretFixture("50", reset), options);
+        Assert.Single(WindowStarts(now));
+        Assert.Contains(Times(now, DummyEventKind.SkillTick), at => at > 15.1);
+    }
+
+    [Fact]
+    public void AHeldResetKeepsTheFirstCooldownStartEvenWhenItsSlotIsUsedAgain()
+    {
+        // Two charges, used 0.5 s apart, each impact killing as it deploys. The kill at 0 holds the reset for the recharge starting then,
+        // due at 1; the use at 0.5 doesn't move it. At 1 the recharge resets, so the third use comes at 1 where it would wait for 10.
+        var (pack, _) = GearCooldownFixture("50", new SimTriggerDefinition { Key = "tag", Kind = "buff", On = "skill_kill", Duration = 0.1, Grant = "skill_cooldown", GrantAmount = 1, GrantHoldDelay = 1 });
+        var changed = pack.Pack with
+        {
+            ActiveSkills = [pack.Pack.ActiveSkills[0] with { PreviewOutputs = [.. pack.Pack.ActiveSkills[0].PreviewOutputs, new() { ID = "stock", Formula = "2" }] }],
+            Simulation = pack.Pack.Simulation with { Skills = [pack.Pack.Simulation.Skills[0] with { Stock = "stock", StockInterval = 0.5 }] }
+        };
+        var compiled = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(changed).Compiled);
+        var build = BuildSnapshot.Create(changed).WithEquipment("primary_weapon", "gun").WithEquipment("chest", "vest").WithTalentSelection("chest", "talent", "test")
+            .WithActiveSkillSelection("skill_slot_1", "test_skill");
+        var impacts = Times(Run((compiled, build), Options with { Duration = 5, IncludeSkills = true, IncludeIncoming = true }), DummyEventKind.SkillImpact);
+        Assert.Equal([0d, 0.5, 1], impacts.Take(3));
+    }
+
+    [Fact]
+    public void AHeldResetLandsAfterACooldownStartingAtTheKill()
+    {
+        var options = Options with { Duration = 25, IncludeSkills = true, IncludeIncoming = true };
+        // An impact that kills as its use deploys finds its own cooldown only starting, so nothing is running: the reset is held and
+        // lands 1 s later, where without holding the start's guard leaves it alone (10 s apart, ASkillKillFiresSkillKillForGearTalents).
+        var reset = new SimTriggerDefinition { Key = "tag", Kind = "buff", On = "skill_kill", Duration = 0.1, Grant = "skill_cooldown", GrantAmount = 1, GrantHoldDelay = 1 };
+        Assert.Equal([0d, 1, 2, 3, 4], Times(Run(GearCooldownFixture("50", reset), options), DummyEventKind.SkillImpact).Take(5));
+        // A hit every 4 s: the one at 0 comes as the use deploys and is held to 1; the one at 4 finds the cooldown from 1 running, and
+        // resets it at once.
+        var hits = new SimTriggerDefinition { Key = "tag", Kind = "buff", On = "hit", Duration = 1, Every = 4, Grant = "skill_cooldown", GrantAmount = 1, GrantHoldDelay = 1 };
+        Assert.Equal([0d, 1, 4, 8, 12, 16, 20, 24], Times(Run(CooldownFixture(hits), options), DummyEventKind.SkillImpact));
     }
 
     [Fact]

@@ -39,6 +39,9 @@ public sealed class SkillDamageSchedule
         string Status = "", ImmutableDictionary<int, (double Impact, double Rate, double StatusRate)>? Amounts = null, double Stock = 1, double StockInterval = 0,
         double StatusRate = 0, double StatusWindow = 0, string StatusArmorBonus = "", double Impacts = 1, double ImpactInterval = 0)
     {
+        /// <summary>The skill's cooldown itself; <see cref="Cycle"/> adds the use's length to it when the cooldown runs from a use's end.</summary>
+        public double Cooldown { get; init; } = Cycle;
+
         /// <summary>The use deployed at this time, in a fight of this length, whose impacts end with it.</summary>
         public SkillUse UseAt(double time, double duration)
         {
@@ -124,7 +127,8 @@ public sealed class SkillDamageSchedule
             if (!double.IsFinite(cycle) || cycle <= 0 || !double.IsFinite(impact) || !double.IsFinite(rate * window) || !double.IsFinite(statusRate * (window + statusWindow)))
             { throw new SimulationException("skill-cycle-invalid", $"Invalid cycle or damage for {preview.SkillId}"); }
             plans.Add(new(slot.ID, preview.SkillId, window, cycle, rate, impact, rule.RateArmorBonus, rule.RateRead == "live", StatusDamageState.Damaging.Contains(rule.Status) ? rule.Status : "",
-                null, stock, rule.StockInterval, statusRate, statusWindow, rule.StatusArmorBonus, impacts, interval));
+                null, stock, rule.StockInterval, statusRate, statusWindow, rule.StatusArmorBonus, impacts, interval)
+            { Cooldown = cooldown });
         }
         return new(plans.ToImmutable());
     }

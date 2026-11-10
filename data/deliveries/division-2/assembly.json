@@ -1,107 +1,115 @@
 {
   "format": "shade-tech.planner-v2-assembly",
   "version": 1,
-  "plan_sha256": "2bc3d7455e9b60ce0e0a5b153eff580f20a1259055ec1ca1157fbad3be560850",
-  "pack_manifest_sha256": "dbec840e49a1cae8cbfcd1369af9a40469552b948732a1f599352872376d4b00",
+  "plan_sha256": "d11ed719bd3b90e13e103081aafaf53948b1d9ff272d2439837868a621075c66",
+  "pack_manifest_sha256": "d8ebcca4ad1de18a9a6aec0a23512cdd1ee164c0cd32ab4e100ebb7c58722c28",
   "complete_pack_assembled": true,
   "complete_native_source_derivation": false,
   "consumer_accepted": false,
   "runtime_verified": false,
   "outputs": {
     "support/base-pack/manifest.json": {
-      "sha256": "fc3e3cb0fe4e13a5b8128d3a027031197a068a1b5f6d2376f6eef7ec5077f0ab",
+      "sha256": "0652247f6ddd43d739dae0bb8bb137620d6837b4e26aca8302ba558ea271df1d",
       "bytes": 1828
     },
     "support/base-pack/presentation.json": {
-      "sha256": "b14b9b7de8948c88af6962b53badc23804bf51346160d7f6e4bb9a1f30c0946d",
-      "bytes": 20185
+      "sha256": "ff5c53ebe81229b726e2e427c934d3353e0316f5a960aac6c5682bac78452047",
+      "bytes": 20263
     },
     "support/base-pack/provenance.md": {
-      "sha256": "34499502717ba101e5345de71e2f829bf33c6289873024c60413a4b4bba7b9e9",
-      "bytes": 211464
+      "sha256": "1240367de8099b9b8b0c20827ec2cd82bcc214c1d155c673e9027052a2e95f01",
+      "bytes": 218652
     },
     "support/base-pack/share-codes.json": {
       "sha256": "7ad28718e2f57edbee9512fcbe778df324b3a931ccccf976efaeeb7fa02c4087",
       "bytes": 209
     },
     "support/base-pack/simulation.json": {
-      "sha256": "dfdcd014619a1fa8b69c37c0413ffd19942fe5d05e8ea3bd18773480e11ab111",
-      "bytes": 38833
+      "sha256": "1a1350028e1260f1a4238d647e0bc8eee5fd10420f9ffae6ceb76d0613ab3d92",
+      "bytes": 42818
     },
     "support/base-pack/rules.json": {
-      "sha256": "b2b96d66110da2f68d03eb0d04c123cb5b1eefeb77d8c83a9bd431e0d776839f",
-      "bytes": 2554786
+      "sha256": "56b630ab60831cbc9b4fc1d1ca2189f371dd0cd6973cf1a253257240e71588dd",
+      "bytes": 2561094
     },
     "support/evidence/packet.json": {
-      "sha256": "39cc370ee5567e39413c6d0cbcafd198a49381e9aec3ad963fc236e6a2963231",
-      "bytes": 2148
+      "sha256": "de7f1ac0e90b6f00ca754cc72be71dc678eedc79bfe33315eed967312236a241",
+      "bytes": 2722
     },
-    "support/evidence/docs/R73_SOURCE_REVIEW.md": {
-      "sha256": "e59ceacbfbe0ebf0d6922d8b796b31660773c59e7a58967ac9775fd1c7a909ae",
-      "bytes": 2281
+    "support/evidence/docs/R86_SOURCE_REVIEW.md": {
+      "sha256": "c4619924dda33b3fe8e55fb211bc7d28aca41694d15039404dd9af3779f1861b",
+      "bytes": 1882
     },
-    "support/evidence/sources/talent.fruit": {
-      "sha256": "3c731c8db6955d2ba93f35e138b8bbd0ce5b324ed32df99636312a60d0561f7f",
-      "bytes": 7536
+    "support/evidence/sources/talent_smg_rpm_decrease_optimal_range_increase_based_on_ammo_remaining.mtalent": {
+      "sha256": "8723fb2610b82e771fd7c73c4b78687b222ec06845eac1e8a39cd193b358fbe2",
+      "bytes": 3806
     },
-    "support/evidence/sources/talent.fruit.json": {
-      "sha256": "0c657804491a2ae4598a03069c3325c49c11ac0e049178ba6a66eeaa2ebe7adb",
-      "bytes": 831
+    "support/evidence/sources/talent_smg_rpm_decrease_optimal_range_increase_based_on_ammo_remaining.mtalent.json": {
+      "sha256": "65e63b9fc46654cc35e95c4c57efd1c663c3fe4c26b91de603af94480501c5c5",
+      "bytes": 897
     },
-    "support/evidence/sources/warlock_talent_weapon_kills_grant_skill_tier.mtalent": {
-      "sha256": "39b245e9f97a2a92d045edede14c269b58776a1848ea52e687f796622cf42dbb",
-      "bytes": 5875
+    "support/evidence/sources/talent_smg_rpm_decrease_optimal_range_increase_based_on_ammo_remaining_perfect.mtalent": {
+      "sha256": "d733682484529f4150efdd98f914d6d109addee13fa3f60b5afa2364ce26c529",
+      "bytes": 3623
     },
-    "support/evidence/sources/warlock_talent_weapon_kills_grant_skill_tier.mtalent.json": {
-      "sha256": "6ed20df92d5921cc1f759b1e19639ff16db433b7d1c97f9efcc8d73b1da7230c",
-      "bytes": 871
+    "support/evidence/sources/talent_smg_rpm_decrease_optimal_range_increase_based_on_ammo_remaining_perfect.mtalent.json": {
+      "sha256": "b6247537b1568c70025cbf5be4f0eddd2e23febbfa0454e518e2b33143791a63",
+      "bytes": 905
     },
-    "support/evidence/sources/warlock_talent_weapon_kills_grant_skill_tier_perfect.mtalent": {
-      "sha256": "17ed8cd54d25cbaa70b6937ad25a30697dc196d665a75e7198c9591f3a9031a7",
-      "bytes": 4693
+    "support/evidence/sources/talent_weapon_increased_damage_to_burn.mtalent": {
+      "sha256": "71ce11b50db601a095b66300c15e118146710b5e6b4272f0299788829717606d",
+      "bytes": 2575
     },
-    "support/evidence/sources/warlock_talent_weapon_kills_grant_skill_tier_perfect.mtalent.json": {
-      "sha256": "57da49dbb70ddc46cb56aff571f581b4b0a16585e34bc1e582933df2a78ed196",
+    "support/evidence/sources/talent_weapon_increased_damage_to_burn.mtalent.json": {
+      "sha256": "6626013eb33302f5e32c19d6d8c924e2f2693310faea7b1a5c4dcc6f8c3f661a",
+      "bytes": 865
+    },
+    "support/evidence/sources/talent_weapon_increased_damage_to_burn_perfect.mtalent": {
+      "sha256": "4bb64e1f13f918ece84894c31b423640aa98f07037e2506482be39fc620a14b2",
+      "bytes": 2302
+    },
+    "support/evidence/sources/talent_weapon_increased_damage_to_burn_perfect.mtalent.json": {
+      "sha256": "16a5859f95bf2fb41e6305ee0d8a825764e6a82770bf481791e264579eb59f0c",
+      "bytes": 873
+    },
+    "support/evidence/sources/talentrule_smg_rpm_decrease_optimal_range_increase_based_on_ammo_remaining.mtalentrules": {
+      "sha256": "dfe303ce5b5a280f4f3ff1d296e144cdcb720f4e9e40b31c73d79ee54e2af36c",
+      "bytes": 2054
+    },
+    "support/evidence/sources/talentrule_smg_rpm_decrease_optimal_range_increase_based_on_ammo_remaining.mtalentrules.json": {
+      "sha256": "7160f5f3d06e240c8d33452fa037f8b3605af041fbb4f8a2f69c9e6eecb4787f",
+      "bytes": 910
+    },
+    "support/evidence/sources/talentrule_weapon_increased_damage_to_burn.mtalentrules": {
+      "sha256": "21dbf675d0016acaf94776124f8767ab5d829c162517dec4916c1427bf8560c1",
+      "bytes": 5766
+    },
+    "support/evidence/sources/talentrule_weapon_increased_damage_to_burn.mtalentrules.json": {
+      "sha256": "9dc6140f0dfb0ec684751a092ab4e4dc76bf4dc846a7bb8e7e35c5c3d0ee590e",
       "bytes": 878
     },
-    "support/evidence/sources/warlock_talentrule_weapon_kills_grant_skill_tier.mtalentrules": {
-      "sha256": "9a516aed3496a77843603acdb04ab320a6a4b8e6a6573ad1295505bb063ce255",
-      "bytes": 4474
-    },
-    "support/evidence/sources/warlock_talentrule_weapon_kills_grant_skill_tier.mtalentrules.json": {
-      "sha256": "1f08bbe513b96565f21bcf023b3e9fd7289bad8491cf646ea2355e6bb66fd05b",
-      "bytes": 885
-    },
-    "support/evidence/sources/warlock_talentrule_weapon_kills_grant_skill_tier_overcharge.mtalentrules": {
-      "sha256": "ab1b7c9e4282c7860b168d44eeeb775be29f70053a6212b6ddebaa0095cb207a",
-      "bytes": 1612
-    },
-    "support/evidence/sources/warlock_talentrule_weapon_kills_grant_skill_tier_overcharge.mtalentrules.json": {
-      "sha256": "6b4453b8a3a918cf5280432228c029536baa19f3718cea2af1a13f191cff6b15",
-      "bytes": 895
-    },
     "pack/presentation.json": {
-      "sha256": "b14b9b7de8948c88af6962b53badc23804bf51346160d7f6e4bb9a1f30c0946d",
-      "bytes": 20185
+      "sha256": "ff5c53ebe81229b726e2e427c934d3353e0316f5a960aac6c5682bac78452047",
+      "bytes": 20263
     },
     "pack/provenance.md": {
-      "sha256": "e1065da47c9ef25abf96db2341c72d94ef80071d5138ede08950f6ff1f4a9f9e",
-      "bytes": 212479
+      "sha256": "40ad420c53055e7e962247f713715f546fb688a0d9c17df9597ef56ad6d928bd",
+      "bytes": 219681
     },
     "pack/share-codes.json": {
       "sha256": "7ad28718e2f57edbee9512fcbe778df324b3a931ccccf976efaeeb7fa02c4087",
       "bytes": 209
     },
     "pack/simulation.json": {
-      "sha256": "95399e380c5a491a68b1c7616d1433defc01e7bff27997e90d79ee727b70e384",
-      "bytes": 38931
+      "sha256": "55764414053445f9fb97fa7d14fdc33184cb705083b1f535a6ab4b0c03b74a40",
+      "bytes": 43008
     },
     "pack/rules.json": {
-      "sha256": "b2b96d66110da2f68d03eb0d04c123cb5b1eefeb77d8c83a9bd431e0d776839f",
-      "bytes": 2554786
+      "sha256": "c8b52d017dfd7b71d529213aba92714e5792ee4b6e73f7f3f3a3bd13cbc66c5e",
+      "bytes": 2561818
     },
     "pack/manifest.json": {
-      "sha256": "dbec840e49a1cae8cbfcd1369af9a40469552b948732a1f599352872376d4b00",
+      "sha256": "d8ebcca4ad1de18a9a6aec0a23512cdd1ee164c0cd32ab4e100ebb7c58722c28",
       "bytes": 1828
     },
     "pack/assets/original-slots/slot_backpack.png": {
@@ -137,24 +145,24 @@
       "bytes": 1712
     },
     "overlay-plan.json": {
-      "sha256": "d3ab37ff0041900f0ab2116c49a8687e93609b55d35c55277eaca2166a868828",
-      "bytes": 3569
+      "sha256": "47b6666ec48c7d140c46fd65d267d65fd092aa337a641ac5bf513464497a8047",
+      "bytes": 8455
     },
     "support/intermediate-manifest.json": {
-      "sha256": "692bee0585415da4d314414d669e1a263bd0401042ec355c5cc2eab13e0d6725",
+      "sha256": "f9cfdc49dc8da7c34c29560d8830f6de3df05abea5f75a0e82f159cdb3e71d51",
       "bytes": 1832
     },
     "reports/artwork.json": {
-      "sha256": "d2f846d7c4d21cc52ddda89d1606e2c915d1da433ade54b3d4abb61b54a5a822",
+      "sha256": "a53ef19c208c079b88d14ec16e91d267eab8887ef9854406f976875ac04cd91b",
       "bytes": 11813
     },
     "composition-plan.json": {
-      "sha256": "2bc3d7455e9b60ce0e0a5b153eff580f20a1259055ec1ca1157fbad3be560850",
+      "sha256": "d11ed719bd3b90e13e103081aafaf53948b1d9ff272d2439837868a621075c66",
       "bytes": 505
     },
     "reports/talent-overlay.json": {
-      "sha256": "36c084572d9b67049ae94c3c59d53d30f7081ac35180f6523d9853fc811dfb3d",
-      "bytes": 4141
+      "sha256": "822ce7af7457359f4d844840906ee040bc434a073c771850ec36a31c72c176ed",
+      "bytes": 9058
     }
   }
 }

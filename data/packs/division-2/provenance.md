@@ -2684,3 +2684,101 @@ Whole-row preconditions and source evidence are captured in this assembly. This 
 Seed manifest SHA-256: `692bee0585415da4d314414d669e1a263bd0401042ec355c5cc2eab13e0d6725`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
 
 Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R74 to R76: Prototype colour, Plague of the Outcasts and Tag Team
+
+Base manifest `dbec840e49a1cae8cbfcd1369af9a40469552b948732a1f599352872376d4b00`; overlay plan `202ae44140f8d1b6b87df2a288e5f17db96eb72ff1a4235c8f88e10e32922cc0`; evidence packet `8d81c1af56988a546f197fbc3594197661ffc16026760a7e28542b651882013f`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `263e8eb69197f598d1a5aa486c3e36193be980a8652f7c22cd58bf14a2d387a1`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R77: Skilled's rows
+
+Base manifest `ae7173bcce5a1d505ece5d7caf357ccb78ef83213774878a578a7a3217b37ef5`; overlay plan `af725a2775a73f02a336559c2e1c905dc8643f0ce2ea82581140472151c5d5ed`; evidence packet `3c2b037e496663207998b123ac440f87d4e276fe9f7c10369bff7dee377a857e`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `c6b29d129144cf812cc2cbb9b548c749354f029ffb9b82d88731a302f39531a4`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## Unmodeled talents: Safeguard settled
+
+Base manifest `b298b924ebab7adc10e9164af24d4ee7884c4856cf2a7d7ca167ce3d8ab61101`; overlay plan `94b5534259741ebb2a89611b9f83d32e203fcd316882cd4f41ceaed75fa33805`; evidence packet `f9070e140096bdca08f6d0265c1ac1382f00da1f7f8828fe2f376b4c64a0d404`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `617b8356333f367dde84a02c6b622d79771625c45386318028e47bf4255af719`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R78 to R80: Prototype and Exotic colours, and Calculated's rows
+
+Base manifest `6be5312958219c111b6e2fedbf30b3a900f9f9026c6c22b8877e5dc8a0f6bf05`; overlay plan `ab70d826d765a791391c7741b21345c2a9a95a286219d02fe2d6958a053999b3`; evidence packet `b85016d20d960f2d3d6b9fae201e4ee709a24fa5147b43ae25daf6120cac7397`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `2e805280d87c0c7f6c6a62b73a5ab359933f8bdd921147e263bf41fe129e9bd0`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R82 to R84: Skilled's banked reset, Efficient's source, and skill kills for weapon talents
+
+Base manifest `ab5d4860ba521bffd2469a80ed6c76a46790a37debb29b74cdbbe91a52805874`; overlay plan `4f9510efbeb1d111a3e6d4832210a24598e60eba2d5c8201d70ec4e1bcaa67e0`; evidence packet `63540ecfe27b8395834308a765173669100514b3f7e2b8b38fbcd130ea329cab`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `1e3aab60b0d2786838df6c3d0959d1c579c2940b95e1c4d8b3076d90bad523d4`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R85: Efficient's rows, the specialization kit bonus, and skill kills for Outsider and Preservation
+
+Base manifest `a96d2739c0551c6eb235544bb4559f9fe7d77a9959a64d2f08cf4578b90b0f88`; overlay plan `ed17283d6c137f26a59b9467ba9fe667db70931fe36b4e626a77a5328c96db6e`; evidence packet `32ede4e0f80e30ed5e220d0bdb702e5ea3591f2db7e9419efe7a58a25ab545e5`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `28e19acfbbe82d9ec7bdf9a191873fb35205a9b36417cbb78afda1a8a550e1ac`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R86: Ignited's skill kills, and Outsider's cooldown per talent
+
+Base manifest `0652247f6ddd43d739dae0bb8bb137620d6837b4e26aca8302ba558ea271df1d`; overlay plan `47b6666ec48c7d140c46fd65d267d65fd092aa337a641ac5bf513464497a8047`; evidence packet `de7f1ac0e90b6f00ca754cc72be71dc678eedc79bfe33315eed967312236a241`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `f9cfdc49dc8da7c34c29560d8830f6de3df05abea5f75a0e82f159cdb3e71d51`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
