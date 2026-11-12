@@ -20,7 +20,7 @@ Talents that depend on several enemies fall into three groups:
 | --- | --- | --- | --- |
 | Counting enemies | Bleeding Edge, Incessant Chatter, Hoarder | A user assumption or a fixed reading | Engine: a count of live enemies. Pack: rules that read it |
 | Switching target | Busy Little Bee, Shakedown, Gangland Hit, Ostracize, Unnerve | Assumption inputs | Engine: a real target choice. Pack: rules |
-| Damage or effects reaching other enemies | Bewildered, Plague of the Outcasts, Regicide, Creeping Death, The Trap, Hostile Negotiations, Indirect Transmission | Bewildered, Plague, Regicide, Creeping Death and The Trap are unmodeled; the others have no talent rule of their own, only set bonuses | Engine: pools and statuses on every enemy. Pack: new rule kinds, so a ShadeTech request |
+| Damage or effects reaching other enemies | Bewildered, Plague of the Outcasts, Regicide, Creeping Death, The Trap, Hostile Negotiations, Indirect Transmission | Bewildered, Plague, Regicide, Creeping Death and The Trap were unmodeled; from 2026-11-10 all five are partial, by ADR 0013's rules and ShadeTech's rows (R88 to R97). The others have no talent rule of their own, only set bonuses | Engine: pools and statuses on every enemy. Pack: new rule kinds, so a ShadeTech request |
 
 ## Proposal
 

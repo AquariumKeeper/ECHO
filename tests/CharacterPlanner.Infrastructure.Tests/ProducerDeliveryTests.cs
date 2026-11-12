@@ -30,16 +30,16 @@ public sealed class ProducerDeliveryTests
     [Fact]
     public void AdoptedDeliveryMatchesItsPinnedManifestAndEveryOutput()
     {
-        Assert.Equal("d8ebcca4ad1de18a9a6aec0a23512cdd1ee164c0cd32ab4e100ebb7c58722c28", Hash(Path.Combine(Pack, "manifest.json")));
-        Assert.Equal("f1e9fc0d964007e2a15975685ea1968b9260075d133a10f27e13210a1fedb37a", Hash(Path.Combine(Delivery, "assembly.json")));
+        Assert.Equal("80b7eaae787c0eb494729c69e075312da309184d952d1eb24e500b1792b82495", Hash(Path.Combine(Pack, "manifest.json")));
+        Assert.Equal("783147ac9e07d193c61e447d176f18ffbc35ddbe2ad0f3056cef4119ddc063f3", Hash(Path.Combine(Delivery, "assembly.json")));
         using var assembly = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Delivery, "assembly.json")));
         Assert.True(assembly.RootElement.GetProperty("complete_pack_assembled").GetBoolean());
         Assert.False(assembly.RootElement.GetProperty("complete_native_source_derivation").GetBoolean());
         var outputs = assembly.RootElement.GetProperty("outputs").EnumerateObject().ToArray();
-        Assert.Equal(39, outputs.Length);
+        Assert.Equal(35, outputs.Length);
         var evidence = outputs.Where(output => output.Name.StartsWith(Evidence, StringComparison.Ordinal)).ToArray();
-        Assert.Equal(14, evidence.Length);
-        Assert.Equal("de7f1ac0e90b6f00ca754cc72be71dc678eedc79bfe33315eed967312236a241",
+        Assert.Equal(10, evidence.Length);
+        Assert.Equal("a6ffd8473df4cf228430e476b2a60c974fd5e89d898bd58dd65b10fcfffafacb",
             evidence.Single(output => output.Name == Evidence + "packet.json").Value.GetProperty("sha256").GetString());
         var adopted = outputs.Except(evidence).ToArray();
         foreach (var output in adopted)
@@ -64,15 +64,15 @@ public sealed class ProducerDeliveryTests
         using var report = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Delivery, "reports", "talent-overlay.json")));
         var root = report.RootElement;
         Assert.True(root.GetProperty("ok").GetBoolean());
-        Assert.Equal("d8ebcca4ad1de18a9a6aec0a23512cdd1ee164c0cd32ab4e100ebb7c58722c28", root.GetProperty("pack_manifest_sha256").GetString());
-        // This sits on the r85 candidate.
-        Assert.Equal("0652247f6ddd43d739dae0bb8bb137620d6837b4e26aca8302ba558ea271df1d", root.GetProperty("base_manifest_sha256").GetString());
+        Assert.Equal("80b7eaae787c0eb494729c69e075312da309184d952d1eb24e500b1792b82495", root.GetProperty("pack_manifest_sha256").GetString());
+        // This sits on the r97 candidate.
+        Assert.Equal("97dede892860c345ed9e58170b3d20c4c09840d4c104ab407f0d32c64ccfe90a", root.GetProperty("base_manifest_sha256").GetString());
         Assert.Equal(Hash(Path.Combine(Delivery, "overlay-plan.json")), root.GetProperty("overlay_plan_sha256").GetString());
-        // R86: Ignited's two rows with also skill_kill, and their coverage.
-        Assert.Equal(4, root.GetProperty("changes").GetArrayLength());
+        // R100: Indirect Transmission's row reading Proliferation's stats, and both talents' coverage.
+        Assert.Equal(3, root.GetProperty("changes").GetArrayLength());
         Assert.True(root.GetProperty("assets_sha256_unchanged").GetBoolean());
         Assert.True(root.GetProperty("presentation_and_share_bytes_unchanged").GetBoolean());
-        // The report counts a coverage edit on a talent as a talent change.
+        // The report counts a coverage edit on a talent as a talent change; no stat moves.
         Assert.True(root.GetProperty("stats_unchanged").GetBoolean());
         Assert.False(root.GetProperty("talent_modifiers_unchanged").GetBoolean());
         Assert.False(root.GetProperty("runtime_verified").GetBoolean());
@@ -104,6 +104,9 @@ public sealed class ProducerDeliveryTests
             var index = rows.Select((row, at) => (row, at)).Single(entry => JsonNode.DeepEquals(entry.row, change["after"])).at;
             if (change["op"]!.GetValue<string>() == "append") { rows.RemoveAt(index); }
             else { rows[index] = change["before"]!.DeepClone(); }
+            // A collection an overlay created (R88 to R91's blasts, spreads and passOns) goes with its last row.
+            var name = change["collection"]!.GetValue<string>();
+            if (rows.Count == 0 && before[name] is null) { adopted.AsObject().Remove(name); }
         }
         Assert.True(JsonNode.DeepEquals(before, adopted), $"{file} changed beyond its overlay's rows");
     }

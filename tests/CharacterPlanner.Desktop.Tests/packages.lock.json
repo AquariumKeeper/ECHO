@@ -339,8 +339,8 @@
       "characterplanner.application": {
         "type": "Project",
         "dependencies": {
-          "CharacterPlanner.Core": "[0.2.0-beta.5, )",
-          "CharacterPlanner.Simulation": "[0.2.0-beta.5, )"
+          "CharacterPlanner.Core": "[0.2.0-beta.6, )",
+          "CharacterPlanner.Simulation": "[0.2.0-beta.6, )"
         }
       },
       "characterplanner.core": {
@@ -353,29 +353,29 @@
           "Avalonia.Desktop": "[12.1.5, )",
           "Avalonia.Fonts.Inter": "[12.1.5, )",
           "Avalonia.Themes.Fluent": "[12.1.5, )",
-          "CharacterPlanner.Application": "[0.2.0-beta.5, )",
-          "CharacterPlanner.Infrastructure": "[0.2.0-beta.5, )",
-          "CharacterPlanner.Legacy": "[0.2.0-beta.5, )",
+          "CharacterPlanner.Application": "[0.2.0-beta.6, )",
+          "CharacterPlanner.Infrastructure": "[0.2.0-beta.6, )",
+          "CharacterPlanner.Legacy": "[0.2.0-beta.6, )",
           "CommunityToolkit.Mvvm": "[8.4.2, )"
         }
       },
       "characterplanner.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "CharacterPlanner.Application": "[0.2.0-beta.5, )",
-          "CharacterPlanner.Core": "[0.2.0-beta.5, )"
+          "CharacterPlanner.Application": "[0.2.0-beta.6, )",
+          "CharacterPlanner.Core": "[0.2.0-beta.6, )"
         }
       },
       "characterplanner.legacy": {
         "type": "Project",
         "dependencies": {
-          "CharacterPlanner.Core": "[0.2.0-beta.5, )"
+          "CharacterPlanner.Core": "[0.2.0-beta.6, )"
         }
       },
       "characterplanner.simulation": {
         "type": "Project",
         "dependencies": {
-          "CharacterPlanner.Core": "[0.2.0-beta.5, )"
+          "CharacterPlanner.Core": "[0.2.0-beta.6, )"
         }
       },
       "Avalonia": {

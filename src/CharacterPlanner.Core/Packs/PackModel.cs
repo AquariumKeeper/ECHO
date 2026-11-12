@@ -628,6 +628,106 @@ public sealed record SimTalentDamageDefinition
 }
 
 /// <summary>
+/// A talent's blast (ADR 0013): on its event, <see cref="Amount"/> damage to each enemy in the group within <see cref="Within"/>
+/// metres of the enemy the event is about (a kill's victim, a hit's target), on that enemy's own pools. Enemies are placed by the
+/// fight's enemySpacing; without it, or with one enemy at a time, a blast finds nobody (Regicide's 400% within 5 m).
+/// </summary>
+public sealed record SimBlastDefinition
+{
+    public string Talent { get; init; } = "";
+    public string On { get; init; } = "";
+    /// <summary>The stat giving each enemy's damage, read as the fight's talent damage totals are; empty for a blast that only marks.</summary>
+    public string Amount { get; init; } = "";
+    /// <summary>
+    /// A stacks rule of the same talent held per enemy (cleared at <c>target_death</c>), which gains a stack on each enemy reached and
+    /// left alive (Unnerve's marks). Empty for none.
+    /// </summary>
+    public string Mark { get; init; } = "";
+    public double Within { get; init; }
+    /// <summary>
+    /// A status the blast puts on each enemy it reaches and leaves alive (Regicide's bleed), for <see cref="StatusDuration"/> seconds
+    /// scaled as the player's own statuses are; it ticks there as any status does. Empty for none.
+    /// </summary>
+    public string Status { get; init; } = "";
+    public double StatusDuration { get; init; }
+    /// <summary>The widest blast, in metres.</summary>
+    public const double MaximumWithin = 50;
+}
+
+/// <summary>
+/// A talent's pass-on (ADR 0013): when an enemy dies with that talent's debuff stacks on it (its talentDamage row), they move to the
+/// nearest living enemy in the group within <see cref="Within"/> metres, keeping their schedules, up to the receiver's stack cap
+/// (Plague of the Outcasts, 25 m). A receiver dying passes them on again.
+/// </summary>
+public sealed record SimPassOnDefinition
+{
+    public string Talent { get; init; } = "";
+    public double Within { get; init; }
+    /// <summary>A stat giving the reach in metres at the fight's start, in place of <see cref="Within"/> (Proliferation's 15 m). Empty for none.</summary>
+    public string WithinStat { get; init; } = "";
+    /// <summary>
+    /// For a status pass-on (Indirect Transmission): the status on the dying enemy that passes on, or "any" for each one on it, in
+    /// place of a debuff. Empty for the talent's debuff.
+    /// </summary>
+    public string Status { get; init; } = "";
+    /// <summary>A status pass-on's share of the status's duration as it went on the dying enemy (Indirect Transmission's 50%).</summary>
+    public double Share { get; init; }
+    /// <summary>A stat giving a status pass-on's share at the fight's start, in place of <see cref="Share"/> (Proliferation's 75%). Empty for none.</summary>
+    public string ShareStat { get; init; } = "";
+    /// <summary>"nearest" (the default) or, for a status, "all" the living enemies in reach.</summary>
+    public string To { get; init; } = "";
+    /// <summary>The farthest pass-on, in metres.</summary>
+    public const double MaximumWithin = 50;
+}
+
+/// <summary>
+/// A talent's spread (ADR 0013): when a status newly goes on the enemy being shot, the same status goes on each enemy in the group
+/// within <see cref="Within"/> metres of it, for what's left of its duration, at most every <see cref="Every"/> seconds (Creeping
+/// Death's 8 m and 15 s). A refresh isn't an application, and a spread status sets off no other.
+/// </summary>
+public sealed record SimSpreadDefinition
+{
+    public string Talent { get; init; } = "";
+    public double Within { get; init; }
+    public double Every { get; init; }
+    /// <summary>The widest spread, in metres.</summary>
+    public const double MaximumWithin = 50;
+}
+
+/// <summary>
+/// A talent's trap (ADR 0013, The Trap): with its weapon in hand, an enemy the player has hit for <see cref="TagAfter"/> seconds is
+/// tagged, up to <see cref="MaxTags"/>, the oldest dropped. A headshot kill while the trap is ready, with another enemy tagged, puts
+/// <see cref="Status"/> on every other tagged enemy for <see cref="StatusDuration"/> seconds, at any distance, clears the tags and
+/// starts a cooldown of <see cref="Every"/> seconds, which each later headshot kill cuts by <see cref="Cut"/>.
+/// </summary>
+public sealed record SimTrapDefinition
+{
+    public string Talent { get; init; } = "";
+    public double TagAfter { get; init; }
+    public int MaxTags { get; init; }
+    public string Status { get; init; } = "";
+    public double StatusDuration { get; init; }
+    public double Every { get; init; }
+    public double Cut { get; init; }
+    /// <summary>The most enemies a trap can tag.</summary>
+    public const int MaximumTags = 10;
+}
+
+/// <summary>
+/// A talent's redirect (ADR 0013, Bewildered): each weapon hit on a living enemy moves <see cref="Share"/> of its damage to another
+/// living enemy within <see cref="Within"/> metres of it, chosen at random, which takes that share as a fixed amount. With nobody
+/// in reach the hit lands whole.
+/// </summary>
+public sealed record SimRedirectDefinition
+{
+    public string Talent { get; init; } = "";
+    public double Share { get; init; }
+    public double Within { get; init; }
+    /// <summary>The widest redirect, in metres.</summary>
+    public const double MaximumWithin = 50;
+}
+
+/// <summary>
 /// A numeric assumption whose default follows the distance (the enemy hit rate, P12): in a fight with a set distance, or for
 /// each target with target distances, an input the user hasn't set takes the value of the first band whose <see cref="SimDistanceBand.UpTo"/> reaches the
 /// distance, or the last band's beyond them all.
@@ -666,6 +766,14 @@ public sealed record SimulationRules
     public ImmutableArray<SimSkillDefinition> Skills { get; init; } = [];
     public ImmutableArray<SimStatusDamageDefinition> StatusDamage { get; init; } = [];
     public ImmutableArray<SimTalentDamageDefinition> TalentDamage { get; init; } = [];
+    /// <summary>Talents' blasts on other enemies (ADR 0013).</summary>
+    public ImmutableArray<SimBlastDefinition> Blasts { get; init; } = [];
+    /// <summary>Talents' status spreads to other enemies (ADR 0013).</summary>
+    public ImmutableArray<SimSpreadDefinition> Spreads { get; init; } = [];
+    public ImmutableArray<SimRedirectDefinition> Redirects { get; init; } = [];
+    public ImmutableArray<SimTrapDefinition> Traps { get; init; } = [];
+    /// <summary>Talents' debuffs passing on at a death (ADR 0013).</summary>
+    public ImmutableArray<SimPassOnDefinition> PassOns { get; init; } = [];
     public ImmutableArray<SimDistanceDefault> DistanceDefaults { get; init; } = [];
     public SimArmorKit? ArmorKit { get; init; }
 }

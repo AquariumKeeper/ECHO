@@ -174,7 +174,8 @@ public sealed class TimedBuffState
                 RequiresContext = rule.Kind is "buff" or "ready" && rule.On.Length > 0 ? null : rule.RequiresContext
             };
             if (rule.Kind is not ("buff" or "stacks" or "ready" or "lockout") || rule.Key.Length == 0 || rule.Talent.Length == 0 ||
-                rule.On.Length == 0 && rule.GainWhileHolstered == 0 || !double.IsFinite(rule.GainWhileHolstered) || rule.GainWhileHolstered < 0 ||
+                rule.On.Length == 0 && rule.GainWhileHolstered == 0 && !(isStack && (rule.ResetOn == "target_death" || rule.ConsumeOn == "target_death")) ||
+                !double.IsFinite(rule.GainWhileHolstered) || rule.GainWhileHolstered < 0 ||
                 !double.IsFinite(rule.Duration) || rule.Duration < 0 || !rule.Phases.IsEmpty || rest != new SimTriggerDefinition() ||
                 !double.IsFinite(rule.Every) || rule.Every < 0 || rule.Count < 0 || rule.EveryGroup.Length > 0 && (rule.Every <= 0 || rule.Kind == "lockout") ||
                 rule.WhileStatus.Length > 0 && rule.WhileStatus != "any" && !StatusTriggerState.Names.Contains(rule.WhileStatus) ||
@@ -281,6 +282,58 @@ public sealed class TimedBuffState
             }
             holsteredSince[index] = time;
         }
+    }
+
+    /// <summary>
+    /// A blast's mark (ADR 0013, Unnerve): the rule's gain of a rule held per enemy goes on <paramref name="marks"/>' enemy, as the rule's
+    /// own gains do (purged, decayed, refreshed, capped); then <paramref name="shot"/>'s enemy is held again, whatever happens. False when
+    /// this fight has no such rule (its context gate is closed), so nothing is marked.
+    /// </summary>
+    public bool Mark(EnemyMarks marks, EnemyMarks shot, string key, double time)
+    {
+        ArgumentNullException.ThrowIfNull(marks);
+        ArgumentNullException.ThrowIfNull(shot);
+        var index = onEnemy.FirstOrDefault(entry => rules[entry].Key == key && rules[entry].Kind == "stacks", -1);
+        if (index < 0) { return false; }
+        var rule = rules[index];
+        if (rule.Pool.Length > 0) { throw new SimulationException("trigger-unsupported", $"A blast's mark {key} can't be a pooled rule"); }
+        HoldEnemy(marks, time);
+        try
+        {
+            // Only the enemy being shot counts toward uptime, so the marked enemy's time before now isn't measured.
+            measuredAt[key] = Math.Max(time, clock);
+            var until = rule.Duration == 0 ? double.PositiveInfinity : time + rule.Duration;
+            if (!(until > time)) { throw new SimulationException("trigger-time-invalid", "A mark's expiry cannot advance time"); }
+            stacks[key] = Gained(rule, [.. stacks[key].Where(expiry => expiry > time)], caps[index], Math.Max(1, rule.Gain), until, out _);
+        }
+        finally { HoldEnemy(shot, time); }
+        return true;
+    }
+
+    // A stacks rule's gain on live stacks: emptied when a purging rule is full, else decayed, or refreshed and capped.
+    private static List<double> Gained(SimTriggerDefinition rule, List<double> values, long cap, long gain, double until, out bool purged)
+    {
+        purged = rule.Purge && values.Count >= cap;
+        if (purged) { return []; }
+        var gained = (int)Math.Min(cap, gain);
+        if (rule.Decay > 0)
+        {
+            var count = Math.Min((int)cap, values.Count + gained);
+            values = [];
+            for (var stack = 1; stack <= count; stack++)
+            {
+                var expiry = until + stack / rule.Decay;
+                if (!double.IsFinite(expiry) || expiry <= (values.Count == 0 ? until : values[^1]))
+                { throw new SimulationException("trigger-time-invalid", "Stack decay deadlines cannot advance time"); }
+                values.Add(expiry);
+            }
+            return values;
+        }
+        if (rule.Refresh) { values = [.. values.Select(_ => until)]; }
+        var remove = Math.Max(0, values.Count + gained - (int)cap);
+        if (remove > 0) { values.RemoveRange(0, remove); }
+        values.AddRange(Enumerable.Repeat(until, gained));
+        return values;
     }
 
     /// <summary>The enemy whose marks these rules now read and write. Uptime is settled here, so it counts the enemy being shot.</summary>
@@ -459,34 +512,8 @@ public sealed class TimedBuffState
             // A buff or ready rule's grant comes with each firing (a ready rule on cooldown never gets here).
             if (rule.Grant.Length > 0) { granted.Add(new(rule.Grant, rule.GrantAmount, rule.GrantDuration, time, rule.GrantHoldDelay)); }
             if (rule.Kind != "stacks") { nextDeadlines[index] = until; continue; }
-            var values = stackUpdates.GetValueOrDefault(rule.Key, stacks[rule.Key]).Where(expiry => expiry > time).ToList();
-            var cap = caps[index];
-            if (rule.Purge && values.Count >= cap)
-            {
-                stackUpdates[rule.Key] = [];
-                Array.Clear(nextAlso[index]);
-                continue;
-            }
-            var gained = (int)Math.Min(cap, gain);
-            if (rule.Decay > 0)
-            {
-                var count = Math.Min((int)cap, values.Count + gained);
-                values = [];
-                for (var stack = 1; stack <= count; stack++)
-                {
-                    var expiry = until + stack / rule.Decay;
-                    if (!double.IsFinite(expiry) || expiry <= (values.Count == 0 ? until : values[^1]))
-                    { throw new SimulationException("trigger-time-invalid", "Stack decay deadlines cannot advance time"); }
-                    values.Add(expiry);
-                }
-                stackUpdates[rule.Key] = values;
-                continue;
-            }
-            if (rule.Refresh) { values = [.. values.Select(_ => until)]; }
-            var remove = Math.Max(0, values.Count + gained - (int)cap);
-            if (remove > 0) { values.RemoveRange(0, remove); }
-            values.AddRange(Enumerable.Repeat(until, gained));
-            stackUpdates[rule.Key] = values;
+            stackUpdates[rule.Key] = Gained(rule, [.. stackUpdates.GetValueOrDefault(rule.Key, stacks[rule.Key]).Where(expiry => expiry > time)], caps[index], gain, until, out var purged);
+            if (purged) { Array.Clear(nextAlso[index]); }
         }
         // Pool caps apply after all gains from this event, using only live stacks.
         foreach (var members in pools.Values)

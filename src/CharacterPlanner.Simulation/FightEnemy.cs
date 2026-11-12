@@ -11,9 +11,10 @@ internal sealed class FightEnemy
     private readonly double fullArmor;
     private readonly double fullHealth;
 
-    public FightEnemy(int place, int profile, double? distance, double fullArmor, double fullHealth, double arrivedAt, int attackers, IEnumerable<string> slots, StatusDamageState? dots)
+    public FightEnemy(int place, int profile, double? distance, double fullArmor, double fullHealth, double arrivedAt, int attackers, IEnumerable<string> slots, StatusDamageState? dots,
+        bool reached = true)
     {
-        (Place, Profile, Distance, ArrivedAt, this.fullArmor, this.fullHealth, Dots) = (place, profile, distance, arrivedAt, fullArmor, fullHealth, dots);
+        (Place, Profile, Distance, ArrivedAt, this.fullArmor, this.fullHealth, Dots, Reached) = (place, profile, distance, arrivedAt, fullArmor, fullHealth, dots, reached);
         pool = new(fullArmor, fullHealth);
         Shock = new(attackers);
         PelletHits = slots.ToDictionary(slot => slot, _ => 0, StringComparer.Ordinal);
@@ -40,8 +41,24 @@ internal sealed class FightEnemy
 
     public double? Distance { get; }
 
-    /// <summary>When the player first reached it, which time to kill counts from.</summary>
-    public double ArrivedAt { get; }
+    /// <summary>
+    /// When the player first reached it, which time to kill counts from. For one a blast made before the player came (ADR 0013), when
+    /// it was made, until the player reaches it.
+    /// </summary>
+    public double ArrivedAt { get; private set; }
+
+    /// <summary>Whether the player has reached it; false for one a blast made while it waited.</summary>
+    public bool Reached { get; private set; }
+
+    /// <summary>The player reaches it: time to kill counts from now, unless it was reached before.</summary>
+    public void Reach(double at)
+    {
+        if (Reached) { return; }
+        (ArrivedAt, Reached) = (at, true);
+    }
+
+    /// <summary>Whether this is <see cref="Between"/>'s nobody rather than an enemy.</summary>
+    public bool Placeholder => pool is null;
 
     public ShockFireState Shock { get; }
     public TargetStatuses Statuses { get; } = new();

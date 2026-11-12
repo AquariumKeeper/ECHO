@@ -4,7 +4,7 @@
   <ScrollViewer DataContext="{Binding Simulate}">
     <StackPanel x:DataType="vm:SimulateViewModel" Spacing="8" MaxWidth="720" HorizontalAlignment="Left">
       <TextBlock Name="SimulateStatus" Text="{Binding Status}" AutomationProperties.LiveSetting="Polite" TextWrapping="Wrap" Classes="label" Classes.error="{Binding HasProblem}" />
-      <Grid ColumnDefinitions="Auto,240" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+      <Grid ColumnDefinitions="Auto,240" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
         <TextBlock Text="Fight length (s)" VerticalAlignment="Center" />
         <TextBox Grid.Column="1" Name="FightLengthBox" Text="{Binding FightLength}" AutomationProperties.Name="Fight length (s)" />
         <TextBlock Grid.Row="1" Text="Fights" VerticalAlignment="Center" />
@@ -54,12 +54,16 @@
         <TextBox Grid.Row="14" Grid.Column="1" Name="FocusSecondsBox" Text="{Binding FocusSeconds}" PlaceholderText="until it dies"
                  AutomationProperties.Name="Time on each enemy (s)"
                  ToolTip.Tip="With Enemies at once: how long you shoot an enemy, 0.1 to 60 seconds, before moving to the next one still alive, which takes 1 s more. Enemies keep what's on them, so burns and bleeds keep ticking on those you left. A move waits for a reload and, in cover, for the next peek. With no default: this is your assumption about how you play" />
-        <TextBlock Grid.Row="15" Text="Armor kits" VerticalAlignment="Center" />
-        <TextBox Grid.Row="15" Grid.Column="1" Name="ArmorKitsBox" Text="{Binding ArmorKits}" PlaceholderText="none"
+        <TextBlock Grid.Row="15" Text="Enemy spacing (m)" VerticalAlignment="Center" />
+        <TextBox Grid.Row="15" Grid.Column="1" Name="EnemySpacingBox" Text="{Binding EnemySpacing}" PlaceholderText="none"
+                 AutomationProperties.Name="Enemy spacing (m)"
+                 ToolTip.Tip="With Enemies at once: the meters between neighbouring enemies, 0.5 to 50, standing on a line in group order. Talents whose effects reach other enemies (a blast, a spread or a pass-on, such as Regicide's) use it; without it they reach nobody, and the result says so. With no default: this is your assumption" />
+        <TextBlock Grid.Row="16" Text="Armor kits" VerticalAlignment="Center" />
+        <TextBox Grid.Row="16" Grid.Column="1" Name="ArmorKitsBox" Text="{Binding ArmorKits}" PlaceholderText="none"
                  AutomationProperties.Name="Armor kits"
                  ToolTip.Tip="The armor kits you carry, 1 to 10, with no refills. A kit stops your weapon while it's used, and hits make that longer; going down cancels it. Needs incoming fire and talent triggers, and Use a kit below. A build with Survivalist, Firewall or Hackstep Protocol, which replace the kit, is refused" />
-        <TextBlock Grid.Row="16" Text="Use a kit below (% armor)" VerticalAlignment="Center" />
-        <TextBox Grid.Row="16" Grid.Column="1" Name="ArmorKitAtPercentBox" Text="{Binding ArmorKitAtPercent}" PlaceholderText="none"
+        <TextBlock Grid.Row="17" Text="Use a kit below (% armor)" VerticalAlignment="Center" />
+        <TextBox Grid.Row="17" Grid.Column="1" Name="ArmorKitAtPercentBox" Text="{Binding ArmorKitAtPercent}" PlaceholderText="none"
                  AutomationProperties.Name="Use a kit below (% armor)"
                  ToolTip.Tip="A kit is used when armor is below this share of its maximum, 1 to 100, at the weapon's next decision. With a cover cycle it waits for cover, ahead of that phase's reload. Needed with kits, with no default: this is your assumption" />
       </Grid>
@@ -93,6 +97,23 @@
       <CheckBox Name="IncomingBox" Content="{x:Static vm:SimulateViewModel.IncomingLabel}" IsChecked="{Binding Incoming}" />
       <CheckBox Content="Drive talent triggers" IsChecked="{Binding DriveBuffs}" />
       <CheckBox Content="Include damaging skills" IsChecked="{Binding IncludeSkills}" />
+      <ItemsControl Name="SkillUseRows" ItemsSource="{Binding SkillUses}" IsVisible="{Binding IncludeSkills}" Margin="24,0,0,0">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:SkillUseViewModel">
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,2">
+              <TextBlock Text="{Binding Label}" VerticalAlignment="Center" MinWidth="160" />
+              <ComboBox ItemsSource="{Binding WhenChoices}" SelectedItem="{Binding When}" Width="260" AutomationProperties.Name="{Binding Label}"
+                        ToolTip.Tip="When the skill is used once it's ready. A held skill's cooldown starts when it's used. This is your assumption about how you play" />
+              <TextBox Text="{Binding Value}" PlaceholderText="{Binding ValueHint}" Width="90" IsVisible="{Binding TakesValue}"
+                       AutomationProperties.Name="{Binding ValueHint}" />
+              <ComboBox ItemsSource="{Binding Keys}" SelectedItem="{Binding Key}" Width="260" IsVisible="{Binding TakesKey}"
+                        AutomationProperties.Name="Talent rule" ToolTip.Tip="A key your selected talents' rules drive; the skill waits while it's off">
+                <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:Choice"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
       <CheckBox Content="Include frontal shield" IsChecked="{Binding IncludeShield}" />
       <CheckBox Name="EnemiesShrinkBox" Content="Enemies run out" IsChecked="{Binding EnemiesShrink}"
                 ToolTip.Tip="With Enemies at once: Targets to clear says how many enemies there are in all. The next joins until none are left, then fire falls with each kill" />

@@ -1056,6 +1056,183 @@ public sealed partial class DummyWeaponSimulatorTests
         Assert.True(plague.TotalDps!.Mean > without.TotalDps!.Mean);
     }
 
+    [Fact]
+    public void CommittedReachingRowsAreTheR88ToR91AndR100Values()
+    {
+        // ShadeTech's R88 to R91 candidate: Regicide's 400% blast within 5 m of a headshot kill, with no bleed; the two Creeping Deaths'
+        // spreads; Plague's pass-on within 25 m; Indirect Transmission's statuses to all in reach for a share of their duration, both read
+        // from the four-piece stats: 10 m and half, or 15 m and three quarters with Proliferation (R100).
+        var pack = CommittedPack().Pack;
+        var blast = Assert.Single(pack.Simulation.Blasts, rule => rule.Talent == "weapon_talent_regicide");
+        Assert.Equal(("weapon_talent_regicide", "headshot_kill", "regicide_blast_damage", 5.0, "", ""), (blast.Talent, blast.On, blast.Amount, blast.Within, blast.Status, blast.Mark));
+        Assert.Equal("4 * equipped_weapon_damage / equipped_weapon_pellets", pack.Stats.Single(stat => stat.ID == blast.Amount).Formula);
+        Assert.Equal([("gear_talent_creeping_death", 8.0, 15.0), ("gear_talent_perfect_creeping_death", 10.0, 10.0)],
+            pack.Simulation.Spreads.Select(spread => (spread.Talent, spread.Within, spread.Every)));
+        Assert.Equal([("weapon_talent_plague_of_the_outcasts", 25.0, "", "", 0.0, "", ""),
+            ("gear_talent_indirect_transmission", 0.0, "indirect_transmission_radius", "any", 0.0, "indirect_transmission_refresh", "all")],
+            pack.Simulation.PassOns.Select(passOn => (passOn.Talent, passOn.Within, passOn.WithinStat, passOn.Status, passOn.Share, passOn.ShareStat, passOn.To)));
+        foreach (var talent in new[] { "weapon_talent_regicide", "gear_talent_creeping_death", "gear_talent_perfect_creeping_death", "weapon_talent_plague_of_the_outcasts",
+            "gear_talent_indirect_transmission" })
+        { Assert.Equal("partial", pack.Talents.Single(entry => entry.ID == talent).Coverage!.Status); }
+        Assert.Equal("complete", pack.Talents.Single(entry => entry.ID == "gear_talent_proliferation").Coverage!.Status);
+    }
+
+    [Fact]
+    public void CommittedUnnerveMarksAreTheR92Values()
+    {
+        // ShadeTech's R92 candidate: a kill with the Strega marks each enemy within 20 m, up to 5 marks held per enemy for 10 s from
+        // the last, and each mark adds 15% to the player's shots on it.
+        var pack = CommittedPack().Pack;
+        var mark = Assert.Single(pack.Simulation.Blasts, rule => rule.Talent == "weapon_talent_unnerve");
+        Assert.Equal(("kill", "", 20.0, "unnerve_marks"), (mark.On, mark.Amount, mark.Within, mark.Mark));
+        var rule = Assert.Single(pack.Simulation.Triggers, entry => entry.Talent == mark.Talent);
+        Assert.Equal(("unnerve_marks", "stacks", "", 5L, 10.0, true, "target_death"), (rule.Key, rule.Kind, rule.On, rule.Max, rule.Duration, rule.Refresh, rule.ResetOn));
+        Assert.Equal("partial", pack.Talents.Single(entry => entry.ID == mark.Talent).Coverage!.Status);
+        Assert.Equal(0, pack.Stats.Single(stat => stat.ID == "regicide_blast_damage").Min);
+    }
+
+    [Fact]
+    public void CommittedTheTrapSpringsOnlyWhenThePlayerMovesBetweenEnemies()
+    {
+        // ShadeTech's R97 candidate: The Trap tags after 0.5 s of hits, up to 10, and a headshot kill burns the other tags for 10 s,
+        // then waits 30 s, cut 10 s per headshot kill.
+        var pack = CommittedPack();
+        var row = Assert.Single(pack.Pack.Simulation.Traps);
+        Assert.Equal(("weapon_talent_the_trap", 0.5, 10, "burning", 10.0, 30.0, 10.0), (row.Talent, row.TagAfter, row.MaxTags, row.Status, row.StatusDuration, row.Every, row.Cut));
+        Assert.Equal("partial", pack.Pack.Talents.Single(entry => entry.ID == row.Talent).Coverage!.Status);
+        var build = Equip(pack.Pack, "primary_weapon_sacrum_imperium");
+        DummyFightResult Fight(double? focus) => DummyWeaponSimulator.RunAgainstTargets(pack, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("practical_headshot_share", "30")
+                .Add("enemy_target", "1").Add("enemy_difficulty", "4").Add("enemy_hit_rate", "0"),
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, EnemiesAtOnce = 4, FocusSeconds = focus, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        // Shooting each enemy until it dies tags only the one being shot, so it never springs; moving every second, it does.
+        Assert.DoesNotContain(Fight(null).FirstFightEvents, entry => entry.Kind == DummyEventKind.TrapSprung);
+        var moving = Fight(1);
+        Assert.Contains(moving.FirstFightEvents, entry => entry.Kind == DummyEventKind.TrapSprung);
+        // And the burns it puts on the other tags tick.
+        var sprung = moving.FirstFightEvents.First(entry => entry.Kind == DummyEventKind.TrapSprung).Time;
+        Assert.Contains(moving.FirstFightEvents, entry => entry.Kind == DummyEventKind.BurnTick && entry.Time > sprung);
+    }
+
+    [Fact]
+    public void CommittedBewilderedRedirectsHalfOfEachHitWithin30M()
+    {
+        // ShadeTech's R95-R96 candidate: half of each weapon hit goes to a random enemy within 30 m of the one hit.
+        var pack = CommittedPack();
+        var row = Assert.Single(pack.Pack.Simulation.Redirects);
+        Assert.Equal(("gear_talent_bewildered", 0.5, 30.0), (row.Talent, row.Share, row.Within));
+        Assert.Equal("partial", pack.Pack.Talents.Single(entry => entry.ID == row.Talent).Coverage!.Status);
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(row.Talent)));
+        var build = BuildSnapshot.Create(pack.Pack).WithEquipment("primary_weapon", "primary_weapon_acr").WithEquipment(item.Slot, item.ID)
+            .WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(row.Talent)).ID, row.Talent);
+        // At 20 m the next enemy is in reach and takes shares; at 31 m nobody is, and with no spacing nothing moves.
+        Assert.Contains(ReachingFight(pack, build, "primary_weapon", 20).FirstFightEvents, entry => entry.Kind == DummyEventKind.DamageRedirected);
+        Assert.DoesNotContain(ReachingFight(pack, build, "primary_weapon", 31).FirstFightEvents, entry => entry.Kind == DummyEventKind.DamageRedirected);
+        var unspaced = ReachingFight(pack, build, "primary_weapon", null);
+        Assert.DoesNotContain(unspaced.FirstFightEvents, entry => entry.Kind == DummyEventKind.DamageRedirected);
+        // A redirect moves damage, not adds it: out of reach the fight is the unspaced one.
+        Assert.Equal(unspaced.TotalDps!.Mean, ReachingFight(pack, build, "primary_weapon", 31).TotalDps!.Mean, 6);
+    }
+
+    [Fact]
+    public void CommittedUnnerveFightsReadTheirOwnMarksNotTheAssumption()
+    {
+        // The marks are now driven, so a driven fight ignores the "Unnerve Target Marks" assumption: with one enemy at a time nobody is
+        // marked, whatever the assumption says. A fight without talent triggers still reads it, as static comparisons do.
+        var pack = CommittedPack();
+        var build = Equip(pack.Pack, "primary_weapon_strega");
+        double Fight(string marks, bool driven) => DummyWeaponSimulator.RunAgainstTargets(pack, build,
+            Context.Add("practical_hit_rate", "100").Add("enemy_target", "1").Add("enemy_difficulty", "4").Add("unnerve_marks", marks),
+            new() { Duration = 30, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = driven },
+            cancellationToken: TestContext.Current.CancellationToken).TotalDps!.Mean;
+        Assert.Equal(Fight("0", driven: true), Fight("5", driven: true), 6);
+        // Unnerve is on the build: without talent triggers, five assumed marks raise the damage.
+        Assert.True(Fight("5", driven: false) > Fight("0", driven: false));
+    }
+
+    // ShadeTech's R88 to R91 setup, shortened to two fights of 60 s: four enemies at once with no enemy hits, 100% hits, 30% headshots,
+    // difficulty 4, against the lightest enemy so kills come often.
+    private static DummyFightResult ReachingFight(CompiledPackExpressions pack, BuildSnapshot build, string weapon, double? spacing) =>
+        DummyWeaponSimulator.RunAgainstTargets(pack, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, weapon).Add("practical_hit_rate", "100").Add("practical_headshot_share", "30").Add("enemy_target", "1").Add("enemy_difficulty", "4").Add("enemy_hit_rate", "0"),
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, EnemiesAtOnce = 4, EnemySpacing = spacing, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+
+    public static TheoryData<string, string[], DummyEventKind?, double> ReachingTalents => new()
+    {
+        // Each reaches a neighbour at 3 m. Regicide's 5 m reaches none at 6 m, Plague's 25 m none at 30 m, Creeping Death's 8 m none at
+        // 9 m, Perfect Creeping Death's 10 m none at 11 m, and Indirect Transmission with the chest's Proliferation, 15 m (R100), none at
+        // 16 m. A spread records no event of its own.
+        { "weapon_talent_regicide", ["sidearm_regulus"], DummyEventKind.TalentBlast, 6 },
+        { "weapon_talent_plague_of_the_outcasts", ["primary_weapon_pestilence"], DummyEventKind.DebuffPassedOn, 30 },
+        { "gear_talent_indirect_transmission", ["mask_eclipse_protocol_mask", "chest_eclipse_protocol_chest", "gloves_eclipse_protocol_gloves", "holster_eclipse_protocol_holster"], DummyEventKind.StatusPassedOn, 16 },
+        { "gear_talent_perfect_creeping_death", ["backpack_the_courier"], null, 11 },
+        { "gear_talent_creeping_death", [], null, 9 },
+        // Unnerve's 20 m reaches none at 21 m.
+        { "weapon_talent_unnerve", ["primary_weapon_strega"], DummyEventKind.EnemyMarked, 21 },
+    };
+
+    [Theory]
+    [MemberData(nameof(ReachingTalents))]
+    public void CommittedReachingTalentsRaiseDamageOnlyWithANeighbourInReach(string talent, string[] items, DummyEventKind? kind, double outOfReach)
+    {
+        var pack = CommittedPack();
+        var build = Equip(pack.Pack, items);
+        if (items.Length == 0)
+        {
+            // A gear talent with no fixed item goes on the first item offering it.
+            var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(talent)));
+            build = build.WithEquipment(item.Slot, item.ID).WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(talent)).ID, talent);
+        }
+        var slot = items.Length == 0 ? "" : pack.Pack.Items.Single(item => item.ID == items[0]).Slot;
+        var weapon = pack.Pack.Slots.Any(entry => entry.ID == slot && entry.Weapon) ? slot : "primary_weapon";
+        // The gear talents ride on an ACR with Ignited, for statuses to spread and pass on.
+        if (weapon != slot) { build = build.WithEquipment("primary_weapon", "primary_weapon_acr").WithTalentSelection("primary_weapon", "talent", "weapon_talent_ignited"); }
+        var near = ReachingFight(pack, build, weapon, 3);
+        var far = ReachingFight(pack, build, weapon, outOfReach);
+        var unspaced = ReachingFight(pack, build, weapon, null);
+        Assert.True(near.TotalDps!.Mean > unspaced.TotalDps!.Mean, talent);
+        Assert.Equal(unspaced.TotalDps.Mean, far.TotalDps!.Mean, 6);
+        // The gain is the talent's own row's: without it, the spaced fight is the unspaced one.
+        var simulation = pack.Pack.Simulation;
+        var rowless = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        {
+            Simulation = simulation with
+            {
+                Blasts = [.. simulation.Blasts.Where(rule => rule.Talent != talent)],
+                Spreads = [.. simulation.Spreads.Where(rule => rule.Talent != talent)],
+                PassOns = [.. simulation.PassOns.Where(rule => rule.Talent != talent)]
+            }
+        }).Compiled);
+        Assert.Equal(unspaced.TotalDps.Mean, ReachingFight(rowless, build, weapon, 3).TotalDps!.Mean, 6);
+        if (kind is { } reached)
+        {
+            Assert.Contains(near.FirstFightEvents, entry => entry.Kind == reached);
+            Assert.DoesNotContain(far.FirstFightEvents, entry => entry.Kind == reached);
+        }
+        Assert.Contains(unspaced.Limitations, note => note.Contains("enemy spacing", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void CommittedProliferationPassesOnWithinFifteenMetres()
+    {
+        // R100: with the Eclipse Protocol chest's Proliferation, Indirect Transmission reaches a neighbour 12 m away. Four pieces without
+        // the chest keep the 10 m, and reach nobody there.
+        var pack = CommittedPack();
+        BuildSnapshot Wearing(string[] items) => Equip(pack.Pack, items)
+            .WithEquipment("primary_weapon", "primary_weapon_acr").WithTalentSelection("primary_weapon", "talent", "weapon_talent_ignited");
+        var chest = Wearing(["mask_eclipse_protocol_mask", "chest_eclipse_protocol_chest", "gloves_eclipse_protocol_gloves", "holster_eclipse_protocol_holster"]);
+        var at12 = ReachingFight(pack, chest, "primary_weapon", 12);
+        Assert.Contains(at12.FirstFightEvents, entry => entry.Kind == DummyEventKind.StatusPassedOn);
+        Assert.True(at12.TotalDps!.Mean > ReachingFight(pack, chest, "primary_weapon", null).TotalDps!.Mean);
+        var noChest = Wearing(["mask_eclipse_protocol_mask", "backpack_eclipse_protocol_backpack", "gloves_eclipse_protocol_gloves", "holster_eclipse_protocol_holster"]);
+        Assert.Contains(ReachingFight(pack, noChest, "primary_weapon", 3).FirstFightEvents, entry => entry.Kind == DummyEventKind.StatusPassedOn);
+        var noChestAt12 = ReachingFight(pack, noChest, "primary_weapon", 12);
+        Assert.DoesNotContain(noChestAt12.FirstFightEvents, entry => entry.Kind == DummyEventKind.StatusPassedOn);
+        Assert.Equal(ReachingFight(pack, noChest, "primary_weapon", null).TotalDps!.Mean, noChestAt12.TotalDps!.Mean, 6);
+    }
+
     [Theory]
     [InlineData("gear_talent_tag_team", 6.0)]
     [InlineData("gear_talent_perfect_tag_team", 12.0)]

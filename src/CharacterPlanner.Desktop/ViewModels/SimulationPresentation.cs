@@ -7,13 +7,26 @@ public static class SimulationPresentation
     public static double ProgressFraction(SimulationProgress progress) => progress.TotalFights <= 0 ? 0 :
         Math.Clamp((double)progress.CompletedFights / progress.TotalFights, 0, 1);
 
-    public static string Summary(DummyFightResult fight)
+    /// <summary>
+    /// The result's summary lines. <paramref name="skillSlots"/> names the pack's skill slots in order, for the slots a "Use when" held
+    /// (ADR 0014); a slot it doesn't name shows its ID.
+    /// </summary>
+    public static string Summary(DummyFightResult fight, IReadOnlyList<(string Slot, string Name)>? skillSlots = null)
     {
         var text = $"Weapon DPS: {fight.WeaponDps.Mean:N0}\nTotal DPS: {(fight.TotalDps is { } total ? total.Mean.ToString("N0", System.Globalization.CultureInfo.CurrentCulture) : "Unavailable")}\nShots/fight: {fight.ShotsFired:N1} · Kills/fight: {fight.Kills:N1}";
         if (fight.SkillDps is { } skill)
         {
             text += $"\n{SimulationMetricLabels.SkillTotal}: {skill.Total.Mean:N0}";
             text += $"\n{SimulationMetricLabels.SkillImpact}: {skill.Impact.Mean:N0} · {SimulationMetricLabels.SkillContinuousWindow}: {skill.ContinuousWindow.Mean:N0}";
+        }
+        // Each slot with a "Use when": how often its skill was used, and how long it waited while ready.
+        var named = (skillSlots ?? []).DistinctBy(entry => entry.Slot, StringComparer.Ordinal).ToArray();
+        var known = named.Select(entry => entry.Slot).ToHashSet(StringComparer.Ordinal);
+        foreach (var (slot, name) in named.Where(entry => fight.SkillUses.ContainsKey(entry.Slot))
+            .Concat(fight.SkillUses.Keys.Where(slot => !known.Contains(slot)).Order(StringComparer.Ordinal).Select(slot => (slot, slot))))
+        {
+            var use = fight.SkillUses[slot];
+            text += $"\n{name} uses/fight: {use.Uses:N2} · Held while ready: {use.HeldSeconds:N1} s/fight";
         }
         if (fight.StatusDps is { } status) { text += $"\n{SimulationMetricLabels.Status}: {status.Mean:N0}"; }
         if (fight.TalentDps is { } talent) { text += $"\n{SimulationMetricLabels.Talent}: {talent.Mean:N0}"; }

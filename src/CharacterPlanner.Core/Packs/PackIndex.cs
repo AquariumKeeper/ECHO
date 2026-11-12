@@ -40,7 +40,7 @@ internal sealed class PackIndex
         });
         ruledSetTalents = new(() =>
         {
-            var ruled = pack.Simulation.Triggers.Select(rule => rule.Talent).Concat(pack.Simulation.TalentDamage.Select(rule => rule.Talent)).ToHashSet(StringComparer.Ordinal);
+            var ruled = pack.Simulation.Triggers.Select(rule => rule.Talent).Concat(pack.Simulation.TalentDamage.Select(rule => rule.Talent)).Concat(pack.Simulation.Blasts.Select(rule => rule.Talent)).Concat(pack.Simulation.Spreads.Select(rule => rule.Talent)).Concat(pack.Simulation.PassOns.Select(rule => rule.Talent)).Concat(pack.Simulation.Redirects.Select(rule => rule.Talent)).Concat(pack.Simulation.Traps.Select(rule => rule.Talent)).ToHashSet(StringComparer.Ordinal);
             return [.. SlotlessSetTalents.Where(talent => ruled.Contains(talent.ID))];
         });
         activeSkills = new(() => pack.ActiveSkills.ToFrozenDictionary(skill => skill.ID, StringComparer.Ordinal));

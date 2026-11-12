@@ -1,4 +1,4 @@
-Character Planner 0.2.0-beta.5 — tester release
+Character Planner 0.2.0-beta.6 — tester release
 
 To start, double-click CharacterPlanner.Desktop.exe. It opens the build editor; its
 Simulate tab runs combat simulations against targets, with optional enemy fire,
@@ -26,34 +26,57 @@ original slot images by Shade-Tech contributors (MIT); the app draws its own sym
 for talents, skills, specializations and items. release-manifest.json lists every
 file in this archive with its SHA-256.
 
-New since 0.2.0-beta.4:
-- A tree view for allocating specialization nodes, laid out as the game does, with
-  each node's artwork.
-- Prototype items show in the game's Prototype colour, and Exotics in the game's
-  orange.
-- If something goes wrong in the window, it reports it and stays open.
+New since 0.2.0-beta.5:
+- Enemy spacing (m) on the Simulate tab, under Time on each enemy: with Enemies at
+  once, the metres between neighbouring enemies standing on a line. Talents whose
+  effects reach other enemies use it; without it they reach nobody, and the result
+  says so. It's your assumption about the fight.
+- A "Use ... when" row for each skill slot on the Simulate tab, shown once Include
+  damaging skills is ticked. Instead of using the skill the moment it's ready, it's
+  used only while a talent rule of your build is on (with Drive talent triggers),
+  after a time into the fight, or while at least a number of enemies are alive (with
+  Enemies at once, and no more than it); until then it waits. The summary shows each
+  such skill's uses per fight and how long it waited. It's your assumption about how
+  you play. The command-line version has the same as its "skillUse" option; CLI.md
+  has the details.
 
-Changes since 0.2.0-beta.4 that move fight results, each only for builds with the
+Changes since 0.2.0-beta.5 that move fight results, each only for builds with the
 talent:
-- Skilled resets skill cooldowns on a skill kill, by chance. With no cooldown
-  running, the reset waits and lands 1 s after the next starts, so turret, hive
-  and Sticky Bomb builds gain too.
-- Calculated takes time off skill cooldowns on a kill in cover.
-- Tag Team cuts the skill cooldown when a weapon hit follows a skill hit.
-- Plague of the Outcasts stacks its debuff on every hit.
-- Efficient keeps a used armor kit by chance, from 10 s into a fight, and doubles
-  the specialization kit bonuses (Gunner's bonus armor, Demolitionist's and
-  Sharpshooter's kit buffs).
-- Outsider, Preservation and Ignited count a skill's kill as well as the weapon's,
-  while the weapon is in hand. In the game, kills by turrets, drones and hives don't
-  count for them, or for Skilled; the planner counts them, so those builds read high.
+- In fights with several enemies at once and an enemy spacing set:
+  - Regicide: a headshot kill with the Regulus blasts every enemy within 5 m for 400%
+    weapon damage. The tooltip's bleed isn't in the game's live script, so there's
+    none.
+  - Creeping Death (and Perfect): a status your talents put on the target spreads to
+    enemies within 8 m every 15 s (10 m every 10 s).
+  - Plague of the Outcasts: at a death, the stacks move to the nearest enemy within
+    25 m.
+  - Indirect Transmission: at a death, the enemy's statuses go on every enemy within
+    10 m for half their duration; with the Eclipse Protocol chest's Proliferation,
+    within 15 m for 75%.
+  - Unnerve: a kill with the Strega marks every enemy within 20 m, up to 5 marks, each
+    adding 15% to your shots on that enemy; all of an enemy's marks clear 10 s after
+    its last.
+  - Bewildered: half of each weapon hit goes to a random enemy within 30 m.
+- In fights with several enemies at once and Time on each enemy set: The Trap, on the
+  Sacrum Imperium, tags an enemy once you've hit it for 0.5 s without a break, up to
+  10. A headshot kill then burns every other tag for 10 s, and the trap waits 30 s,
+  10 s less for each later headshot kill. Shooting each enemy until it dies tags only
+  that one, so it never springs.
+- In every fight with talent triggers, one enemy at a time included: Unnerve's marks
+  come from the fight, not the "Unnerve Target Marks" setting, so a fight with nobody
+  else to mark has none. The setting still sets static comparisons and fights without
+  talent triggers.
 
-Changes in 0.2.0-beta.4 that moved fight results, for testers coming from beta.3:
-- A burn or other status ends when its enemy dies.
-- Turrets and mines space their shots out instead of landing them all at once.
-- Stinger Hive's stings share one status per enemy and draw on stored charges.
-- Fights reach Overcharge, through the Energize and Future Perfect talents.
-- Skills cycle through deployment, duration and cooldown.
+Changes in 0.2.0-beta.5 that moved fight results, for testers coming from beta.4:
+- Skilled resets skill cooldowns on a skill kill, by chance; with no cooldown running,
+  the reset waits and lands 1 s after the next starts, so turret, hive and Sticky Bomb
+  builds gain too. Calculated and Tag Team cut skill cooldowns.
+- Plague of the Outcasts stacks its debuff on every hit.
+- Efficient keeps a used armor kit by chance and doubles the specialization kit
+  bonuses.
+- Outsider, Preservation and Ignited count a skill's kill as well as the weapon's.
+  In the game, kills by turrets, drones and hives don't count for them, or for
+  Skilled; the planner counts them, so those builds read high.
 Builds saved with an earlier beta open unchanged.
 
 Also in this folder:

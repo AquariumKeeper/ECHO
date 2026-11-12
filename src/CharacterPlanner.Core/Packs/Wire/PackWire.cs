@@ -392,6 +392,11 @@ internal sealed record SimulationWire
     [JsonPropertyName("skills")] public List<SimSkillWire>? Skills { get; init; }
     [JsonPropertyName("statusDamage")] public List<StatusDamageWire>? StatusDamage { get; init; }
     [JsonPropertyName("talentDamage")] public List<TalentDamageWire>? TalentDamage { get; init; }
+    [JsonPropertyName("blasts")] public List<BlastWire>? Blasts { get; init; }
+    [JsonPropertyName("spreads")] public List<SpreadWire>? Spreads { get; init; }
+    [JsonPropertyName("redirects")] public List<RedirectWire>? Redirects { get; init; }
+    [JsonPropertyName("traps")] public List<TrapWire>? Traps { get; init; }
+    [JsonPropertyName("passOns")] public List<PassOnWire>? PassOns { get; init; }
     [JsonPropertyName("distanceDefaults")] public List<DistanceDefaultWire>? DistanceDefaults { get; init; }
     [JsonPropertyName("armorKit")] public ArmorKitWire? ArmorKit { get; init; }
 }
@@ -416,6 +421,53 @@ internal sealed record DistanceBandWire
 {
     [JsonPropertyName("upTo")] public double? UpTo { get; init; }
     [JsonPropertyName("value")] public required double Value { get; init; }
+}
+
+internal sealed record PassOnWire
+{
+    [JsonPropertyName("talent")] public required string Talent { get; init; }
+    [JsonPropertyName("within")] public double? Within { get; init; }
+    [JsonPropertyName("withinStat")] public string? WithinStat { get; init; }
+    [JsonPropertyName("status")] public string? Status { get; init; }
+    [JsonPropertyName("share")] public double? Share { get; init; }
+    [JsonPropertyName("shareStat")] public string? ShareStat { get; init; }
+    [JsonPropertyName("to")] public string? To { get; init; }
+}
+
+internal sealed record TrapWire
+{
+    [JsonPropertyName("talent")] public required string Talent { get; init; }
+    [JsonPropertyName("tagAfter")] public required double TagAfter { get; init; }
+    [JsonPropertyName("maxTags")] public required int MaxTags { get; init; }
+    [JsonPropertyName("status")] public required string Status { get; init; }
+    [JsonPropertyName("statusDuration")] public required double StatusDuration { get; init; }
+    [JsonPropertyName("every")] public double? Every { get; init; }
+    [JsonPropertyName("cut")] public double? Cut { get; init; }
+}
+
+internal sealed record RedirectWire
+{
+    [JsonPropertyName("talent")] public required string Talent { get; init; }
+    [JsonPropertyName("share")] public required double Share { get; init; }
+    [JsonPropertyName("within")] public required double Within { get; init; }
+}
+
+internal sealed record SpreadWire
+{
+    [JsonPropertyName("talent")] public required string Talent { get; init; }
+    [JsonPropertyName("within")] public required double Within { get; init; }
+    [JsonPropertyName("every")] public double? Every { get; init; }
+}
+
+internal sealed record BlastWire
+{
+    [JsonPropertyName("talent")] public required string Talent { get; init; }
+    [JsonPropertyName("on")] public required string On { get; init; }
+    [JsonPropertyName("amount")] public string? Amount { get; init; }
+    [JsonPropertyName("mark")] public string? Mark { get; init; }
+    [JsonPropertyName("within")] public required double Within { get; init; }
+    [JsonPropertyName("status")] public string? Status { get; init; }
+    [JsonPropertyName("statusDuration")] public double? StatusDuration { get; init; }
 }
 
 internal sealed record TalentDamageWire

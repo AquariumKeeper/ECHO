@@ -661,6 +661,12 @@
       "talent": "weapon_talent_ignited",
       "key": "target_burning",
       "on": "kill",
+      "also": [
+        {
+          "on": "skill_kill",
+          "gain": 1
+        }
+      ],
       "kind": "status",
       "duration": 7,
       "count": 4,
@@ -670,6 +676,12 @@
       "talent": "weapon_talent_perfect_ignited",
       "key": "target_burning",
       "on": "kill",
+      "also": [
+        {
+          "on": "skill_kill",
+          "gain": 1
+        }
+      ],
       "kind": "status",
       "duration": 7,
       "count": 3,
@@ -1558,6 +1570,15 @@
       "grantAmount": 0.15,
       "grantDuration": 5,
       "grantInstances": "independent"
+    },
+    {
+      "talent": "weapon_talent_unnerve",
+      "key": "unnerve_marks",
+      "kind": "stacks",
+      "max": 5,
+      "duration": 10,
+      "refresh": true,
+      "resetOn": "target_death"
     }
   ],
   "skills": [
@@ -1811,5 +1832,62 @@
     "replacedByTalents": [
       "gear_talent_hackstep_protocol"
     ]
-  }
+  },
+  "blasts": [
+    {
+      "talent": "weapon_talent_regicide",
+      "on": "headshot_kill",
+      "amount": "regicide_blast_damage",
+      "within": 5
+    },
+    {
+      "talent": "weapon_talent_unnerve",
+      "on": "kill",
+      "within": 20,
+      "mark": "unnerve_marks"
+    }
+  ],
+  "spreads": [
+    {
+      "talent": "gear_talent_creeping_death",
+      "within": 8,
+      "every": 15
+    },
+    {
+      "talent": "gear_talent_perfect_creeping_death",
+      "within": 10,
+      "every": 10
+    }
+  ],
+  "passOns": [
+    {
+      "talent": "weapon_talent_plague_of_the_outcasts",
+      "within": 25
+    },
+    {
+      "talent": "gear_talent_indirect_transmission",
+      "within": 10,
+      "status": "any",
+      "share": 0.5,
+      "to": "all"
+    }
+  ],
+  "redirects": [
+    {
+      "talent": "gear_talent_bewildered",
+      "share": 0.5,
+      "within": 30
+    }
+  ],
+  "traps": [
+    {
+      "talent": "weapon_talent_the_trap",
+      "tagAfter": 0.5,
+      "maxTags": 10,
+      "status": "burning",
+      "statusDuration": 10,
+      "every": 30,
+      "cut": 10
+    }
+  ]
 }

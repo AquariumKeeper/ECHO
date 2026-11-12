@@ -3,7 +3,7 @@
 The planner's numbers come from sources that sometimes disagree.
 One reading on the item card or stats screen usually
 settles it. Values below are for the bundled pack
-(`y8s3.3-pve.2026-11-08.r86.candidate.1`).
+(`y8s3.3-pve.2026-11-11.r100.candidate.1`).
 
 ## How to report a reading
 
@@ -166,7 +166,20 @@ and what you were shooting at.
 - **Plague of the Outcasts:** with Pestilence, put stacks on one enemy and count its
   damage numbers per second. The game hard-codes the tick, and the planner assumes one
   a second. Then kill it beside another enemy: does that one show the same stacks, and
-  do they run a full 10 s or what was left? The planner doesn't pass stacks on yet.
+  do they run a full 10 s or what was left? With an enemy spacing set, the planner moves
+  them to the nearest enemy within 25 m, keeping what was left, and drops any past that
+  enemy's 50.
+- **Unnerve:** with the Strega, kill an enemy beside two others and watch their damage
+  numbers from your skills and burns, not only your shots. The source's bonus covers all
+  your damage to a marked enemy; the planner adds it to your shots only.
+- **The Trap:** with the Sacrum Imperium and a known Status Effects bonus, scope three
+  enemies, then kill one of them with a headshot, and time the burn on the other two. The
+  planner lengthens the 10 s burn by your status duration; the source doesn't say. Then
+  scope two, kill an unscoped one with a headshot, and see whether the two burn: the
+  source says any headshot kill sets it off, the tooltip says a marked one's.
+- **Regicide:** with the Regulus, get a headshot kill next to another enemy and watch
+  that enemy. Does it bleed? The tooltip says so, but the game's live script deals only
+  the blast, so the planner applies no bleed.
 - **Tag Team:** with a skill on cooldown, hit an enemy with a skill, then shoot it, and
   note the cooldown before and after (6 s off, 12 s for Perfect). Then hit it with a skill
   again within 4 s and keep shooting. The game places no new mark during those 4 s, while

@@ -386,6 +386,20 @@ public static class PackWriter
             Period = damage.Period,
             MaxStacks = damage.MaxStacks == 1 ? null : damage.MaxStacks
         })),
+        PassOns = NullIfEmpty(simulation.PassOns.Select(passOn => new PassOnWire { Talent = passOn.Talent, Within = Optional(passOn.Within), WithinStat = Optional(passOn.WithinStat), Status = Optional(passOn.Status), Share = Optional(passOn.Share), ShareStat = Optional(passOn.ShareStat), To = Optional(passOn.To) })),
+        Spreads = NullIfEmpty(simulation.Spreads.Select(spread => new SpreadWire { Talent = spread.Talent, Within = spread.Within, Every = Optional(spread.Every) })),
+        Redirects = NullIfEmpty(simulation.Redirects.Select(redirect => new RedirectWire { Talent = redirect.Talent, Share = redirect.Share, Within = redirect.Within })),
+        Traps = NullIfEmpty(simulation.Traps.Select(trap => new TrapWire
+        {
+            Talent = trap.Talent,
+            TagAfter = trap.TagAfter,
+            MaxTags = trap.MaxTags,
+            Status = trap.Status,
+            StatusDuration = trap.StatusDuration,
+            Every = Optional(trap.Every),
+            Cut = Optional(trap.Cut)
+        })),
+        Blasts = NullIfEmpty(simulation.Blasts.Select(blast => new BlastWire { Talent = blast.Talent, On = blast.On, Amount = Optional(blast.Amount), Mark = Optional(blast.Mark), Within = blast.Within, Status = Optional(blast.Status), StatusDuration = Optional(blast.StatusDuration) })),
         DistanceDefaults = NullIfEmpty(simulation.DistanceDefaults.Select(entry => new DistanceDefaultWire
         {
             Input = entry.Input,

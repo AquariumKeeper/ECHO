@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+using System.Globalization;
 using CharacterPlanner.Desktop.ViewModels;
 using CharacterPlanner.Simulation;
 
@@ -107,6 +109,14 @@ public sealed class SimulationDistributionsTests
         { Assert.Contains(row.Metric + ":", text, StringComparison.Ordinal); }
         Assert.Contains("Skill impact DPS:", SimulationPresentation.Summary(fight), StringComparison.Ordinal);
         Assert.Contains("Skill continuous-window DPS:", SimulationPresentation.Summary(fight), StringComparison.Ordinal);
+        // ADR 0014: a line per held slot, in the pack's order, named where the caller can; none without a "Use when".
+        Assert.DoesNotContain("uses/fight", text, StringComparison.Ordinal);
+        var held = fight with { SkillUses = ImmutableDictionary.CreateRange(StringComparer.Ordinal, [new KeyValuePair<string, SkillSlotUse>("b", new(2, 4.25)), new("a", new(1.5, 0))]) };
+        var heldText = SimulationPresentation.Summary(held, [("b", "Right"), ("a", "Left")]);
+        Assert.Contains(string.Create(CultureInfo.CurrentCulture, $"Right uses/fight: {2:N2} · Held while ready: {4.25:N1} s/fight\nLeft uses/fight: {1.5:N2} · Held while ready: {0:N1} s/fight"), heldText, StringComparison.Ordinal);
+        Assert.Contains(string.Create(CultureInfo.CurrentCulture, $"\na uses/fight: {1.5:N2}"), SimulationPresentation.Summary(held, [("b", "Right")]), StringComparison.Ordinal);
+        // A slot named twice gets one line.
+        Assert.Single(SimulationPresentation.Summary(held, [("b", "Right"), ("b", "Right"), ("a", "Left")]).Split('\n'), line => line.StartsWith("Right uses/fight", StringComparison.Ordinal));
     }
 
     [Theory]

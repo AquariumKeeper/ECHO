@@ -206,6 +206,149 @@ public sealed class SimulateViewModelTests
     }
 
     [Theory]
+    [InlineData("", null)]
+    [InlineData("0.5", null)]
+    [InlineData("50", null)]
+    [InlineData("0.4", "Enemy spacing must be a number of meters from 0.5 to 50, or empty for none")]
+    [InlineData("51", "Enemy spacing must be a number of meters from 0.5 to 50, or empty for none")]
+    [InlineData("NaN", "Enemy spacing must be a number of meters from 0.5 to 50, or empty for none")]
+    [InlineData("close", "Enemy spacing must be a number of meters from 0.5 to 50, or empty for none")]
+    public void EnemySpacingIsChecked(string spacing, string? expected) =>
+        Assert.Equal(expected, SimulateViewModel.Validate("60", "500", "1", "", CultureInfo.InvariantCulture, enemySpacing: spacing));
+
+    [Fact]
+    public void EnemySpacingReadsTheUsersDecimals() =>
+        Assert.Null(SimulateViewModel.Validate("60", "500", "1", "", CultureInfo.GetCultureInfo("de-DE"), enemySpacing: "2,5"));
+
+    [Fact]
+    public void EnemySpacingNeedsSeveralEnemies()
+    {
+        using var simulate = Create();
+        simulate.EnemySpacing = "3";
+        Assert.Equal("Enemy spacing needs several enemies at once", simulate.Problem);
+        simulate.Incoming = true;
+        simulate.EnemiesAtOnce = "3";
+        Assert.Null(simulate.Problem);
+    }
+
+    [Fact]
+    public async Task ARunPlacesItsEnemiesAtTheSpacing()
+    {
+        var build = BuildSnapshot.Create(Division.Pack).WithEquipment("primary_weapon", "primary_weapon_acr");
+        var state = PlannerState.Of(build) with { Assumptions = PlannerState.Of(build).Assumptions.Add("weapon_slot", "primary_weapon").Add("enemy_target", "1") };
+        var dispatcher = new QueueDispatcher();
+        using var simulate = new SimulateViewModel(new PlannerSession(Division, state, new OperationApplier(Division)), dispatcher);
+        simulate.FightLength = "5";
+        simulate.Fights = "2";
+        simulate.Incoming = true;
+        simulate.EnemiesAtOnce = "3";
+        simulate.EnemySpacing = " 4\u00A0";
+        Assert.Null(simulate.Problem);
+        simulate.RunCommand.Execute(null);
+        await simulate.Running;
+        dispatcher.RunPending();
+        Assert.Contains(simulate.Result!.Limitations, note => note.StartsWith("Assumed enemy spacing: 4 m", StringComparison.Ordinal));
+    }
+
+    // ADR 0014: an ACR with Ignited, whose rule drives target_burning, and an Explosive Seeker Mine in the first skill slot.
+    private static SimulateViewModel SkillUseForm(QueueDispatcher dispatcher)
+    {
+        var build = BuildSnapshot.Create(Division.Pack).WithEquipment("primary_weapon", "primary_weapon_acr")
+            .WithTalentSelection("primary_weapon", "talent", "weapon_talent_ignited").WithActiveSkillSelection("skill_slot_1", "skill_explosive_seeker_mine");
+        var state = PlannerState.Of(build) with { Assumptions = PlannerState.Of(build).Assumptions.Add("weapon_slot", "primary_weapon").Add("enemy_target", "1") };
+        return new SimulateViewModel(new PlannerSession(Division, state, new OperationApplier(Division)), dispatcher);
+    }
+
+    [Fact]
+    public void SkillUseRowsAreCheckedAsTheEngineChecksThem()
+    {
+        using var simulate = SkillUseForm(new QueueDispatcher());
+        var first = simulate.SkillUses[0];
+        var second = simulate.SkillUses[1];
+        // The talent rules offered are the build's own.
+        Assert.Equal(["target_burning"], first.Keys.Select(choice => choice.Id));
+        first.When = SkillUseViewModel.AfterTime;
+        // With skills left out the rows are hidden and play no part.
+        Assert.Null(simulate.Problem);
+        simulate.IncludeSkills = true;
+        simulate.Incoming = true;
+        Assert.Equal($"{first.Name}'s time must be a number of seconds above 0 up to 600", simulate.Problem);
+        first.Value = "601";
+        Assert.Equal($"{first.Name}'s time must be a number of seconds above 0 up to 600", simulate.Problem);
+        first.Value = "2.5";
+        Assert.Null(simulate.Problem);
+        // The second slot has no skill to hold.
+        second.When = SkillUseViewModel.AfterTime;
+        second.Value = "1";
+        Assert.Equal($"{second.Name} has no damaging skill to hold", simulate.Problem);
+        second.When = SkillUseViewModel.WhenReady;
+        Assert.Null(simulate.Problem);
+        // Enemies need Enemies at once, and no more than it. The count is kept apart from the time.
+        first.When = SkillUseViewModel.WhileEnemies;
+        Assert.Equal("", first.Value);
+        first.Value = "3";
+        Assert.Equal($"{first.Name} waiting for enemies needs Enemies at once", simulate.Problem);
+        simulate.EnemiesAtOnce = "2";
+        Assert.Equal($"{first.Name} can't wait for more enemies than Enemies at once", simulate.Problem);
+        simulate.EnemiesAtOnce = "3";
+        Assert.Null(simulate.Problem);
+        first.When = SkillUseViewModel.AfterTime;
+        Assert.Equal("2.5", first.Value);
+        // A talent rule needs talent triggers.
+        first.When = SkillUseViewModel.WhileKey;
+        Assert.Equal("target_burning", first.Key.Id);
+        Assert.Null(simulate.Problem);
+        simulate.EnemiesAtOnce = "";
+        simulate.DriveBuffs = false;
+        Assert.Equal($"{first.Name} waiting for a talent rule needs talent triggers", simulate.Problem);
+    }
+
+    [Fact]
+    public void ATalentRuleThatLeavesTheBuildIsNotSwappedForAnother()
+    {
+        // The rule chosen goes when its talent does: the row clears and asks again, rather than waiting on whatever is left.
+        var dispatcher = new QueueDispatcher();
+        var build = BuildSnapshot.Create(Division.Pack).WithEquipment("primary_weapon", "primary_weapon_acr")
+            .WithTalentSelection("primary_weapon", "talent", "weapon_talent_ignited").WithActiveSkillSelection("skill_slot_1", "skill_explosive_seeker_mine");
+        var state = PlannerState.Of(build) with { Assumptions = PlannerState.Of(build).Assumptions.Add("weapon_slot", "primary_weapon").Add("enemy_target", "1") };
+        var session = new PlannerSession(Division, state, new OperationApplier(Division));
+        using var simulate = new SimulateViewModel(session, dispatcher);
+        simulate.IncludeSkills = true;
+        simulate.Incoming = true;
+        var first = simulate.SkillUses[0];
+        first.When = SkillUseViewModel.WhileKey;
+        Assert.Equal("target_burning", first.Key.Id);
+        Assert.True(session.Apply([TalentOperation.Cleared("primary_weapon", "talent")], session.Snapshot.Revision, EditOrigin.Desktop).Succeeded);
+        dispatcher.RunPending();
+        simulate.FightLength = "61";
+        Assert.Equal(Choice.None, first.Key);
+        Assert.Equal($"Choose the talent rule {first.Name} waits for", simulate.Problem);
+    }
+
+    [Fact]
+    public async Task ARunHoldsASkillAsItsRowSays()
+    {
+        var dispatcher = new QueueDispatcher();
+        using var simulate = SkillUseForm(dispatcher);
+        simulate.FightLength = "10";
+        simulate.Fights = "2";
+        simulate.Incoming = true;
+        simulate.IncludeSkills = true;
+        simulate.SkillUses[0].When = SkillUseViewModel.AfterTime;
+        simulate.SkillUses[0].Value = "3";
+        Assert.Null(simulate.Problem);
+        simulate.RunCommand.Execute(null);
+        await simulate.Running;
+        dispatcher.RunPending();
+        Assert.Contains(simulate.Result!.Limitations, note => note.StartsWith("Assumed skill use: skill_slot_1 after 3 s", StringComparison.Ordinal));
+        Assert.Equal(3, simulate.Result.SkillUses["skill_slot_1"].HeldSeconds, 9);
+        // The summary names the slot and shows its uses and held time.
+        var use = simulate.Result.SkillUses["skill_slot_1"];
+        Assert.Contains($"{simulate.SkillUses[0].Name} uses/fight: {use.Uses:N2} · Held while ready: {3d:N1} s/fight", simulate.ResultText, StringComparison.Ordinal);
+        Assert.DoesNotContain("\n" + simulate.SkillUses[1].Name + " uses/fight", simulate.ResultText, StringComparison.Ordinal);
+    }
+
+    [Theory]
     [InlineData("", "", null)]
     [InlineData("1", "50", null)]
     [InlineData("10", "100", null)]

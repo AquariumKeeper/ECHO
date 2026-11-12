@@ -8,7 +8,7 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <Version>0.2.0-beta.5</Version>
+    <Version>0.2.0-beta.6</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <Deterministic>true</Deterministic>
     <!-- Debug policy (owner, 2026-11-09): normal builds keep the SDK's SourceLink. A release package maps source paths to /_/

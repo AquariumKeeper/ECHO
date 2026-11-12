@@ -124,6 +124,15 @@ public sealed partial class CliAppTests
     [InlineData("""{"targets":false,"targetDistances":[10]}""", "'targetDistances' applies only with targets")]
     [InlineData("""{"peekSeconds":0}""", "'peekSeconds'")]
     [InlineData("""{"focusSeconds":0}""", "'focusSeconds'")]
+    [InlineData("""{"skillUse":[]}""", "'skillUse' needs an object")]
+    [InlineData("""{"skillUse":{"skill_slot_1":"ready"}}""", "'skillUse.skill_slot_1' needs an object")]
+    [InlineData("""{"skillUse":{"skill_slot_1":{}}}""", "'skillUse.skill_slot_1' needs an object with 'when'")]
+    [InlineData("""{"skillUse":{"skill_slot_1":{"when":"sometimes"}}}""", "ready, key, afterSeconds or enemiesAtLeast")]
+    [InlineData("""{"skillUse":{"skill_slot_1":{"when":"enemiesAtLeast","count":11}}}""", "'skillUse.skill_slot_1.count'")]
+    [InlineData("""{"skillUse":{"skill_slot_1":{"when":"enemiesAtLeast"}}}""", "needs a count from 1 to 10")]
+    [InlineData("""{"skillUse":{"skill_slot_1":{"when":"key"}}}""", "needs a key")]
+    [InlineData("""{"skillUse":{"skill_slot_1":{"when":"afterSeconds","seconds":0}}}""", "'skillUse.skill_slot_1.seconds'")]
+    [InlineData("""{"skillUse":{"skill_slot_1":{"when":"ready","delay":1}}}""", "Unknown field 'skillUse.skill_slot_1.delay'")]
     [InlineData("""{"coverSeconds":61}""", "'coverSeconds'")]
     [InlineData("""{"peekHitPercent":101}""", "'peekHitPercent'")]
     [InlineData("""{"peekSeconds":2}""", "needs 'peekSeconds' and 'coverSeconds' together")]
@@ -224,6 +233,29 @@ public sealed partial class CliAppTests
             WriteSimulateOptions("""{"mode":"random","duration":10,"seed":1,"driveSimpleBuffs":true,"includeIncoming":true,"enemiesAtOnce":3,"focusSeconds":2}"""), "--context", context);
         Assert.Equal(CliApp.Success, run.ExitCode);
         Assert.Contains("Assumed shooting pattern: 2 s", run.Json.GetProperty("result").GetProperty("limitations").GetRawText(), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task SkillUseConditionsRunThroughTheCli()
+    {
+        // ADR 0014: an Explosive Seeker Mine held until 3 s into the fight. The result reports its uses and held time; a fight without
+        // conditions has no skillUses field.
+        var (build, context) = await WriteDivisionWeaponBuildAsync();
+        var skilled = await RunAsync("build", "apply", CommittedDivision, build, WriteOperations("""
+            [{"kind":"active_skill","slot":"skill_slot_1","id":"skill_explosive_seeker_mine"}]
+            """));
+        Assert.Equal(CliApp.Success, skilled.ExitCode);
+        File.WriteAllText(build, skilled.Json.GetProperty("result").GetProperty("document").GetRawText());
+        var run = await RunAsync("build", "simulate", CommittedDivision, build, "--options",
+            WriteSimulateOptions("""{"mode":"random","duration":20,"seed":1,"includeSkills":true,"skillUse":{"skill_slot_1":{"when":"afterSeconds","seconds":3}}}"""), "--context", context);
+        Assert.Equal(CliApp.Success, run.ExitCode);
+        var uses = run.Json.GetProperty("result").GetProperty("skillUses").GetProperty("skill_slot_1");
+        Assert.True(uses.GetProperty("uses").GetDouble() >= 1);
+        Assert.Equal(3, uses.GetProperty("heldSeconds").GetDouble(), 9);
+        Assert.Contains("Assumed skill use: skill_slot_1 after 3 s", run.Json.GetProperty("result").GetProperty("limitations").GetRawText(), StringComparison.Ordinal);
+        var plain = await RunAsync("build", "simulate", CommittedDivision, build, "--options",
+            WriteSimulateOptions("""{"mode":"random","duration":20,"seed":1,"includeSkills":true}"""), "--context", context);
+        Assert.False(plain.Json.GetProperty("result").TryGetProperty("skillUses", out _));
     }
 
     [Fact]

@@ -73,6 +73,16 @@ public sealed record DummyFightOptions
     /// </summary>
     public double? FocusSeconds { get; init; }
     /// <summary>
+    /// With <see cref="EnemiesAtOnce"/>: the metres between neighbouring enemies, standing on a line by their place in the group
+    /// (ADR 0013), for effects that reach other enemies. There is no default; without it those effects find nobody.
+    /// </summary>
+    public double? EnemySpacing { get; init; }
+    /// <summary>
+    /// When each skill slot's skill is used once it's ready (ADR 0014), keyed by slot; a slot not named is used as soon as it's ready.
+    /// The player's choice, not the game's.
+    /// </summary>
+    public ImmutableDictionary<string, SkillUseCondition> SkillUse { get; init; } = ImmutableDictionary<string, SkillUseCondition>.Empty;
+    /// <summary>
     /// With <see cref="ArmorKitAtPercent"/>, incoming fire and driven triggers: the armor kits the player carries (ADR 0010). There
     /// is no default, and the pack supplies what a kit does. Null for a fight without kits.
     /// </summary>
@@ -95,6 +105,8 @@ public sealed record DummyFightOptions
 
     /// <summary>The shortest and the longest time on an enemy before moving on.</summary>
     public const double MinimumFocusSeconds = 0.1, MaximumFocusSeconds = 60;
+    /// <summary>The closest and the farthest neighbouring enemies, in metres.</summary>
+    public const double MinimumEnemySpacing = 0.5, MaximumEnemySpacing = 50;
     /// <summary>The fewest and the most armor kits a fight takes.</summary>
     public const int MinimumArmorKits = 1, MaximumArmorKits = 10;
     /// <summary>The lowest and the highest armor percentage a kit may wait for.</summary>
@@ -134,6 +146,9 @@ public sealed record DummyFightOptions
     /// <summary>Why a fight can't move between enemies, or null when it can. Shared by the engine and the desktop form.</summary>
     public static string? FocusProblem(int? enemies) => enemies is null ? "Time on each enemy needs several enemies at once" : null;
 
+    /// <summary>Why a fight can't take an enemy spacing, or null when it can.</summary>
+    public static string? EnemySpacingProblem(int? enemies) => enemies is null ? "Enemy spacing needs several enemies at once" : null;
+
     /// <summary>Why a fight's group can't shrink, or null when it can. Shared by the engine and the desktop form.</summary>
     public static string? EnemiesShrinkProblem(int? enemies, int? clearKills) =>
         enemies is null ? "A shrinking group needs several enemies at once" :
@@ -168,10 +183,16 @@ public sealed record DummyFightOptions
         if (ArmorKitAtPercent is { } kitPercent && (!double.IsFinite(kitPercent) || kitPercent < MinimumArmorKitPercent || kitPercent > MaximumArmorKitPercent)) { throw new ArgumentOutOfRangeException(nameof(ArmorKitAtPercent)); }
         if (EnemiesAtOnce is < MinimumEnemiesAtOnce or > MaximumEnemiesAtOnce) { throw new ArgumentOutOfRangeException(nameof(EnemiesAtOnce)); }
         if (FocusSeconds is { } focus && (!double.IsFinite(focus) || focus < MinimumFocusSeconds || focus > MaximumFocusSeconds)) { throw new ArgumentOutOfRangeException(nameof(FocusSeconds)); }
+        if (EnemySpacing is { } spacing && (!double.IsFinite(spacing) || spacing < MinimumEnemySpacing || spacing > MaximumEnemySpacing)) { throw new ArgumentOutOfRangeException(nameof(EnemySpacing)); }
+        if (SkillUse is null) { throw new ArgumentNullException(nameof(SkillUse)); }
+        foreach (var (slot, condition) in SkillUse)
+        {
+            if (string.IsNullOrEmpty(slot) || condition is null || condition.Problem() is not null) { throw new ArgumentException(condition?.Problem() ?? "A skill use needs a slot and a condition", nameof(SkillUse)); }
+        }
     }
 }
 
-public enum DummyEventKind { Shot, ReloadStarted, ReloadCompleted, Kill, TargetArrived, SwapStarted, SwapCompleted, SkillImpact, SkillTick, EnemyShot, EnemyHit, ArmorBreak, Downed, EnemyShotBlocked, ArmorRepaired, HealthRepaired, ShieldRaised, ShieldHit, ShieldBreak, ShieldRepaired, TargetMarked, PreservationStarted, BurnTick, BleedTick, BonusArmorGranted, Pickup, TalentTick, ArmorKitStarted, ArmorKitUsed }
+public enum DummyEventKind { Shot, ReloadStarted, ReloadCompleted, Kill, TargetArrived, SwapStarted, SwapCompleted, SkillImpact, SkillTick, EnemyShot, EnemyHit, ArmorBreak, Downed, EnemyShotBlocked, ArmorRepaired, HealthRepaired, ShieldRaised, ShieldHit, ShieldBreak, ShieldRepaired, TargetMarked, PreservationStarted, BurnTick, BleedTick, BonusArmorGranted, Pickup, TalentTick, ArmorKitStarted, ArmorKitUsed, TalentBlast, DebuffPassedOn, StatusPassedOn, EnemyMarked, DamageRedirected, TrapSprung }
 public sealed record DummyEvent(double Time, DummyEventKind Kind, double Damage = 0, string WeaponSlot = "");
 public static class DummyEventAmounts
 {
@@ -179,10 +200,47 @@ public static class DummyEventAmounts
     public static bool CarriesAmount(this DummyEventKind kind) => kind is DummyEventKind.Shot or DummyEventKind.SkillImpact
         or DummyEventKind.SkillTick or DummyEventKind.EnemyHit or DummyEventKind.ShieldHit or DummyEventKind.ShieldRepaired
         or DummyEventKind.ArmorRepaired or DummyEventKind.HealthRepaired or DummyEventKind.PreservationStarted
-        or DummyEventKind.BurnTick or DummyEventKind.BleedTick or DummyEventKind.BonusArmorGranted or DummyEventKind.TalentTick or DummyEventKind.ArmorKitUsed;
+        or DummyEventKind.BurnTick or DummyEventKind.BleedTick or DummyEventKind.BonusArmorGranted or DummyEventKind.TalentTick or DummyEventKind.ArmorKitUsed or DummyEventKind.TalentBlast or DummyEventKind.DebuffPassedOn or DummyEventKind.StatusPassedOn or DummyEventKind.DamageRedirected or DummyEventKind.TrapSprung;
 }
 public sealed record SimulationProgress(int CompletedFights, int TotalFights);
 public sealed record FightSummary(double Mean, double StdDev, double Min, double P5, double P50, double P95, double Max);
+/// <summary>
+/// ADR 0014's condition for a skill slot: <c>ready</c> uses it as soon as it's ready; <c>key</c> waits for a driven key to be on;
+/// <c>afterSeconds</c> waits for the fight to have run <see cref="Seconds"/>; <c>enemiesAtLeast</c> waits for at least
+/// <see cref="Count"/> enemies to be alive in the group.
+/// </summary>
+public sealed record SkillUseCondition
+{
+    public string When { get; init; } = "ready";
+    public string Key { get; init; } = "";
+    public double Seconds { get; init; }
+    public int Count { get; init; }
+    public const string Ready = "ready", KeyOn = "key", AfterSeconds = "afterSeconds", EnemiesAtLeast = "enemiesAtLeast";
+
+    /// <summary>What's wrong with the condition, or null.</summary>
+    public string? Problem() => When switch
+    {
+        Ready => Key.Length > 0 || Seconds != 0 || Count != 0 ? "A ready skill use takes no key, seconds or count" : null,
+        KeyOn => Key.Length == 0 || Seconds != 0 || Count != 0 ? "A key skill use needs a key and takes no seconds or count" : null,
+        AfterSeconds => Key.Length > 0 || Count != 0 || !double.IsFinite(Seconds) || Seconds <= 0 || Seconds > SimulationLimits.MaximumFightDuration
+            ? $"An afterSeconds skill use needs seconds above 0 up to {SimulationLimits.MaximumFightDuration:G}, and no key or count" : null,
+        EnemiesAtLeast => Key.Length > 0 || Seconds != 0 || Count is < 1 or > DummyFightOptions.MaximumEnemiesAtOnce
+            ? $"An enemiesAtLeast skill use needs a count from 1 to {DummyFightOptions.MaximumEnemiesAtOnce}, and no key or seconds" : null,
+        _ => "A skill use is ready, key, afterSeconds or enemiesAtLeast"
+    };
+
+    public override string ToString() => When switch
+    {
+        KeyOn => $"while {Key} is on",
+        AfterSeconds => string.Create(System.Globalization.CultureInfo.InvariantCulture, $"after {Seconds:G} s"),
+        EnemiesAtLeast => Count == 1 ? "while at least 1 enemy is alive" : $"while at least {Count} enemies are alive",
+        _ => "when ready"
+    };
+}
+
+/// <summary>A skill slot's mean uses per fight, and the mean time it was ready but held for its condition (ADR 0014).</summary>
+public sealed record SkillSlotUse(double Uses, double HeldSeconds);
+
 /// <summary>Grouped total, deployment-impact and modeled continuous-window skill DPS.</summary>
 public sealed record SkillDpsSummary(FightSummary Total, FightSummary Impact, FightSummary ContinuousWindow);
 /// <summary>Mean seconds in one phase/reading value and its fraction of the full requested duration.</summary>
@@ -219,6 +277,8 @@ public sealed record DummyFightResult(
 {
     public EffectCoverageReport Coverage { get; init; } = EffectCoverageReport.Empty;
     public SkillDpsSummary? SkillDps { get; init; }
+    /// <summary>Each conditioned skill slot's uses and held time (ADR 0014); empty in fights without <see cref="DummyFightOptions.SkillUse"/>.</summary>
+    public ImmutableDictionary<string, SkillSlotUse> SkillUses { get; init; } = ImmutableDictionary<string, SkillSlotUse>.Empty;
     /// <summary>Burn and bleed tick damage on targets, when the pack defines status damage and a selected talent applies it.</summary>
     public FightSummary? StatusDps { get; init; }
     /// <summary>DPS of talent debuffs (Toxic Delivery), when a selected talent has one; part of the total, not of status DPS.</summary>

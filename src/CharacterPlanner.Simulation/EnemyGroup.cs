@@ -24,6 +24,8 @@ internal sealed class EnemyGroup
     private readonly List<Enemy> enemies;
     // Who is alive and in the group, firing or silent.
     private readonly List<int> alive;
+    // Each living enemy's slot on the line (ADR 0013): a joining enemy takes the dead one's, and an empty slot stays empty.
+    private readonly Dictionary<int, int> slots;
     // The next target in the fight's order that hasn't joined.
     private int reserve;
     private Enemy? soonest;
@@ -37,6 +39,7 @@ internal sealed class EnemyGroup
         this.interval = interval;
         this.total = total;
         alive = [.. Enumerable.Range(0, size)];
+        slots = alive.ToDictionary(place => place, place => place);
         reserve = size;
         if (interval(0) is null) { enemies = []; return; }
         var seconds = Enumerable.Range(0, size).Select(target => interval(target)!.Value).ToArray();
@@ -58,6 +61,18 @@ internal sealed class EnemyGroup
     public IReadOnlyList<int> Alive => alive;
 
     /// <summary>
+    /// How many will be alive in the group once the dead among <see cref="Alive"/> are settled: each dead place is filled from the
+    /// enemies yet to join, while any are left.
+    /// </summary>
+    public int Living(Func<int, bool> dead)
+    {
+        ArgumentNullException.ThrowIfNull(dead);
+        var dying = alive.Count(dead);
+        var left = total is { } all ? Math.Max(0, all - reserve) : int.MaxValue;
+        return alive.Count - Math.Max(0, dying - left);
+    }
+
+    /// <summary>
     /// Who the player goes to after this target: the next living one in turn, or with nobody else the one who'd join, or null.
     /// </summary>
     public int? Following(int place)
@@ -65,6 +80,28 @@ internal sealed class EnemyGroup
         var at = alive.IndexOf(place);
         if (alive.Count > 1) { return alive[(at + 1) % alive.Count]; }
         return reserve >= total ? null : reserve;
+    }
+
+    /// <summary>
+    /// The living enemies other than <paramref name="place"/> within <paramref name="within"/> metres of it, with neighbours
+    /// <paramref name="spacing"/> metres apart on the line (ADR 0013): nearest first, then by slot.
+    /// </summary>
+    public int[] InReach(int place, double within, double spacing)
+    {
+        if (!slots.TryGetValue(place, out var from)) { return []; }
+        return [.. alive.Where(other => other != place).Select(other => (Place: other, Gap: Math.Abs(slots[other] - from)))
+            .Where(entry => entry.Gap * spacing <= within + 1e-9).OrderBy(entry => entry.Gap).ThenBy(entry => slots[entry.Place]).Select(entry => entry.Place)];
+    }
+
+    /// <summary>
+    /// Who arrives next under focus fire once the enemies named are gone: the earliest living one left, or the one who'd join, or
+    /// null. With enemies dying in order it's the next in the fight's order; a blast can kill one out of order (ADR 0013).
+    /// </summary>
+    public int? NextArrival(params int[] gone)
+    {
+        var others = alive.Where(place => !gone.Contains(place)).ToArray();
+        if (others.Length > 0) { return others.Min(); }
+        return total is null || reserve < total ? reserve : null;
     }
 
     /// <summary>When the next attempt comes.</summary>
@@ -94,8 +131,10 @@ internal sealed class EnemyGroup
         else
         {
             alive[alive.IndexOf(dead)] = joining;
+            slots[joining] = slots[dead];
             reserve++;
         }
+        slots.Remove(dead);
         if (enemies.Count == 0) { return; }
         var enemy = enemies.Single(candidate => candidate.Target == dead);
         if (leaves)

@@ -611,6 +611,476 @@ public sealed partial class IncomingFightTests
         Assert.Equal(new[] { 0.5, 1, 1.5 }, Times(result, DummyEventKind.EnemyHit));
     }
 
+    // Regicide's shape (ADR 0013): the gun's talent blasts on a kill, `amount` to each enemy within `within` metres. A shot each second
+    // deals 10, so a 30-health enemy dies to the third.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) BlastFixture(double within, string amount = "15", string on = "kill", string status = "", double statusDuration = 0, string bleedTick = "1")
+    {
+        var (original, _) = Fixture(changes: [("character_armor", "0"), ("character_health", "100000"), ("enemy_target_health", "30")]);
+        var rules = original.Pack with
+        {
+            // A bleed ticks 1 a second.
+            Stats = [.. original.Pack.Stats, new StatDefinition { ID = "blast_amount", Formula = amount }, new StatDefinition { ID = "bleed_tick", Formula = bleedTick }],
+            Simulation = original.Pack.Simulation with
+            {
+                Blasts = [new() { Talent = "test", On = on, Amount = "blast_amount", Within = within, Status = status, StatusDuration = statusDuration }],
+                StatusDamage = [new() { Status = "bleeding", Tick = "bleed_tick", Period = 1 }]
+            }
+        };
+        return (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled),
+            BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test"));
+    }
+
+    [Fact]
+    public void ABlastReachesTheEnemiesWithinItsRadiusOnTheLine()
+    {
+        // Three enemies 4 m apart. The first dies at 2 s: a 5 m blast reaches its neighbour, 4 m away, and not the one 8 m away.
+        var near = Run(BlastFixture(5), Group(3, 3) with { EnemySpacing = 4 });
+        Assert.Equal([15d], Amounts(near, DummyEventKind.TalentBlast));
+        Assert.Equal([2d], Times(near, DummyEventKind.TalentBlast));
+        Assert.Contains(near.Limitations, note => note.StartsWith("Assumed enemy spacing: 4 m", StringComparison.Ordinal));
+        // 9 m reaches both; at 10 m apart, a 9 m blast reaches nobody.
+        Assert.Equal([15d, 15d], Amounts(Run(BlastFixture(9), Group(3, 3) with { EnemySpacing = 4 }), DummyEventKind.TalentBlast));
+        Assert.Empty(Times(Run(BlastFixture(9), Group(3, 3) with { EnemySpacing = 10 }), DummyEventKind.TalentBlast));
+        // The blast's damage counts as talent damage.
+        Assert.True(near.TalentDps!.Mean > 0);
+    }
+
+    [Fact]
+    public void ABlastsStatusTicksOnTheEnemiesItReached()
+    {
+        // Regicide's shape, two enemies in all: the first dies at 2 s, and the blast deals 1 to its neighbour and puts a 2.5 s bleed on it,
+        // which ticks 1 a second there, at 3 and 4 s (a status ticks before its end). The player takes 5 s to reach it, so those ticks run on
+        // an enemy nobody is shooting. Nobody is left for the neighbour's own blast.
+        var result = Run(BlastFixture(5, amount: "1", status: "bleeding", statusDuration: 2.5), Group(10, 2) with { EnemySpacing = 4, ClearKills = 2, EnemiesShrink = true }, delay: 5);
+        Assert.Equal([7d], Times(result, DummyEventKind.TargetArrived).Where(at => at > 0));
+        Assert.Equal([3d, 4d], Times(result, DummyEventKind.BleedTick));
+        Assert.All(Amounts(result, DummyEventKind.BleedTick), amount => Assert.Equal(1, amount));
+        // Without a status, nothing bleeds.
+        Assert.Empty(Times(Run(BlastFixture(5), Group(10, 3) with { EnemySpacing = 4 }), DummyEventKind.BleedTick));
+        // An enemy the blast kills takes no status.
+        Assert.Empty(Times(Run(BlastFixture(5, amount: "30", status: "bleeding", statusDuration: 4), Group(10, 3) with { EnemySpacing = 4 }), DummyEventKind.BleedTick));
+    }
+
+    // Unnerve's shape (ADR 0013): a kill marks each enemy within `within` metres, a stacks rule held per enemy with no event of its own, and
+    // each mark on the enemy shot adds 1 to a shot's damage. A shot each second deals 10, so a 30-health enemy dies to the third.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) MarkFixture(double within, int max = 5, double duration = 0, bool mark = true, bool refresh = false, bool bothWeapons = false, string magazine = "10")
+    {
+        var marks = new SimTriggerDefinition { Talent = "test", Key = "marks", Kind = "stacks", Max = max, Duration = duration, Refresh = refresh, ResetOn = "target_death" };
+        var (original, _) = Fixture(marks, changes: [("character_armor", "0"), ("character_health", "100000"), ("enemy_target_health", "30"), ("equipped_weapon_magazine_size", magazine)]);
+        var rules = original.Pack with
+        {
+            NumericContextInputs = [.. original.Pack.NumericContextInputs, new() { ID = "marks", Name = "Marks", Min = 0, Max = 5, Step = 1 }],
+            Talents = [original.Pack.Talents[0] with { Modifiers = [new() { Stat = "buff_damage", Op = ModifierOps.Flat, Value = new("context_value('marks')") }] }],
+            Simulation = original.Pack.Simulation with { Blasts = mark ? [new() { Talent = "test", On = "kill", Within = within, Mark = "marks" }] : [] }
+        };
+        if (!bothWeapons) { return Recompile(rules); }
+        rules = rules with
+        {
+            Slots = [.. rules.Slots, new() { ID = "secondary_weapon", Name = "Sidearm", Weapon = true }],
+            Items = [.. rules.Items, new() { ID = "other", Name = "Other", Slot = "secondary_weapon", TalentSlots = [new() { ID = "talent", Choices = ["test"] }] }]
+        };
+        var (pack, build) = Recompile(rules);
+        return (pack, build.WithEquipment("secondary_weapon", "other").WithTalentSelection("secondary_weapon", "talent", "test"));
+    }
+
+    [Fact]
+    public void AKillMarksTheEnemiesInReachAndShotsOnThemHitHarder()
+    {
+        // Three enemies 4 m apart. The first dies at 2 s and marks its neighbour, so the shots on it deal 11 (the killing one what's left);
+        // its death at 5 s marks the third.
+        var result = Run(MarkFixture(5), Group(8, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true });
+        Assert.Equal([10d, 10d, 10d, 11d, 11d, 8d, 11d, 11d], ShotDamage(result));
+        Assert.Equal([2d, 5d], Times(result, DummyEventKind.EnemyMarked));
+        // The enemy being shot carries a mark from 2 s to the end, and nothing counts before the first kill.
+        Assert.Equal(6, result.TimedTriggerUptime["marks"].Seconds, 9);
+        // A 9 m kill reaches both the others: the third carries two marks when the player reaches it, one from each death.
+        var far = Run(MarkFixture(9), Group(8, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true });
+        Assert.Equal([10d, 10d, 10d, 11d, 11d, 8d, 12d, 12d], ShotDamage(far));
+        // Capped at one, the second mark only refreshes.
+        Assert.Equal([10d, 10d, 10d, 11d, 11d, 8d, 11d, 11d], ShotDamage(Run(MarkFixture(9, max: 1), Group(8, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true })));
+        // A 1.5 s mark has run out by the second shot on each.
+        Assert.Equal([10d, 10d, 10d, 11d, 10d, 9d, 11d, 10d], ShotDamage(Run(MarkFixture(5, duration: 1.5), Group(8, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true })));
+        // 3.5 s marks reaching 9 m: the third's mark from 2 s has run out by its first shot at 6 s, unless the one from 5 s refreshed it.
+        Assert.Equal([11d, 11d], ShotDamage(Run(MarkFixture(9, duration: 3.5), Group(8, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true })).Skip(6));
+        Assert.Equal([12d, 12d], ShotDamage(Run(MarkFixture(9, duration: 3.5, refresh: true), Group(8, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true })).Skip(6));
+        // On both rotated weapons, the copy in hand marks; no swap comes in 8 s, so the shots are the same.
+        Assert.Equal([10d, 10d, 10d, 11d, 11d, 8d, 11d, 11d], ShotDamage(Run(MarkFixture(5, bothWeapons: true),
+            Group(8, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true, Rotation = new("secondary_weapon") })));
+        // A swap between kills.
+        var swapping = Run(MarkFixture(5, bothWeapons: true, magazine: "3"),
+            Group(12, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true, Rotation = new("secondary_weapon") });
+        // Three rounds a weapon and a swap after each magazine: the rifle's kill at 2 s marks the second enemy, which the sidearm shoots from
+        // 4 s, and the sidearm's kill at 6 s marks the third, which the rifle shoots from 10 s. Each weapon's copy reads its own marks, so
+        // neither weapon shoots an enemy it marked, and every shot deals 10.
+        Assert.Equal([2d, 6d], Times(swapping, DummyEventKind.EnemyMarked));
+        Assert.Equal([4d, 8d], Times(swapping, DummyEventKind.SwapCompleted));
+        Assert.All(ShotDamage(swapping), damage => Assert.Equal(10, damage));
+        // Out of reach, or without the blast, no mark.
+        Assert.All(ShotDamage(Run(MarkFixture(5), Group(8, 3) with { EnemySpacing = 10, ClearKills = 3, EnemiesShrink = true })), damage => Assert.Equal(10, damage));
+        Assert.All(ShotDamage(Run(MarkFixture(5, mark: false), Group(8, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true })), damage => Assert.Equal(10, damage));
+    }
+
+    // The Trap's shape (ADR 0013): every shot is a headshot for 10, ten a second, and an enemy has 30. An enemy hit for 0.1 s is tagged,
+    // and a headshot kill burns every other tag for 10 s, a tick of 1 each 0.1 s, then waits `every` seconds, cut by `cut` per headshot kill.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) TrapFixture(double every = 30, double cut = 10, bool trap = true, int maxTags = 10, double tagAfter = 0.1)
+    {
+        var (original, _) = Fixture(changes: [("character_armor", "0"), ("character_health", "100000"), ("enemy_target_health", "30"),
+            ("equipped_weapon_rpm", "600"), ("equipped_weapon_magazine_size", "1000"), ("practical_headshot_fraction", "1")]);
+        var rules = original.Pack with
+        {
+            Stats = [.. original.Pack.Stats, new StatDefinition { ID = "burn_tick", Formula = "1" }],
+            Simulation = original.Pack.Simulation with
+            {
+                Traps = trap ? [new() { Talent = "test", TagAfter = tagAfter, MaxTags = maxTags, Status = "burning", StatusDuration = 10, Every = every, Cut = cut }] : [],
+                StatusDamage = [new() { Status = "burning", Tick = "burn_tick", Period = 0.1 }]
+            }
+        };
+        return Recompile(rules);
+    }
+
+    private static bool Near(double a, double b) => Math.Abs(a - b) < 1e-9;
+
+    [Fact]
+    public void ATrapBurnsTheOtherTagsAtAHeadshotKill()
+    {
+        // Three enemies, 0.15 s on each: two hits tag A, B and C in turn, and the third hit on A, at 0.6 s, kills it with a headshot. The
+        // trap burns B and C, which tick from 0.7 s, so B dies to a shot of 9. Headshot kills at 0.7 and 0.8 s cut the 30 s cooldown by
+        // 10 s each, the one at 1.5 s ends it, and the next, at 1.6 s, springs it again on the one other tag.
+        var options = Group(8, 3) with { FocusSeconds = 0.15 };
+        var result = Run(TrapFixture(), options);
+        Assert.Equal([0.6, 1.6, 3.3], Times(result, DummyEventKind.TrapSprung).Take(3), Near);
+        Assert.Equal([2d, 1d, 2d], Amounts(result, DummyEventKind.TrapSprung).Take(3));
+        Assert.Equal([0.7, 0.7], Times(result, DummyEventKind.BurnTick).Take(2), Near);
+        Assert.Contains(result.Limitations, note => note.StartsWith("Traps tag the enemies the player has hit for long enough", StringComparison.Ordinal));
+        // Without cuts the 30 s cooldown holds for the rest of the fight.
+        Assert.Equal([0.6], Times(Run(TrapFixture(cut: 0), options), DummyEventKind.TrapSprung), Near);
+        // With one tag kept, C's replaced B's, so the first spring burns only C.
+        Assert.Equal(1, Amounts(Run(TrapFixture(maxTags: 1), options), DummyEventKind.TrapSprung)[0]);
+        // A tag needs the time without a break: each visit hits for 0.1 s, so a 0.15 s tag never comes, however often the player returns.
+        Assert.Empty(Times(Run(TrapFixture(tagAfter: 0.15), options), DummyEventKind.TrapSprung));
+        // Shooting each enemy until it dies tags only the one being shot, so the trap never springs; nor without the trap.
+        var focus = Run(TrapFixture(), Group(8, 3));
+        Assert.Empty(Times(focus, DummyEventKind.TrapSprung));
+        Assert.Empty(Times(focus, DummyEventKind.BurnTick));
+        Assert.Empty(Times(Run(TrapFixture(trap: false), options), DummyEventKind.BurnTick));
+        // With one enemy at a time, nobody else is tagged, and the result names the talent.
+        var alone = Run(TrapFixture(), Options with { Duration = 3, DriveSimpleBuffs = true });
+        Assert.Empty(Times(alone, DummyEventKind.TrapSprung));
+        Assert.Contains(alone.Limitations, note => note.StartsWith("These traps find nobody, since the fight has no several enemies at once", StringComparison.Ordinal));
+    }
+
+    // Bewildered's shape (ADR 0013): `share` of each weapon hit goes to a random enemy within `within` metres of the one shot. A shot
+    // each second deals 10, and an enemy has `health`.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) RedirectFixture(double within, double share = 0.5, string health = "30", bool redirect = true)
+    {
+        var (original, _) = Fixture(changes: [("character_armor", "0"), ("character_health", "100000"), ("enemy_target_health", health)]);
+        var rules = original.Pack with
+        {
+            Simulation = original.Pack.Simulation with { Redirects = redirect ? [new() { Talent = "test", Share = share, Within = within }] : [] }
+        };
+        return Recompile(rules);
+    }
+
+    [Fact]
+    public void ARedirectMovesAShareOfEachHitToAnEnemyInReach()
+    {
+        // Three enemies 4 m apart; from the first, a 5 m redirect reaches only the second. Each shot deals 5 to the first and moves 5 to
+        // the second, so both have taken 30 at the sixth shot, at 5 s: the shot kills the first and the moved share the second.
+        var result = Run(RedirectFixture(5), Group(6, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true });
+        Assert.Equal([5d, 5d, 5d, 5d, 5d, 5d], ShotDamage(result).Take(6));
+        Assert.Equal([5d, 5d, 5d, 5d, 5d, 5d], Amounts(result, DummyEventKind.DamageRedirected).Take(6));
+        Assert.Equal([5d, 5d], Times(result, DummyEventKind.Kill).Take(2));
+        Assert.Contains(result.Limitations, note => note.StartsWith("Redirects move a share of each weapon hit", StringComparison.Ordinal));
+        // The moved share is still the weapon's damage: the same 60 as a fight without the redirect, half of it on the second enemy.
+        var plain = Run(RedirectFixture(5, redirect: false), Group(6, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true });
+        Assert.Equal(plain.WeaponDps!.Mean, result.WeaponDps!.Mean, 9);
+        // A share of 0.25 moves 2.5 and leaves 7.5.
+        var quarter = Run(RedirectFixture(5, share: 0.25, health: "1000"), Group(3, 3) with { EnemySpacing = 4 });
+        Assert.Equal([7.5, 7.5, 7.5], ShotDamage(quarter));
+        Assert.Equal([2.5, 2.5, 2.5], Amounts(quarter, DummyEventKind.DamageRedirected));
+        // Out of reach, or without spacing, the hit lands whole.
+        Assert.All(ShotDamage(Run(RedirectFixture(5), Group(3, 3) with { EnemySpacing = 10 })), damage => Assert.Equal(10, damage));
+        var unspaced = Run(RedirectFixture(5), Group(3, 3));
+        Assert.All(ShotDamage(unspaced), damage => Assert.Equal(10, damage));
+        Assert.Contains(unspaced.Limitations, note => note.StartsWith("These effects on other enemies find nobody", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ARedirectPicksAtRandomAmongTheEnemiesInReach()
+    {
+        // Three enemies 4 m apart. Each shot deals 2 to the first and moves 8, and an enemy has 40, so a receiver dies to its fifth
+        // share and the one joining in its place takes the next. Within 5 m only the second is in reach, and it dies every five shots;
+        // within 9 m the third takes shares too, so the deaths elsewhere come differently.
+        var options = Group(20, 3) with { EnemySpacing = 4 };
+        var nearest = Times(Run(RedirectFixture(5, share: 0.8, health: "40"), options), DummyEventKind.Kill);
+        Assert.Equal([4d, 9d, 16d], nearest.Take(3));
+        Assert.NotEqual(nearest, Times(Run(RedirectFixture(9, share: 0.8, health: "40"), options), DummyEventKind.Kill));
+        // Every hit moves a share, and the shots draw as without the redirect.
+        var huge = Group(20, 3) with { EnemySpacing = 4 };
+        var moving = Run(RedirectFixture(9, health: "1000000"), huge);
+        var plain = Run(RedirectFixture(9, health: "1000000", redirect: false), huge);
+        Assert.Equal(Times(moving, DummyEventKind.Shot).Length, Amounts(moving, DummyEventKind.DamageRedirected).Length);
+        Assert.Equal(Times(plain, DummyEventKind.Shot), Times(moving, DummyEventKind.Shot));
+        // With random crits (20 each), a shot that would deal 10 or 20 deals 5 or 10: the crit draws are the same.
+        var redirecting = RedirectFixture(9, health: "1000000").Pack.Pack;
+        var critical = Recompile(redirecting with
+        {
+            Stats = [.. redirecting.Stats.Select(stat => stat.ID switch
+            {
+                "effective_critical_hit_chance" => stat with { Formula = "0.5" },
+                "equipped_weapon_critical_damage" => stat with { Formula = "20" },
+                _ => stat
+            })]
+        });
+        var plainCritical = Recompile(critical.Pack.Pack with { Simulation = critical.Pack.Pack.Simulation with { Redirects = [] } });
+        var criticalShots = ShotDamage(Run(critical, huge));
+        Assert.Equal(ShotDamage(Run(plainCritical, huge)).Select(damage => damage / 2), criticalShots);
+        Assert.Contains(criticalShots, damage => damage == 10);
+    }
+
+    [Fact]
+    public void ABuildWithTwoRedirectsIsRefused()
+    {
+        var fixture = RedirectFixture(9).Pack.Pack;
+        var rules = fixture with
+        {
+            Slots = [.. fixture.Slots, new() { ID = "chest", Name = "Chest" }],
+            Items = [.. fixture.Items, new() { ID = "vest", Name = "Vest", Slot = "chest", TalentSlots = [new() { ID = "talent", Choices = ["other"] }] }],
+            Talents = [.. fixture.Talents, new() { ID = "other", Name = "Other" }],
+            Simulation = fixture.Simulation with { Redirects = [.. fixture.Simulation.Redirects, new() { Talent = "other", Share = 0.5, Within = 9 }] }
+        };
+        var (pack, build) = Recompile(rules);
+        build = build.WithEquipment("chest", "vest").WithTalentSelection("chest", "talent", "other");
+        Assert.Equal("trigger-unsupported", Assert.Throws<SimulationException>(() => Run((pack, build), Group(3, 3) with { EnemySpacing = 4 })).Code);
+    }
+
+    // Creeping Death's shape (ADR 0013): the gun's talent bleeds the enemy it hits (a 1.5 s bleed, at most every `every` seconds), and
+    // a spread copies a bleed newly on it to enemies within 5 m, at most every `spreadEvery` seconds. A bleed ticks 1 a second.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) SpreadFixture(double every, double spreadEvery)
+    {
+        var bleed = new SimTriggerDefinition { Talent = "test", Key = "buff", Kind = "status", Status = "bleeding", On = "hit", ApplyOnHit = true, Duration = 1.5, Every = every };
+        var (original, _) = Fixture(bleed, changes: [("character_armor", "0"), ("character_health", "100000")]);
+        var rules = original.Pack with
+        {
+            Stats = [.. original.Pack.Stats, new StatDefinition { ID = "bleed_tick", Formula = "1" }],
+            Simulation = original.Pack.Simulation with
+            {
+                Spreads = [new() { Talent = "test", Within = 5, Every = spreadEvery }],
+                StatusDamage = [new() { Status = "bleeding", Tick = "bleed_tick", Period = 1 }]
+            }
+        };
+        return (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled),
+            BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test"));
+    }
+
+    private static int TicksAt(DummyFightResult result, double at) => Times(result, DummyEventKind.BleedTick).Count(time => Math.Abs(time - at) < 1e-9);
+
+    [Fact]
+    public void ABleedFromABlastKillingTheLastWaitingEnemyLeavesNobodyToArrive()
+    {
+        // Two enemies in all. The first dies at 2 s, and its blast's bleed, 30 a tick, kills the waiting neighbour at 3 s, before the player
+        // reaches it 5 s later: two kills, and the arrival due at 7 s never comes. The tick kill moves the next arrival as a blast kill does.
+        var result = Run(BlastFixture(5, amount: "1", status: "bleeding", statusDuration: 5, bleedTick: "30"),
+            Group(10, 2) with { EnemySpacing = 4, ClearKills = 2, EnemiesShrink = true }, delay: 5);
+        Assert.Equal([2d, 3d], Times(result, DummyEventKind.Kill));
+        Assert.DoesNotContain(Times(result, DummyEventKind.TargetArrived), at => at > 0);
+        Assert.DoesNotContain(Times(result, DummyEventKind.Shot), at => at > 2);
+        // Three in all: the bleed kills the neighbour at 3 s, and the player goes on to the third, not back to the dead neighbour. Three
+        // kills, not four.
+        var three = Run(BlastFixture(5, amount: "1", status: "bleeding", statusDuration: 5, bleedTick: "30"),
+            Group(20, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true }, delay: 5);
+        Assert.Equal(3, three.Kills);
+        Assert.Equal([2d, 3d], Times(three, DummyEventKind.Kill).Take(2));
+    }
+
+    // Plague's shape (ADR 0013): each hit starts a debuff of 10 over 10 s, ticking 1 a second, up to `maxStacks` on an enemy, and at a
+    // death the stacks pass on to the nearest enemy within 25 m. A 30-health enemy dies to the third shot, at 2 s.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) PassOnFixture(int maxStacks = 50, bool passOn = true)
+    {
+        var (original, _) = Fixture(changes: [("character_armor", "0"), ("character_health", "100000"), ("enemy_target_health", "30")]);
+        var rules = original.Pack with
+        {
+            Stats = [.. original.Pack.Stats, new StatDefinition { ID = "plague_total", Formula = "10" }],
+            Simulation = original.Pack.Simulation with
+            {
+                TalentDamage = [new() { Talent = "test", On = "hit", Total = "plague_total", Duration = 10, Period = 1, MaxStacks = maxStacks }],
+                PassOns = passOn ? [new() { Talent = "test", Within = 25 }] : []
+            }
+        };
+        return (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled),
+            BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test"));
+    }
+
+    // Talent ticks while the player is between enemies, from 2 s to the arrival at 7 s.
+    private static int TicksWhileAway(DummyFightResult result) => Times(result, DummyEventKind.TalentTick).Count(at => at > 2 && at < 7);
+
+    [Fact]
+    public void ADebuffPassesOnToTheNearestEnemyAtADeath()
+    {
+        // The first enemy dies at 2 s with two stacks on it, from the hits at 0 and 1 s (the killing hit starts none on a dead enemy). They
+        // move to its neighbour, 4 m away, and keep ticking there, two a second from 3 s, while the player takes 5 s to arrive.
+        var options = Group(10, 3) with { EnemySpacing = 4 };
+        var passed = Run(PassOnFixture(), options, delay: 5);
+        Assert.Equal(8, TicksWhileAway(passed));
+        // The first pass-on, at 2 s, carries those two; the neighbour's own death later passes on again.
+        Assert.Equal(2, Amounts(passed, DummyEventKind.DebuffPassedOn)[0]);
+        Assert.Equal(2, Times(passed, DummyEventKind.DebuffPassedOn)[0]);
+        Assert.Contains(passed.Limitations, note => note.StartsWith("Pass-ons move a talent's debuff stacks", StringComparison.Ordinal));
+        // Without the pass-on, the stacks die with their enemy.
+        Assert.Equal(0, TicksWhileAway(Run(PassOnFixture(passOn: false), options, delay: 5)));
+        // At 30 m apart nobody is within 25 m, and without a spacing nobody is placed: the stacks are lost.
+        Assert.Equal(0, TicksWhileAway(Run(PassOnFixture(), options with { EnemySpacing = 30 }, delay: 5)));
+        var unspaced = Run(PassOnFixture(), Group(10, 3), delay: 5);
+        Assert.Equal(0, TicksWhileAway(unspaced));
+        Assert.Contains(unspaced.Limitations, note => note.StartsWith("These effects on other enemies find nobody", StringComparison.Ordinal));
+        // A receiver holds no more than its stack cap: with one at most, one lands.
+        Assert.Equal(4, TicksWhileAway(Run(PassOnFixture(maxStacks: 1), options, delay: 5)));
+    }
+
+    // Indirect Transmission's shape (ADR 0013): the gun's talent bleeds the enemy it hits for 4 s, at most every 3 s, and at a death the
+    // bleed passes on, half its duration, within `within` metres. The bleed is the fixture's buff key too, so shots deal 20 while it's on,
+    // and a 30-health enemy dies to the second shot, at 1 s.
+    // With `fromStats`, the reach and share are formulas of two stats in place of numbers (Proliferation's shape).
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) StatusPassOnFixture(string to = "nearest", double within = 5, bool passOn = true,
+        (string Within, string Share)? fromStats = null)
+    {
+        var bleed = new SimTriggerDefinition { Talent = "test", Key = "buff", Kind = "status", Status = "bleeding", On = "hit", ApplyOnHit = true, Duration = 4, Every = 3 };
+        var (original, _) = Fixture(bleed, changes: [("character_armor", "0"), ("character_health", "100000"), ("enemy_target_health", "30")]);
+        var rules = original.Pack with
+        {
+            Stats = [.. original.Pack.Stats, new StatDefinition { ID = "bleed_tick", Formula = "1" },
+                new StatDefinition { ID = "pass_reach", Formula = fromStats?.Within ?? "0" }, new StatDefinition { ID = "pass_share", Formula = fromStats?.Share ?? "0" }],
+            Simulation = original.Pack.Simulation with
+            {
+                PassOns = !passOn ? [] : fromStats is null ? [new() { Talent = "test", Within = within, Status = "bleeding", Share = 0.5, To = to }]
+                    : [new() { Talent = "test", WithinStat = "pass_reach", Status = "bleeding", ShareStat = "pass_share", To = to }],
+                StatusDamage = [new() { Status = "bleeding", Tick = "bleed_tick", Period = 1 }]
+            }
+        };
+        return (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled),
+            BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test"));
+    }
+
+    // Bleed ticks while the player is between enemies, from 1 s to the arrival at 6 s.
+    private static int BleedsWhileAway(DummyFightResult result) => Times(result, DummyEventKind.BleedTick).Count(at => at > 1 && at < 6);
+
+    [Fact]
+    public void AStatusPassesOnAtADeathForItsShareOfTheDuration()
+    {
+        // The bleed went on at 0 s for 4 s; at the death at 1 s half that, 2 s, goes on the neighbour 4 m away, which ticks once, at 2 s
+        // (a status ticks before its end), while the player takes 5 s to arrive.
+        var options = Group(10, 3) with { EnemySpacing = 4 };
+        var nearest = Run(StatusPassOnFixture(), options, delay: 5);
+        Assert.Equal(1, BleedsWhileAway(nearest));
+        Assert.Equal(1, Times(nearest, DummyEventKind.StatusPassedOn)[0]);
+        Assert.Equal(1, Amounts(nearest, DummyEventKind.StatusPassedOn)[0]);
+        // To all within 9 m, both neighbours bleed.
+        var all = Run(StatusPassOnFixture(to: "all", within: 9), options, delay: 5);
+        Assert.Equal(2, BleedsWhileAway(all));
+        Assert.Equal(2, Amounts(all, DummyEventKind.StatusPassedOn)[0]);
+        // To the nearest only, still one, whoever else is in reach.
+        Assert.Equal(1, BleedsWhileAway(Run(StatusPassOnFixture(within: 9), options, delay: 5)));
+        // Without the pass-on nothing bleeds then.
+        Assert.Equal(0, BleedsWhileAway(Run(StatusPassOnFixture(passOn: false), options, delay: 5)));
+    }
+
+    [Fact]
+    public void APassOnCanTakeItsReachAndShareFromStats()
+    {
+        var options = Group(10, 3) with { EnemySpacing = 4 };
+        // The same as the numbers: half the bleed to all within 9 m reaches both neighbours, one tick each.
+        Assert.Equal(2, BleedsWhileAway(Run(StatusPassOnFixture(to: "all", fromStats: ("9", "0.5")), options, delay: 5)));
+        // A reach of 5 m finds only the one 4 m away.
+        Assert.Equal(1, BleedsWhileAway(Run(StatusPassOnFixture(to: "all", fromStats: ("5", "0.5")), options, delay: 5)));
+        // The whole bleed, 4 s from the death at 1 s, ticks at 2, 3 and 4 s on the neighbour.
+        Assert.Equal(3, BleedsWhileAway(Run(StatusPassOnFixture(fromStats: ("5", "1")), options, delay: 5)));
+        // A value outside the field's limits refuses the fight rather than reach nobody or everybody.
+        foreach (var (within, share) in new[] { ("0", "0.5"), ("51", "0.5"), ("5", "0"), ("5", "1.5") })
+        {
+            var refused = Assert.Throws<SimulationException>(() => Run(StatusPassOnFixture(fromStats: (within, share)), options, delay: 5));
+            Assert.Equal("trigger-unsupported", refused.Code);
+            // A fight where nothing is placed, so the pass-on reaches nobody, runs as before and says so.
+            var unspaced = Run(StatusPassOnFixture(fromStats: (within, share)), Group(10, 3), delay: 5);
+            Assert.Equal(0, BleedsWhileAway(unspaced));
+            Assert.Contains(unspaced.Limitations, note => note.StartsWith("These effects on other enemies find nobody", StringComparison.Ordinal));
+        }
+    }
+
+    [Fact]
+    public void ASpreadCopiesANewStatusToTheEnemiesInReach()
+    {
+        // Three enemies 4 m apart. The hit at 0 s bleeds the target to 1.5 s, and the spread bleeds its neighbour for what's left, so both
+        // tick at 1 s. The one 8 m away isn't reached.
+        var result = Run(SpreadFixture(every: 3, spreadEvery: 0), Group(2, 3) with { EnemySpacing = 4 });
+        Assert.Equal(2, TicksAt(result, 1));
+        var wide = Run(SpreadFixture(every: 3, spreadEvery: 0), Group(2, 3) with { EnemySpacing = 10 });
+        Assert.Equal(1, TicksAt(wide, 1));
+        // Without a spacing it reaches nobody, and says so.
+        var unspaced = Run(SpreadFixture(every: 3, spreadEvery: 0), Group(2, 3));
+        Assert.Equal(1, TicksAt(unspaced, 1));
+        Assert.Contains(unspaced.Limitations, note => note.StartsWith("These effects on other enemies find nobody", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ASpreadWaitsForItsCooldown()
+    {
+        // The bleed goes on anew at 0, 3 and 6 s. With no cooldown each spreads, so two ticks at 1, 4 and 7 s; with 5 s, the spread at 3 s
+        // waits, so one tick at 4 s.
+        var every = Run(SpreadFixture(every: 3, spreadEvery: 0), Group(8, 3) with { EnemySpacing = 4 });
+        Assert.Equal([2, 2, 2], new[] { 1d, 4, 7 }.Select(at => TicksAt(every, at)));
+        var cooled = Run(SpreadFixture(every: 3, spreadEvery: 5), Group(8, 3) with { EnemySpacing = 4 });
+        Assert.Equal([2, 1, 2], new[] { 1d, 4, 7 }.Select(at => TicksAt(cooled, at)));
+    }
+
+    [Fact]
+    public void WithoutASpacingABlastFindsNobodyAndSpacingNeedsSeveralEnemies()
+    {
+        var unspaced = Run(BlastFixture(50), Group(3, 3));
+        Assert.Empty(Times(unspaced, DummyEventKind.TalentBlast));
+        Assert.Contains(unspaced.Limitations, note => note.StartsWith("These effects on other enemies find nobody, since the fight has no enemy spacing", StringComparison.Ordinal));
+        var alone = Run(BlastFixture(50), Options with { Duration = 3, DriveSimpleBuffs = true });
+        Assert.Empty(Times(alone, DummyEventKind.TalentBlast));
+        Assert.Contains(alone.Limitations, note => note.StartsWith("These effects on other enemies find nobody, since the fight has no several enemies at once", StringComparison.Ordinal));
+        Assert.Equal("enemy-spacing-unsupported", Assert.Throws<SimulationException>(() => Run(BlastFixture(5), Options with { Duration = 3, DriveSimpleBuffs = true, EnemySpacing = 4 })).Code);
+        Assert.Throws<ArgumentOutOfRangeException>(() => Run(BlastFixture(5), Group(3, 3) with { EnemySpacing = 0.1 }));
+    }
+
+    [Fact]
+    public void ABlastKillingWaitingEnemiesCountsEachOnceAndTheFightRunsOutOfThem()
+    {
+        // Three enemies in all, 4 m apart. The first dies at 2 s, and its 30-damage, 9 m blast kills both waiting ones: three kills at
+        // 2 s, nobody left, and no more shots. Neither comes back to be shot.
+        var result = Run(BlastFixture(9, amount: "30"), Group(10, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true });
+        Assert.Equal([2d, 2d, 2d], Times(result, DummyEventKind.Kill));
+        Assert.Equal(3, result.Kills);
+        Assert.DoesNotContain(Times(result, DummyEventKind.Shot), at => at > 2);
+    }
+
+    [Fact]
+    public void ABlastKillingTheLastWaitingEnemyLeavesNobodyToArriveAndNoTimeToKill()
+    {
+        // Two enemies in all, 4 m apart, each 10 m away. The first shot's hit at 0 s blasts the waiting one dead; the player's own
+        // target dies at 2 s, and nobody is left to arrive. The blasted enemy was never reached, so time to kill is the first's 2 s.
+        var result = Run(BlastFixture(5, amount: "30", on: "hit"), Group(10, 2) with { EnemySpacing = 4, ClearKills = 2, EnemiesShrink = true, TargetDistances = [10, 10] });
+        Assert.Equal([0d, 2d], Times(result, DummyEventKind.Kill));
+        Assert.Equal(2, result.Kills);
+        Assert.DoesNotContain(Times(result, DummyEventKind.Shot), at => at > 2);
+        Assert.Equal(2, result.TimeToKill!.Mean, 9);
+    }
+
+    [Fact]
+    public void UnderFocusFireTheNextArrivalSkipsAnEnemyABlastKilled()
+    {
+        // Three enemies in all, 4 m apart. The 5 m blast at 2 s kills only the neighbour next in line, so the player goes on to the
+        // third, which dies to three more shots. Three kills, not four: the dead neighbour isn't shot again.
+        var result = Run(BlastFixture(5, amount: "30"), Group(20, 3) with { EnemySpacing = 4, ClearKills = 3, EnemiesShrink = true });
+        Assert.Equal(3, result.Kills);
+        var kills = Times(result, DummyEventKind.Kill);
+        Assert.Equal([2d, 2d], kills.Take(2));
+        Assert.True(kills[2] > 2);
+        Assert.DoesNotContain(Times(result, DummyEventKind.Shot), at => at > kills[2]);
+    }
+
     private static (CompiledPackExpressions Pack, BuildSnapshot Build) OneShotTargets(params (string Id, string Formula)[] changes) =>
         Fixture(changes: [("character_armor", "0"), ("character_health", "100000"), ("enemy_target_health", "5"), .. changes]);
 
@@ -2549,6 +3019,91 @@ public sealed partial class IncomingFightTests
         Assert.DoesNotContain(result.FirstFightEvents, e => e.Time > 2);
         var tie = result.FirstFightEvents.Where(e => e.Time == 1).ToArray();
         Assert.True(Array.FindIndex(tie, e => e.Kind == DummyEventKind.EnemyHit) < Array.FindIndex(tie, e => e.Kind == DummyEventKind.SkillImpact));
+    }
+
+    // ADR 0014: a skill dealing 5 an impact, 15 while the talent's buff from a kill is on, on a 1 s cooldown. A 30-health target dies to
+    // the third shot, at 2 s, which turns the buff on for the rest of the fight.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) SkillUseFixture(string health = "30")
+    {
+        var (original, build) = IncomingSkillFixture(impact: "5 + buff_damage", cooldown: "1",
+            changes: [("character_armor", "0"), ("character_health", "100000"), ("enemy_target_health", health)]);
+        var rules = original.Pack with
+        {
+            Simulation = original.Pack.Simulation with { Triggers = [new() { Talent = "test", Key = "buff", Kind = "buff", On = "kill", Duration = 100 }] }
+        };
+        var (pack, _) = Recompile(rules);
+        return (pack, build.WithTalentSelection("primary_weapon", "talent", "test"));
+    }
+
+    private static DummyFightOptions SkillUseOptions(params (string Slot, SkillUseCondition Condition)[] uses) =>
+        Options with { Duration = 5, IncludeSkills = true, DriveSimpleBuffs = true, SkillUse = uses.ToImmutableDictionary(use => use.Slot, use => use.Condition) };
+
+    private static double[] Impacts(DummyFightResult result) => [.. result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.SkillImpact).Select(e => e.Time)];
+
+    [Fact]
+    public void ASkillWaitsForItsKeyAndItsCooldownStartsWhenUsed()
+    {
+        // As soon as it's ready: 0 to 4 s, three of them before the kill.
+        var ready = Run(SkillUseFixture(), SkillUseOptions());
+        Assert.Equal([0d, 1, 2, 3, 4], Impacts(ready));
+        Assert.Empty(ready.SkillUses);
+        // Waiting for the buff: held from 0 s to the kill at 2 s, then each second, every impact at 15.
+        var waiting = Run(SkillUseFixture(), SkillUseOptions(("damage_slot", new() { When = SkillUseCondition.KeyOn, Key = "buff" })));
+        Assert.Equal([2d, 3, 4], Impacts(waiting));
+        // Each with the buff, 15; the one at 4 s deals the 10 left on its target.
+        Assert.Equal([15d, 15, 10], waiting.FirstFightEvents.Where(e => e.Kind == DummyEventKind.SkillImpact).Select(e => e.Damage));
+        Assert.Equal(new SkillSlotUse(3, 2), waiting.SkillUses["damage_slot"]);
+        Assert.Contains(waiting.Limitations, note => note.StartsWith("Assumed skill use: damage_slot while buff is on", StringComparison.Ordinal));
+        // Ready after 1.5 s: first at 1.5 s, then each second; held 1.5 s.
+        var later = Run(SkillUseFixture(), SkillUseOptions(("damage_slot", new() { When = SkillUseCondition.AfterSeconds, Seconds = 1.5 })));
+        Assert.Equal([1.5, 2.5, 3.5, 4.5], Impacts(later));
+        Assert.Equal(new SkillSlotUse(4, 1.5), later.SkillUses["damage_slot"]);
+    }
+
+    [Fact]
+    public void ASkillWaitingForEnemiesStopsOnceTheGroupShrinks()
+    {
+        var options = SkillUseOptions(("damage_slot", new() { When = SkillUseCondition.EnemiesAtLeast, Count = 3 })) with { EnemiesAtOnce = 3, ClearKills = 3, EnemiesShrink = true, Duration = 8 };
+        // Three enemies, three in all, so the group shrinks with each kill. The skill and shots kill the first at 1 s; from then two are
+        // alive, so the skill waiting for three is held for the rest of the 8 s fight. Used as soon as it's ready, it goes on to 3 s.
+        var result = Run(SkillUseFixture(), options);
+        Assert.Equal([0d, 1], Impacts(result));
+        Assert.Equal(new SkillSlotUse(2, 6), result.SkillUses["damage_slot"]);
+        Assert.Contains(result.Limitations, note => note.Contains("damage_slot while at least 3 enemies are alive", StringComparison.Ordinal));
+        Assert.Equal([0d, 1, 2, 3], Impacts(Run(SkillUseFixture(), options with { SkillUse = ImmutableDictionary<string, SkillUseCondition>.Empty })));
+        // Waiting for two, it's used until the second kill, at 2 s, and held from then.
+        var two = Run(SkillUseFixture(), options with { SkillUse = ImmutableDictionary<string, SkillUseCondition>.Empty.Add("damage_slot", new() { When = SkillUseCondition.EnemiesAtLeast, Count = 2 }) });
+        Assert.Equal([0d, 1, 2], Impacts(two));
+        Assert.Equal(new SkillSlotUse(3, 5), two.SkillUses["damage_slot"]);
+        // It needs several enemies at once, at least as many as its count.
+        Assert.Equal("skill-use-unsupported", Assert.Throws<SimulationException>(() => Run(SkillUseFixture(), options with { SkillUse = ImmutableDictionary<string, SkillUseCondition>.Empty.Add("damage_slot", new() { When = SkillUseCondition.EnemiesAtLeast, Count = 4 }) })).Code);
+        Assert.Equal("while at least 1 enemy is alive", new SkillUseCondition { When = SkillUseCondition.EnemiesAtLeast, Count = 1 }.ToString());
+        Assert.Equal("skill-use-unsupported", Assert.Throws<SimulationException>(() => Run(SkillUseFixture(), SkillUseOptions(("damage_slot", new() { When = SkillUseCondition.EnemiesAtLeast, Count = 2 })))).Code);
+    }
+
+    [Fact]
+    public void ASkillWhoseConditionNeverHoldsIsNeverUsed()
+    {
+        // No kill comes, so the buff never turns on: held for the whole fight, and the result says so.
+        var result = Run(SkillUseFixture(health: "100000"), SkillUseOptions(("damage_slot", new() { When = SkillUseCondition.KeyOn, Key = "buff" })));
+        Assert.Empty(Impacts(result));
+        Assert.Equal(new SkillSlotUse(0, 5), result.SkillUses["damage_slot"]);
+        Assert.Contains(result.Limitations, note => note == "Never used, since its condition never held: damage_slot while buff is on");
+    }
+
+    [Fact]
+    public void SkillUseConditionsAreChecked()
+    {
+        string Refusal(DummyFightOptions options) => Assert.Throws<SimulationException>(() => Run(SkillUseFixture(), options)).Code;
+        // A key the build's rules don't drive, a slot with no damaging skill, and a fight with no skills are refused.
+        Assert.Equal("skill-use-unsupported", Refusal(SkillUseOptions(("damage_slot", new() { When = SkillUseCondition.KeyOn, Key = "enemy_hit_rate" }))));
+        Assert.Equal("skill-use-unsupported", Refusal(SkillUseOptions(("other_slot", new() { When = SkillUseCondition.AfterSeconds, Seconds = 1 }))));
+        Assert.Equal("skill-use-unsupported", Refusal(SkillUseOptions(("damage_slot", new() { When = SkillUseCondition.AfterSeconds, Seconds = 1 })) with { IncludeSkills = false }));
+        // A key needs talent triggers.
+        Assert.Equal("skill-use-unsupported", Refusal(Options with { Duration = 5, IncludeSkills = true, SkillUse = ImmutableDictionary<string, SkillUseCondition>.Empty.Add("damage_slot", new() { When = SkillUseCondition.KeyOn, Key = "buff" }) }));
+        // A malformed condition is refused by the options themselves.
+        Assert.Throws<ArgumentException>(() => Run(SkillUseFixture(), SkillUseOptions(("damage_slot", new() { When = SkillUseCondition.AfterSeconds }))));
+        Assert.Throws<ArgumentException>(() => Run(SkillUseFixture(), SkillUseOptions(("damage_slot", new() { When = "sometimes" }))));
     }
 
     [Fact]

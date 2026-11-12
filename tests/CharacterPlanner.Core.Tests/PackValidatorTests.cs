@@ -186,6 +186,46 @@ public sealed class PackValidatorTests
         ["status also on status applied"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, Count = 4, Also = [new() { On = "status_applied" }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["status also on an unknown event"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, Count = 4, Also = [new() { On = "nowhere" }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["status also counted on a whole second"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "status", Status = "burning", Duration = 7, On = "second", Count = 4, Also = [new() { On = "kill" }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["pass-on twice for a talent"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "hit", Total = Pack.Stats[0].ID, Duration = 10, Period = 1 }], PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 25 }, new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10 }] } }, "bad-sim-pass-on", "simulation.passOns[1].talent"),
+        ["pass-on beyond 50 m"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "hit", Total = Pack.Stats[0].ID, Duration = 10, Period = 1 }], PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 51 }] } }, "bad-sim-pass-on", "simulation.passOns[0].within"),
+        ["pass-on reaching nowhere"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "hit", Total = Pack.Stats[0].ID, Duration = 10, Period = 1 }], PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 0 }] } }, "bad-sim-pass-on", "simulation.passOns[0].within"),
+        ["status pass-on of a burn without a tick row"] = (() => Pack with { Simulation = Pack.Simulation with { StatusDamage = [], PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10, Status = "burning", Share = 0.5 }] } }, "bad-sim-pass-on", "simulation.passOns[0].status"),
+        ["blast with nothing to do"] = (() => Pack with { Simulation = Pack.Simulation with { Blasts = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "kill", Within = 10 }] } }, "bad-sim-blast", "simulation.blasts[0].amount"),
+        ["blast marking a rule not held per enemy"] = (() => Pack with { Simulation = Pack.Simulation with { Blasts = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "kill", Within = 10, Mark = Pack.Simulation.Triggers[0].Key }] } }, "bad-sim-blast", "simulation.blasts[0].mark"),
+        ["per-enemy stacks with no event and no blast marking them"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Key = "marks", Kind = "stacks", Max = 5, ResetOn = "target_death" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["trap of an unknown talent"] = (() => Pack with { Simulation = Pack.Simulation with { Traps = [new() { Talent = "nobody", TagAfter = 0.5, MaxTags = 10, Status = "shocked", StatusDuration = 10 }] } }, "bad-sim-trap", "simulation.traps[0].talent"),
+        ["trap tagging eleven"] = (() => Pack with { Simulation = Pack.Simulation with { Traps = [new() { Talent = Pack.Simulation.Triggers[0].Talent, TagAfter = 0.5, MaxTags = 11, Status = "shocked", StatusDuration = 10 }] } }, "bad-sim-trap", "simulation.traps[0].maxTags"),
+        ["trap with an unknown status"] = (() => Pack with { Simulation = Pack.Simulation with { Traps = [new() { Talent = Pack.Simulation.Triggers[0].Talent, TagAfter = 0.5, MaxTags = 10, Status = "frozen", StatusDuration = 10 }] } }, "bad-sim-trap", "simulation.traps[0].status"),
+        ["trap burning without a tick row"] = (() => Pack with { Simulation = Pack.Simulation with { StatusDamage = [], Traps = [new() { Talent = Pack.Simulation.Triggers[0].Talent, TagAfter = 0.5, MaxTags = 10, Status = "burning", StatusDuration = 10 }] } }, "bad-sim-trap", "simulation.traps[0].status"),
+        ["trap status without a duration"] = (() => Pack with { Simulation = Pack.Simulation with { Traps = [new() { Talent = Pack.Simulation.Triggers[0].Talent, TagAfter = 0.5, MaxTags = 10, Status = "shocked" }] } }, "bad-sim-trap", "simulation.traps[0].statusDuration"),
+        ["trap with a negative cut"] = (() => Pack with { Simulation = Pack.Simulation with { Traps = [new() { Talent = Pack.Simulation.Triggers[0].Talent, TagAfter = 0.5, MaxTags = 10, Status = "shocked", StatusDuration = 10, Cut = -1 }] } }, "bad-sim-trap", "simulation.traps[0].cut"),
+        ["redirect of an unknown talent"] = (() => Pack with { Simulation = Pack.Simulation with { Redirects = [new() { Talent = "nobody", Share = 0.5, Within = 30 }] } }, "bad-sim-redirect", "simulation.redirects[0].talent"),
+        ["redirect of all of a hit"] = (() => Pack with { Simulation = Pack.Simulation with { Redirects = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Share = 1, Within = 30 }] } }, "bad-sim-redirect", "simulation.redirects[0].share"),
+        ["redirect beyond 50 m"] = (() => Pack with { Simulation = Pack.Simulation with { Redirects = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Share = 0.5, Within = 51 }] } }, "bad-sim-redirect", "simulation.redirects[0].within"),
+        ["two redirects for a talent"] = (() => Pack with { Simulation = Pack.Simulation with { Redirects = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Share = 0.5, Within = 30 }, new() { Talent = Pack.Simulation.Triggers[0].Talent, Share = 0.5, Within = 30 }] } }, "bad-sim-redirect", "simulation.redirects[1].talent"),
+        ["status pass-on without a share"] = (() => Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10, Status = "bleeding" }] } }, "bad-sim-pass-on", "simulation.passOns[0].status"),
+        ["status pass-on to some"] = (() => Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10, Status = "any", Share = 0.5, To = "some" }] } }, "bad-sim-pass-on", "simulation.passOns[0].status"),
+        ["debuff pass-on to all"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "hit", Total = Pack.Stats[0].ID, Duration = 10, Period = 1 }], PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 25, To = "all" }] } }, "bad-sim-pass-on", "simulation.passOns[0].status"),
+        ["pass-on without a debuff"] = (() => Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 25 }] } }, "bad-sim-pass-on", "simulation.passOns[0].talent"),
+        ["pass-on with within and withinStat"] = (() => Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10, WithinStat = Pack.Stats[0].ID, Status = "any", Share = 0.5 }] } }, "bad-sim-pass-on", "simulation.passOns[0].within"),
+        ["pass-on with an unknown withinStat"] = (() => Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, WithinStat = "missing", Status = "any", Share = 0.5 }] } }, "unknown-stat", "simulation.passOns[0].withinStat"),
+        ["status pass-on with share and shareStat"] = (() => Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10, Status = "any", Share = 0.5, ShareStat = Pack.Stats[0].ID }] } }, "bad-sim-pass-on", "simulation.passOns[0].status"),
+        ["status pass-on with an unknown shareStat"] = (() => Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10, Status = "any", ShareStat = "missing" }] } }, "unknown-stat", "simulation.passOns[0].shareStat"),
+        ["debuff pass-on with a shareStat"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "hit", Total = Pack.Stats[0].ID, Duration = 10, Period = 1 }], PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 25, ShareStat = Pack.Stats[0].ID }] } }, "bad-sim-pass-on", "simulation.passOns[0].status"),
+        ["spread unknown talent"] = (() => Pack with { Simulation = Pack.Simulation with { Spreads = [new() { Talent = "nobody", Within = 8, Every = 15 }] } }, "bad-sim-spread", "simulation.spreads[0].talent"),
+        ["spread twice for a talent"] = (() => Pack with { Simulation = Pack.Simulation with { Spreads = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 8 }, new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10 }] } }, "bad-sim-spread", "simulation.spreads[1].talent"),
+        ["spread reaching nowhere"] = (() => Pack with { Simulation = Pack.Simulation with { Spreads = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 0 }] } }, "bad-sim-spread", "simulation.spreads[0].within"),
+        ["spread cooldown negative"] = (() => Pack with { Simulation = Pack.Simulation with { Spreads = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 8, Every = -1 }] } }, "bad-sim-spread", "simulation.spreads[0].every"),
+        ["spread beyond 50 m"] = (() => Pack with { Simulation = Pack.Simulation with { Spreads = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 51 }] } }, "bad-sim-spread", "simulation.spreads[0].within"),
+        ["spread cooldown above 600"] = (() => Pack with { Simulation = Pack.Simulation with { Spreads = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 8, Every = 601 }] } }, "bad-sim-spread", "simulation.spreads[0].every"),
+        ["blast unknown talent"] = (() => Pack with { Simulation = Pack.Simulation with { Blasts = [new() { Talent = "nobody", On = "kill", Amount = Pack.Stats[0].ID, Within = 5 }] } }, "bad-sim-blast", "simulation.blasts[0].talent"),
+        ["blast on a whole second"] = (() => Pack with { Simulation = Pack.Simulation with { Blasts = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "second", Amount = Pack.Stats[0].ID, Within = 5 }] } }, "bad-sim-blast", "simulation.blasts[0].on"),
+        ["blast on a reload"] = (() => Pack with { Simulation = Pack.Simulation with { Blasts = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "reload", Amount = Pack.Stats[0].ID, Within = 5 }] } }, "bad-sim-blast", "simulation.blasts[0].on"),
+        ["blast burn without a tick row"] = (() => Pack with { Simulation = Pack.Simulation with { StatusDamage = [], Blasts = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "kill", Amount = Pack.Stats[0].ID, Within = 5, Status = "burning", StatusDuration = 5 }] } }, "bad-sim-blast", "simulation.blasts[0].status"),
+        ["blast status unknown"] = (() => Pack with { Simulation = Pack.Simulation with { Blasts = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "kill", Amount = Pack.Stats[0].ID, Within = 5, Status = "glowing", StatusDuration = 5 }] } }, "bad-sim-blast", "simulation.blasts[0].status"),
+        ["blast status without a duration"] = (() => Pack with { Simulation = Pack.Simulation with { Blasts = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "kill", Amount = Pack.Stats[0].ID, Within = 5, Status = "bleeding" }] } }, "bad-sim-blast", "simulation.blasts[0].status"),
+        ["blast duration without a status"] = (() => Pack with { Simulation = Pack.Simulation with { Blasts = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "kill", Amount = Pack.Stats[0].ID, Within = 5, StatusDuration = 5 }] } }, "bad-sim-blast", "simulation.blasts[0].status"),
+        ["blast beyond 50 m"] = (() => Pack with { Simulation = Pack.Simulation with { Blasts = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "kill", Amount = Pack.Stats[0].ID, Within = 51 }] } }, "bad-sim-blast", "simulation.blasts[0].within"),
         ["hold delay on temporary armor"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "temporary_armor", GrantAmount = 0.5, GrantDuration = 10, GrantHoldDelay = 1 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
         ["hold delay above 60"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "skill_cooldown", GrantAmount = 1, GrantHoldDelay = 61 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
         ["hold delay without a grant"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { GrantHoldDelay = 1 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
@@ -621,6 +661,45 @@ public sealed class PackValidatorTests
         Assert.Empty(PackValidator.Load(bytes).Diagnostics);
         var stacksWithout = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { Also = [new() { On = "headshot" }] }] } };
         Assert.Contains(PackValidator.Load(PackWriter.Write(stacksWithout)).Diagnostics, entry => entry.Code == "bad-sim-trigger" && entry.Message.Contains("positive gains", StringComparison.Ordinal));
+        // ADR 0013: a pass-on, a spread and a blast keep their shapes through a write and load.
+        var passingOn = Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "hit", Total = Pack.Stats[0].ID, Duration = 10, Period = 1 }], PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 25 }] } };
+        var loadedPassOn = PackValidator.Load(PackWriter.Write(passingOn));
+        Assert.Empty(loadedPassOn.Diagnostics);
+        Assert.Equal(25d, Assert.Single(loadedPassOn.Compiled!.Pack.Simulation.PassOns).Within);
+        var trapping = Pack with { Simulation = Pack.Simulation with { Traps = [new() { Talent = Pack.Simulation.Triggers[0].Talent, TagAfter = 0.5, MaxTags = 10, Status = "shocked", StatusDuration = 10, Every = 30, Cut = 10 }] } };
+        var loadedTrap = PackValidator.Load(PackWriter.Write(trapping));
+        Assert.Empty(loadedTrap.Diagnostics);
+        var trap = Assert.Single(loadedTrap.Compiled!.Pack.Simulation.Traps);
+        Assert.Equal((0.5, 10, "shocked", 10d, 30d, 10d), (trap.TagAfter, trap.MaxTags, trap.Status, trap.StatusDuration, trap.Every, trap.Cut));
+        var redirecting = Pack with { Simulation = Pack.Simulation with { Redirects = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Share = 0.5, Within = 30 }] } };
+        var loadedRedirect = PackValidator.Load(PackWriter.Write(redirecting));
+        Assert.Empty(loadedRedirect.Diagnostics);
+        var redirect = Assert.Single(loadedRedirect.Compiled!.Pack.Simulation.Redirects);
+        Assert.Equal((0.5, 30d), (redirect.Share, redirect.Within));
+        var statusPassingOn = Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10, Status = "any", Share = 0.5, To = "all" }] } };
+        var loadedStatusPassOn = PackValidator.Load(PackWriter.Write(statusPassingOn));
+        Assert.Empty(loadedStatusPassOn.Diagnostics);
+        var statusPassOn = Assert.Single(loadedStatusPassOn.Compiled!.Pack.Simulation.PassOns);
+        Assert.Equal(("any", 0.5, "all"), (statusPassOn.Status, statusPassOn.Share, statusPassOn.To));
+        // Proliferation's shape: the reach and share from stats, and neither number written.
+        var statPassingOn = Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, WithinStat = Pack.Stats[0].ID, Status = "any", ShareStat = Pack.Stats[1].ID, To = "all" }] } };
+        var statPassOnBytes = PackWriter.Write(statPassingOn);
+        var loadedStatPassOn = PackValidator.Load(statPassOnBytes);
+        Assert.Empty(loadedStatPassOn.Diagnostics);
+        var statPassOn = Assert.Single(loadedStatPassOn.Compiled!.Pack.Simulation.PassOns);
+        Assert.Equal((0d, Pack.Stats[0].ID, 0d, Pack.Stats[1].ID), (statPassOn.Within, statPassOn.WithinStat, statPassOn.Share, statPassOn.ShareStat));
+        var statPassOnJson = System.Text.Encoding.UTF8.GetString(statPassOnBytes[PackFiles.Simulation].Span);
+        Assert.DoesNotContain("\"within\"", statPassOnJson, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"share\"", statPassOnJson, StringComparison.Ordinal);
+        var spreading = Pack with { Simulation = Pack.Simulation with { Spreads = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 8, Every = 15 }] } };
+        var loadedSpread = PackValidator.Load(PackWriter.Write(spreading));
+        Assert.Empty(loadedSpread.Diagnostics);
+        Assert.Equal((8d, 15d), (loadedSpread.Compiled!.Pack.Simulation.Spreads[0].Within, loadedSpread.Compiled.Pack.Simulation.Spreads[0].Every));
+        var blasting = Pack with { Simulation = Pack.Simulation with { StatusDamage = [new() { Status = "bleeding", Tick = Pack.Stats[0].ID, Period = 1 }], Blasts = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "headshot_kill", Amount = Pack.Stats[0].ID, Within = 5, Status = "bleeding", StatusDuration = 8 }] } };
+        var loadedBlast = PackValidator.Load(PackWriter.Write(blasting));
+        Assert.Empty(loadedBlast.Diagnostics);
+        var blast = loadedBlast.Compiled!.Pack.Simulation.Blasts[0];
+        Assert.Equal(("headshot_kill", 5d, "bleeding", 8d), (blast.On, blast.Within, blast.Status, blast.StatusDuration));
         // R82: Efficient's activation delay, and a kit grant scaled by a stat.
         var efficient = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { ActiveAfter = 10, Grant = "temporary_armor", GrantAmountStat = Pack.Stats[0].ID, GrantDuration = 10 }] } };
         var loadedEfficient = PackValidator.Load(PackWriter.Write(efficient));

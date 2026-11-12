@@ -2210,6 +2210,14 @@
       "format": "decimal",
       "formula": "20 * (1 + specialization_kit_bonus)",
       "min": 0
+    },
+    {
+      "id": "regicide_blast_damage",
+      "name": "Regicide Blast Damage",
+      "description": "Damage of Regicide's blast to each enemy within 5 m of a headshot kill's victim: 400% (warlock_talentrule_exotic_pistol_mk2_P1_damage_bonus 4.0) of PhysicalDamageMaxFinal, the weapon's damage per bullet with its weapon-damage bonuses and no headshot, critical, amplified or distance term. Both the explosion's minimum and maximum damage take it, so there's no falloff (R88).",
+      "format": "integer",
+      "formula": "4 * equipped_weapon_damage / equipped_weapon_pellets",
+      "min": 0
     }
   ],
   "curves": {
@@ -11221,7 +11229,7 @@
     {
       "id": "unnerve_marks",
       "name": "Unnerve Target Marks",
-      "description": "Assumed currently retained Unnerve marks on this target (0\u20135), each adding 15% amplified Weapon Damage. Kill and proximity conditions, mark application, and the 10-second timer are not inferred.",
+      "description": "Assumed Unnerve marks on this target (0\u20135), each adding 15% amplified damage, applied to weapon damage. Driven fights take the marks from the fight (Unnerve's kills mark enemies within 20 m for 10 s); this assumption is for static comparisons and fights without talent triggers.",
       "min": 0,
       "max": 5,
       "default": 0
@@ -52426,11 +52434,12 @@
       "name": "Creeping Death",
       "description": "When you apply a status effect, it is also applied to all enemies within 8m of your target.  Cooldown: 15s",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "When you apply a status effect, it is also applied to all enemies within 8m of your target."
+          "A skill's own status: the script also listens to each skill slot's latest skill agent, so the source spreads those too; fights don't (R89).",
+          "Other talents seeing the spread: its applications have the player as source, so talents that count the player's statuses may see them; fights give them none. Not established (R89)."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R88_R91_SOURCE_REVIEW.md (talent_mask_status_effects_spread_skillscript)"
       }
     },
     {
@@ -52438,11 +52447,12 @@
       "name": "Perfect Creeping Death",
       "description": "When you apply a status effect, it is also applied to all enemies within 10m of your target.  Cooldown: 10s",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "When you apply a status effect, it is also applied to all enemies within 10m of your target."
+          "A skill's own status: the script also listens to each skill slot's latest skill agent, so the source spreads those too; fights don't (R89).",
+          "Other talents seeing the spread: its applications have the player as source, so talents that count the player's statuses may see them; fights give them none. Not established (R89)."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R88_R91_SOURCE_REVIEW.md (talent_mask_status_effects_spread_skillscript)"
       }
     },
     {
@@ -52925,7 +52935,7 @@
       ],
       "coverage": {
         "status": "complete",
-        "evidence": "R35_PRIORITY3_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); every source parameter appears in the pack (or as a matching delta)"
+        "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (talent_gearset_contagion_chest)"
       }
     },
     {
@@ -53197,11 +53207,13 @@
       "name": "Bewildered",
       "description": "When dealing Weapon Damage to an enemy, 50% of the damage will be dealt to another enemy within 30m instead. When there are no enemies nearby, deal damage normally. Does not apply to Armor Plates.",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "When dealing Weapon Damage to an enemy, 50% of the damage will be dealt to another enemy within 30m instead."
+          "Armor plates and weak points: a hit there moves nothing by the source; fights have neither, so every hit moves its share (R94).",
+          "Receivers: the source excludes the Tank, BigDog, BigDogConvoy and BigDogFlamer archetypes, destructible props, enemies targetable on weak points only and invulnerable ones; fights draw from every enemy in reach (R94).",
+          "Skill damage: a second Dealt x0.5 covers SOURCE_SKILLSCRIPT damage, and only Blossom Harvest's is moved; whether other skill damage is halved isn't settled (R94). Pending an in-game check."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R94_SOURCE_REVIEW.md (skillscript_talent_bewildered)"
       }
     },
     {
@@ -53730,8 +53742,11 @@
         "gear_set_eclipse_protocol"
       ],
       "coverage": {
-        "status": "complete",
-        "evidence": "R35_PRIORITY3_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); every source parameter appears in the pack (or as a matching delta)"
+        "status": "partial",
+        "omits": [
+          "A skill's own status: the script also records statuses a skill's own agent applies, so the source passes those on too; fights don't (R91)."
+        ],
+        "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (skillscript_gearset_contagion_4pc)"
       }
     },
     {
@@ -57272,10 +57287,10 @@
       "coverage": {
         "status": "partial",
         "omits": [
-          "Stacks passing to a nearby enemy within 25 m when the target dies.",
+          "Which enemy takes the stacks at a death, what a full receiver does with the rest, and whether a moved stack keeps its schedule: the talent is hard-coded, and the data has only 25 m and all of the stacks; fights choose the nearest, drop the rest and keep the schedule (R90).",
           "Its tick rate and damage basis: the talent is hard-coded, so the row assumes a 1 s tick and a body hit."
         ],
-        "evidence": "R74_R76_SOURCE_REVIEW.md (talent values; hard-coded settings)"
+        "evidence": "R74_R76_SOURCE_REVIEW.md (talent values; hard-coded settings); R88_R91_SOURCE_REVIEW.md (pass-on)"
       }
     },
     {
@@ -57295,11 +57310,12 @@
       "name": "Regicide",
       "description": "Headshot Kills create a 5m explosion, dealing 400% weapon damage and applying bleed to all enemies hit.",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "Headshot Kills create a 5m explosion, dealing 400% weapon damage and applying bleed to all enemies hit."
+          "The bleed in its text: the live skill script's explosion deals BLAST damage and applies no status; only an older rule set no file references bleeds (R88). Pending an in-game check.",
+          "Which bonuses the BLAST explosion then takes (explosive or amplified damage, armor): the source doesn't say, and fights deal it as talent damage."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R88_R91_SOURCE_REVIEW.md (warlock_talent_exotic_pistol_mk2_skillscript)"
       }
     },
     {
@@ -57422,11 +57438,13 @@
       "name": "The Trap",
       "description": "Tags enemies when in scope (maximum 10). If Agent kills any marked target with a headshot, all other targets will have 50% (20% PVP) movement speed and receive burn for 10 seconds. Cooldown 30 seconds. Killing another enemy with a headshot will shorten the cooldown for 10 seconds. Targets are marked after 1 second in crosshair.",
       "coverage": {
-        "status": "unmodeled",
+        "status": "partial",
         "omits": [
-          "Tags enemies when in scope (maximum 10)."
+          "The slow: the source also cuts every tag's movement speed by 50% for 10 s, which changes nothing in a fight (R94).",
+          "Tags by aim: the source tags an enemy after about 0.5 s of steady aim under two aim flags (probably aiming and scoped); fights tag by hits on the enemy being shot (R94).",
+          "The burn's duration: the source gives the Burn an explicit 10 s, and whether the player's status duration scales it isn't in the data; fights scale it (R94, as R89)."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (description only; no effect in the pack)"
+        "evidence": "R94_SOURCE_REVIEW.md (skillscript_exotic_weapon_the_trap)"
       }
     },
     {
@@ -57453,8 +57471,11 @@
         }
       ],
       "coverage": {
-        "status": "complete",
-        "evidence": "R35_PRIORITY2_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); every source parameter appears in the pack, condition as an assumption input"
+        "status": "partial",
+        "omits": [
+          "The bonus covers all the player's damage to a marked enemy (a Taken combat modifier with no damage or source type), where the pack applies it to weapon damage only (R92)."
+        ],
+        "evidence": "R35_PRIORITY2_REVIEW.md (talent parameters); R92_SOURCE_REVIEW.md (skillscript_exotic_unnerve and its enemy debuff)"
       }
     },
     {

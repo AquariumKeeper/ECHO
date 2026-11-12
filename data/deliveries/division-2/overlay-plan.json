@@ -1,218 +1,137 @@
 {
   "format": "shade-tech.planner-talent-rule-overlay",
   "version": 2,
-  "provenance_heading": "R86: Ignited's skill kills, and Outsider's cooldown per talent",
-  "base_manifest_sha256": "0652247f6ddd43d739dae0bb8bb137620d6837b4e26aca8302ba558ea271df1d",
+  "provenance_heading": "R100: Indirect Transmission's row reading Proliferation's stats",
+  "base_manifest_sha256": "97dede892860c345ed9e58170b3d20c4c09840d4c104ab407f0d32c64ccfe90a",
   "evidence_packet": {
     "path": "packet.json",
-    "sha256": "de7f1ac0e90b6f00ca754cc72be71dc678eedc79bfe33315eed967312236a241"
+    "sha256": "a6ffd8473df4cf228430e476b2a60c974fd5e89d898bd58dd65b10fcfffafacb"
   },
   "changes": [
     {
       "document": "simulation.json",
-      "collection": "triggers",
+      "collection": "passOns",
       "op": "replace",
       "match": {
-        "talent": "weapon_talent_ignited",
-        "key": "target_burning"
+        "talent": "gear_talent_indirect_transmission"
       },
       "before": {
-        "talent": "weapon_talent_ignited",
-        "key": "target_burning",
-        "on": "kill",
-        "kind": "status",
-        "duration": 7,
-        "count": 4,
-        "status": "burning"
+        "talent": "gear_talent_indirect_transmission",
+        "within": 10,
+        "status": "any",
+        "share": 0.5,
+        "to": "all"
       },
       "after": {
-        "talent": "weapon_talent_ignited",
-        "key": "target_burning",
-        "on": "kill",
-        "also": [
-          {
-            "on": "skill_kill",
-            "gain": 1
-          }
-        ],
-        "kind": "status",
-        "duration": 7,
-        "count": 4,
-        "status": "burning"
+        "talent": "gear_talent_indirect_transmission",
+        "withinStat": "indirect_transmission_radius",
+        "status": "any",
+        "shareStat": "indirect_transmission_refresh",
+        "to": "all"
       },
       "evidence_paths": [
-        "sources/talent_weapon_increased_damage_to_burn.mtalent",
-        "sources/talent_weapon_increased_damage_to_burn_perfect.mtalent",
-        "sources/talentrule_weapon_increased_damage_to_burn.mtalentrules",
-        "docs/R86_SOURCE_REVIEW.md"
+        "docs/R88_R91_SOURCE_REVIEW.md",
+        "sources/talent_gearset_contagion_4pc.mtalent",
+        "sources/talent_gearset_contagion_chest.mtalent",
+        "sources/skillscript_gearset_contagion_4pc.mskillscriptgraph",
+        "sources/talent_dictionary.mdict"
       ],
-      "rationale": "\"Kill Stack Counter\" counts a defeat or down from any source toward one count; the burn arms the next SOURCE_PROJECTILE hit (R85, R86)."
+      "rationale": "talent_gearset_contagion_4pc_range 10 m and refreshpercentage 0.5, each raised by the chest talent (Proliferation) by 5 m and 0.25; the four-piece stats indirect_transmission_radius and indirect_transmission_refresh hold the same 10 or 15 and 50% or 75% (R91, R100)."
     },
     {
       "document": "rules.json",
       "collection": "talents",
       "op": "replace",
       "match": {
-        "id": "weapon_talent_ignited"
+        "id": "gear_talent_indirect_transmission"
       },
       "before": {
-        "id": "weapon_talent_ignited",
-        "name": "Ignited",
-        "description": "Amplifies +25% weapon damage to burning enemies.  After 4 kills, applies burning to the next enemy you hit.",
-        "modifiers": [
-          {
-            "stat": "weapon_damage_multiplier",
-            "op": "mult",
-            "value": 0.25,
-            "requires": {
-              "target_burning": "true"
-            }
-          }
-        ],
-        "coverage": {
-          "status": "partial",
-          "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; R20_DAMAGE_APPLICATION.md, In-game reading; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md)",
-          "omits": [
-            "Damage to Armor on armor ticks (observed for skill burns, untested for talent burns)"
-          ]
-        }
-      },
-      "after": {
-        "id": "weapon_talent_ignited",
-        "name": "Ignited",
-        "description": "Amplifies +25% weapon damage to burning enemies.  After 4 kills, applies burning to the next enemy you hit.",
-        "modifiers": [
-          {
-            "stat": "weapon_damage_multiplier",
-            "op": "mult",
-            "value": 0.25,
-            "requires": {
-              "target_burning": "true"
-            }
-          }
+        "id": "gear_talent_indirect_transmission",
+        "name": "Indirect Transmission",
+        "description": "On kill: Spread status effects of that enemy to all enemies within 10m. Refresh 50% of status effect durations.",
+        "modeledBySets": [
+          "gear_set_eclipse_protocol"
         ],
         "coverage": {
           "status": "partial",
           "omits": [
-            "Damage to Armor on armor ticks (observed for skill burns, untested for talent burns)",
-            "Kills by owned agents (a turret, drone or hive): the source's kill conditions exclude them (myTriggeredByRuleAgentsOwnedAgents FALSE); fights count every skill's kill.",
-            "Whether a skill's kill counts as the player's (myTriggeredByRuleAgent) isn't in the data; fights count it."
+            "Proliferation's 15 m and 75%: a pass-on's reach and share are numbers, so fights pass on within 10 m at 50%; the four-piece stats show 15 m and 75% (R91).",
+            "A skill's own status: the script also records statuses a skill's own agent applies, so the source passes those on too; fights don't (R91)."
           ],
-          "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; R20_DAMAGE_APPLICATION.md, In-game reading; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md); R85_SOURCE_REVIEW.md and R86_SOURCE_REVIEW.md (skill kills)"
+          "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (skillscript_gearset_contagion_4pc)"
+        }
+      },
+      "after": {
+        "id": "gear_talent_indirect_transmission",
+        "name": "Indirect Transmission",
+        "description": "On kill: Spread status effects of that enemy to all enemies within 10m. Refresh 50% of status effect durations.",
+        "modeledBySets": [
+          "gear_set_eclipse_protocol"
+        ],
+        "coverage": {
+          "status": "partial",
+          "omits": [
+            "A skill's own status: the script also records statuses a skill's own agent applies, so the source passes those on too; fights don't (R91)."
+          ],
+          "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (skillscript_gearset_contagion_4pc)"
         }
       },
       "evidence_paths": [
-        "sources/talent_weapon_increased_damage_to_burn.mtalent",
-        "sources/talent_weapon_increased_damage_to_burn_perfect.mtalent",
-        "sources/talentrule_weapon_increased_damage_to_burn.mtalentrules",
-        "docs/R86_SOURCE_REVIEW.md"
+        "docs/R88_R91_SOURCE_REVIEW.md",
+        "sources/talent_gearset_contagion_4pc.mtalent",
+        "sources/talent_gearset_contagion_chest.mtalent",
+        "sources/skillscript_gearset_contagion_4pc.mskillscriptgraph",
+        "sources/talent_dictionary.mdict"
       ],
-      "rationale": "Coverage after skill kills (R86)."
-    },
-    {
-      "document": "simulation.json",
-      "collection": "triggers",
-      "op": "replace",
-      "match": {
-        "talent": "weapon_talent_perfect_ignited",
-        "key": "target_burning"
-      },
-      "before": {
-        "talent": "weapon_talent_perfect_ignited",
-        "key": "target_burning",
-        "on": "kill",
-        "kind": "status",
-        "duration": 7,
-        "count": 3,
-        "status": "burning"
-      },
-      "after": {
-        "talent": "weapon_talent_perfect_ignited",
-        "key": "target_burning",
-        "on": "kill",
-        "also": [
-          {
-            "on": "skill_kill",
-            "gain": 1
-          }
-        ],
-        "kind": "status",
-        "duration": 7,
-        "count": 3,
-        "status": "burning"
-      },
-      "evidence_paths": [
-        "sources/talent_weapon_increased_damage_to_burn.mtalent",
-        "sources/talent_weapon_increased_damage_to_burn_perfect.mtalent",
-        "sources/talentrule_weapon_increased_damage_to_burn.mtalentrules",
-        "docs/R86_SOURCE_REVIEW.md"
-      ],
-      "rationale": "\"Kill Stack Counter\" counts a defeat or down from any source toward one count; the burn arms the next SOURCE_PROJECTILE hit (R85, R86)."
+      "rationale": "Coverage after Indirect Transmission's row reads the four-piece stats (R100)."
     },
     {
       "document": "rules.json",
       "collection": "talents",
       "op": "replace",
       "match": {
-        "id": "weapon_talent_perfect_ignited"
+        "id": "gear_talent_proliferation"
       },
       "before": {
-        "id": "weapon_talent_perfect_ignited",
-        "name": "Perfect Ignited",
-        "description": "Amplifies +30% weapon damage to burning enemies. After 3 kills, applies burning to the next enemy you hit.",
-        "modifiers": [
-          {
-            "stat": "weapon_damage_multiplier",
-            "op": "mult",
-            "value": 0.3,
-            "requires": {
-              "target_burning": "true"
-            }
-          }
+        "id": "gear_talent_proliferation",
+        "name": "Proliferation",
+        "description": "Increases Indirect Transmission range from 10m to 15m. Increases refresh percentage from 50% to 75%.",
+        "modeledBySets": [
+          "gear_set_eclipse_protocol"
         ],
         "coverage": {
           "status": "partial",
-          "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md)",
           "omits": [
-            "Damage to Armor on armor ticks (untested for talent burns)"
-          ]
+            "Proliferation's 15 m and 75%: a pass-on's reach and share are numbers, so fights pass on within 10 m at 50%; the four-piece stats show 15 m and 75% (R91)."
+          ],
+          "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (talent_gearset_contagion_chest)"
         }
       },
       "after": {
-        "id": "weapon_talent_perfect_ignited",
-        "name": "Perfect Ignited",
-        "description": "Amplifies +30% weapon damage to burning enemies. After 3 kills, applies burning to the next enemy you hit.",
-        "modifiers": [
-          {
-            "stat": "weapon_damage_multiplier",
-            "op": "mult",
-            "value": 0.3,
-            "requires": {
-              "target_burning": "true"
-            }
-          }
+        "id": "gear_talent_proliferation",
+        "name": "Proliferation",
+        "description": "Increases Indirect Transmission range from 10m to 15m. Increases refresh percentage from 50% to 75%.",
+        "modeledBySets": [
+          "gear_set_eclipse_protocol"
         ],
         "coverage": {
-          "status": "partial",
-          "omits": [
-            "Damage to Armor on armor ticks (untested for talent burns)",
-            "Kills by owned agents (a turret, drone or hive): the source's kill conditions exclude them (myTriggeredByRuleAgentsOwnedAgents FALSE); fights count every skill's kill.",
-            "Whether a skill's kill counts as the player's (myTriggeredByRuleAgent) isn't in the data; fights count it."
-          ],
-          "evidence": "R27_STATUS_DURATIONS.md, Damage per tick; this pack carries the R30 ticks (R30_PACK_HANDOFF.md), the Rebalance cap (REBALANCE_CAP_HANDOFF.md) and the Unstoppable Force refresh (UNSTOPPABLE_FORCE_HANDOFF.md); R85_SOURCE_REVIEW.md and R86_SOURCE_REVIEW.md (skill kills)"
+          "status": "complete",
+          "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (talent_gearset_contagion_chest)"
         }
       },
       "evidence_paths": [
-        "sources/talent_weapon_increased_damage_to_burn.mtalent",
-        "sources/talent_weapon_increased_damage_to_burn_perfect.mtalent",
-        "sources/talentrule_weapon_increased_damage_to_burn.mtalentrules",
-        "docs/R86_SOURCE_REVIEW.md"
+        "docs/R88_R91_SOURCE_REVIEW.md",
+        "sources/talent_gearset_contagion_4pc.mtalent",
+        "sources/talent_gearset_contagion_chest.mtalent",
+        "sources/skillscript_gearset_contagion_4pc.mskillscriptgraph",
+        "sources/talent_dictionary.mdict"
       ],
-      "rationale": "Coverage after skill kills (R86)."
+      "rationale": "Coverage after Indirect Transmission's row reads the four-piece stats (R100)."
     }
   ],
   "exclusions": [
-    "Outsider's rows keep the shared everyGroup: the source doesn't say whether each talent keeps its own state (R86).",
-    "Immobilize and Thunder Strike: the damage type of a skill kill is not established (R84)."
+    "Indirect Transmission's skill-agent statuses: as in R91.",
+    "The Trap's slow, aim tags and the scaling of its explicit 10 s: as in R97.",
+    "Bewildered's plates, excluded receivers and skill-script halving: as in R96."
   ]
 }

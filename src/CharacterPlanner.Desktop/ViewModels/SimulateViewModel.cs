@@ -30,10 +30,11 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
     private int refreshPosted;
     private string? message;
     private bool enemiesShrink;
-    private string fightLength = "60", fights = "500", swaps = NoSwaps, swapTime = "1", distance = "", seed = "1", pickupDelay = "2", pickupChance = "100", clearKills = "", peekSeconds = "", coverSeconds = "", peekHitPercent = "", enemiesAtOnce = "", armorKits = "", armorKitAtPercent = "", focusSeconds = "";
+    private string fightLength = "60", fights = "500", swaps = NoSwaps, swapTime = "1", distance = "", seed = "1", pickupDelay = "2", pickupChance = "100", clearKills = "", peekSeconds = "", coverSeconds = "", peekHitPercent = "", enemiesAtOnce = "", armorKits = "", armorKitAtPercent = "", focusSeconds = "", enemySpacing = "";
     private bool averageFight, incoming, includeSkills, includeShield, captureEvents;
     private bool driveBuffs = true;
     private Choice swapWeapon = Choice.None;
+    private (Core.Builds.BuildSnapshot, ImmutableDictionary<string, string>, bool, bool, string)? offeredFor;
 
     public SimulateViewModel(PlannerSession session, IUiDispatcher ui)
     {
@@ -42,6 +43,9 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
         this.session = session;
         this.ui = ui;
         RunCommand = new RelayCommand(Run, () => !disposed && !IsRunning && Problem is null);
+        // ADR 0014: a "Use when" for each skill slot the pack has.
+        SkillUses = [.. session.Pack.Pack.ActiveSkillSlots.Select(slot => new SkillUseViewModel(slot.ID, slot.Name, Check))];
+        OfferSkillUseKeys();
         CancelCommand = new RelayCommand(() => Invalidate("Simulation cancelled."), () => IsRunning);
         // Mixed targets (P10): the pack's named enemy target profiles, without "no target". The engine takes whole profile
         // numbers; a pack whose input has no named options offers none.
@@ -158,6 +162,8 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
     public string PeekHitPercent { get => peekHitPercent; set { if (SetProperty(ref peekHitPercent, value ?? "")) { Check(); } } }
     /// <summary>How many enemies fire at once (ADR 0008); empty for one at a time.</summary>
     public string EnemiesAtOnce { get => enemiesAtOnce; set { if (SetProperty(ref enemiesAtOnce, value ?? "")) { Check(); } } }
+    /// <summary>The meters between neighbouring enemies on a line, for talents reaching other enemies (ADR 0013); empty for none.</summary>
+    public string EnemySpacing { get => enemySpacing; set { if (SetProperty(ref enemySpacing, value ?? "")) { Check(); } } }
     /// <summary>Nobody replaces the last enemies, so fire falls with each kill; Targets to clear says how many there are.</summary>
     public bool EnemiesShrink { get => enemiesShrink; set { if (SetProperty(ref enemiesShrink, value)) { Check(); } } }
     /// <summary>Seconds on each enemy before moving to the next (ADR 0011); empty to shoot each until it dies. There is no default.</summary>
@@ -168,6 +174,8 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
     public string ArmorKitAtPercent { get => armorKitAtPercent; set { if (SetProperty(ref armorKitAtPercent, value ?? "")) { Check(); } } }
     public bool Incoming { get => incoming; set { if (SetProperty(ref incoming, value)) { Check(); } } }
     public bool IncludeSkills { get => includeSkills; set { if (SetProperty(ref includeSkills, value)) { Check(); } } }
+    /// <summary>Each skill slot's "Use when" (ADR 0014), shown with damaging skills included.</summary>
+    public ImmutableArray<SkillUseViewModel> SkillUses { get; }
     public bool IncludeShield { get => includeShield; set { if (SetProperty(ref includeShield, value)) { Check(); } } }
     public bool DriveBuffs { get => driveBuffs; set { if (SetProperty(ref driveBuffs, value)) { Check(); } } }
     public bool CaptureEvents { get => captureEvents; set { if (SetProperty(ref captureEvents, value)) { Check(); } } }
@@ -266,12 +274,13 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
         Invalidate(null);
         Problem = Validate(FightLength, Fights, SwapTime, Distance, pickupDelay: PickupDelay, pickupChance: PickupChance, clearKills: ClearKills,
             peekSeconds: PeekSeconds, coverSeconds: CoverSeconds, peekHitPercent: PeekHitPercent, incoming: Incoming, enemiesAtOnce: EnemiesAtOnce,
-            armorKits: ArmorKits, armorKitAtPercent: ArmorKitAtPercent, focusSeconds: FocusSeconds);
+            armorKits: ArmorKits, armorKitAtPercent: ArmorKitAtPercent, focusSeconds: FocusSeconds, enemySpacing: EnemySpacing);
         if (Problem is not null) { return; }
         var cover = PeekSeconds.Trim().Length > 0;
         var enemies = EnemiesAtOnce.Trim().Length > 0;
         var kits = ArmorKits.Trim().Length > 0;
         var focus = FocusSeconds.Trim().Length > 0;
+        var spaced = EnemySpacing.Trim().Length > 0;
         if (LoadoutResolver.EquipmentLimitProblem(session.Pack.Pack, session.Snapshot.State.Build) is { } equipmentProblem)
         { Problem = equipmentProblem.Message; return; }
         if (!ulong.TryParse(Seed.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out _)) { Problem = "Seed must be a whole number from 0 to 18,446,744,073,709,551,615"; }
@@ -290,6 +299,7 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
         else if (EnemiesShrink && DummyFightOptions.EnemiesShrinkProblem(EnemyCount(), ClearCount()) is { } shrinkProblem) { Problem = shrinkProblem; }
         else if (kits && DummyFightOptions.ArmorKitsProblem(Incoming, DriveBuffs) is { } kitProblem) { Problem = kitProblem; }
         else if (focus && DummyFightOptions.FocusProblem(EnemyCount()) is { } focusProblem) { Problem = focusProblem; }
+        else if (spaced && DummyFightOptions.EnemySpacingProblem(EnemyCount()) is { } spacingProblem) { Problem = spacingProblem; }
         else if (Swaps != NoSwaps && Incoming && !DriveBuffs) { Problem = SwapsUnderFire; }
         else if (Swaps != NoSwaps && SwapWeapon.Id.Length == 0) { Problem = "Equip and choose another weapon for swaps"; }
         else if (IncludeShield && !Incoming) { Problem = "Shield simulation requires incoming fire"; }
@@ -300,6 +310,40 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
         { Problem = sequenceProblem; }
         else if (!TargetDistances.IsEmpty && DummyFightOptions.TargetDistancesProblem(DriveBuffs) is { } distancesProblem) { Problem = distancesProblem; }
         else if (DistanceEntry.Trim().Length > 0) { Problem = "Add the typed target distance, or clear the box"; }
+        // The talent rules offered follow the build and the form, even while another field has a problem.
+        OfferSkillUseKeys();
+        if (Problem is not null) { return; }
+        // Each slot's "Use when", checked as the engine checks it.
+        var build = session.Snapshot.State.Build;
+        var damaging = session.Pack.Pack.Simulation.Skills.Select(rule => rule.Skill).ToHashSet(StringComparer.Ordinal);
+        foreach (var use in SkillUses)
+        {
+            if (use.Problem(IncludeSkills, damaging.Contains(build.ActiveSkillSelections.GetValueOrDefault(use.Slot, "")), DriveBuffs, enemies ? EnemyCount() : null,
+                CultureInfo.CurrentCulture) is { } useProblem) { Problem = useProblem; return; }
+        }
+    }
+
+    // The keys of the rules the engine runs for this build and form (the weapon in hand, a swap's second weapon, full sets and
+    // specialization nodes), each named with its talent, in the pack's order. The engine still has the last word when the fight runs.
+    private void OfferSkillUseKeys()
+    {
+        if (SkillUses.IsDefaultOrEmpty) { return; }
+        var pack = session.Pack;
+        var snapshot = session.Snapshot;
+        // Resolving the build is the costly part, so it's redone only when the build, the assumptions or these options change.
+        var asked = (snapshot.State.Build, snapshot.State.Assumptions, DriveBuffs, Incoming, Swaps == NoSwaps ? "" : SwapWeapon.Id);
+        if (asked.Equals(offeredFor)) { return; }
+        offeredFor = asked;
+        var talents = DummyWeaponSimulator.RuleTalents(pack, snapshot.State.Build, snapshot.State.Assumptions, new DummyFightOptions
+        {
+            DriveSimpleBuffs = DriveBuffs,
+            IncludeIncoming = Incoming,
+            Rotation = asked.Item5.Length == 0 ? null : new(asked.Item5)
+        });
+        var names = pack.Pack.Talents.ToDictionary(talent => talent.ID, talent => talent.Name, StringComparer.Ordinal);
+        ImmutableArray<Choice> keys = [.. pack.Pack.Simulation.Triggers.Where(rule => talents.Contains(rule.Talent) && rule.Key.Length > 0)
+            .Select(rule => new Choice(rule.Key, $"{names.GetValueOrDefault(rule.Talent, rule.Talent)}: {rule.Key}")).DistinctBy(choice => choice.Id)];
+        foreach (var use in SkillUses) { use.Offer(keys); }
     }
 
     private void Run()
@@ -333,6 +377,10 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
             EnemiesAtOnce = EnemyCount(),
             EnemiesShrink = EnemiesShrink,
             FocusSeconds = Optional(FocusSeconds),
+            EnemySpacing = Optional(EnemySpacing),
+            // Hidden with skills left out, the rows play no part then.
+            SkillUse = !IncludeSkills ? ImmutableDictionary<string, SkillUseCondition>.Empty : SkillUses.Select(use => (use.Slot, Condition: use.Condition(CultureInfo.CurrentCulture)))
+                .Where(use => use.Condition is not null).ToImmutableDictionary(use => use.Slot, use => use.Condition!, StringComparer.Ordinal),
             ArmorKits = KitCount(),
             ArmorKitAtPercent = Optional(ArmorKitAtPercent),
             Rotation = Swaps == NoSwaps ? null : new(SwapWeapon.Id, Swaps == SwapAfterKill ? WeaponSwapMode.AfterKill : WeaponSwapMode.WhenEmpty,
@@ -370,7 +418,7 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
         Timeline = SimulationTimeline.From(fight);
         Progress = 1;
         message = $"Completed {fight.Iterations:N0} fight(s), {fight.Duration:N2} s each · seed {fight.Seed}";
-        ResultText = SimulationPresentation.Summary(fight);
+        ResultText = SimulationPresentation.Summary(fight, [.. SkillUses.Select(use => (use.Slot, use.Name))]);
         Limitations = string.Join(Environment.NewLine, fight.Limitations.Append(fight.Coverage.InputBasis).Append(fight.Coverage.Summary));
         OnPropertyChanged(nameof(Status));
     }
@@ -446,7 +494,7 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
     public static string? Validate(string fightLength, string fights, string swapTime, string distance, IFormatProvider? culture = null,
         string pickupDelay = "2", string pickupChance = "100", string clearKills = "",
         string peekSeconds = "", string coverSeconds = "", string peekHitPercent = "", bool incoming = false, string enemiesAtOnce = "",
-        string armorKits = "", string armorKitAtPercent = "", string focusSeconds = "")
+        string armorKits = "", string armorKitAtPercent = "", string focusSeconds = "", string enemySpacing = "")
     {
         culture ??= CultureInfo.CurrentCulture;
         if (!double.TryParse(fightLength.Trim(), NumberStyles.Float, culture, out var seconds) || !double.IsFinite(seconds) || seconds <= 0 || seconds > SimulationLimits.MaximumFightDuration)
@@ -479,6 +527,8 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
         { return $"Enemies at once must be a whole number from {DummyFightOptions.MinimumEnemiesAtOnce} to {DummyFightOptions.MaximumEnemiesAtOnce}, or empty for one at a time"; }
         if (focusSeconds.Trim().Length > 0 && !InRange(focusSeconds, DummyFightOptions.MinimumFocusSeconds, DummyFightOptions.MaximumFocusSeconds, culture))
         { return string.Create(culture, $"Time on each enemy must be a number of seconds from {DummyFightOptions.MinimumFocusSeconds:G} to {DummyFightOptions.MaximumFocusSeconds:G}, or empty to shoot each until it dies"); }
+        if (enemySpacing.Trim().Length > 0 && !InRange(enemySpacing, DummyFightOptions.MinimumEnemySpacing, DummyFightOptions.MaximumEnemySpacing, culture))
+        { return string.Create(culture, $"Enemy spacing must be a number of meters from {DummyFightOptions.MinimumEnemySpacing:G} to {DummyFightOptions.MaximumEnemySpacing:G}, or empty for none"); }
         if (armorKits.Trim() is { Length: > 0 } carried && (!int.TryParse(carried, NumberStyles.None, culture, out var kits) ||
             kits is < DummyFightOptions.MinimumArmorKits or > DummyFightOptions.MaximumArmorKits))
         { return $"Armor kits must be a whole number from {DummyFightOptions.MinimumArmorKits} to {DummyFightOptions.MaximumArmorKits}, or empty for none"; }

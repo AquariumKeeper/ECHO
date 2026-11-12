@@ -31,7 +31,7 @@ public sealed record SimulationDistributions(ImmutableArray<SimulationSummaryRow
             (result.Incoming is null ? "." : ", including time after going down.") + " All values are DPS." +
             (result.SkillDps is null ? "" : " Continuous-window DPS includes modeled skill fire such as Assault Turret; it is not a status DoT category.") +
             (result.StatusDps is null ? " Burn and bleed ticks are not modeled for this build or pack." : " Burn and bleed DPS counts status ticks on targets; it is included in total DPS.") +
-            (result.TalentDps is null ? "" : " Talent debuff DPS counts a talent's own damage over time, such as Toxic Delivery; it is included in total DPS, not in burn and bleed DPS.") +
+            (result.TalentDps is null ? "" : " Talent debuff DPS counts a talent's own damage over time, such as Toxic Delivery, and its blasts on other enemies; it is included in total DPS, not in burn and bleed DPS.") +
             (result.SkillDps is null && result.StatusDps is null && result.TalentDps is null ? "" : " Component percentiles are not additive."));
     }
 }

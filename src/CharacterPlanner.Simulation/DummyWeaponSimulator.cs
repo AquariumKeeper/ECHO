@@ -20,6 +20,88 @@ public static class DummyWeaponSimulator
     // A swap within this many seconds of the last kill is a swap after a kill (Finisher).
     private const double SwapAfterKillWindow = 10;
 
+    /// <summary>
+    /// The talents whose combat rules a fight with these options runs: those on equipped items whose effects are active (the weapon
+    /// in hand, and with talent triggers the rotation's second weapon), full-set talents and active specialization nodes. The
+    /// Desktop asks this for the rules a held skill can wait for (ADR 0014).
+    /// </summary>
+    public static IReadOnlySet<string> RuleTalents(CompiledPackExpressions pack, BuildSnapshot build, ImmutableDictionary<string, string> context, DummyFightOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(pack);
+        ArgumentNullException.ThrowIfNull(build);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(options);
+        var selected = new HashSet<string>(StringComparer.Ordinal);
+        if (options.DriveSimpleBuffs || options.IncludeIncoming)
+        {
+            CollectRuleTalents(pack, build, context, options, selected, new HashSet<string>(StringComparer.Ordinal), new HashSet<string>(StringComparer.Ordinal),
+                new Dictionary<string, HashSet<string>>(StringComparer.Ordinal));
+        }
+        return selected;
+    }
+
+    private static void CollectRuleTalents(CompiledPackExpressions pack, BuildSnapshot build, ImmutableDictionary<string, string> context, DummyFightOptions options,
+        HashSet<string> selected, HashSet<string> setTalents, HashSet<string> gearTalents, Dictionary<string, HashSet<string>> weaponTalents)
+    {
+        foreach (var item in LoadoutResolver.Resolve(pack.Pack, build).Equipped.Where(item => item.EffectsActive(context) ||
+            options.DriveSimpleBuffs && item.WeaponSlot && item.SlotId == options.Rotation?.SecondSlot))
+        {
+            foreach (var slot in item.Item.TalentSlots)
+            {
+                var id = build.TalentSelections.GetValueOrDefault(item.SlotId)?.GetValueOrDefault(slot.ID, "") ?? "";
+                if (slot.Choices.Contains(id))
+                {
+                    selected.Add(id);
+                    if (!item.WeaponSlot) { gearTalents.Add(id); }
+                    else
+                    {
+                        if (!weaponTalents.TryGetValue(item.SlotId, out var owned)) { weaponTalents[item.SlotId] = owned = new(StringComparer.Ordinal); }
+                        owned.Add(id);
+                    }
+                }
+            }
+        }
+        // The resolver's own sets, so a talent's rule runs exactly when the row reading its key applies.
+        if (SetBonusSelection.MayRunSetTalents(pack.Pack, LoadoutResolver.Resolve(pack.Pack, build).Equipped.Select(item => item.Item.ID)))
+        {
+            foreach (var id in SetBonusSelection.FullSetTalents(pack.Pack, BuildResolver.Resolve(pack, build, context).ActiveSets))
+            {
+                selected.Add(id);
+                gearTalents.Add(id);
+                setTalents.Add(id);
+            }
+        }
+        // A specialization node's rule runs while the node is active, and it reacts as gear does (R56). Like a set talent's, it's
+        // checked at setup for what a fight holds fixed.
+        if (pack.Pack.Specializations.FirstOrDefault(specialization => specialization.ID == build.SpecializationId) is { } chosen)
+        {
+            foreach (var id in SpecializationRules.Status(chosen, build.SpecializationNodeSelections).Active)
+            {
+                selected.Add(id);
+                gearTalents.Add(id);
+                setTalents.Add(id);
+            }
+        }
+    }
+
+    // A pass-on with its withinStat and shareStat read; a value outside the field's own limits refuses the fight.
+    private static SimPassOnDefinition PassOnFromStats(SimPassOnDefinition rule, IReadOnlyDictionary<string, double> stats)
+    {
+        if (rule.WithinStat.Length > 0)
+        {
+            if (!stats.TryGetValue(rule.WithinStat, out var within) || !double.IsFinite(within) || within <= 0 || within > SimPassOnDefinition.MaximumWithin)
+            { throw new SimulationException("trigger-unsupported", $"withinStat {rule.WithinStat} needs a value above 0 up to {SimPassOnDefinition.MaximumWithin:G} metres"); }
+            rule = rule with { Within = within, WithinStat = "" };
+        }
+        if (rule.ShareStat.Length > 0)
+        {
+            if (!stats.TryGetValue(rule.ShareStat, out var share) || !double.IsFinite(share) || share <= 0 || share > 1)
+            { throw new SimulationException("trigger-unsupported", $"shareStat {rule.ShareStat} needs a value above 0 up to 1"); }
+            rule = rule with { Share = share, ShareStat = "" };
+        }
+        return rule;
+    }
+
     public static DummyFightResult Run(CompiledPackExpressions pack, BuildSnapshot build,
         ImmutableDictionary<string, string> assumptions, DummyFightOptions? options = null,
         CancellationToken cancellationToken = default, IProgress<SimulationProgress>? progress = null)
@@ -149,6 +231,11 @@ public static class DummyWeaponSimulator
         var statusRules = ImmutableArray<SimTriggerDefinition>.Empty;
         var dotRules = ImmutableArray<SimStatusDamageDefinition>.Empty;
         var talentDamageRules = ImmutableArray<SimTalentDamageDefinition>.Empty;
+        var blastRules = ImmutableArray<SimBlastDefinition>.Empty;
+        var spreadRules = ImmutableArray<SimSpreadDefinition>.Empty;
+        var redirectRules = ImmutableArray<SimRedirectDefinition>.Empty;
+        var trapRules = ImmutableArray<SimTrapDefinition>.Empty;
+        var passOnRules = ImmutableArray<SimPassOnDefinition>.Empty;
         var drivenKeys = ImmutableArray<string>.Empty;
         var pickupsUsed = false;
         var secondsUsed = false;
@@ -162,45 +249,7 @@ public static class DummyWeaponSimulator
         var weaponTalents = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
         if (options.DriveSimpleBuffs || options.IncludeIncoming)
         {
-            foreach (var item in LoadoutResolver.Resolve(pack.Pack, build).Equipped.Where(item => item.EffectsActive(context) ||
-                options.DriveSimpleBuffs && item.WeaponSlot && item.SlotId == options.Rotation?.SecondSlot))
-            {
-                foreach (var slot in item.Item.TalentSlots)
-                {
-                    var id = build.TalentSelections.GetValueOrDefault(item.SlotId)?.GetValueOrDefault(slot.ID, "") ?? "";
-                    if (slot.Choices.Contains(id))
-                    {
-                        selected.Add(id);
-                        if (!item.WeaponSlot) { gearTalents.Add(id); }
-                        else
-                        {
-                            if (!weaponTalents.TryGetValue(item.SlotId, out var owned)) { weaponTalents[item.SlotId] = owned = new(StringComparer.Ordinal); }
-                            owned.Add(id);
-                        }
-                    }
-                }
-            }
-            // The resolver's own sets, so a talent's rule runs exactly when the row reading its key applies.
-            if (SetBonusSelection.MayRunSetTalents(pack.Pack, LoadoutResolver.Resolve(pack.Pack, build).Equipped.Select(item => item.Item.ID)))
-            {
-                foreach (var id in SetBonusSelection.FullSetTalents(pack.Pack, BuildResolver.Resolve(pack, build, context).ActiveSets))
-                {
-                    selected.Add(id);
-                    gearTalents.Add(id);
-                    setTalents.Add(id);
-                }
-            }
-            // A specialization node's rule runs while the node is active, and it reacts as gear does (R56). Like a set talent's, it's
-            // checked at setup for what a fight holds fixed.
-            if (pack.Pack.Specializations.FirstOrDefault(specialization => specialization.ID == build.SpecializationId) is { } chosen)
-            {
-                foreach (var id in SpecializationRules.Status(chosen, build.SpecializationNodeSelections).Active)
-                {
-                    selected.Add(id);
-                    gearTalents.Add(id);
-                    setTalents.Add(id);
-                }
-            }
+            CollectRuleTalents(pack, build, context, options, selected, setTalents, gearTalents, weaponTalents);
         }
         if (options.DriveSimpleBuffs)
         {
@@ -301,8 +350,19 @@ public static class DummyWeaponSimulator
                 !Clears(rule.ResetOn) || !Clears(rule.AlsoResetOn) || !Clears(rule.ConsumeOn) || !Clears(rule.CancelOn)))
             { throw new SimulationException("trigger-event-unsupported", "A selected rule requires an unimplemented event"); }
             context = new StatusTriggerState(pack, statusRules).Context(context, 0);
-            // Only statuses a selected talent applies tick; observer rules never apply one.
-            dotRules = [.. pack.Pack.Simulation.StatusDamage.Where(damage => statusRules.Any(rule => rule.On.Length > 0 && rule.Status == damage.Status))];
+            // A selected talent's blast on other enemies (ADR 0013).
+            blastRules = [.. pack.Pack.Simulation.Blasts.Where(blast => selected.Contains(blast.Talent))];
+            spreadRules = [.. pack.Pack.Simulation.Spreads.Where(spread => selected.Contains(spread.Talent))];
+            redirectRules = [.. pack.Pack.Simulation.Redirects.Where(redirect => selected.Contains(redirect.Talent))];
+            trapRules = [.. pack.Pack.Simulation.Traps.Where(trap => selected.Contains(trap.Talent))];
+            // One share of a hit moves; two redirects on a build would need an order the source doesn't give.
+            if (redirectRules.Length > 1) { throw new SimulationException("trigger-unsupported", "A build can have one talent that redirects weapon damage"); }
+            passOnRules = [.. pack.Pack.Simulation.PassOns.Where(passOn => selected.Contains(passOn.Talent))];
+            if (blastRules.Any(rule => !supportedEvents.Contains(rule.On)))
+            { throw new SimulationException("trigger-event-unsupported", "A blast requires an unimplemented event"); }
+            // Only statuses a selected talent applies tick, by a rule or a blast; observer rules never apply one.
+            dotRules = [.. pack.Pack.Simulation.StatusDamage.Where(damage => statusRules.Any(rule => rule.On.Length > 0 && rule.Status == damage.Status) ||
+                blastRules.Any(rule => rule.Status == damage.Status) || trapRules.Any(rule => rule.Status == damage.Status))];
             // A selected talent's own damage over time (Toxic Delivery) ticks beside the statuses.
             talentDamageRules = [.. pack.Pack.Simulation.TalentDamage.Where(damage => selected.Contains(damage.Talent))];
             if (talentDamageRules.Any(rule => !supportedEvents.Contains(rule.On)))
@@ -388,6 +448,7 @@ public static class DummyWeaponSimulator
         var rateArmorBonuses = options.IncludeSkills ? pack.Pack.Simulation.Skills.SelectMany(rule => new[] { rule.RateArmorBonus, rule.StatusArmorBonus }).Where(stat => stat.Length > 0) : [];
         ImmutableDictionary<string, double> ReadStatusTicks(ResolvedBuild current) => dotRules.Select(rule => (Key: rule.Status, Stat: rule.Tick))
             .Concat(talentDamageRules.Select(rule => (Key: rule.Total, Stat: rule.Total)))
+            .Concat(blastRules.Where(rule => rule.Amount.Length > 0).Select(rule => (Key: rule.Amount, Stat: rule.Amount)))
             .Concat(statusArmorBonuses.Values.Concat(rateArmorBonuses).Select(stat => (Key: stat, Stat: stat))).DistinctBy(pair => pair.Key, StringComparer.Ordinal)
             .ToImmutableDictionary(pair => pair.Key, pair =>
         {
@@ -410,6 +471,20 @@ public static class DummyWeaponSimulator
         }
         if (options.FocusSeconds is not null && DummyFightOptions.FocusProblem(options.EnemiesAtOnce) is { } focusProblem)
         { throw new SimulationException("focus-unsupported", focusProblem); }
+        if (options.EnemySpacing is not null && DummyFightOptions.EnemySpacingProblem(options.EnemiesAtOnce) is { } spacingProblem)
+        { throw new SimulationException("enemy-spacing-unsupported", spacingProblem); }
+        // Blasts, spreads and pass-ons reach other enemies only with several at once and a spacing; otherwise they find nobody, and
+        // the result says so. With any of them, a waiting enemy can die out of order, so the next arrival follows the group.
+        // The talents whose effects reach other enemies (ADR 0013), for the reach and its note.
+        string[] reachTalents = [.. blastRules.Select(rule => rule.Talent).Concat(spreadRules.Select(rule => rule.Talent)).Concat(passOnRules.Select(rule => rule.Talent))
+            .Concat(redirectRules.Select(rule => rule.Talent)).Distinct(StringComparer.Ordinal)];
+        var reachActive = targeted && reachTalents.Length > 0 && options.EnemiesAtOnce is not null && options.EnemySpacing is not null;
+        // A pass-on's reach and share may come from stats (Proliferation's 15 m and 75%), read once, at the fight's start, and only when
+        // it can reach someone: a fight it plays no part in isn't refused for its values.
+        if (reachActive) { passOnRules = [.. passOnRules.Select(rule => PassOnFromStats(rule, stats))]; }
+        // A trap reaches by tag, at any distance, so it needs several enemies but no spacing.
+        var trapActive = targeted && !trapRules.IsEmpty && options.EnemiesAtOnce is not null;
+        var spacing = options.EnemySpacing ?? 0;
         if (options.EnemiesShrink && DummyFightOptions.EnemiesShrinkProblem(options.EnemiesAtOnce, options.ClearKills) is { } shrinkProblem)
         { throw new SimulationException("enemies-at-once-unsupported", shrinkProblem); }
         // How many enemies a fight has in all, when it has an end; otherwise the next is always there.
@@ -576,6 +651,20 @@ public static class DummyWeaponSimulator
         }
         foreach (var held in heldSkills.Values) { held.CheckWork(options.Duration, skillCuts); }
         var skillFights = skillSchedule?.Fights(options.Duration, skillCuts, cancellationToken);
+        // ADR 0014: each conditioned slot needs a damaging skill there, and a key condition a key the build's rules drive.
+        if (!options.SkillUse.IsEmpty)
+        {
+            if (skillFights is null) { throw new SimulationException("skill-use-unsupported", "Skill use conditions need damaging skills in the fight"); }
+            foreach (var (slot, condition) in options.SkillUse.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+            {
+                if (skillFights.IndexOf(slot) < 0) { throw new SimulationException("skill-use-unsupported", $"Skill slot {slot} has no damaging skill in this build"); }
+                if (condition.When == SkillUseCondition.KeyOn && !(options.DriveSimpleBuffs && drivenKeys.Contains(condition.Key)))
+                { throw new SimulationException("skill-use-unsupported", $"A skill use can wait only for a key the build's rules drive, with talent triggers on: {condition.Key}"); }
+                if (condition.When == SkillUseCondition.EnemiesAtLeast && (options.EnemiesAtOnce is not { } atOnce || condition.Count > atOnce))
+                { throw new SimulationException("skill-use-unsupported", $"A skill use waiting for enemies needs several enemies at once, at least as many as its count: {condition.Count}"); }
+            }
+        }
+        var skillUseTotals = options.SkillUse.Keys.ToDictionary(slot => slot, _ => (Uses: 0d, Held: 0d), StringComparer.Ordinal);
         var skillStates = new Dictionary<string, SkillDamageSchedule>(StringComparer.Ordinal);
         var killTimes = ImmutableArray.CreateBuilder<double>();
         double kills = 0;
@@ -589,7 +678,7 @@ public static class DummyWeaponSimulator
         var dps = new double[fights];
         var skillStatistics = options.IncludeSkills ? new SkillStatistics(fights) : null;
         var statusDps = dotRules.IsEmpty ? null : new double[fights];
-        var talentDps = talentDamageRules.IsEmpty ? null : new double[fights];
+        var talentDps = talentDamageRules.IsEmpty && !(reachActive && !blastRules.IsEmpty) ? null : new double[fights];
         var totalDps = new double[fights];
         long work = 0;
         double shots = 0, reloads = 0, swaps = 0;
@@ -617,6 +706,7 @@ public static class DummyWeaponSimulator
             var skills = skillFights?.NewFight();
             var fightKills = 0;
             var fightKillSeconds = 0d;
+            var timedKills = 0;
             var skillHitGroups = new HashSet<int>();
             var externalKillPending = false;
             double weaponTotal = 0, skillTotal = 0;
@@ -672,6 +762,8 @@ public static class DummyWeaponSimulator
             var coveredCycle = -1d;
             var kits = armorKit is null ? null : new ArmorKitState(armorKit, options.ArmorKits!.Value, options.ArmorKitAtPercent!.Value);
             var random = new SimulationRandom(options.Seed, (ulong)fight);
+            // A redirect's receiver is drawn from its own stream, so a fight's shots draw as they would without one.
+            var redirectRandom = new SimulationRandom(options.Seed, (1UL << 60) | (uint)fight);
             double total = 0, time = 0, ammo = initialWeapon.Magazine;
             var magazine = options.DriveSimpleBuffs && template is null ? phases!.TrackMagazine(initialWeapon.Magazine) : null;
             var counts = enemyCounts?.Fresh();
@@ -704,6 +796,19 @@ public static class DummyWeaponSimulator
             var available = 0d;
             // Enemies the player has shot and left, by place, and who comes next: with a shooting pattern, the next in turn.
             var left = new Dictionary<int, FightEnemy>();
+            // Enemies a blast killed while the player was elsewhere, settled once the event that set it off is done.
+            var blastKills = new Queue<(FightEnemy Enemy, double At)>();
+            // Under focus fire with blasts: nobody is left to arrive after the enemy being shot.
+            var nobodyComing = false;
+            // When each spread may next fire.
+            var spreadReady = new double[spreadRules.Length];
+            // Each trap's tags, oldest first, and when the trap is ready again; and the enemy the player has been hitting without a
+            // break, with the weapon in hand, since when.
+            var trapTags = trapRules.Select(_ => new List<FightEnemy>()).ToArray();
+            var trapReady = new double[trapRules.Length];
+            FightEnemy? aimed = null;
+            var aimedSince = 0d;
+            string? aimedWith = null;
             var comingPlace = 0;
             var moveAt = double.PositiveInfinity;
             // The player's state reads and writes what this enemy holds.
@@ -715,7 +820,8 @@ public static class DummyWeaponSimulator
             FightEnemy NewTarget()
             {
                 groupMovedOn = false;
-                if (!left.Remove(comingPlace, out var enemy))
+                if (left.Remove(comingPlace, out var enemy)) { enemy.Reach(available); }
+                else
                 {
                     targetCount++;
                     var profile = sequence.IsEmpty ? -1 : sequence[comingPlace % sequence.Length];
@@ -725,6 +831,12 @@ public static class DummyWeaponSimulator
                 }
                 HoldState(enemy, available);
                 if (options.FocusSeconds is { } focus) { moveAt = available + focus; }
+                // With blasts, a waiting enemy can die out of order, so the next arrival is the earliest one left.
+                else if (reachActive)
+                {
+                    var next = group!.NextArrival(enemy.Place);
+                    (comingPlace, nobodyComing) = (next ?? enemy.Place, next is null);
+                }
                 else { comingPlace = targetCount; }
                 return enemy;
             }
@@ -895,7 +1007,8 @@ public static class DummyWeaponSimulator
             }
             // Without rotation every selected talent reacts; under rotation only gear and the weapon in hand do.
             bool FireStatuses(string name, double at, double factor, IReadOnlySet<string>? eligible = null, TriggerGates? gates = null) =>
-                statuses!.Fire(name, at, factor, eligible ?? holdingTalents[hand], gates: gates ?? (gated ? buffs!.Gates(at) : null), distance: target.Distance);
+                Spread(statuses!.Fire(name, at, factor, eligible ?? holdingTalents[hand], gates: gates ?? (gated ? buffs!.Gates(at) : null), distance: target.Distance), at,
+                    eligible ?? holdingTalents[hand]);
             // weapon is the slot whose weapon produced the event; null for events with no weapon behind them.
             bool FireBuffs(string name, double at, IReadOnlySet<string> active, IReadOnlySet<string>? eligible = null,
                 IReadOnlySet<string>? owners = null, string? weapon = null)
@@ -906,7 +1019,11 @@ public static class DummyWeaponSimulator
                 counts?.Sample(name, eligible ?? holdingTalents[hand], targeted && target.Dead && !groupMovedOn, at, present);
                 // Every event passes here, so a talent debuff (Toxic Delivery) starts on its event on a living target.
                 target.Dots?.StartTalents(name, at, eligible ?? holdingTalents[hand], statusTicks, !targeted || !target.Dead);
+                Blast(name, at, eligible ?? holdingTalents[hand]);
+                Trap(name, at, eligible ?? holdingTalents[hand]);
                 ApplyGrants(at);
+                // Every event is a decision a held skill waits for (ADR 0014).
+                skills?.Release(at);
                 return requested;
             }
             // Weapon repair-per-kill follows weapon and skill kills only. A marked target drops Doctor Home's kit however it
@@ -926,11 +1043,16 @@ public static class DummyWeaponSimulator
                 // Kills before the fight's end count, as its repairs and pickups do.
                 if (at < options.Duration)
                 {
-                    fightKillSeconds += at - target.ArrivedAt;
+                    // An enemy a blast killed before the player reached it has no time to kill (ADR 0013).
+                    if (target.Reached)
+                    {
+                        fightKillSeconds += at - target.ArrivedAt;
+                        timedKills++;
+                    }
                     if (++fightKills == options.ClearKills) { clearTimes.Add(at); }
                 }
                 if (slot is null) { lastWeaponKills[hand] = at; }
-                if (fight == 0 && killTimes.Count < TraceLimit) { killTimes.Add(at - target.ArrivedAt); }
+                if (fight == 0 && killTimes.Count < TraceLimit && target.Reached) { killTimes.Add(at - target.ArrivedAt); }
                 else if (fight == 0) { truncated = true; }
                 Record(DummyEventKind.Kill, at: at, slot: slot);
                 // Every kill drops a pickup when a rule collects them: picked up after the delay, or missed.
@@ -939,7 +1061,7 @@ public static class DummyWeaponSimulator
                 var moving = options.FocusSeconds is null ? null : group!.Following(target.Place);
                 if (away && comingPlace != target.Place) { return; }
                 // After the last enemy no target ever arrives, so skills stop and the fight runs out its length.
-                noTargetsLeft = options.FocusSeconds is null ? targetCount >= enemyTotal : moving is null;
+                noTargetsLeft = options.FocusSeconds is null ? reachActive ? group!.NextArrival(target.Place) is null : targetCount >= enemyTotal : moving is null;
                 if (moving is { } next) { comingPlace = next; }
                 if (away && !noTargetsLeft) { return; }
                 // The arrival a move recorded won't come now.
@@ -1085,6 +1207,8 @@ public static class DummyWeaponSimulator
                 // Home's kit; a mark consumed here clears with its target).
                 if (buffs is not null && at < options.Duration && FireBuffs("target_death", at, statuses!.Active(at), fightTalents, fightTalents)) { Refill(at); }
                 foreach (var slot in profiles.Keys) { target.PelletHits[slot] = 0; }
+                // Passed on while the dying enemy still holds its statuses and debuffs.
+                PassOn(at);
                 skillStatuses?.ResetTarget(at);
                 target.Dots?.Sync(statuses!, statusTicks);
                 target.Dots?.ResetTalents();
@@ -1094,6 +1218,275 @@ public static class DummyWeaponSimulator
                     nextEnemy = group.Next;
                     groupMovedOn = true;
                     counts?.ReadAgain(at, present);
+                }
+            }
+            // A kill by a tick or a blast, on the enemy being shot or one the player isn't (ADR 0011, 0013): it runs as any status kill,
+            // on that enemy, and the player then carries on.
+            void KillElsewhere(FightEnemy dying, double at)
+            {
+                var (shot, movedOn, away) = (target, groupMovedOn, !ReferenceEquals(dying, target));
+                var parked = away && !shot.Dead;
+                // Under focus fire with effects reaching others, a waiting enemy can die out of order (ADR 0013): the next arrival moves past
+                // it first, so the kill doesn't take the arrival with it.
+                var reordering = reachActive && options.FocusSeconds is null;
+                if (away && reordering && comingPlace == dying.Place)
+                {
+                    var next = group!.NextArrival(shot.Place, dying.Place);
+                    (comingPlace, nobodyComing) = (next ?? shot.Place, next is null);
+                }
+                if (away)
+                {
+                    // The enemy being shot waits with those left, so a count read on this kill still finds it.
+                    left.Remove(dying.Place);
+                    if (parked) { left[shot.Place] = shot; }
+                    target = dying;
+                    groupMovedOn = false;
+                    HoldState(target, at);
+                }
+                // Preservation and weapon repair-per-kill are not granted: whether a status kill credits them is an in-game check
+                // (R41). Doctor Home's kit is, when the target was marked.
+                CreditKill(at, "", () => RepairOnKill(at, weaponBound: false), away);
+                if (!away && options.Rotation?.Mode == WeaponSwapMode.AfterKill) { externalKillPending = true; }
+                // A status kill is a kill to gear talents only, as a skill's is. It's no skill_kill: by the source a burn or bleed
+                // tick isn't a skill kill (R77), though a skill's own status ticks in its stream count as one, a known partial.
+                FireStatuses("kill", at, buffWeapon.StatusDurationFactor, gearTalents);
+                if (FireBuffs("kill", at, statuses!.Active(at), gearTalents))
+                { Refill(at); }
+                ClearTarget(at);
+                if (away)
+                {
+                    // A blast this kill set off may have killed it meanwhile; it still comes back out, to be settled as the target.
+                    if (parked) { left.Remove(shot.Place); }
+                    target = shot;
+                    groupMovedOn = movedOn;
+                    HoldState(target, at);
+                }
+                // The player's own kill set an arrival before this one killed the rest: with nobody left, it won't come.
+                if (away && reordering && target.Dead && !noTargetsLeft && nobodyComing)
+                {
+                    noTargetsLeft = true;
+                    available = double.PositiveInfinity;
+                    for (var index = events.Count - 1; fight == 0 && index >= 0; index--)
+                    { if (events[index].Kind == DummyEventKind.TargetArrived && events[index].Time > at) { events.RemoveAt(index); } }
+                }
+            }
+            // A blast made a waiting enemy before the player reached it: it holds its pools from now on (ADR 0013).
+            FightEnemy Early(int place, double at)
+            {
+                var profile = sequence.IsEmpty ? -1 : sequence[place % sequence.Length];
+                var (fullArmor, fullHealth) = profile < 0 ? (armor, health) : sequencePools[profile];
+                var enemy = new FightEnemy(place, profile, distances.IsEmpty ? options.Distance : distances[place % distances.Length], fullArmor, fullHealth, at,
+                    incoming?.Attackers ?? 1, profiles.Keys, NewDots(), reached: false);
+                left[place] = enemy;
+                return enemy;
+            }
+            // A driven value is on unless it's missing, empty, zero or false (ADR 0014's key condition).
+            static bool IsOn(string? value) => value is { Length: > 0 } && value != "0" && !value.Equals("false", StringComparison.OrdinalIgnoreCase) &&
+                !(double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number) && number == 0);
+            // A hit tags the enemy being shot once the player has hit it for the trap's time without a break, with the trap's weapon in
+            // hand (The Trap). Hitting stands in for aiming, which a fight doesn't otherwise have.
+            void Tag(double at)
+            {
+                if (!trapActive || target.Placeholder || target.Dead) { return; }
+                if (!ReferenceEquals(aimed, target) || aimedWith != hand) { (aimed, aimedSince, aimedWith) = (target, at, hand); }
+                for (var index = 0; index < trapRules.Length; index++)
+                {
+                    var rule = trapRules[index];
+                    var tags = trapTags[index];
+                    if (holdingTalents[hand]?.Contains(rule.Talent) == false) { continue; }
+                    if (tags.Contains(target, ReferenceEqualityComparer.Instance) || at - aimedSince < rule.TagAfter - 1e-9) { continue; }
+                    // The dead hold no slot, so a living tag is dropped only for another.
+                    tags.RemoveAll(enemy => enemy.Dead);
+                    tags.Add(target);
+                    if (tags.Count > rule.MaxTags) { tags.RemoveAt(0); }
+                }
+            }
+            // A trap whose weapon is put away while it's ready loses its tags, as in the source; one cooling down keeps them.
+            void HolsterTraps(double at)
+            {
+                for (var index = 0; index < trapRules.Length; index++)
+                {
+                    if (holdingTalents[hand]?.Contains(trapRules[index].Talent) == false && at >= trapReady[index]) { trapTags[index].Clear(); }
+                }
+            }
+            // A headshot kill springs a ready trap on every other enemy it tagged, at any distance, then starts its cooldown; during the
+            // cooldown each headshot kill cuts it (The Trap).
+            void Trap(string name, double at, IReadOnlySet<string>? eligible)
+            {
+                if (!trapActive || name != "headshot_kill" || at >= options.Duration) { return; }
+                for (var index = 0; index < trapRules.Length; index++)
+                {
+                    var rule = trapRules[index];
+                    if (eligible?.Contains(rule.Talent) == false) { continue; }
+                    if (at < trapReady[index])
+                    {
+                        trapReady[index] = Math.Max(at, trapReady[index] - rule.Cut);
+                        continue;
+                    }
+                    var tags = trapTags[index];
+                    // The victim is dead by now, so it goes with the others that died: a kill on the only tag springs nothing.
+                    tags.RemoveAll(enemy => enemy.Dead);
+                    if (tags.Count == 0) { continue; }
+                    var burned = 0;
+                    foreach (var enemy in tags) { if (PutStatus(enemy, rule.Status, rule.StatusDuration, at, scale: true)) { burned++; } }
+                    // As a spread's, the cooldown starts only when the status went on someone (one yielding to a skill's own, R63, didn't).
+                    if (burned == 0) { continue; }
+                    tags.Clear();
+                    trapReady[index] = at + rule.Every;
+                    Record(DummyEventKind.TrapSprung, burned, at, "");
+                }
+            }
+            // A redirect's receiver (ADR 0013, Bewildered): a living enemy within reach of the one being shot, at random; null with
+            // nobody in reach, or when the redirect isn't the hand's. Who is in reach is read from the group for each pellet, since a
+            // pellet before it can kill.
+            (FightEnemy Enemy, double Share)? Redirect(double at)
+            {
+                if (!reachActive || redirectRules.IsEmpty || at >= options.Duration || target.Placeholder || target.Dead || !group!.Alive.Contains(target.Place)) { return null; }
+                var rule = redirectRules[0];
+                if (holdingTalents[hand]?.Contains(rule.Talent) == false) { return null; }
+                var places = group.InReach(target.Place, rule.Within, spacing).Where(place => EnemyAt(place)?.Dead != true).ToArray();
+                if (places.Length == 0) { return null; }
+                var place = places[(int)Math.Min(places.Length - 1, Math.Floor(redirectRandom.NextDouble() * places.Length))];
+                return (EnemyAt(place) ?? Early(place, at), rule.Share);
+            }
+            // A selected talent's blast on its event: its amount to each living enemy in reach of the one the event is about, on that
+            // enemy's own pools (ADR 0013). Kills it makes are settled after the event.
+            void Blast(string name, double at, IReadOnlySet<string>? eligible)
+            {
+                if (!reachActive || at >= options.Duration || target.Placeholder || !group!.Alive.Contains(target.Place)) { return; }
+                foreach (var rule in blastRules)
+                {
+                    if (rule.On != name || eligible?.Contains(rule.Talent) == false) { continue; }
+                    var amount = rule.Amount.Length == 0 ? 0 : statusTicks[rule.Amount];
+                    foreach (var place in group.InReach(target.Place, rule.Within, spacing))
+                    {
+                        var enemy = EnemyAt(place) ?? Early(place, at);
+                        if (enemy.Dead) { continue; }
+                        if (rule.Amount.Length > 0)
+                        {
+                            var dealt = enemy.Apply(amount, 1, 1);
+                            talentTotal += dealt;
+                            total += dealt;
+                            timeline[(int)at] += dealt / fights;
+                            if (!double.IsFinite(total) || !double.IsFinite(timeline[(int)at]))
+                            { throw new SimulationException("damage-overflow", "Blast damage overflowed"); }
+                            Record(DummyEventKind.TalentBlast, dealt, at, "");
+                            if (enemy.Dead)
+                            {
+                                blastKills.Enqueue((enemy, at));
+                                continue;
+                            }
+                        }
+                        if (rule.Status.Length > 0) { PutStatus(enemy, rule.Status, rule.StatusDuration, at, scale: true); }
+                        // A mark on a rule held per enemy (Unnerve), read when the player shoots that enemy.
+                        // A talent on both rotated weapons keeps a copy of its rules per weapon; the copy in hand marks. Without driven
+                        // rules, or with the rule's gate closed, there's nothing to mark.
+                        if (rule.Mark.Length > 0 && buffs is not null &&
+                            buffs.Mark(enemy.Marks, target.Marks, copiedKeys.TryGetValue(rule.Mark, out var copies) ? copies[hand] : rule.Mark, at))
+                        { Record(DummyEventKind.EnemyMarked, 0, at, ""); }
+                    }
+                }
+            }
+            // The dying enemy's debuffs of a talent with a pass-on move to the nearest living enemy in reach (ADR 0013, Plague), keeping
+            // their schedules, up to its stack cap; the rest, or all with nobody in reach, are lost. The event carries how many landed.
+            void PassOn(double at)
+            {
+                if (!reachActive || passOnRules.IsEmpty || at >= options.Duration || target.Placeholder || !group!.Alive.Contains(target.Place)) { return; }
+                foreach (var rule in passOnRules)
+                {
+                    if (rule.Status.Length > 0)
+                    {
+                        PassOnStatuses(rule, at);
+                        continue;
+                    }
+                    if (target.Dots is null) { continue; }
+                    var debuffs = target.Dots.TakeTalent(rule.Talent);
+                    if (debuffs.Length == 0) { continue; }
+                    foreach (var place in group.InReach(target.Place, rule.Within, spacing))
+                    {
+                        var enemy = EnemyAt(place) ?? Early(place, at);
+                        if (enemy.Dead) { continue; }
+                        var landed = enemy.Dots!.Receive(debuffs);
+                        if (landed > 0) { Record(DummyEventKind.DebuffPassedOn, landed, at, ""); }
+                        break;
+                    }
+                }
+            }
+            // A status pass-on (Indirect Transmission): each named status a talent put on the dying enemy goes on the nearest living
+            // enemy in reach, or all of them, for its share of the duration it went on with. A skill's own status doesn't pass on.
+            void PassOnStatuses(SimPassOnDefinition rule, double at)
+            {
+                var passing = (rule.Status == "any" ? StatusTriggerState.Names : [rule.Status])
+                    .Select(status => (Status: status, On: statuses!.Application(status))).Where(entry => entry.On is { } on && on.Until > at)
+                    .Select(entry => (entry.Status, Duration: rule.Share * (entry.On!.Value.Until - entry.On.Value.AppliedAt))).Where(entry => entry.Duration > 0).ToArray();
+                if (passing.Length == 0) { return; }
+                var landed = 0;
+                foreach (var place in group!.InReach(target.Place, rule.Within, spacing))
+                {
+                    var enemy = EnemyAt(place) ?? Early(place, at);
+                    if (enemy.Dead) { continue; }
+                    var on = false;
+                    foreach (var (status, duration) in passing) { on |= PutStatus(enemy, status, duration, at, scale: false); }
+                    if (!on) { continue; }
+                    landed++;
+                    // The nearest that takes it; one where each yields to a skill's own status passes it to the next in reach.
+                    if (rule.To != "all") { break; }
+                }
+                if (landed > 0) { Record(DummyEventKind.StatusPassedOn, landed, at, ""); }
+            }
+            // A status goes on another enemy, read and written there, and starts its ticks; then the enemy being shot is held again,
+            // whatever happens. Counts of enemies with a status read again.
+            // Returns whether it went on; it yields to a skill's own status there (R63).
+            bool PutStatus(FightEnemy enemy, string status, double duration, double at, bool scale)
+            {
+                bool on;
+                statuses!.Hold(enemy.Statuses, at);
+                try
+                {
+                    on = statuses.ApplyDirect(status, duration, at, buffWeapon.StatusDurationFactor, scale);
+                    enemy.Dots?.Sync(statuses, statusTicks);
+                }
+                finally { statuses.Hold(target.Statuses, at); }
+                counts?.ReadAgain(at, present);
+                return on;
+            }
+            // Statuses newly on the enemy being shot go on each enemy in a spread's reach, for what's left of them, while it's ready
+            // (Creeping Death), when its talent may react to the event. The cooldown starts when a status went on someone. Returns whether a
+            // status went on the target, as given.
+            bool Spread(bool applied, double at, IReadOnlySet<string>? eligible)
+            {
+                if (!applied || !reachActive || spreadRules.IsEmpty || at >= options.Duration || target.Placeholder || target.Dead || !group!.Alive.Contains(target.Place))
+                { return applied; }
+                // What's left of each status newly on the target, before any other enemy is held.
+                var remaining = statuses!.NewlyOn.Select(status => (Status: status, On: statuses.Application(status)))
+                    .Where(entry => entry.On is { } on && on.Until > at).Select(entry => (entry.Status, Left: entry.On!.Value.Until - at)).ToArray();
+                if (remaining.Length == 0) { return applied; }
+                for (var index = 0; index < spreadRules.Length; index++)
+                {
+                    var rule = spreadRules[index];
+                    if (at < spreadReady[index] || eligible?.Contains(rule.Talent) == false) { continue; }
+                    var reached = false;
+                    foreach (var place in group.InReach(target.Place, rule.Within, spacing))
+                    {
+                        var enemy = EnemyAt(place) ?? Early(place, at);
+                        if (enemy.Dead) { continue; }
+                        foreach (var (status, duration) in remaining) { reached |= PutStatus(enemy, status, duration, at, scale: false); }
+                    }
+                    if (reached) { spreadReady[index] = at + rule.Every; }
+                }
+                return applied;
+            }
+            // Settles the kills blasts made, each as any kill on an enemy the player isn't shooting. Under focus fire the next arrival
+            // moves past one that died waiting first, so the kill doesn't take the arrival with it.
+            void SettleBlastKills()
+            {
+                while (blastKills.TryDequeue(out var entry))
+                {
+                    var (dying, at) = entry;
+                    // A kill already settled (the enemy being shot dying to its own shot) is gone from the group.
+                    if (!dying.Dead || !group!.Alive.Contains(dying.Place)) { continue; }
+                    // The enemy being shot can die to a blast another kill set off: that's its own kill, on the spot.
+                    KillElsewhere(dying, at);
                 }
             }
             // A triggered refill fills the weapon in hand; a reload already under way fills it when it completes.
@@ -1300,6 +1693,28 @@ public static class DummyWeaponSimulator
             // A driven rotation decides at the weapon branch's clock: each weapon's reload and swap speed as it would be
             // in hand then. The holstered weapon's are its current state; the drawn weapon's are resolved with it in hand.
             if (skills is not null && (buffs is not null || rotation is not null)) { skills.Read = (slot, at) => SkillsAt(at).For(slot); }
+            if (skills is not null && !options.SkillUse.IsEmpty)
+            {
+                // Each plan waiting for a key or for enemies, by its index.
+                var waitingFor = new Dictionary<int, SkillUseCondition>();
+                foreach (var (slot, condition) in options.SkillUse)
+                {
+                    var index = skills.IndexOf(slot);
+                    if (condition.When == SkillUseCondition.AfterSeconds) { skills.DelayFirst(index, condition.Seconds); }
+                    if (condition.When is SkillUseCondition.KeyOn or SkillUseCondition.EnemiesAtLeast) { waitingFor[index] = condition; }
+                }
+                // A key is on when the state the skill would read holds it as anything but off; enemies count while alive in the group.
+                if (waitingFor.Count > 0)
+                {
+                    // An enemy killed at this moment counts only if nobody is left to take its place.
+                    skills.MayDeploy = (index, at) => !waitingFor.TryGetValue(index, out var condition) || condition.When switch
+                    {
+                        SkillUseCondition.KeyOn => IsOn(StateHeld(hand, at).GetValueOrDefault(condition.Key)),
+                        SkillUseCondition.EnemiesAtLeast => group!.Living(place => EnemyAt(place)?.Dead == true) >= condition.Count,
+                        _ => throw new InvalidOperationException($"No hold for a {condition.When} skill use")
+                    };
+                }
+            }
             if (rotation is not null && options.DriveSimpleBuffs)
             {
                 rotation.DrivenTiming = slot =>
@@ -1310,9 +1725,14 @@ public static class DummyWeaponSimulator
             }
             while (time < options.Duration || skills?.Next is not null || nextEnemy < options.Duration || Ticking()?.Dots!.NextTick < options.Duration ||
                 pickups.Count > 0 && pickups.Peek() < options.Duration || actionEvents.Count > 0 && actionEvents.Peek().At < options.Duration || nextSecond < options.Duration ||
-                HeldDue() < options.Duration)
+                HeldDue() < options.Duration || blastKills.Count > 0)
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                if (blastKills.Count > 0)
+                {
+                    SettleBlastKills();
+                    continue;
+                }
                 var nextSkill = skills?.Next;
                 var nextSkillTime = nextSkill?.Time ?? double.PositiveInfinity;
                 var nextStatusTick = Ticking()?.Dots!.NextTick ?? double.PositiveInfinity;
@@ -1455,6 +1875,7 @@ public static class DummyWeaponSimulator
                     {
                         var from = action.From;
                         hand = action.To;
+                        HolsterTraps(at);
                         buffs!.Hold(at, weaponTags[hand]);
                         RefreshWeapon(at);
                         // Swap and swap_after_kill go to gear and the source weapon; swapped goes to gear and the drawn weapon.
@@ -1508,8 +1929,8 @@ public static class DummyWeaponSimulator
                     }
                     if (player?.Downed == true) { continue; }
                     // A status applied on the second lands only on a living target; between targets there is none.
-                    var applied = statuses!.Fire("second", at, buffWeapon.StatusDurationFactor, holdingTalents[hand], !targeted || !target.Dead,
-                        gated ? buffs!.Gates(at) : null, target.Distance);
+                    var applied = Spread(statuses!.Fire("second", at, buffWeapon.StatusDurationFactor, holdingTalents[hand], !targeted || !target.Dead,
+                        gated ? buffs!.Gates(at) : null, target.Distance), at, holdingTalents[hand]);
                     var started = statuses.Started;
                     if (FireBuffs("second", at, statuses.Active(at))) { Refill(at); }
                     if (started) { FixNewStatus(); }
@@ -1550,37 +1971,7 @@ public static class DummyWeaponSimulator
                         "bleeding" => DummyEventKind.BleedTick,
                         _ => throw new SimulationException("status-damage-invalid", $"Status {status} has no tick event")
                     }, dealt, at, "");
-                    if (targeted && ticking.Dead)
-                    {
-                        // A kill on an enemy the player left runs as any status kill, on that enemy, and the player then carries on.
-                        var (shot, movedOn, away) = (target, groupMovedOn, !ReferenceEquals(ticking, target));
-                        if (away)
-                        {
-                            // The enemy being shot waits with those left, so a count read on this kill still finds it.
-                            left.Remove(ticking.Place);
-                            if (!shot.Dead) { left[shot.Place] = shot; }
-                            target = ticking;
-                            groupMovedOn = false;
-                            HoldState(target, at);
-                        }
-                        // Preservation and weapon repair-per-kill are not granted: whether a status kill credits them is an in-game check
-                        // (R41). Doctor Home's kit is, when the target was marked.
-                        CreditKill(at, "", () => RepairOnKill(at, weaponBound: false), away);
-                        if (!away && options.Rotation?.Mode == WeaponSwapMode.AfterKill) { externalKillPending = true; }
-                        // A status kill is a kill to gear talents only, as a skill's is. It's no skill_kill: by the source a burn or bleed
-                        // tick isn't a skill kill (R77), though a skill's own status ticks in its stream count as one, a known partial.
-                        FireStatuses("kill", at, buffWeapon.StatusDurationFactor, gearTalents);
-                        if (FireBuffs("kill", at, statuses!.Active(at), gearTalents))
-                        { Refill(at); }
-                        ClearTarget(at);
-                        if (away)
-                        {
-                            if (!shot.Dead) { left.Remove(shot.Place); }
-                            target = shot;
-                            groupMovedOn = movedOn;
-                            HoldState(target, at);
-                        }
-                    }
+                    if (targeted && ticking.Dead) { KillElsewhere(ticking, at); }
                     RefreshWeapon(at);
                     continue;
                 }
@@ -1799,6 +2190,7 @@ public static class DummyWeaponSimulator
                 var healthBefore = target.Health;
                 var unarmoredBefore = !targeted || target.Armor == 0;
                 double damage;
+                var redirected = 0d;
                 var criticalDamage = 0d;
                 if (options.Mode == SimulationMode.Random)
                 {
@@ -1827,23 +2219,35 @@ public static class DummyWeaponSimulator
                             if (critical) { critPellets++; }
                         }
                         if (!targeted) { damage += raw; continue; }
-                        var dealt = target.Apply(raw, weapon.ArmorFactor, weapon.HealthFactor);
+                        // A redirect moves its share of the pellet to another enemy, which takes it as a fixed amount (Bewildered).
+                        var redirect = alive ? Redirect(time) : null;
+                        var dealt = target.Apply(redirect is { } moving ? raw * (1 - moving.Share) : raw, weapon.ArmorFactor, weapon.HealthFactor);
                         damage += dealt;
                         if (critical) { criticalDamage += dealt; }
                         if (alive && target.Dead) { killingCrit = critical; killingHeadshot = headshot; }
+                        if (redirect is { } moved)
+                        {
+                            // As the hit dealt it, with the weapon's armor and health factors, but none of the receiver's own.
+                            var share = moved.Enemy.Apply(raw * moved.Share, weapon.ArmorFactor, weapon.HealthFactor);
+                            redirected += share;
+                            Record(DummyEventKind.DamageRedirected, share, time);
+                            if (moved.Enemy.Dead) { blastKills.Enqueue((moved.Enemy, time)); }
+                        }
                     }
                     target.PelletHits[hand] = landed;
                 }
                 else { damage = targeted ? target.Apply(weapon.Expected, weapon.ArmorFactor, weapon.HealthFactor) : weapon.Expected; }
                 // A shot is unarmored when its damage reaches health, including the shot that strips the last armor.
                 var unarmored = unarmoredBefore || target.Health < healthBefore;
-                total += damage;
-                weaponTotal += damage;
-                timeline[(int)time] += damage / fights;
+                // What a redirect moved is still the weapon's damage, dealt to another enemy.
+                total += damage + redirected;
+                weaponTotal += damage + redirected;
+                timeline[(int)time] += (damage + redirected) / fights;
                 if (!double.IsFinite(total) || !double.IsFinite(timeline[(int)time]))
                 { throw new SimulationException("damage-overflow", "Simulation damage overflowed"); }
                 shots++;
                 Record(DummyEventKind.Shot, damage);
+                if (hitEvent) { Tag(time); }
                 if (player is not null && criticalDamage > 0 && recoveryProfile!.CriticalDamageShare > 0)
                 {
                     // Saturating an overflowing product is exact after the finite missing-armor cap.
@@ -1974,7 +2378,16 @@ public static class DummyWeaponSimulator
                 if (!double.IsFinite(talentDps[fight])) { throw new SimulationException("damage-overflow", "Talent damage DPS overflowed"); }
             }
             totalDps[fight] = total / options.Duration;
-            if (fightKills > 0) { killTimeMeans.Add(fightKillSeconds / fightKills); }
+            if (timedKills > 0) { killTimeMeans.Add(fightKillSeconds / timedKills); }
+            if (skills is not null)
+            {
+                foreach (var slot in options.SkillUse.Keys)
+                {
+                    var index = skills.IndexOf(slot);
+                    var (uses, held) = skillUseTotals[slot];
+                    skillUseTotals[slot] = (uses + skills.UsesOf(index), held + skills.HeldFor(index, options.Duration));
+                }
+            }
             if (!double.IsFinite(dps[fight]) || !double.IsFinite(totalDps[fight])) { throw new SimulationException("damage-overflow", "Simulation DPS overflowed"); }
             progress?.Report(new(fight + 1, fights));
         }
@@ -2025,6 +2438,17 @@ public static class DummyWeaponSimulator
              .. (firstDistance is null && statusRules.Any(rule => rule.Within > 0) ? ["With no fight distance, a status rule's range is taken as met"] : Array.Empty<string>()),
              .. (kitlessTalents.IsEmpty ? Array.Empty<string>() : [$"This fight carries no armor kits, so these read your setting and never react to one: {string.Join(", ", kitlessTalents)}"]),
              .. (skilllessTalents.IsEmpty ? Array.Empty<string>() : [$"This fight has no skills, so these never react to a skill's hit or kill: {string.Join(", ", skilllessTalents)}"]),
+             .. (reachActive && !spreadRules.IsEmpty ? ["Spreads copy statuses talents put on the enemy being shot; a skill's own status doesn't spread"] : Array.Empty<string>()),
+             .. (options.SkillUse.IsEmpty ? Array.Empty<string>() : [$"Assumed skill use: {string.Join("; ", options.SkillUse.OrderBy(pair => pair.Key, StringComparer.Ordinal).Select(pair => $"{pair.Key} {pair.Value}"))}. A held skill's cooldown starts when it's used, and others are used as soon as they're ready"]),
+             .. (skillUseTotals.Where(pair => pair.Value.Uses == 0).Select(pair => pair.Key).Order(StringComparer.Ordinal).ToArray() is { Length: > 0 } unused
+                 ? [$"Never used, since its condition never held: {string.Join(", ", unused.Select(slot => $"{slot} {options.SkillUse[slot]}"))}"] : Array.Empty<string>()),
+             .. (trapActive ? ["Traps tag the enemies the player has hit for long enough, so under focus fire only the enemy being shot is tagged and a trap springs only when the player moves between enemies; the slow isn't modeled"] : Array.Empty<string>()),
+             .. (!trapRules.IsEmpty && !trapActive ? [$"These traps find nobody, since the fight has no {(!targeted ? "targets" : "several enemies at once")}: {string.Join(", ", trapRules.Select(rule => RuleOwnerName(pack.Pack, rule.Talent)).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal))}"] : Array.Empty<string>()),
+             .. (reachActive && !redirectRules.IsEmpty ? ["Redirects move a share of each weapon hit to a random enemy in reach, as a fixed amount that's no hit and applies no status; fights have no armor plates, so every hit moves its share"] : Array.Empty<string>()),
+             .. (reachActive && !passOnRules.IsEmpty ? ["Pass-ons move a talent's debuff stacks to the nearest enemy at a death, up to its stack cap, or put a share of its talents' statuses on the nearest or all in reach; a skill's own status doesn't pass on"] : Array.Empty<string>()),
+             .. (options.EnemySpacing is { } spaced ? [string.Create(CultureInfo.InvariantCulture,
+                 $"Assumed enemy spacing: {spaced:0.##} m between neighbours on a line, by their place in the group; an enemy joining takes the dead one's place")] : Array.Empty<string>()),
+             .. (reachTalents.Length > 0 && !reachActive ? [$"These effects on other enemies find nobody, since the fight has no {(!targeted ? "targets" : options.EnemiesAtOnce is null ? "several enemies at once" : "enemy spacing")}: {string.Join(", ", reachTalents.Select(id => RuleOwnerName(pack.Pack, id)).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal))}"] : Array.Empty<string>()),
              .. (enemyCounts is null ? Array.Empty<string>() :
                  ["Talents that count enemies read those alive in the group, by each enemy's distance. Enemies don't move, so a count changes only as they die or join; one read on an event holds until that event comes round again, starting from none"]),
              .. (uncountedKeys.IsEmpty ? Array.Empty<string>() : [$"With one enemy at a time these stay as set: {string.Join(", ", uncountedKeys)}. Fights count enemies with several at once"]),
@@ -2058,6 +2482,7 @@ public static class DummyWeaponSimulator
             TargetStatusUptime = statusSeconds.ToImmutableDictionary(pair => pair.Key,
                 pair => new StatusUptime(pair.Value / fights, pair.Value / fights / options.Duration), StringComparer.Ordinal),
             SkillDps = skillStatistics?.Summary(),
+            SkillUses = skillUseTotals.ToImmutableDictionary(pair => pair.Key, pair => new SkillSlotUse(pair.Value.Uses / fights, pair.Value.Held / fights), StringComparer.Ordinal),
             StatusDps = statusDps is null ? null : Summarize(statusDps),
             TalentDps = talentDps is null ? null : Summarize(talentDps),
             TotalDps = Summarize(totalDps),

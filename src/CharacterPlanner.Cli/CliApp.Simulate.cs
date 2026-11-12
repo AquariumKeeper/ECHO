@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Text.Json;
 using CharacterPlanner.Application.Commands;
 using CharacterPlanner.Application.Sessions;
@@ -41,7 +42,7 @@ internal static partial class CliApp
         { return Fail(output, Diagnostics(validation.Diagnostics).Append(new { severity = "error", code = exception.Code, path = "", message = exception.Message })); }
         var diagnostics = Diagnostics(validation.Diagnostics).Concat(fight.Diagnostics.Select(diagnostic =>
             new { severity = diagnostic.Severity, code = diagnostic.Code, path = diagnostic.Subject, message = diagnostic.Message }));
-        output.WriteLine(JsonSerializer.Serialize(new
+        var written = JsonSerializer.SerializeToNode(new
         {
             ok = true,
             result = new
@@ -90,7 +91,10 @@ internal static partial class CliApp
                 limitations = fight.Limitations
             },
             diagnostics
-        }, ResultJson));
+        }, ResultJson)!;
+        // Each conditioned skill slot's uses and held time (ADR 0014), only in a fight that set them, so other results read as before.
+        if (!fight.SkillUses.IsEmpty) { written["result"]!["skillUses"] = JsonSerializer.SerializeToNode(Sorted(fight.SkillUses), ResultJson); }
+        output.WriteLine(written.ToJsonString(ResultJson));
         return Success;
     }
 
@@ -176,6 +180,32 @@ internal static partial class CliApp
                     case "enemiesAtOnce": options = options with { EnemiesAtOnce = (int)Whole(value, name, DummyFightOptions.MinimumEnemiesAtOnce, DummyFightOptions.MaximumEnemiesAtOnce) }; break;
                     case "enemiesShrink": options = options with { EnemiesShrink = Flag(value, name) }; break;
                     case "focusSeconds": options = options with { FocusSeconds = Number(value, name, DummyFightOptions.MinimumFocusSeconds, DummyFightOptions.MaximumFocusSeconds) }; break;
+                    case "skillUse":
+                        if (value.ValueKind != JsonValueKind.Object) { throw Invalid("'skillUse' needs an object of skill slots, each with a condition"); }
+                        var uses = ImmutableDictionary.CreateBuilder<string, SkillUseCondition>(StringComparer.Ordinal);
+                        foreach (var slot in value.EnumerateObject())
+                        {
+                            if (uses.ContainsKey(slot.Name)) { throw Invalid($"'skillUse' repeats '{slot.Name}'"); }
+                            if (slot.Value.ValueKind != JsonValueKind.Object) { throw Invalid($"'skillUse.{slot.Name}' needs an object with 'when'"); }
+                            if (!slot.Value.TryGetProperty("when", out _)) { throw Invalid($"'skillUse.{slot.Name}' needs an object with 'when'"); }
+                            var condition = new SkillUseCondition();
+                            foreach (var field in slot.Value.EnumerateObject())
+                            {
+                                condition = field.Name switch
+                                {
+                                    "when" => condition with { When = field.Value.ValueKind == JsonValueKind.String ? field.Value.GetString()! : throw Invalid($"'skillUse.{slot.Name}.when' needs a string") },
+                                    "key" => condition with { Key = field.Value.ValueKind == JsonValueKind.String ? field.Value.GetString()! : throw Invalid($"'skillUse.{slot.Name}.key' needs a string") },
+                                    "seconds" => condition with { Seconds = Number(field.Value, $"skillUse.{slot.Name}.seconds", 0, SimulationLimits.MaximumFightDuration, exclusiveMinimum: true) },
+                                    "count" => condition with { Count = (int)Whole(field.Value, $"skillUse.{slot.Name}.count", 1, DummyFightOptions.MaximumEnemiesAtOnce) },
+                                    _ => throw Invalid($"Unknown field 'skillUse.{slot.Name}.{field.Name}'")
+                                };
+                            }
+                            if (condition.Problem() is { } problem) { throw Invalid($"'skillUse.{slot.Name}': {problem}"); }
+                            uses[slot.Name] = condition;
+                        }
+                        options = options with { SkillUse = uses.ToImmutable() };
+                        break;
+                    case "enemySpacing": options = options with { EnemySpacing = Number(value, name, DummyFightOptions.MinimumEnemySpacing, DummyFightOptions.MaximumEnemySpacing) }; break;
                     case "armorKits": options = options with { ArmorKits = (int)Whole(value, name, DummyFightOptions.MinimumArmorKits, DummyFightOptions.MaximumArmorKits) }; break;
                     case "armorKitAtPercent": options = options with { ArmorKitAtPercent = Number(value, name, DummyFightOptions.MinimumArmorKitPercent, DummyFightOptions.MaximumArmorKitPercent) }; break;
                     default: throw Invalid($"Unknown option '{name}'");

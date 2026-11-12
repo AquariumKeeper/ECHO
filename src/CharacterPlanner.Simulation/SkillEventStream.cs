@@ -21,6 +21,13 @@ public sealed class SkillFights
         (this.plans, this.duration, this.boundaries, this.cancellationToken) = (plans, duration, boundaries, cancellationToken);
 
     internal ImmutableArray<SkillDamageSchedule.Plan> Plans => plans;
+
+    /// <summary>The plan index of a skill slot, or -1 when the build has no damaging skill there.</summary>
+    internal int IndexOf(string slot)
+    {
+        for (var index = 0; index < plans.Length; index++) { if (plans[index].Slot == slot) { return index; } }
+        return -1;
+    }
     internal double Duration => duration;
 
     public SkillEventStream NewFight() => new(this);
@@ -104,6 +111,10 @@ public sealed class SkillEventStream
     private readonly SkillDamageSchedule.Plan?[] lastPlan;
     private int uses;
     private int events;
+    // ADR 0014: each slot's uses this fight, whether it's held waiting for its condition, since when, and its held time so far.
+    private readonly int[] slotUses;
+    private readonly double[] heldSince;
+    private readonly double[] heldSeconds;
 
     internal SkillEventStream(SkillFights fights)
     {
@@ -114,7 +125,51 @@ public sealed class SkillEventStream
         recharges = Enumerable.Repeat(double.PositiveInfinity, nextUse.Length).ToArray();
         lastUse = Enumerable.Repeat(double.NaN, nextUse.Length).ToArray();
         lastPlan = new SkillDamageSchedule.Plan?[nextUse.Length];
+        slotUses = new int[nextUse.Length];
+        heldSince = Enumerable.Repeat(double.NaN, nextUse.Length).ToArray();
+        heldSeconds = new double[nextUse.Length];
     }
+
+    /// <summary>The plan index of a skill slot, or -1 when the build has no damaging skill there.</summary>
+    internal int IndexOf(string slot) => fights.IndexOf(slot);
+
+    /// <summary>A slot's first use waits until <paramref name="at"/> (ADR 0014's <c>afterSeconds</c>); later ones follow its cooldown.</summary>
+    internal void DelayFirst(int index, double at)
+    {
+        if (uses > 0) { throw new InvalidOperationException("A first use is delayed before the fight starts"); }
+        // Held from when it would be ready until then, or to the fight's end if that's sooner.
+        heldSeconds[index] += Math.Max(0, Math.Min(at, fights.Duration) - nextUse[index]);
+        nextUse[index] = Math.Max(nextUse[index], at);
+        deployment = null;
+        settled = false;
+    }
+
+    /// <summary>
+    /// Whether a ready slot may deploy now (ADR 0014's conditions). A slot that may not is held until <see cref="Release"/> finds it may;
+    /// null lets every slot deploy when ready. Only a fight that reads its skills as they deploy can hold one.
+    /// </summary>
+    internal Func<int, double, bool>? MayDeploy { get; set; }
+
+    /// <summary>Lets each held slot whose condition now holds deploy at <paramref name="at"/>.</summary>
+    internal void Release(double at)
+    {
+        if (MayDeploy is null) { return; }
+        for (var index = 0; index < nextUse.Length; index++)
+        {
+            if (double.IsNaN(heldSince[index]) || at >= fights.Duration || !MayDeploy(index, at)) { continue; }
+            heldSeconds[index] += Math.Max(0, at - heldSince[index]);
+            heldSince[index] = double.NaN;
+            nextUse[index] = at;
+            deployment = null;
+            settled = false;
+        }
+    }
+
+    /// <summary>A slot's uses this fight.</summary>
+    internal int UsesOf(int index) => slotUses[index];
+
+    /// <summary>The time a slot was ready but held this fight, a hold still running counted to <paramref name="end"/>.</summary>
+    internal double HeldFor(int index, double end) => heldSeconds[index] + (double.IsNaN(heldSince[index]) ? 0 : Math.Max(0, end - heldSince[index]));
 
     /// <summary>
     /// Takes time off every skill cooldown running at this time: <paramref name="share"/> of each skill's own cooldown plus
@@ -132,7 +187,8 @@ public sealed class SkillEventStream
         {
             // A cooldown that starts at this very moment isn't cut: a use whose own impact resets it (Skilled on a skill kill)
             // would otherwise deploy again at once, without end.
-            if (lastPlan[index] is not { } plan || lastUse[index] >= at) { continue; }
+            // A held skill is ready, waiting only for its condition (ADR 0014), so there's nothing to cut.
+            if (lastPlan[index] is not { } plan || lastUse[index] >= at || !double.IsNaN(heldSince[index])) { continue; }
             var amount = share * plan.Cooldown + seconds;
             var earliest = Math.Max(at, lastUse[index] + (plan.Cycle - plan.Cooldown));
             if (stocks[index] > 1)
@@ -163,7 +219,7 @@ public sealed class SkillEventStream
     {
         for (var index = 0; index < nextUse.Length; index++)
         {
-            if (lastPlan[index] is not { } plan) { continue; }
+            if (lastPlan[index] is not { } plan || !double.IsNaN(heldSince[index])) { continue; }
             if (stocks[index] > 1 ? lastUse[index] < at && double.IsFinite(recharges[index]) && recharges[index] > at
                 : CooldownStart(index, plan) < at && nextUse[index] > at) { return true; }
         }
@@ -216,6 +272,15 @@ public sealed class SkillEventStream
     {
         Settle();
         if (deployment is null) { throw new InvalidOperationException("No skill deployment is due"); }
+        // A ready slot whose condition doesn't hold as the fight reaches it waits, out of the schedule, until a decision releases it.
+        if (MayDeploy is not null && !MayDeploy(deploying, deployment.Time))
+        {
+            heldSince[deploying] = deployment.Time;
+            nextUse[deploying] = double.PositiveInfinity;
+            deployment = null;
+            settled = false;
+            return;
+        }
         Make(deploying, Read!(deployment.Slot, deployment.Time));
         deployment = null;
         settled = false;
@@ -282,6 +347,7 @@ public sealed class SkillEventStream
         if (++uses > UseLimit) { throw new SimulationException("skill-work-limit", "Too many skill deployments"); }
         var time = nextUse[index];
         (lastUse[index], lastPlan[index]) = (time, plan);
+        slotUses[index]++;
         if (double.IsNaN(stocks[index]))
         {
             stocks[index] = plan.Stock;

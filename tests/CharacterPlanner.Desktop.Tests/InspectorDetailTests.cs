@@ -102,7 +102,8 @@ public sealed class InspectorDetailTests : IDisposable
     [InlineData("gear_talent_resolved", "Pack combat rules exist")]
     [InlineData("gear_talent_perfect_tag_team", "Pack combat rules exist")]
     [InlineData("gear_talent_perfect_calculated", "Pack combat rules exist")]
-    [InlineData("gear_talent_bewildered", "No modeled effect")]
+    // Bewildered had no modeled effect until R96's redirect.
+    [InlineData("gear_talent_bewildered", "Pack redirect of weapon damage to another enemy")]
     public async Task CandidateCardsDescribeIndirectAndMissingModels(string talentId, string expected)
     {
         var item = TestPack.Division.Pack.Items.First(item => item.TalentSlots.Any(slot => slot.Choices.Contains(talentId)));

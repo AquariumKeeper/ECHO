@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "id": "division_2",
   "name": "The Division 2",
-  "version": "y8s3.3-pve.2026-11-08.r85.candidate.1",
+  "version": "y8s3.3-pve.2026-11-10.r97.candidate.1",
   "gameVersion": "Year 8 Season 3 \u00b7 Title Update Y8S3.3 (PvE)",
   "description": "Plan a level-40 PvE build for The Division 2. Configure gear, weapons, skills, specialization, SHD Watch and item Expertise to preview armor, health, weapon damage, DPS, skill damage and recovery estimates. Modeled permanent bonuses apply automatically; use Assumptions for conditional effects. Assumptions are view settings and are not saved or shared. Estimates use community references and need live-game verification. Some talents and skill outputs remain unmodeled; combat events, ammunition and PvP normalization are not simulated. Fights reach Overcharge only through talents that grant it, Energize and Future Perfect; other Overcharge is a preview.",
   "capabilities": [
@@ -21,20 +21,20 @@
       "bytes": 20263
     },
     "provenance.md": {
-      "sha256": "1b4a7f0d67e27f38e02c8e713c3c577d431426a45eb228431d0a6a040002e0be",
-      "bytes": 219307
+      "sha256": "1f34da6e0446d9f0c4ee669938d945148a364a9857aa7dca3906ec783cc54e03",
+      "bytes": 224470
     },
     "share-codes.json": {
       "sha256": "7ad28718e2f57edbee9512fcbe778df324b3a931ccccf976efaeeb7fa02c4087",
       "bytes": 209
     },
     "simulation.json": {
-      "sha256": "55764414053445f9fb97fa7d14fdc33184cb705083b1f535a6ab4b0c03b74a40",
-      "bytes": 43008
+      "sha256": "cb396edfef0f2b7ab81394f23849f8754ee934bfbc9aa9c557e92ae098bbe012",
+      "bytes": 44353
     },
     "rules.json": {
-      "sha256": "c8b52d017dfd7b71d529213aba92714e5792ee4b6e73f7f3f3a3bd13cbc66c5e",
-      "bytes": 2561818
+      "sha256": "862b2abaf16d3892ef4fe3073c7cfec9bce5f7f953a38e0b7502a4b5bfd7b219",
+      "bytes": 2564581
     }
   },
   "assetsSha256": "5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d"

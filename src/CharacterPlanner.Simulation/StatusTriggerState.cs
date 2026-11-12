@@ -102,6 +102,10 @@ public sealed class StatusTriggerState
         }
     }
 
+    /// <summary>The statuses the last <see cref="Fire"/> newly put on the enemy held (a refresh isn't one), for a spread (ADR 0013).</summary>
+    internal IReadOnlyList<string> NewlyOn => newlyOnStatuses;
+    private readonly List<string> newlyOnStatuses = [];
+
     /// <summary>Whether the last <see cref="Fire"/> started a talent's status here, so its ticks start, even on an enemy where a skill's rate only carries that status.</summary>
     internal bool Started { get; private set; }
 
@@ -132,6 +136,7 @@ public sealed class StatusTriggerState
         CheckTime(time);
         if (!double.IsFinite(durationFactor) || durationFactor <= 0) { throw new ArgumentOutOfRangeException(nameof(durationFactor)); }
         Started = false;
+        newlyOnStatuses.Clear();
         if (!events.Contains(eventName)) { Advance(time); return false; }
         var nextCounted = (long[])counted.Clone();
         var nextArmed = (double[])armedAt.Clone();
@@ -184,6 +189,7 @@ public sealed class StatusTriggerState
             if (time < deadlines.GetValueOrDefault(status)) { continue; }
             held.StartFactors[status] = durationFactor;
             Started = true;
+            if (!held.Has(status, time)) { newlyOnStatuses.Add(status); }
             newlyOn |= !held.Has(status, time);
         }
         if (updates.Count > 0) { Accumulate("any", time); }
@@ -195,6 +201,31 @@ public sealed class StatusTriggerState
         }
         if (updates.Count > 0) { version++; }
         return newlyOn;
+    }
+
+    /// <summary>
+    /// A status put straight on the enemy held now, by a blast (ADR 0013): on for its duration from now, scaled as the player's statuses
+    /// are, or a running one extended. As with a talent's, one status per target (R63): while a skill's rate is that status's damage on
+    /// this enemy, it doesn't go on.
+    /// </summary>
+    /// <param name="scale">False for a duration already scaled, such as what's left of a status spread from another enemy.</param>
+    /// <returns>Whether it went on, or was extended; false when it yields to a skill's.</returns>
+    public bool ApplyDirect(string status, double duration, double time, double durationFactor, bool scale = true)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(status);
+        CheckTime(time);
+        if (!double.IsFinite(durationFactor) || durationFactor <= 0) { throw new ArgumentOutOfRangeException(nameof(durationFactor)); }
+        if (Yields(status, time)) { return false; }
+        var until = time + duration * (scale ? FactorFor(status, time, durationFactor) : 1);
+        if (!double.IsFinite(until) || until <= time) { throw new SimulationException("trigger-time-invalid", "Status duration cannot advance time"); }
+        Advance(time);
+        if (!(time < deadlines.GetValueOrDefault(status))) { held.StartFactors[status] = durationFactor; }
+        Accumulate("any", time);
+        Accumulate(status, time);
+        deadlines[status] = Math.Max(deadlines.GetValueOrDefault(status), until);
+        appliedAt[status] = time;
+        version++;
+        return true;
     }
 
     /// <summary>

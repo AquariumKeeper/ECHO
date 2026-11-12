@@ -62,6 +62,11 @@ public static class EffectCoverage
 
     /// <summary>A talent's own damage over time (pack <c>simulation.talentDamage</c>, Toxic Delivery).</summary>
     public const string TalentDamage = "talent-damage";
+    public const string TalentBlast = "talent-blast";
+    public const string TalentSpread = "talent-spread";
+    public const string TalentRedirect = "talent-redirect";
+    public const string TalentTrap = "talent-trap";
+    public const string TalentPassOn = "talent-pass-on";
 
     /// <summary>The producer's source audit of the talent's mechanic (pack <c>coverage</c>, R35).</summary>
     public const string SourceAudit = "source-audit";
@@ -135,6 +140,23 @@ public static class EffectCoverage
         var damage = pack.Simulation.TalentDamage.Where(rule => rule.Talent == talent.ID).Select(rule => rule.Total).ToImmutableArray();
         if (!damage.IsEmpty)
         { channels.Add(new(TalentDamage, damage, "Pack talent damage over time exists; driven simulations tick it on the current target. Static comparisons don't include it.")); }
+        // A blast on other enemies (ADR 0013) runs only in driven simulations with several enemies and a spacing.
+        var blast = pack.Simulation.Blasts.Where(rule => rule.Talent == talent.ID)
+            .SelectMany(rule => new[] { rule.Amount, rule.Status, rule.Mark }.Where(value => value.Length > 0)).ToImmutableArray();
+        if (!blast.IsEmpty)
+        { channels.Add(new(TalentBlast, blast, "Pack blast on other enemies exists; driven simulations with several enemies and an enemy spacing apply it. Static comparisons don't include it.")); }
+        // A trap on the enemies the player tagged (ADR 0013, The Trap), in fights with several enemies.
+        if (pack.Simulation.Traps.Any(rule => rule.Talent == talent.ID))
+        { channels.Add(new(TalentTrap, [talent.ID], "Pack trap on tagged enemies exists; driven simulations with several enemies apply it. Static comparisons don't include it.")); }
+        // A share of each weapon hit moved to another enemy (ADR 0013, Bewildered), in the same fights.
+        if (pack.Simulation.Redirects.Any(rule => rule.Talent == talent.ID))
+        { channels.Add(new(TalentRedirect, [talent.ID], "Pack redirect of weapon damage to another enemy exists; driven simulations with several enemies and an enemy spacing apply it. Static comparisons don't include it.")); }
+        // A status spread to other enemies (ADR 0013), in the same fights.
+        if (pack.Simulation.Spreads.Any(rule => rule.Talent == talent.ID))
+        { channels.Add(new(TalentSpread, [talent.ID], "Pack status spread to other enemies exists; driven simulations with several enemies and an enemy spacing apply it. Static comparisons don't include it.")); }
+        // A debuff passing on at a death (ADR 0013), in the same fights.
+        if (pack.Simulation.PassOns.Any(rule => rule.Talent == talent.ID))
+        { channels.Add(new(TalentPassOn, [talent.ID], "Pack pass-on at a death exists (a debuff's stacks or a status); driven simulations with several enemies and an enemy spacing apply it. Static comparisons don't include it.")); }
         return new(slot, talent.ID, talent.Name, active, channels.ToImmutable());
     }
 

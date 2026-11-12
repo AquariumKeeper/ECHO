@@ -1,14 +1,14 @@
 {
   "format": "shade-tech.planner-talent-rule-composition",
   "version": 1,
-  "candidate_version": "y8s3.3-pve.2026-11-08.r86.candidate.1",
+  "candidate_version": "y8s3.3-pve.2026-11-11.r100.candidate.1",
   "base_manifest": {
     "path": "support/base-pack/manifest.json",
-    "sha256": "0652247f6ddd43d739dae0bb8bb137620d6837b4e26aca8302ba558ea271df1d"
+    "sha256": "97dede892860c345ed9e58170b3d20c4c09840d4c104ab407f0d32c64ccfe90a"
   },
   "overlay_plan": {
     "path": "overlay-plan.json",
-    "sha256": "47b6666ec48c7d140c46fd65d267d65fd092aa337a641ac5bf513464497a8047"
+    "sha256": "2ac24613d8359fb744f6a12c87b24d60c055642af6e0c129be28caf0df707dce"
   },
   "evidence_root": "support/evidence",
   "assets_root": "pack/assets"

@@ -87,6 +87,41 @@ public sealed class StatusDamageState
         return started;
     }
 
+    /// <summary>
+    /// A talent's running debuffs leave this enemy, to pass on (ADR 0013): each keeps its rule, start, ticks taken and amount, so its
+    /// schedule goes on where it lands. Every enemy's state is made from the same rules, so they mean the same rule there.
+    /// </summary>
+    internal (int Rule, double Start, double Amount, int Taken)[] TakeTalent(string talent)
+    {
+        var taken = running.Where(debuff => talents[debuff.Rule].Talent == talent).Select(debuff => (debuff.Rule, debuff.Start, debuff.Amount, debuff.Taken)).ToArray();
+        if (taken.Length == 0) { return taken; }
+        running.RemoveAll(debuff => talents[debuff.Rule].Talent == talent);
+        FindDue();
+        return taken;
+    }
+
+    /// <summary>
+    /// Debuffs passed on from another enemy start running here, the latest-started first, up to each rule's stack cap with what's
+    /// already here; the rest are lost. Returns how many landed.
+    /// </summary>
+    internal int Receive(IEnumerable<(int Rule, double Start, double Amount, int Taken)> debuffs)
+    {
+        var landed = 0;
+        foreach (var debuff in debuffs.OrderByDescending(entry => entry.Start))
+        {
+            if (running.Count(entry => entry.Rule == debuff.Rule) >= talents[debuff.Rule].MaxStacks) { continue; }
+            running.Add(new(debuff.Rule, debuff.Start, debuff.Amount) { Taken = debuff.Taken });
+            landed++;
+        }
+        if (landed == 0) { return 0; }
+        // Back in start order, which ticks due together are taken in; a stable sort keeps this enemy's own order among equal starts.
+        var ordered = running.OrderBy(debuff => debuff.Start).ToArray();
+        running.Clear();
+        running.AddRange(ordered);
+        FindDue();
+        return landed;
+    }
+
     /// <summary>A dead or replaced target takes its talent debuffs with it.</summary>
     public void ResetTalents()
     {

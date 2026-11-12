@@ -42,7 +42,9 @@ public sealed class LegacyResolutionTests
         // Plague of the Outcasts' debuff total (R75, 2026-11-08), read only by fights.
         "plague_of_the_outcasts_debuff_damage",
         // The specialization kit bonus and the three kit values that read it (R85, 2026-11-08); without Efficient they're the old constants.
-        "specialization_kit_bonus", "gunner_hardened_armor_kits_bonus_armor", "demolitionist_stimulant_patch_duration", "sharpshooter_emergency_cleanse_duration"];
+        "specialization_kit_bonus", "gunner_hardened_armor_kits_bonus_armor", "demolitionist_stimulant_patch_duration", "sharpshooter_emergency_cleanse_duration",
+        // Regicide's blast damage (R88, 2026-11-09), read only by fights with an enemy spacing.
+        "regicide_blast_damage"];
     private sealed record Suite(byte[] PackBytes, int Count);
     private static readonly Dictionary<string, Suite> Suites = new(StringComparer.Ordinal)
     {

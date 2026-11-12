@@ -188,6 +188,103 @@ public static partial class PackValidator
                 if (rule.MaxStacks is < 1 or > MaximumTalentDamageStacks)
                 { Error("bad-sim-talent-damage", path + ".maxStacks", $"A talent debuff's stacks must be from 1 to {MaximumTalentDamageStacks}"); }
             }
+            // A talent's debuff or status passing on at a death (ADR 0013): one per talent. A debuff needs the talent's talentDamage row
+            // and goes to the nearest enemy; a status needs a share of its duration, and may go to all in reach.
+            var passing = new HashSet<string>(StringComparer.Ordinal);
+            var passOns = pack.Simulation.PassOns;
+            for (var i = 0; i < passOns.Length; i++)
+            {
+                var rule = passOns[i];
+                var path = $"simulation.passOns[{i}]";
+                if (rule.Status.Length == 0 ? !talentDamage.Any(damage => damage.Talent == rule.Talent) : !talents.Contains(rule.Talent))
+                { Error("bad-sim-pass-on", path + ".talent", rule.Status.Length == 0 ? $"Talent {Q(rule.Talent)} has no talentDamage debuff to pass on" : $"Unknown talent {Q(rule.Talent)}"); }
+                else if (!passing.Add(rule.Talent)) { Error("bad-sim-pass-on", path + ".talent", $"Talent {Q(rule.Talent)} has two pass-ons"); }
+                // The share may come from a stat instead (Proliferation's 75%), read when a fight starts.
+                if (rule.Status.Length == 0 ? rule.Share != 0 || rule.ShareStat.Length > 0 || rule.To is not ("" or "nearest")
+                    : !(Statuses.Contains(rule.Status) || rule.Status == "any") || (rule.ShareStat.Length > 0 ? rule.Share != 0 : !double.IsFinite(rule.Share) || rule.Share is <= 0 or > 1) ||
+                        rule.To is not ("" or "nearest" or "all"))
+                { Error("bad-sim-pass-on", path + ".status", "A status pass-on needs a known status or any, a share above 0 up to 1 or a shareStat in its place, and to nearest or all; a debuff's takes neither a share nor all"); }
+                else if (DamagingStatuses.Contains(rule.Status) && !pack.Simulation.StatusDamage.Any(damage => damage.Status == rule.Status))
+                { Error("bad-sim-pass-on", path + ".status", $"A pass-on's {Q(rule.Status)} needs a statusDamage row to tick"); }
+                // A debuff's shareStat is refused above, whatever it names.
+                if (rule.Status.Length > 0 && rule.ShareStat.Length > 0) { Stat(rule.ShareStat, path + ".shareStat"); }
+                // The reach likewise (Proliferation's 15 m).
+                if (rule.WithinStat.Length > 0)
+                {
+                    if (rule.Within != 0) { Error("bad-sim-pass-on", path + ".within", "A pass-on takes within or withinStat, not both"); }
+                    Stat(rule.WithinStat, path + ".withinStat");
+                }
+                else if (!double.IsFinite(rule.Within) || rule.Within <= 0 || rule.Within > SimPassOnDefinition.MaximumWithin)
+                { Error("bad-sim-pass-on", path + ".within", $"A pass-on reaches above 0 up to {SimPassOnDefinition.MaximumWithin:G} metres"); }
+            }
+            // A talent's status spread to other enemies (ADR 0013): one per talent.
+            var spreading = new HashSet<string>(StringComparer.Ordinal);
+            var spreads = pack.Simulation.Spreads;
+            for (var i = 0; i < spreads.Length; i++)
+            {
+                var rule = spreads[i];
+                var path = $"simulation.spreads[{i}]";
+                if (!talents.Contains(rule.Talent)) { Error("bad-sim-spread", path + ".talent", $"Unknown talent {Q(rule.Talent)}"); }
+                else if (!spreading.Add(rule.Talent)) { Error("bad-sim-spread", path + ".talent", $"Talent {Q(rule.Talent)} has two spreads"); }
+                if (!double.IsFinite(rule.Within) || rule.Within <= 0 || rule.Within > SimSpreadDefinition.MaximumWithin)
+                { Error("bad-sim-spread", path + ".within", $"A spread reaches above 0 up to {SimSpreadDefinition.MaximumWithin:G} metres"); }
+                if (!double.IsFinite(rule.Every) || rule.Every is < 0 or > 600) { Error("bad-sim-spread", path + ".every", "A spread's cooldown is from 0 to 600 seconds"); }
+            }
+            // A talent's trap on the enemies it tagged (ADR 0013, The Trap): one per talent.
+            var trapping = new HashSet<string>(StringComparer.Ordinal);
+            var traps = pack.Simulation.Traps;
+            for (var i = 0; i < traps.Length; i++)
+            {
+                var rule = traps[i];
+                var path = $"simulation.traps[{i}]";
+                if (!talents.Contains(rule.Talent)) { Error("bad-sim-trap", path + ".talent", $"Unknown talent {Q(rule.Talent)}"); }
+                else if (!trapping.Add(rule.Talent)) { Error("bad-sim-trap", path + ".talent", $"Talent {Q(rule.Talent)} has two traps"); }
+                if (!double.IsFinite(rule.TagAfter) || rule.TagAfter is < 0 or > 10) { Error("bad-sim-trap", path + ".tagAfter", "A tag takes from 0 to 10 seconds of hits"); }
+                if (rule.MaxTags is < 1 or > SimTrapDefinition.MaximumTags) { Error("bad-sim-trap", path + ".maxTags", $"A trap tags from 1 to {SimTrapDefinition.MaximumTags} enemies"); }
+                if (!Statuses.Contains(rule.Status)) { Error("bad-sim-trap", path + ".status", $"Unknown status {Q(rule.Status)}"); }
+                else if (DamagingStatuses.Contains(rule.Status) && !pack.Simulation.StatusDamage.Any(damage => damage.Status == rule.Status))
+                { Error("bad-sim-trap", path + ".status", $"A trap's {Q(rule.Status)} needs a statusDamage row to tick"); }
+                if (!double.IsFinite(rule.StatusDuration) || rule.StatusDuration is <= 0 or > 600) { Error("bad-sim-trap", path + ".statusDuration", "A trap's status lasts above 0 up to 600 seconds"); }
+                if (!double.IsFinite(rule.Every) || rule.Every is < 0 or > 600) { Error("bad-sim-trap", path + ".every", "A trap's cooldown is from 0 to 600 seconds"); }
+                if (!double.IsFinite(rule.Cut) || rule.Cut is < 0 or > 600) { Error("bad-sim-trap", path + ".cut", "A trap's cut is from 0 to 600 seconds"); }
+            }
+            // A talent's redirect of weapon damage to another enemy (ADR 0013, Bewildered): one per talent.
+            var redirecting = new HashSet<string>(StringComparer.Ordinal);
+            var redirects = pack.Simulation.Redirects;
+            for (var i = 0; i < redirects.Length; i++)
+            {
+                var rule = redirects[i];
+                var path = $"simulation.redirects[{i}]";
+                if (!talents.Contains(rule.Talent)) { Error("bad-sim-redirect", path + ".talent", $"Unknown talent {Q(rule.Talent)}"); }
+                else if (!redirecting.Add(rule.Talent)) { Error("bad-sim-redirect", path + ".talent", $"Talent {Q(rule.Talent)} has two redirects"); }
+                if (!double.IsFinite(rule.Share) || rule.Share is <= 0 or >= 1) { Error("bad-sim-redirect", path + ".share", "A redirect moves a share above 0 and below 1 of each hit"); }
+                if (!double.IsFinite(rule.Within) || rule.Within <= 0 || rule.Within > SimRedirectDefinition.MaximumWithin)
+                { Error("bad-sim-redirect", path + ".within", $"A redirect reaches above 0 up to {SimRedirectDefinition.MaximumWithin:G} metres"); }
+            }
+            // A talent's blast on other enemies (ADR 0013): one per talent and event.
+            var blasting = new HashSet<(string, string)>();
+            var blasts = pack.Simulation.Blasts;
+            for (var i = 0; i < blasts.Length; i++)
+            {
+                var rule = blasts[i];
+                var path = $"simulation.blasts[{i}]";
+                if (!talents.Contains(rule.Talent)) { Error("bad-sim-blast", path + ".talent", $"Unknown talent {Q(rule.Talent)}"); }
+                if (!BlastEvents.Contains(rule.On))
+                { Error("bad-sim-blast", path + ".on", "A blast needs an event about an enemy: a hit or a kill, by the weapon or a skill"); }
+                else if (!blasting.Add((rule.Talent, rule.On))) { Error("bad-sim-blast", path + ".on", $"Talent {Q(rule.Talent)} has two blasts on {Q(rule.On)}"); }
+                if (rule.Amount.Length > 0) { Stat(rule.Amount, path + ".amount"); }
+                if (rule.Amount.Length == 0 && rule.Status.Length == 0 && rule.Mark.Length == 0)
+                { Error("bad-sim-blast", path + ".amount", "A blast needs an amount, a status or a mark"); }
+                if (rule.Mark.Length > 0 && !pack.Simulation.Triggers.Any(trigger => trigger.Talent == rule.Talent && trigger.Key == rule.Mark && trigger.Kind == "stacks" &&
+                    (trigger.ResetOn == "target_death" || trigger.ConsumeOn == "target_death") && trigger.Pool.Length == 0 && trigger.Bank.Length == 0))
+                { Error("bad-sim-blast", path + ".mark", $"A blast's mark names a stacks rule of {Q(rule.Talent)} cleared at target_death, held per enemy, with no pool or bank"); }
+                if (!double.IsFinite(rule.Within) || rule.Within <= 0 || rule.Within > SimBlastDefinition.MaximumWithin)
+                { Error("bad-sim-blast", path + ".within", $"A blast reaches above 0 up to {SimBlastDefinition.MaximumWithin:G} metres"); }
+                if (rule.Status.Length > 0 ? !Statuses.Contains(rule.Status) || !double.IsFinite(rule.StatusDuration) || rule.StatusDuration is <= 0 or > 600 : rule.StatusDuration != 0)
+                { Error("bad-sim-blast", path + ".status", "A blast's status needs a known status and a duration above 0 up to 600; without one, no duration"); }
+                else if (DamagingStatuses.Contains(rule.Status) && !pack.Simulation.StatusDamage.Any(damage => damage.Status == rule.Status))
+                { Error("bad-sim-blast", path + ".status", $"A blast's {Q(rule.Status)} needs a statusDamage row to tick"); }
+            }
         }
 
         // The armor kit a fight can use (ADR 0010).
@@ -245,6 +342,9 @@ public static partial class PackValidator
         private const double MinimumTickPeriod = 0.01;
         // Plague of the Outcasts runs 50; the cap keeps a fight's tick queue bounded.
         private const int MaximumTalentDamageStacks = 100;
+        // The events a blast centres on an enemy for (ADR 0013): its hit or its death.
+        private static readonly HashSet<string> BlastEvents = new(StringComparer.Ordinal)
+        { "hit", "hit_pellet", "crit", "crit_pellet", "headshot", "body_hit", "unarmored_hit", "kill", "crit_kill", "headshot_kill", "skill_hit", "skill_kill" };
         private const double MaximumTickPeriod = 60;
 
         // A grant on firing (Ablative Nano-Plating's temporary armor) uses clearGrant's kinds and limits.
@@ -373,8 +473,10 @@ public static partial class PackValidator
                 if (r.Percent && number && r.Phases.Length == 0) { return null; }
                 return r.Percent || r.Phases.Length < 2 || number ? "A magazine rule needs two or more phases on a condition key, or percent on a numeric input" : null;
             }
-            // A holstered-gain stacks rule (Quick Draw) may gain on time alone, with no event.
-            if (r.On.Length == 0 && !(r.Kind == "stacks" && r.GainWhileHolstered > 0) || !Events.Contains(r.On) || !Events.Contains(r.ResetOn) || !Events.Contains(r.ConsumeOn))
+            // A holstered-gain stacks rule (Quick Draw) may gain on time alone, with no event; one held per enemy, by blasts' marks alone
+            // (Unnerve, ADR 0013).
+            if (r.On.Length == 0 && !(r.Kind == "stacks" && (r.GainWhileHolstered > 0 || (r.ResetOn == "target_death" || r.ConsumeOn == "target_death") &&
+                pack.Simulation.Blasts.Any(blast => blast.Talent == r.Talent && blast.Mark == r.Key))) || !Events.Contains(r.On) || !Events.Contains(r.ResetOn) || !Events.Contains(r.ConsumeOn))
             { return "Trigger events must be simulator events"; }
             // A durationStat stands in for the duration (Clutch's post-kill window); its own field check follows.
             var timed = r.Duration > 0 || r.DurationStat.Length > 0;

@@ -355,6 +355,15 @@ public static class PackReader
             {
                 Talent = damage.Talent, On = damage.On, Total = damage.Total, Duration = damage.Duration, Period = damage.Period, MaxStacks = damage.MaxStacks ?? 1
             })],
+            PassOns = [.. List(simulation.PassOns).Select(passOn => new SimPassOnDefinition { Talent = passOn.Talent, Within = passOn.Within ?? 0, WithinStat = passOn.WithinStat ?? "", Status = passOn.Status ?? "", Share = passOn.Share ?? 0, ShareStat = passOn.ShareStat ?? "", To = passOn.To ?? "" })],
+            Spreads = [.. List(simulation.Spreads).Select(spread => new SimSpreadDefinition { Talent = spread.Talent, Within = spread.Within, Every = spread.Every ?? 0 })],
+            Redirects = [.. List(simulation.Redirects).Select(redirect => new SimRedirectDefinition { Talent = redirect.Talent, Share = redirect.Share, Within = redirect.Within })],
+            Traps = [.. List(simulation.Traps).Select(trap => new SimTrapDefinition
+            {
+                Talent = trap.Talent, TagAfter = trap.TagAfter, MaxTags = trap.MaxTags, Status = trap.Status, StatusDuration = trap.StatusDuration,
+                Every = trap.Every ?? 0, Cut = trap.Cut ?? 0
+            })],
+            Blasts = [.. List(simulation.Blasts).Select(blast => new SimBlastDefinition { Talent = blast.Talent, On = blast.On, Amount = blast.Amount ?? "", Mark = blast.Mark ?? "", Within = blast.Within, Status = blast.Status ?? "", StatusDuration = blast.StatusDuration ?? 0 })],
             DistanceDefaults = [.. List(simulation.DistanceDefaults).Select(entry => new SimDistanceDefault
             {
                 Input = entry.Input, Bands = [.. entry.Bands.Select(band => new SimDistanceBand { UpTo = band.UpTo, Value = band.Value })]

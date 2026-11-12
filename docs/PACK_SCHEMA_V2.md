@@ -910,3 +910,68 @@ Prototype `normalizeInput` reads the validated numeric assumption:
 exactly 1 normalizes, including a declared default of 1. An invalid supplied value
 reports `context-value-invalid` and uses the declared default, consistently with
 other numeric inputs. It never reads or separately parses the raw context string.
+
+- `simulation.blasts` is new on 2026-11-09 (ADR 0013), optional: a talent's blast on other enemies. Each entry has
+  `talent`, `on` (an event about an enemy, not `second` or `target_death`), `amount` (a stat: the damage to each enemy
+  reached, read as talent damage totals are) and `within` (metres, above 0 up to 50). On its event, from the talent in
+  hand or on gear, each living enemy in the group within `within` of the enemy the event is about (a kill's victim, a
+  hit's target) takes `amount` on its own pools, as talent damage. Enemies stand on a line by the fight's `enemySpacing`;
+  without it, or with one enemy at a time, a blast finds nobody and the result names the talent. A waiting enemy is made
+  when a blast first reaches it, and a kill by a blast counts as a status kill does: `kill` to gear talents,
+  `target_death` to all. One blast per talent and event. From 2026-11-09 a blast may also take `status` (one of the
+  statuses status rules know) and `statusDuration` (seconds, above 0 up to 600), both or neither: each enemy it reaches
+  and leaves alive gets that status for that long, scaled by the player's status duration as their own statuses are, or
+  a running one extended. A damaging status ticks there by its `statusDamage` row, whoever the player is shooting. It's
+  no `status_applied` event, which stays the enemy being shot's. From 2026-11-09 a blast may also take `mark`, the key
+  of a `stacks` rule of the same talent cleared at `target_death` (`resetOn` or `consumeOn`), so held per enemy, with no
+  `pool` or `bank`: each enemy it reaches and leaves alive gains the rule's stacks as its own gains would, read when the
+  player shoots that enemy (Unnerve's marks), with an `EnemyMarked` event. A rule a blast marks may have no `on`,
+  gaining by marks alone. With the talent on both rotated weapons, each weapon's copy holds its own marks. `amount` is
+  optional then; a blast needs at least one of `amount`, `status` and `mark`.
+
+- `simulation.spreads` is new on 2026-11-09 (ADR 0013), optional: a talent's status spread. Each entry has `talent`,
+  `within` (metres, above 0 up to 50) and `every` (seconds, 0 to 600; default 0). When a talent's status newly goes on
+  the enemy being shot (a refresh isn't one), the same status goes on each living enemy in the group within `within` of
+  it, for what's left of its duration, unscaled again. The spread then waits `every` seconds; the wait starts only when it
+  reached someone. A spread status sets off no other, and no `status_applied`. A skill's own status doesn't spread.
+  Enemies stand on the line `enemySpacing` sets; without it the spread finds nobody, and the result names the talent.
+  One spread per talent.
+
+- `simulation.traps` is new on 2026-11-10 (ADR 0013), optional: a talent's trap on the enemies the player tagged. Each
+  entry has `talent`, `tagAfter` (seconds, 0 to 10), `maxTags` (1 to 10), `status` (a known status; a burn or bleed needs
+  its `statusDamage` row), `statusDuration` (seconds, above 0 up to 600), `every` (the cooldown, 0 to 600; default 0) and
+  `cut` (0 to 600; default 0). With the talent's weapon in hand, an enemy the player has hit for `tagAfter` seconds
+  without a break is tagged, up to `maxTags` living tags, the oldest dropped; putting the weapon away while the trap is
+  ready drops the tags. A headshot kill while the trap is ready, tagged or not, with another living enemy tagged, puts
+  `status` on each of them for `statusDuration`, scaled by the player's status duration, at any distance, clears the
+  tags and starts `every`; a spring that put the status on nobody spends nothing. During
+  it each headshot kill takes `cut` off what's left. It needs several enemies at once but no `enemySpacing`; without
+  several enemies the result names the talent. Under focus fire only the enemy being shot gets tagged, so a trap springs
+  only when the player moves between enemies (`focusSeconds`). One trap per talent (The Trap: 0.5 s, 10 tags, burning
+  for 10 s, 30 s cut by 10 s, R94).
+
+- `simulation.redirects` is new on 2026-11-10 (ADR 0013), optional: a talent moving part of each weapon hit to another
+  enemy. Each entry has `talent`, `share` (above 0, below 1) and `within` (metres, above 0 up to 50). Each pellet that
+  lands on a living enemy, with the talent in hand or on gear, deals `1 − share` of its damage there, and `share` of it
+  goes to a living enemy in the group within `within` of the one shot, drawn at random, which takes it on its own pools
+  as the hit dealt it (the weapon's damage to armor and to health, none of the receiver's own). The moved share counts
+  as the weapon's damage, but it's no hit: it sets off no on-hit rule and applies no status. A kill by it is a kill
+  elsewhere, as a blast's is: `kill` to gear talents only, `target_death` to all. With nobody in reach the pellet lands
+  whole. Fights have no armor plates, so every hit moves its share. Enemies stand on the line `enemySpacing` sets;
+  without it nothing moves, and the result names the talent. One redirect per talent, and a build with two is refused
+  (Bewildered's 50% within 30 m, R94).
+
+- `simulation.passOns` is new on 2026-11-09 (ADR 0013), optional: a talent's debuff passing on at a death. Each entry has
+  `talent`, which must have a `talentDamage` row, and `within` (metres, above 0 up to 50). When an enemy dies with that
+  talent's debuffs on it, however it died, they move to the nearest living enemy in the group within `within`, the next in
+  group order between two at the same distance. Each keeps its schedule (ticks taken, amount), up to the receiver's
+  `maxStacks` with what it already holds, the latest-started first; the rest are lost, as are all of them with nobody in
+  reach. A receiver dying passes them on again. Enemies stand on the line `enemySpacing` sets; without it nothing passes
+  on, and the result names the talent. One pass-on per talent. From 2026-11-09 a pass-on may instead name a `status`
+  (a known status, or `any` for each on the dying enemy), with `share` (above 0 up to 1) and `to` (`nearest`, the
+  default, or `all`): each such status a talent put on the dying enemy goes on the nearest living enemy in reach, or all
+  of them, for `share` of the duration it went on with (Indirect Transmission's 50%). The talent needs no
+  `talentDamage` row then. A skill's own status doesn't pass on. A debuff pass-on takes neither `share` nor `all`.
+  Marks passing on come later. From 2026-11-11 a pass-on may name `withinStat`, a declared stat, in place of `within`,
+  and a status pass-on `shareStat` in place of `share` (Proliferation's 15 m and 75%). Each is the stat's value at the
+  fight's start, within the field's own limits, or the fight is refused. A debuff pass-on takes no `shareStat`.
