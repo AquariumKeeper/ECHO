@@ -124,7 +124,7 @@ public static partial class PackValidator
                 var skill = pack.ActiveSkills.FirstOrDefault(skill => skill.ID == rule.Skill);
                 if (skill is null) { Error("bad-sim-skill", path, $"Unknown skill {Q(rule.Skill)}"); continue; }
                 if (!seen.Add(rule.Skill)) { Error("bad-sim-skill", path, $"Skill {Q(rule.Skill)} has two rules"); continue; }
-                foreach (var id in new[] { rule.Rate, rule.Window, rule.Cooldown, rule.Impact, rule.Impacts, rule.Shield, rule.Regeneration, rule.Stock, rule.StatusRate, rule.StatusWindow, rule.ImpactInterval })
+                foreach (var id in new[] { rule.Rate, rule.Window, rule.Cooldown, rule.Impact, rule.Impacts, rule.Shield, rule.Regeneration, rule.Stock, rule.StatusRate, rule.StatusWindow, rule.ImpactInterval, rule.Area, rule.AreaFull })
                 {
                     if (id.Length > 0 && !skill.PreviewOutputs.Any(output => output.ID == id))
                     { Error("bad-sim-skill", path, $"Skill {Q(rule.Skill)} has no preview output {Q(id)}"); }
@@ -142,7 +142,21 @@ public static partial class PackValidator
                 { Error("bad-sim-skill", path, "A skill rule needs a window with a rate or a status and a cycle, or an impact and a cooldown"); }
                 if (rule.Impacts.Length > 0 && rule.Impact.Length == 0) { Error("bad-sim-skill", path, "impacts needs an impact"); }
                 if (rule.ImpactInterval.Length > 0 && rule.Impacts.Length == 0) { Error("bad-sim-skill", path, "impactInterval needs impacts"); }
+                // An area is an impact's (ADR 0016) or a control status's (ADR 0017); a rate, a window or a shield stays on one enemy.
+                if (rule.Area.Length > 0 && rule.Impact.Length == 0 && !rule.ControlStatus) { Error("bad-sim-skill", path + ".area", "An area needs an impact or a control status"); }
+                else if (rule.Area.Length > 0 && rule.Shield.Length > 0) { Error("bad-sim-skill", path + ".area", "A shield takes no area"); }
+                // An area's falloff (R107): the full-damage radius and the share at the edge go together, on a rule with an area.
+                if ((rule.AreaFull.Length > 0 || rule.AreaEdge != 0) && (rule.Area.Length == 0 || rule.AreaFull.Length == 0))
+                { Error("bad-sim-skill", path + ".areaFull", "areaFull and areaEdge go together, on a rule with an area"); }
+                else if (rule.AreaFull.Length > 0 && rule.Impact.Length == 0)
+                { Error("bad-sim-skill", path + ".areaFull", "A falloff is an impact's: a control status goes on whole"); }
+                else if (rule.AreaFull.Length > 0 && (!double.IsFinite(rule.AreaEdge) || rule.AreaEdge is <= 0 or > 1))
+                { Error("bad-sim-skill", path + ".areaEdge", "areaEdge is the share at the area's edge, above 0 up to 1"); }
                 if (rule.Status.Length > 0 && !Statuses.Contains(rule.Status)) { Error("bad-sim-skill", path, $"Unknown status {Q(rule.Status)}"); }
+                // A control status goes on for the window's duration (ADR 0017), so it needs a control status and a window.
+                if (rule.ControlStatus && (rule.Status is not ("shocked" or "disoriented" or "ensnared" or "blinded") || rule.Window.Length == 0))
+                { Error("bad-sim-skill", path + ".controlStatus", "controlStatus needs a control status (shocked, disoriented, ensnared or blinded) and a window"); }
+                else if (rule.ControlStatus && rule.Shield.Length > 0) { Error("bad-sim-skill", path + ".controlStatus", "A shield takes no controlStatus"); }
                 if (rule.Stock.Length > 0 ? rule.Cooldown.Length == 0 || rule.CooldownFromEnd || rule.Shield.Length > 0 || !double.IsFinite(rule.StockInterval) || rule.StockInterval <= 0 : rule.StockInterval != 0)
                 { Error("bad-sim-skill", path, "stock needs a cooldown that doesn't run from a use's end, and a positive stockInterval"); }
                 if ((rule.StatusRate.Length > 0 || rule.StatusWindow.Length > 0 || rule.StatusArmorBonus.Length > 0) &&
@@ -188,6 +202,9 @@ public static partial class PackValidator
                 if (rule.MaxStacks is < 1 or > MaximumTalentDamageStacks)
                 { Error("bad-sim-talent-damage", path + ".maxStacks", $"A talent debuff's stacks must be from 1 to {MaximumTalentDamageStacks}"); }
             }
+            // A copy of a skill's own burn or bleed ticks as the player's (ADR 0015), so both need their statusDamage rows.
+            bool SkillCopiesTick() => pack.Simulation.StatusDamage.Any(damage => damage.Status == "burning") && pack.Simulation.StatusDamage.Any(damage => damage.Status == "bleeding");
+            const string SkillCopiesTickMessage = "skillStatuses needs statusDamage rows for burning and bleeding, for the copies to tick";
             // A talent's debuff or status passing on at a death (ADR 0013): one per talent. A debuff needs the talent's talentDamage row
             // and goes to the nearest enemy; a status needs a share of its duration, and may go to all in reach.
             var passing = new HashSet<string>(StringComparer.Ordinal);
@@ -208,6 +225,10 @@ public static partial class PackValidator
                 { Error("bad-sim-pass-on", path + ".status", $"A pass-on's {Q(rule.Status)} needs a statusDamage row to tick"); }
                 // A debuff's shareStat is refused above, whatever it names.
                 if (rule.Status.Length > 0 && rule.ShareStat.Length > 0) { Stat(rule.ShareStat, path + ".shareStat"); }
+                // A skill has no debuff stacks, so only a status pass-on takes its statuses (ADR 0015).
+                if (rule.SkillStatuses && rule.Status is not ("any" or "burning" or "bleeding"))
+                { Error("bad-sim-pass-on", path + ".skillStatuses", "Only a pass-on of any status, burning or bleeding takes skillStatuses: a skill's own statuses in fights are burns and bleeds, and it has no debuff stacks"); }
+                else if (rule.SkillStatuses && !SkillCopiesTick()) { Error("bad-sim-pass-on", path + ".skillStatuses", SkillCopiesTickMessage); }
                 // The reach likewise (Proliferation's 15 m).
                 if (rule.WithinStat.Length > 0)
                 {
@@ -229,6 +250,7 @@ public static partial class PackValidator
                 if (!double.IsFinite(rule.Within) || rule.Within <= 0 || rule.Within > SimSpreadDefinition.MaximumWithin)
                 { Error("bad-sim-spread", path + ".within", $"A spread reaches above 0 up to {SimSpreadDefinition.MaximumWithin:G} metres"); }
                 if (!double.IsFinite(rule.Every) || rule.Every is < 0 or > 600) { Error("bad-sim-spread", path + ".every", "A spread's cooldown is from 0 to 600 seconds"); }
+                if (rule.SkillStatuses && !SkillCopiesTick()) { Error("bad-sim-spread", path + ".skillStatuses", SkillCopiesTickMessage); }
             }
             // A talent's trap on the enemies it tagged (ADR 0013, The Trap): one per talent.
             var trapping = new HashSet<string>(StringComparer.Ordinal);

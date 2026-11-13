@@ -11,15 +11,17 @@ namespace CharacterPlanner.Core.Packs.Wire;
 /// <summary>Strict System.Text.Json settings and the byte-level checks the serializer cannot make.</summary>
 internal static class WireJson
 {
-    // Reflection-based on purpose: the source generator resets omitted init-only
-    // members and was not faster here. Defaults are applied by the mapper instead.
+    // Source-generated metadata, so a process's first pack load doesn't build it by reflection: that was most of the CLI's
+    // per-call time. The wire types carry no defaults of their own (the mapper applies them; a test holds them to that), so
+    // the generator's handling of omitted init-only members changes nothing. There's no reflection fallback: a type the
+    // context doesn't reach (its roots and their members' types) fails in tests instead of quietly costing the time back.
     public static JsonSerializerOptions Options { get; } = CreateOptions();
 
     private static JsonSerializerOptions CreateOptions()
     {
         var options = new JsonSerializerOptions
         {
-            TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+            TypeInfoResolver = PackWireContext.Default,
             AllowDuplicateProperties = false,
             UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
             PropertyNameCaseInsensitive = false,

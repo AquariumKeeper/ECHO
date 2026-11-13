@@ -432,6 +432,7 @@ internal sealed record PassOnWire
     [JsonPropertyName("share")] public double? Share { get; init; }
     [JsonPropertyName("shareStat")] public string? ShareStat { get; init; }
     [JsonPropertyName("to")] public string? To { get; init; }
+    [JsonPropertyName("skillStatuses")] public bool? SkillStatuses { get; init; }
 }
 
 internal sealed record TrapWire
@@ -457,6 +458,7 @@ internal sealed record SpreadWire
     [JsonPropertyName("talent")] public required string Talent { get; init; }
     [JsonPropertyName("within")] public required double Within { get; init; }
     [JsonPropertyName("every")] public double? Every { get; init; }
+    [JsonPropertyName("skillStatuses")] public bool? SkillStatuses { get; init; }
 }
 
 internal sealed record BlastWire
@@ -576,6 +578,10 @@ internal sealed record SimSkillWire
     [JsonPropertyName("cooldownFromEnd")] public bool? CooldownFromEnd { get; init; }
     [JsonPropertyName("impacts")] public string? Impacts { get; init; }
     [JsonPropertyName("impactInterval")] public string? ImpactInterval { get; init; }
+    [JsonPropertyName("area")] public string? Area { get; init; }
+    [JsonPropertyName("areaFull")] public string? AreaFull { get; init; }
+    [JsonPropertyName("areaEdge")] public double? AreaEdge { get; init; }
+    [JsonPropertyName("controlStatus")] public bool? ControlStatus { get; init; }
     [JsonPropertyName("shield")] public string? Shield { get; init; }
     [JsonPropertyName("regeneration")] public string? Regeneration { get; init; }
     [JsonPropertyName("weapons")] public List<string>? Weapons { get; init; }

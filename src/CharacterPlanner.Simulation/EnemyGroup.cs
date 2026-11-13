@@ -82,6 +82,9 @@ internal sealed class EnemyGroup
         return reserve >= total ? null : reserve;
     }
 
+    /// <summary>The metres between two places on the line, neighbours <paramref name="spacing"/> metres apart (ADR 0013).</summary>
+    public double Distance(int from, int to, double spacing) => Math.Abs(slots[to] - slots[from]) * spacing;
+
     /// <summary>
     /// The living enemies other than <paramref name="place"/> within <paramref name="within"/> metres of it, with neighbours
     /// <paramref name="spacing"/> metres apart on the line (ADR 0013): nearest first, then by slot.

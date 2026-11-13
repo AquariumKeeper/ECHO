@@ -5,8 +5,8 @@
       "characterplanner.application": {
         "type": "Project",
         "dependencies": {
-          "CharacterPlanner.Core": "[0.2.0-beta.6, )",
-          "CharacterPlanner.Simulation": "[0.2.0-beta.6, )"
+          "CharacterPlanner.Core": "[0.2.0-beta.7, )",
+          "CharacterPlanner.Simulation": "[0.2.0-beta.7, )"
         }
       },
       "characterplanner.core": {
@@ -15,7 +15,7 @@
       "characterplanner.simulation": {
         "type": "Project",
         "dependencies": {
-          "CharacterPlanner.Core": "[0.2.0-beta.6, )"
+          "CharacterPlanner.Core": "[0.2.0-beta.7, )"
         }
       }
     },

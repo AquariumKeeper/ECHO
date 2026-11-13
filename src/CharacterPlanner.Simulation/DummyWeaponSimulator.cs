@@ -84,6 +84,9 @@ public static class DummyWeaponSimulator
         }
     }
 
+    // Fights track a skill's own burn and bleed only, so only those are copied to other enemies (ADR 0015).
+    private static bool SkillStatusCopies(string status) => status is "burning" or "bleeding";
+
     // A pass-on with its withinStat and shareStat read; a value outside the field's own limits refuses the fight.
     private static SimPassOnDefinition PassOnFromStats(SimPassOnDefinition rule, IReadOnlyDictionary<string, double> stats)
     {
@@ -361,8 +364,15 @@ public static class DummyWeaponSimulator
             if (blastRules.Any(rule => !supportedEvents.Contains(rule.On)))
             { throw new SimulationException("trigger-event-unsupported", "A blast requires an unimplemented event"); }
             // Only statuses a selected talent applies tick, by a rule or a blast; observer rules never apply one.
+            // A copy of a skill's own burn or bleed ticks as the player's (ADR 0015), so it needs that status's ticks even with no talent
+            // applying it.
+            bool CopiesSkillStatus(string status) => options.IncludeSkills && SkillStatusCopies(status) &&
+                (spreadRules.Any(rule => rule.SkillStatuses) || passOnRules.Any(rule => rule.SkillStatuses && (rule.Status == "any" || rule.Status == status)) ||
+                    // A skill's area puts its status on other enemies as a status (ADR 0016), in a fight where it can reach them.
+                    options.EnemiesAtOnce is not null && options.EnemySpacing is not null &&
+                    pack.Pack.Simulation.Skills.Any(rule => rule.Area.Length > 0 && rule.Status == status && build.ActiveSkillSelections.Values.Contains(rule.Skill)));
             dotRules = [.. pack.Pack.Simulation.StatusDamage.Where(damage => statusRules.Any(rule => rule.On.Length > 0 && rule.Status == damage.Status) ||
-                blastRules.Any(rule => rule.Status == damage.Status) || trapRules.Any(rule => rule.Status == damage.Status))];
+                blastRules.Any(rule => rule.Status == damage.Status) || trapRules.Any(rule => rule.Status == damage.Status) || CopiesSkillStatus(damage.Status))];
             // A selected talent's own damage over time (Toxic Delivery) ticks beside the statuses.
             talentDamageRules = [.. pack.Pack.Simulation.TalentDamage.Where(damage => selected.Contains(damage.Talent))];
             if (talentDamageRules.Any(rule => !supportedEvents.Contains(rule.On)))
@@ -476,8 +486,19 @@ public static class DummyWeaponSimulator
         // Blasts, spreads and pass-ons reach other enemies only with several at once and a spacing; otherwise they find nobody, and
         // the result says so. With any of them, a waiting enemy can die out of order, so the next arrival follows the group.
         // The talents whose effects reach other enemies (ADR 0013), for the reach and its note.
+        // A selected skill whose impacts reach an area (ADR 0016) reaches other enemies too.
+        var selectedSkills = build.ActiveSkillSelections.Values.ToHashSet(StringComparer.Ordinal);
+        // An impact's area always reaches; a control status's only where control statuses act (with talent triggers, ADR 0017).
+        string[] areaSkills = options.IncludeSkills
+            ? [.. pack.Pack.Simulation.Skills.Where(rule => rule.Area.Length > 0 && selectedSkills.Contains(rule.Skill) && (rule.Impact.Length > 0 || rule.ControlStatus && options.DriveSimpleBuffs))
+                .Select(rule => rule.Skill)] : [];
+        var impactAreas = options.IncludeSkills && pack.Pack.Simulation.Skills.Any(rule => rule.Area.Length > 0 && rule.Impact.Length > 0 && selectedSkills.Contains(rule.Skill));
+        var areaFalls = options.IncludeSkills && pack.Pack.Simulation.Skills.Any(rule => rule.AreaFull.Length > 0 && selectedSkills.Contains(rule.Skill));
+        // A selected control skill whose row puts its status on (ADR 0017), in a fight that holds statuses (one with talent triggers).
+        var controlSkills = targeted && options.IncludeSkills && options.DriveSimpleBuffs &&
+            pack.Pack.Simulation.Skills.Any(rule => rule.ControlStatus && selectedSkills.Contains(rule.Skill));
         string[] reachTalents = [.. blastRules.Select(rule => rule.Talent).Concat(spreadRules.Select(rule => rule.Talent)).Concat(passOnRules.Select(rule => rule.Talent))
-            .Concat(redirectRules.Select(rule => rule.Talent)).Distinct(StringComparer.Ordinal)];
+            .Concat(redirectRules.Select(rule => rule.Talent)).Concat(areaSkills).Distinct(StringComparer.Ordinal)];
         var reachActive = targeted && reachTalents.Length > 0 && options.EnemiesAtOnce is not null && options.EnemySpacing is not null;
         // A pass-on's reach and share may come from stats (Proliferation's 15 m and 75%), read once, at the fight's start, and only when
         // it can reach someone: a fight it plays no part in isn't refused for its values.
@@ -1358,10 +1379,8 @@ public static class DummyWeaponSimulator
                 {
                     if (rule.On != name || eligible?.Contains(rule.Talent) == false) { continue; }
                     var amount = rule.Amount.Length == 0 ? 0 : statusTicks[rule.Amount];
-                    foreach (var place in group.InReach(target.Place, rule.Within, spacing))
+                    foreach (var (_, enemy) in LivingNear(target.Place, rule.Within, at))
                     {
-                        var enemy = EnemyAt(place) ?? Early(place, at);
-                        if (enemy.Dead) { continue; }
                         if (rule.Amount.Length > 0)
                         {
                             var dealt = enemy.Apply(amount, 1, 1);
@@ -1402,10 +1421,8 @@ public static class DummyWeaponSimulator
                     if (target.Dots is null) { continue; }
                     var debuffs = target.Dots.TakeTalent(rule.Talent);
                     if (debuffs.Length == 0) { continue; }
-                    foreach (var place in group.InReach(target.Place, rule.Within, spacing))
+                    foreach (var (_, enemy) in LivingNear(target.Place, rule.Within, at))
                     {
-                        var enemy = EnemyAt(place) ?? Early(place, at);
-                        if (enemy.Dead) { continue; }
                         var landed = enemy.Dots!.Receive(debuffs);
                         if (landed > 0) { Record(DummyEventKind.DebuffPassedOn, landed, at, ""); }
                         break;
@@ -1413,20 +1430,24 @@ public static class DummyWeaponSimulator
                 }
             }
             // A status pass-on (Indirect Transmission): each named status a talent put on the dying enemy goes on the nearest living
-            // enemy in reach, or all of them, for its share of the duration it went on with. A skill's own status doesn't pass on.
+            // enemy in reach, or all of them, for its share of the duration it went on with; where the row says so, a skill's own too
+            // (ADR 0015).
             void PassOnStatuses(SimPassOnDefinition rule, double at)
             {
-                var passing = (rule.Status == "any" ? StatusTriggerState.Names : [rule.Status])
-                    .Select(status => (Status: status, On: statuses!.Application(status))).Where(entry => entry.On is { } on && on.Until > at)
-                    .Select(entry => (entry.Status, Duration: rule.Share * (entry.On!.Value.Until - entry.On.Value.AppliedAt))).Where(entry => entry.Duration > 0).ToArray();
+                // A talent's status while it runs; otherwise, where the row says so, a skill's own, for its share of one application, however
+                // little was left (ADR 0015, R105). There's one of each on the dying enemy dealing damage (R63), so one of each passes on. Each
+                // carries the damage it went on with: a copy's, or a skill's own; the player's rate otherwise.
+                (string Status, double Duration, double? PerSecond) Passing(string status) =>
+                    statuses!.Application(status) is { } on && on.Until > at ? (status, rule.Share * (on.Until - on.AppliedAt), statuses.RunningCopyRate(status))
+                    : rule.SkillStatuses && SkillStatusCopies(status) && statuses.SkillApplication(status, at) is { } skill ? (status, rule.Share * skill.Span, skill.Rate)
+                    : (status, 0, null);
+                var passing = (rule.Status == "any" ? StatusTriggerState.Names : [rule.Status]).Select(Passing).Where(entry => entry.Duration > 0).ToArray();
                 if (passing.Length == 0) { return; }
                 var landed = 0;
-                foreach (var place in group!.InReach(target.Place, rule.Within, spacing))
+                foreach (var (_, enemy) in LivingNear(target.Place, rule.Within, at))
                 {
-                    var enemy = EnemyAt(place) ?? Early(place, at);
-                    if (enemy.Dead) { continue; }
                     var on = false;
-                    foreach (var (status, duration) in passing) { on |= PutStatus(enemy, status, duration, at, scale: false); }
+                    foreach (var (status, duration, perSecond) in passing) { on |= PutStatus(enemy, status, duration, at, scale: false, perSecond); }
                     if (!on) { continue; }
                     landed++;
                     // The nearest that takes it; one where each yields to a skill's own status passes it to the next in reach.
@@ -1437,13 +1458,13 @@ public static class DummyWeaponSimulator
             // A status goes on another enemy, read and written there, and starts its ticks; then the enemy being shot is held again,
             // whatever happens. Counts of enemies with a status read again.
             // Returns whether it went on; it yields to a skill's own status there (R63).
-            bool PutStatus(FightEnemy enemy, string status, double duration, double at, bool scale)
+            bool PutStatus(FightEnemy enemy, string status, double duration, double at, bool scale, double? perSecond = null)
             {
                 bool on;
                 statuses!.Hold(enemy.Statuses, at);
                 try
                 {
-                    on = statuses.ApplyDirect(status, duration, at, buffWeapon.StatusDurationFactor, scale);
+                    on = statuses.ApplyDirect(status, duration, at, buffWeapon.StatusDurationFactor, scale, perSecond);
                     enemy.Dots?.Sync(statuses, statusTicks);
                 }
                 finally { statuses.Hold(target.Statuses, at); }
@@ -1459,22 +1480,119 @@ public static class DummyWeaponSimulator
                 { return applied; }
                 // What's left of each status newly on the target, before any other enemy is held.
                 var remaining = statuses!.NewlyOn.Select(status => (Status: status, On: statuses.Application(status)))
-                    .Where(entry => entry.On is { } on && on.Until > at).Select(entry => (entry.Status, Left: entry.On!.Value.Until - at)).ToArray();
+                    .Where(entry => entry.On is { } on && on.Until > at).Select(entry => (entry.Status, Left: entry.On!.Value.Until - at, PerSecond: (double?)null)).ToArray();
                 if (remaining.Length == 0) { return applied; }
                 for (var index = 0; index < spreadRules.Length; index++)
                 {
-                    var rule = spreadRules[index];
-                    if (at < spreadReady[index] || eligible?.Contains(rule.Talent) == false) { continue; }
-                    var reached = false;
-                    foreach (var place in group.InReach(target.Place, rule.Within, spacing))
-                    {
-                        var enemy = EnemyAt(place) ?? Early(place, at);
-                        if (enemy.Dead) { continue; }
-                        foreach (var (status, duration) in remaining) { reached |= PutStatus(enemy, status, duration, at, scale: false); }
-                    }
-                    if (reached) { spreadReady[index] = at + rule.Every; }
+                    if (eligible?.Contains(spreadRules[index].Talent) != false) { SpreadFrom(index, remaining, at); }
                 }
                 return applied;
+            }
+            // One spread, if it's ready, puts these statuses on each living enemy in its reach of the enemy being shot; its cooldown starts
+            // when one went on someone.
+            void SpreadFrom(int index, (string Status, double Left, double? PerSecond)[] statusesLeft, double at, int? from = null)
+            {
+                var rule = spreadRules[index];
+                if (at < spreadReady[index]) { return; }
+                var reached = false;
+                // From another enemy, the spread leaves the enemy being shot alone: it takes the skill's own status there (ADR 0016).
+                foreach (var (_, enemy) in LivingNear(from ?? target.Place, rule.Within, at, except: from is null ? null : target.Place))
+                {
+                    foreach (var (status, left, perSecond) in statusesLeft) { reached |= PutStatus(enemy, status, left, at, scale: false, perSecond); }
+                }
+                if (reached) { spreadReady[index] = at + rule.Every; }
+            }
+            // A skill's own burn or bleed newly on the enemy being shot (ADR 0015): each spread whose row takes skill statuses copies it to
+            // the enemies in reach, for what's left of it up to one application, carrying the skill's own damage where its status has a rate
+            // of its own (R105) and the player's otherwise. A spread's one cooldown covers talent and skill statuses alike.
+            void SkillStatusOn(string status, double at)
+            {
+                if (!SkillStatusCopies(status) || statuses?.SkillApplication(status, at) is not { } skill) { return; }
+                if (!reachActive || spreadRules.IsEmpty || at >= options.Duration || target.Placeholder || target.Dead || !group!.Alive.Contains(target.Place)) { return; }
+                // The copy carries the skill's own damage where its status has a rate of its own (R105); the player's otherwise.
+                (string, double, double?)[] left = [(status, Math.Min(skill.Until - at, skill.Span), skill.Rate)];
+                for (var index = 0; index < spreadRules.Length; index++)
+                {
+                    if (spreadRules[index].SkillStatuses && holdingTalents[hand]?.Contains(spreadRules[index].Talent) != false) { SpreadFrom(index, left, at); }
+                }
+            }
+            // A skill's impact with an area (ADR 0016) lands, at full damage, on every living enemy within its radius of the enemy being
+            // shot, each on its own pools, with the burn or bleed the impact puts on there for one application, carrying the skill's own
+            // damage. It sets off no hit or status event: those stay the enemy being shot's. A kill is a kill elsewhere, settled after the
+            // event. Each enemy the status newly lands on, nearest first, can set off a spread that takes skill statuses (ADR 0015).
+            void AreaImpact(SkillDamageSchedule.Plan plan, string slot, double at)
+            {
+                if (!AreaReaches(plan, at)) { return; }
+                CheckAreaLimit(plan);
+                var landed = new List<(int Place, double? Rate)>();
+                foreach (var (place, enemy) in LivingNear(target.Place, plan.Area, at))
+                {
+                    var (impact, _, statusRate) = enemy.Profile >= 0 && plan.Amounts is { } amounts ? amounts[enemy.Profile] : (plan.Impact, plan.Rate, plan.StatusRate);
+                    // Full damage near the centre, falling in a straight line to the edge's share (R107); the status goes on whole.
+                    var dealt = enemy.Apply(impact * plan.AreaShare(group!.Distance(target.Place, place, spacing)), 1, 1);
+                    skillTotal += dealt;
+                    skillImpactTotal += dealt;
+                    total += dealt;
+                    timeline[(int)at] += dealt / fights;
+                    if (!double.IsFinite(total) || !double.IsFinite(timeline[(int)at]))
+                    { throw new SimulationException("damage-overflow", "Skill area damage overflowed"); }
+                    Record(DummyEventKind.SkillAreaHit, dealt, at, slot);
+                    if (enemy.Dead)
+                    {
+                        blastKills.Enqueue((enemy, at));
+                        continue;
+                    }
+                    if (plan.Status.Length == 0 || plan.StatusWindow <= 0 || statuses is null) { continue; }
+                    var wasOn = enemy.Statuses.Has(plan.Status, at);
+                    double? carried = statusRate > 0 ? statusRate : null;
+                    if (PutStatus(enemy, plan.Status, plan.StatusWindow, at, scale: false, carried) && !wasOn) { landed.Add((place, carried)); }
+                }
+                if (landed.Count == 0 || spreadRules.IsEmpty) { return; }
+                foreach (var (place, carried) in landed)
+                {
+                    for (var index = 0; index < spreadRules.Length; index++)
+                    {
+                        if (spreadRules[index].SkillStatuses && holdingTalents[hand]?.Contains(spreadRules[index].Talent) != false)
+                        { SpreadFrom(index, [(plan.Status, plan.StatusWindow, carried)], at, place); }
+                    }
+                }
+            }
+            // A control skill's use (ADR 0017): its status goes on the enemy being shot for the window, as the player's status, through the
+            // path talents' statuses take, firing status_applied there if it's newly on; a second use while it's on refreshes it. With an
+            // area it goes on every living enemy in reach too, with no events. With no living enemy being shot it goes on nobody.
+            void ControlUse(SkillDamageSchedule.Plan plan, double at)
+            {
+                if (statuses is null || plan.ControlStatus.Length == 0 || plan.Window <= 0 || at >= options.Duration || !targeted || target.Placeholder || target.Dead) { return; }
+                var newly = !target.Statuses.Has(plan.ControlStatus, at);
+                if (PutStatus(target, plan.ControlStatus, plan.Window, at, scale: false) && newly && buffs is not null)
+                {
+                    FireStatuses("status_applied", at, buffWeapon.StatusDurationFactor);
+                    if (FireBuffs("status_applied", at, statuses.Active(at))) { Refill(at); }
+                }
+                if (!AreaReaches(plan, at)) { return; }
+                CheckAreaLimit(plan);
+                foreach (var (_, enemy) in LivingNear(target.Place, plan.Area, at)) { PutStatus(enemy, plan.ControlStatus, plan.Window, at, scale: false); }
+            }
+            // The living enemies within reach of a place on the line, nearest first, each looked up or brought in early as it's reached
+            // (ADR 0013), leaving out one place if asked. Lazy, so one an earlier step killed is passed over. A redirect keeps its own
+            // filter, since it draws among those already there without bringing anyone in.
+            IEnumerable<(int Place, FightEnemy Enemy)> LivingNear(int from, double within, double at, int? except = null)
+            {
+                foreach (var place in group!.InReach(from, within, spacing))
+                {
+                    if (place == except) { continue; }
+                    var enemy = EnemyAt(place) ?? Early(place, at);
+                    if (!enemy.Dead) { yield return (place, enemy); }
+                }
+            }
+            // Whether a skill's area (ADR 0016, ADR 0017) can reach anyone from the enemy being shot now.
+            bool AreaReaches(SkillDamageSchedule.Plan plan, double at) =>
+                plan.Area > 0 && reachActive && at < options.Duration && !target.Placeholder && group!.Alive.Contains(target.Place);
+            // An area over its limit refuses the fight, checked only where the area reaches someone, so a fight it plays no part in isn't refused.
+            static void CheckAreaLimit(SkillDamageSchedule.Plan plan)
+            {
+                if (plan.Area > SimSkillDefinition.MaximumArea)
+                { throw new SimulationException("skill-output-invalid", $"{plan.Skill}'s area is over {SimSkillDefinition.MaximumArea:G} metres"); }
             }
             // Settles the kills blasts made, each as any kill on an enemy the player isn't shooting. Under focus fire the next arrival
             // moves past one that died waiting first, so the kill doesn't take the arrival with it.
@@ -1989,6 +2107,12 @@ public static class DummyWeaponSimulator
                         target = NewTarget();
                         arrival = available;
                     }
+                    if (entry.Kind == SkillDamageKind.Control)
+                    {
+                        ControlUse(skills.Taken!, entry.Time);
+                        if (entry.Time < options.Duration) { RefreshWeapon(entry.Time); }
+                        continue;
+                    }
                     // Against mixed targets, a skill deals its plan's own amount against the target in front of it, computed as the
                     // event's own is (an impact, or the rate over the batch), so an exact kill stays exact. A live rate reads the state now.
                     var rawSkillDamage = entry.Damage;
@@ -2029,6 +2153,7 @@ public static class DummyWeaponSimulator
                     { throw new SimulationException("damage-overflow", "Skill fight damage overflowed"); }
                     // A status waiting on a talent's, or that found nothing to land on, isn't a tick.
                     if (entry.Time < options.Duration && (rawSkillDamage > 0 || entry.Kind != SkillDamageKind.StatusDot)) { Record(entry.Kind == SkillDamageKind.Impact ? DummyEventKind.SkillImpact : DummyEventKind.SkillTick, dealt, entry.Time, entry.Slot); }
+                    if (entry.Kind == SkillDamageKind.Impact && targeted) { AreaImpact(skillPlan, entry.Slot, entry.Time); }
                     if (targeted && target.Dead)
                     {
                         CreditKill(entry.Time, entry.Slot, () => RepairOnKill(entry.Time));
@@ -2048,7 +2173,14 @@ public static class DummyWeaponSimulator
                         // with a status only carries it, as Stinger Hive's stings do; a status's own damage is its statusRate (R68).
                         if (dealt > 0 && entry.Kind == SkillDamageKind.ContinuousWindow && skills.Taken!.Status.Length > 0 && skills.Taken.StatusRate == 0 && !(targeted && target.Dead))
                         { skillStatusApplied = statuses!.ApplyFromSkill(skills.Taken.Status, skills.TakenUntil, entry.Start, entry.Time, rateIsStatus: false); }
-                        if (skillStatusApplied && !(targeted && target.Dead)) { EmitSkillEvent("status_applied"); }
+                        // Each application notes how long one lasts there, newly on or not, so a pass-on can read it later (ADR 0015).
+                        if (skillPlan.Status.Length > 0 && !(targeted && target.Dead)) { statuses?.NoteSkillSpan(skillPlan.Status, skillPlan.StatusWindow, entry.Time); }
+                        if (skillStatusApplied && !(targeted && target.Dead))
+                        {
+                            EmitSkillEvent("status_applied");
+                            // The talents' own reactions spread first, as before; the skill's status then takes what the cooldown leaves.
+                            SkillStatusOn(skillPlan.Status, entry.Time);
+                        }
                         // A skill's kill, its own burn or bleed included, is a kill to gear talents. It's a skill_kill to them and to the weapon
                         // in hand's talents, so a weapon talent that takes kills from any source names it (R84: Outsider, Ignited and
                         // Preservation); a holstered weapon's talents aren't active.
@@ -2438,14 +2570,20 @@ public static class DummyWeaponSimulator
              .. (firstDistance is null && statusRules.Any(rule => rule.Within > 0) ? ["With no fight distance, a status rule's range is taken as met"] : Array.Empty<string>()),
              .. (kitlessTalents.IsEmpty ? Array.Empty<string>() : [$"This fight carries no armor kits, so these read your setting and never react to one: {string.Join(", ", kitlessTalents)}"]),
              .. (skilllessTalents.IsEmpty ? Array.Empty<string>() : [$"This fight has no skills, so these never react to a skill's hit or kill: {string.Join(", ", skilllessTalents)}"]),
-             .. (reachActive && !spreadRules.IsEmpty ? ["Spreads copy statuses talents put on the enemy being shot; a skill's own status doesn't spread"] : Array.Empty<string>()),
+             .. (controlSkills ? ["Control skills put their status on the enemy being shot as they're used, for their window, and with an area on every enemy within it; a trap's goes on once per use, and no immunity is modeled"] : Array.Empty<string>()),
+             .. (reachActive && impactAreas ? ["Skills with an area land each impact on every enemy within its radius of the enemy being shot" + (areaFalls
+                 ? ", falling in a straight line from a full-damage radius to the edge's share where the row gives one (an assumption: the source gives the ends, not the curve)" : ", at full damage") + ", with the burn or bleed it puts on for one application; kills there are kills elsewhere, and hit and status events stay the enemy being shot's"] : Array.Empty<string>()),
+             .. (reachActive && !spreadRules.IsEmpty ? [spreadRules.Any(rule => rule.SkillStatuses)
+                 ? "Spreads copy statuses talents put on the enemy being shot, and where a spread's row says so a skill's own burn or bleed, for what's left of it up to one application, carrying the skill's own damage where its status has a rate of its own"
+                 : "Spreads copy statuses talents put on the enemy being shot; a skill's own status doesn't spread"] : Array.Empty<string>()),
              .. (options.SkillUse.IsEmpty ? Array.Empty<string>() : [$"Assumed skill use: {string.Join("; ", options.SkillUse.OrderBy(pair => pair.Key, StringComparer.Ordinal).Select(pair => $"{pair.Key} {pair.Value}"))}. A held skill's cooldown starts when it's used, and others are used as soon as they're ready"]),
              .. (skillUseTotals.Where(pair => pair.Value.Uses == 0).Select(pair => pair.Key).Order(StringComparer.Ordinal).ToArray() is { Length: > 0 } unused
                  ? [$"Never used, since its condition never held: {string.Join(", ", unused.Select(slot => $"{slot} {options.SkillUse[slot]}"))}"] : Array.Empty<string>()),
              .. (trapActive ? ["Traps tag the enemies the player has hit for long enough, so under focus fire only the enemy being shot is tagged and a trap springs only when the player moves between enemies; the slow isn't modeled"] : Array.Empty<string>()),
              .. (!trapRules.IsEmpty && !trapActive ? [$"These traps find nobody, since the fight has no {(!targeted ? "targets" : "several enemies at once")}: {string.Join(", ", trapRules.Select(rule => RuleOwnerName(pack.Pack, rule.Talent)).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal))}"] : Array.Empty<string>()),
              .. (reachActive && !redirectRules.IsEmpty ? ["Redirects move a share of each weapon hit to a random enemy in reach, as a fixed amount that's no hit and applies no status; fights have no armor plates, so every hit moves its share"] : Array.Empty<string>()),
-             .. (reachActive && !passOnRules.IsEmpty ? ["Pass-ons move a talent's debuff stacks to the nearest enemy at a death, up to its stack cap, or put a share of its talents' statuses on the nearest or all in reach; a skill's own status doesn't pass on"] : Array.Empty<string>()),
+             .. (reachActive && !passOnRules.IsEmpty ? ["Pass-ons move a talent's debuff stacks to the nearest enemy at a death, up to its stack cap, or put a share of its talents' statuses on the nearest or all in reach" + (passOnRules.Any(rule => rule.SkillStatuses)
+                 ? ", and where a pass-on's row says so a skill's own burn or bleed, for its share of one full application, carrying the skill's own damage where its status has a rate of its own" : "; a skill's own status doesn't pass on")] : Array.Empty<string>()),
              .. (options.EnemySpacing is { } spaced ? [string.Create(CultureInfo.InvariantCulture,
                  $"Assumed enemy spacing: {spaced:0.##} m between neighbours on a line, by their place in the group; an enemy joining takes the dead one's place")] : Array.Empty<string>()),
              .. (reachTalents.Length > 0 && !reachActive ? [$"These effects on other enemies find nobody, since the fight has no {(!targeted ? "targets" : options.EnemiesAtOnce is null ? "several enemies at once" : "enemy spacing")}: {string.Join(", ", reachTalents.Select(id => RuleOwnerName(pack.Pack, id)).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal))}"] : Array.Empty<string>()),
@@ -2546,9 +2684,9 @@ public static class DummyWeaponSimulator
     // Only explicitly implemented recovery is allowed; later pack additions still fail closed.
     private static readonly Regex RecoveryStat = new("repair|regen|healing|on_kill|restor|recover", RegexOptions.CultureInvariant);
 
-    /// <summary>The name of a rule's talent or specialization node.</summary>
+    /// <summary>The name of a rule's talent, specialization node or, for a skill's area (ADR 0016), skill.</summary>
     private static string RuleOwnerName(GamePack pack, string id) => pack.Talents.FirstOrDefault(talent => talent.ID == id)?.Name ??
-        pack.Specializations.SelectMany(specialization => specialization.Nodes).First(node => node.ID == id).Name;
+        pack.ActiveSkills.FirstOrDefault(skill => skill.ID == id)?.Name ?? pack.Specializations.SelectMany(specialization => specialization.Nodes).First(node => node.ID == id).Name;
 
     /// <summary>Recovery-named stats that are not in-fight player recovery: skill repair scaling (skills are excluded
     /// from incoming fights), healing given to others, durations rather than amounts, and previews of repairs that pack

@@ -1515,14 +1515,14 @@
     {
       "id": "indirect_transmission_radius",
       "name": "Indirect Transmission Spread Radius (m)",
-      "description": "Available passive four-piece set property: 10 meters for spreading the killed enemy's status effects, or 15 with equipped selected Proliferation. No kills, spread, targets or range detection are inferred. Zero below four pieces means unavailable. No events, stack progression, buff activation or elapsed time are simulated. Pinned catalog value, pending in-game verification.",
+      "description": "Available passive four-piece set property: 10 meters for spreading the killed enemy's status effects, or 15 with equipped selected Proliferation. Driven fights read it at the fight's start as the reach of Indirect Transmission's pass-on, to enemies placed by an enemy spacing. Zero below four pieces means unavailable. Pinned catalog value, pending in-game verification.",
       "format": "integer",
       "formula": "0"
     },
     {
       "id": "indirect_transmission_refresh",
       "name": "Indirect Transmission Duration Refresh (%)",
-      "description": "Available passive four-piece set property: 50% status-duration refresh, or 75% with equipped selected Proliferation. Not a global Status Effects bonus or actual duration. Symptom Aggravator damage application remains deferred. Zero below four pieces means unavailable. No events, stack progression, buff activation or elapsed time are simulated. Pinned catalog value, pending in-game verification.",
+      "description": "Available passive four-piece set property: 50% status-duration refresh, or 75% with equipped selected Proliferation. Not a global Status Effects bonus or actual duration. Driven fights read it at the fight's start as the share of each status's duration that Indirect Transmission passes on. Symptom Aggravator damage application remains deferred. Zero below four pieces means unavailable. Pinned catalog value, pending in-game verification.",
       "format": "percent",
       "formula": "0"
     },
@@ -52436,10 +52436,12 @@
       "coverage": {
         "status": "partial",
         "omits": [
-          "A skill's own status: the script also listens to each skill slot's latest skill agent, so the source spreads those too; fights don't (R89).",
+          "A skill status's amount: copies carry the skill's own damage, as the source does, but whether the player's Status Effects rescale that explicit amount isn't in the data (R105).",
+          "A copy's armor bonus: fights give a copy the player's status armor bonus, not the skill status's own statusArmorBonus; the source doesn't say which applies (R106).",
+          "Where a spread starts: fights start it around each enemy a skill's area newly puts the status on, as the source starts it around each agent its listener reports (R107). An enemy whose status a later blast only refreshes sets off no spread: the listener fires on an application, and whether a refresh counts as one isn't in the data (R59, R89). A status a skill puts on enemies outside any area fights model, such as the Airburst Seeker's cone or the Burn Sticky Bomb's flame, spreads only from the enemy being shot.",
           "Other talents seeing the spread: its applications have the player as source, so talents that count the player's statuses may see them; fights give them none. Not established (R89)."
         ],
-        "evidence": "R88_R91_SOURCE_REVIEW.md (talent_mask_status_effects_spread_skillscript)"
+        "evidence": "R88_R91_SOURCE_REVIEW.md (talent_mask_status_effects_spread_skillscript); R105_SOURCE_REVIEW.md (R106); R107_SOURCE_REVIEW.md (R107)"
       }
     },
     {
@@ -52449,10 +52451,12 @@
       "coverage": {
         "status": "partial",
         "omits": [
-          "A skill's own status: the script also listens to each skill slot's latest skill agent, so the source spreads those too; fights don't (R89).",
+          "A skill status's amount: copies carry the skill's own damage, as the source does, but whether the player's Status Effects rescale that explicit amount isn't in the data (R105).",
+          "A copy's armor bonus: fights give a copy the player's status armor bonus, not the skill status's own statusArmorBonus; the source doesn't say which applies (R106).",
+          "Where a spread starts: fights start it around each enemy a skill's area newly puts the status on, as the source starts it around each agent its listener reports (R107). An enemy whose status a later blast only refreshes sets off no spread: the listener fires on an application, and whether a refresh counts as one isn't in the data (R59, R89). A status a skill puts on enemies outside any area fights model, such as the Airburst Seeker's cone or the Burn Sticky Bomb's flame, spreads only from the enemy being shot.",
           "Other talents seeing the spread: its applications have the player as source, so talents that count the player's statuses may see them; fights give them none. Not established (R89)."
         ],
-        "evidence": "R88_R91_SOURCE_REVIEW.md (talent_mask_status_effects_spread_skillscript)"
+        "evidence": "R88_R91_SOURCE_REVIEW.md (talent_mask_status_effects_spread_skillscript); R105_SOURCE_REVIEW.md (R106); R107_SOURCE_REVIEW.md (R107)"
       }
     },
     {
@@ -52934,10 +52938,7 @@
         "gear_set_eclipse_protocol"
       ],
       "coverage": {
-        "status": "partial",
-        "omits": [
-          "Proliferation's 15 m and 75%: a pass-on's reach and share are numbers, so fights pass on within 10 m at 50%; the four-piece stats show 15 m and 75% (R91)."
-        ],
+        "status": "complete",
         "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (talent_gearset_contagion_chest)"
       }
     },
@@ -53538,9 +53539,9 @@
       "description": "While in combat, applies burn to the enemy closest to you within 20m. Cooldown: 35s.",
       "coverage": {
         "status": "partial",
-        "evidence": "T7_EXOTICS_SOURCE_REVIEW.md, Dragon's Glare; timed burn rule on whole seconds every 35 s (planner PR #55)",
+        "evidence": "T7_EXOTICS_SOURCE_REVIEW.md, Dragon's Glare; timed burn rule on whole seconds every 35 s (planner PR #55); 20 m as the row's within (R101)",
         "omits": [
-          "20 m range and line-of-sight gating (planner fights assume a target in range and sight)",
+          "line-of-sight gating (planner fights assume a target in sight)",
           "about 2 s of line of sight before the first burn",
           "target choice (the text says closest; the graph takes the first agent in its list)"
         ]
@@ -53747,10 +53748,10 @@
       "coverage": {
         "status": "partial",
         "omits": [
-          "Proliferation's 15 m and 75%: a pass-on's reach and share are numbers, so fights pass on within 10 m at 50%; the four-piece stats show 15 m and 75% (R91).",
-          "A skill's own status: the script also records statuses a skill's own agent applies, so the source passes those on too; fights don't (R91)."
+          "A skill status's amount: copies carry the skill's own damage, as the source does, but whether the player's Status Effects rescale that explicit amount isn't in the data (R105).",
+          "A copy's armor bonus: fights give a copy the player's status armor bonus, not the skill status's own statusArmorBonus; the source doesn't say which applies (R106)."
         ],
-        "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (skillscript_gearset_contagion_4pc)"
+        "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (skillscript_gearset_contagion_4pc); R105_SOURCE_REVIEW.md (R106)"
       }
     },
     {
@@ -62444,6 +62445,20 @@
           "formula": "4 * (1 + curve('skill_burn_sticky_bomb_burn_duration_seconds_tiers', overcharged_skill_tier) + skill_mod_burn_duration) * max(0, 1 + effective_status_effects + burn_duration + status_effect_duration)"
         },
         {
+          "id": "radius_meters",
+          "name": "Blast Radius (m)",
+          "description": "The blast's radius: a fixed 3 m in skill_player_sticky_burn, whose Radius variable keeps its default; no attribute, tier or mod changes it. Fights use it as the impact's area (ADR 0016): full damage within area_full_meters, falling in a straight line to 10% at this radius. The source gives those ends; the curve between them isn't in the data (R107, R108). The flame that burns the stuck enemy and a 1.5 m, 10\u00b0 pie for 10 s isn't an area here (R107).",
+          "format": "decimal",
+          "formula": "3"
+        },
+        {
+          "id": "area_full_meters",
+          "name": "Full-Damage Radius (m)",
+          "description": "Full-damage radius of the blast: a fixed 1.5 m, half its fixed 3 m radius, as player_skill_damage_stickybomb passes CommonExplosion an inner radius of 0.5 times the outer; no attribute, tier or mod changes it. Fights give full damage within it (R107, R108, R109).",
+          "format": "decimal",
+          "formula": "1.5"
+        },
+        {
           "id": "expertise_bonus_reference",
           "name": "Installed Expertise Burn Damage Bonus Reference",
           "description": "Installed grade on this exact variant, 0-30. Source Skill Info!AC29:AC30 (TU27): +1% Burn Damage per grade. Estimated effect included in: Estimated Burn Damage. Does not simulate proficiency, account eligibility or upgrade costs. This is the source increment, not a separate multiplier on the final estimate or a claim about caps.",
@@ -62702,9 +62717,16 @@
         {
           "id": "radius_meters",
           "name": "Estimated Radius Reference (m)",
-          "description": "Community level-40 PvE Blast Radius reference from Skill List!C40:J40 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. This is a radius reference, not area, targets hit, range detection, damage falloff or uptime. Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
+          "description": "Community level-40 PvE Blast Radius reference from Skill List!C40:J40 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. Fights use it as the impact's area (ADR 0016): full damage within area_full_meters, falling in a straight line to 10% at this radius. The source gives those ends; the curve between them isn't in the data (R107, R108). Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
           "format": "decimal",
           "formula": "3 * (1 + curve('skill_explosive_sticky_bomb_radius_meters_tiers', overcharged_skill_tier) + skill_mod_radius)"
+        },
+        {
+          "id": "area_full_meters",
+          "name": "Full-Damage Radius (m)",
+          "description": "Full-damage radius of the blast: half its radius, as player_skill_damage_stickybomb passes CommonExplosion an inner radius of 0.5 times the outer, so it follows the radius's tiers and mods. Fights give full damage within it (R107, R108).",
+          "format": "decimal",
+          "formula": "0.5 * (3 * (1 + curve('skill_explosive_sticky_bomb_radius_meters_tiers', overcharged_skill_tier) + skill_mod_radius))"
         },
         {
           "id": "cooldown_seconds",
@@ -64748,7 +64770,7 @@
         {
           "id": "radius_meters",
           "name": "Estimated Radius Reference (m)",
-          "description": "Community level-40 PvE Blast Radius reference from Skill List!C112:J112 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. This is a radius reference, not area, targets hit, range detection, damage falloff or uptime. Healing ranges, unreviewed overrides, skill mods and skill Expertise are excluded. Source values require live verification.",
+          "description": "Community level-40 PvE Blast Radius reference from Skill List!C112:J112 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. Fights use it as the impact's area (ADR 0016), at full damage to every enemy within it; the source has no falloff (R107). Healing ranges, unreviewed overrides, skill mods and skill Expertise are excluded. Source values require live verification.",
           "format": "decimal",
           "formula": "4.5 * (1 + curve('skill_artillery_turret_radius_meters_tiers', overcharged_skill_tier))"
         },
@@ -66160,7 +66182,7 @@
         {
           "id": "radius_meters",
           "name": "Estimated Radius Reference (m)",
-          "description": "Community level-40 PvE Cloud Radius reference from Skill List!C171:J171 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. This is a radius reference, not area, targets hit, range detection, damage falloff or uptime. Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
+          "description": "Community level-40 PvE Cloud Radius reference from Skill List!C171:J171 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. Fights use it as the impact's area (ADR 0016), at full damage to every enemy within it; the source has no falloff (R107). Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
           "format": "decimal",
           "formula": "3 * (1 + curve('skill_firestarter_chem_launcher_radius_meters_tiers', overcharged_skill_tier) + skill_mod_radius)"
         },
@@ -67243,9 +67265,16 @@
         {
           "id": "radius_meters",
           "name": "Estimated Radius Reference (m)",
-          "description": "Community level-40 PvE Blast Radius reference from Skill List!C210:J210 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. This is a radius reference, not area, targets hit, range detection, damage falloff or uptime. Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
+          "description": "Community level-40 PvE Blast Radius reference from Skill List!C210:J210 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. Fights use it as the impact's area (ADR 0016): full damage within area_full_meters, falling in a straight line to 50% at this radius. The source gives those ends; the curve between them isn't in the data (R107, R108). Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
           "format": "decimal",
           "formula": "4 * (1 + curve('skill_explosive_seeker_mine_radius_meters_tiers', overcharged_skill_tier) + skill_mod_radius)"
+        },
+        {
+          "id": "area_full_meters",
+          "name": "Full-Damage Radius (m)",
+          "description": "Full-damage radius of the blast: a fixed 1 m, the inner radius skill_player_seekermine_explosion passes CommonExplosion; no tier or mod changes it. Fights give full damage within it (R107, R108).",
+          "format": "decimal",
+          "formula": "1"
         },
         {
           "id": "skill_health",
@@ -67692,9 +67721,16 @@
         {
           "id": "radius_meters",
           "name": "Estimated Radius Reference (m)",
-          "description": "Community level-40 PvE Blast Radius reference from Skill List!C227:J227 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. This is a radius reference, not area, targets hit, range detection, damage falloff or uptime. Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
+          "description": "Community level-40 PvE Blast Radius reference from Skill List!C227:J227 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. Fights use it as the impact's area (ADR 0016): full damage within area_full_meters, falling in a straight line to 50% at this radius. The source gives those ends; the curve between them isn't in the data (R107, R108). Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
           "format": "decimal",
           "formula": "2 * (1 + curve('skill_cluster_seeker_mine_radius_meters_tiers', overcharged_skill_tier) + skill_mod_radius)"
+        },
+        {
+          "id": "area_full_meters",
+          "name": "Full-Damage Radius (m)",
+          "description": "Full-damage radius of the blast: a fixed 1 m, the inner radius skill_player_seekermine_explosion passes CommonExplosion; no tier or mod changes it. Fights give full damage within it (R107, R108).",
+          "format": "decimal",
+          "formula": "1"
         },
         {
           "id": "skill_health",

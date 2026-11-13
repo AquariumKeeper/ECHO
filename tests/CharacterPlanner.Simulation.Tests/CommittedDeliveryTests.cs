@@ -143,7 +143,7 @@ public sealed partial class DummyWeaponSimulatorTests
         // The Dragon's Glare candidate (R36): the default burn on the current target every 35 s, on whole seconds.
         var pack = CommittedPack();
         var glare = Assert.Single(pack.Pack.Simulation.Triggers, trigger => trigger.Talent == "gear_talent_dragon_s_glare");
-        Assert.Equal(("second", "burning", 7.0, 35.0), (glare.On, glare.Status, glare.Duration, glare.Every));
+        Assert.Equal(("second", "burning", 7.0, 35.0, 20.0), (glare.On, glare.Status, glare.Duration, glare.Every, glare.Within));
         var build = Equip(pack.Pack, "primary_weapon_acr", "holster_imperial_dynasty");
         var context = Context.Add("practical_hit_rate", "100").Add("enemy_target", "1").Add("enemy_difficulty", "1");
         var result = DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
@@ -159,6 +159,24 @@ public sealed partial class DummyWeaponSimulatorTests
         Assert.All(ticks, entry => Assert.True(entry.Time < first + 7 || entry.Time >= first + 35, $"{entry.Time}"));
         Assert.Contains(ticks, entry => entry.Time >= first + 35);
         Assert.True(result.StatusDps!.Mean > 0);
+    }
+
+    [Theory]
+    [InlineData(20.0, true)]
+    [InlineData(25.0, false)]
+    [InlineData(null, true)]
+    public void CommittedDragonsGlareBurnsOnlyWithin20Metres(double? distance, bool burns)
+    {
+        // R101: the burn needs the target within 20 m of the player; a fight at a set distance beyond it has none, and one without a
+        // distance takes the range as met and says so. The ACR has no burn of its own, so any tick is Dragon's Glare's.
+        var pack = CommittedPack();
+        var build = Equip(pack.Pack, "primary_weapon_acr", "holster_imperial_dynasty");
+        var context = Context.Add("practical_hit_rate", "100").Add("enemy_target", "1").Add("enemy_difficulty", "1");
+        var result = DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, Distance = distance, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.Equal(burns, result.FirstFightEvents.Any(entry => entry.Kind == DummyEventKind.BurnTick));
+        Assert.Equal(distance is null, result.Limitations.Contains("With no fight distance, a status rule's range is taken as met"));
     }
 
     [Fact]
@@ -1075,6 +1093,154 @@ public sealed partial class DummyWeaponSimulatorTests
             "gear_talent_indirect_transmission" })
         { Assert.Equal("partial", pack.Talents.Single(entry => entry.ID == talent).Coverage!.Status); }
         Assert.Equal("complete", pack.Talents.Single(entry => entry.ID == "gear_talent_proliferation").Coverage!.Status);
+        // R105: all three take a skill's own statuses (ADR 0015).
+        foreach (var talent in new[] { "gear_talent_creeping_death", "gear_talent_perfect_creeping_death" })
+        { Assert.True(pack.Simulation.Spreads.Single(spread => spread.Talent == talent).SkillStatuses, talent); }
+        Assert.True(pack.Simulation.PassOns.Single(passOn => passOn.Talent == "gear_talent_indirect_transmission").SkillStatuses);
+        Assert.False(pack.Simulation.PassOns.Single(passOn => passOn.Talent == "weapon_talent_plague_of_the_outcasts").SkillStatuses);
+        // R106: their coverage says what fights now do. Copies carry the skill's damage and a pass-on isn't capped, so neither is an
+        // omission; what stays open is named.
+        foreach (var talent in new[] { "gear_talent_creeping_death", "gear_talent_perfect_creeping_death", "gear_talent_indirect_transmission" })
+        {
+            var omits = string.Join(" ", pack.Talents.Single(entry => entry.ID == talent).Coverage!.Omits);
+            Assert.DoesNotContain("player's statusDamage rate (R105)", omits, StringComparison.Ordinal);
+            Assert.DoesNotContain("fights cap it", omits, StringComparison.Ordinal);
+            Assert.Contains("A copy's armor bonus", omits, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public void CommittedAreaRowsAreTheR107AndR108Values()
+    {
+        // R107: six skills reach an area; the Airburst Seeker's cone takes none. R108: four fall off.
+        var simulation = CommittedPack().Pack.Simulation;
+        string Row(string skill)
+        {
+            var rule = simulation.Skills.Single(entry => entry.Skill == skill);
+            return $"{rule.Area}/{rule.AreaFull}/{rule.AreaEdge}";
+        }
+        Assert.Equal("radius_meters/area_full_meters/0.1", Row("skill_explosive_sticky_bomb"));
+        Assert.Equal("radius_meters/area_full_meters/0.1", Row("skill_burn_sticky_bomb"));
+        Assert.Equal("radius_meters/area_full_meters/0.5", Row("skill_explosive_seeker_mine"));
+        Assert.Equal("radius_meters/area_full_meters/0.5", Row("skill_cluster_seeker_mine"));
+        Assert.Equal("radius_meters//0", Row("skill_firestarter_chem_launcher"));
+        Assert.Equal("radius_meters//0", Row("skill_artillery_turret"));
+        Assert.Equal("//0", Row("skill_airburst_seeker_mine"));
+        // R109: both Creeping Deaths say a refresh sets off no spread in fights, and cite R107's review.
+        foreach (var id in new[] { "gear_talent_creeping_death", "gear_talent_perfect_creeping_death" })
+        {
+            var coverage = CommittedPack().Pack.Talents.Single(talent => talent.ID == id).Coverage!;
+            Assert.Contains(coverage.Omits, omit => omit.Contains("refresh", StringComparison.OrdinalIgnoreCase));
+            Assert.Contains("R107_SOURCE_REVIEW.md", coverage.Evidence, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public void CommittedControlRowsAreTheR110Values()
+    {
+        // R110 with ADR 0017: all four control skills put their status on; the Shock Trap's and Riot Foam's spheres take an area, the
+        // Banshee Pulse's and Blinder Firefly's pies don't.
+        var simulation = CommittedPack().Pack.Simulation;
+        string Row(string skill)
+        {
+            var rule = simulation.Skills.Single(entry => entry.Skill == skill);
+            return $"{rule.Status}/{rule.ControlStatus}/{rule.Area}";
+        }
+        Assert.Equal("shocked/True/radius_meters", Row("skill_shock_trap"));
+        Assert.Equal("ensnared/True/radius_meters", Row("skill_riot_foam_chem_launcher"));
+        Assert.Equal("disoriented/True/", Row("skill_banshee_pulse"));
+        Assert.Equal("blinded/True/", Row("skill_blinder_firefly"));
+    }
+
+    [Fact]
+    public void CommittedRiotFoamFeedsWicked()
+    {
+        // R110's figures: with an ACR and Wicked, the Riot Foam's ensnare is a status Wicked fires on, so the build gains; without the
+        // field it doesn't. Four enemies at once at 3 m with no enemy hits, as ShadeTech's setup.
+        var pack = CommittedPack();
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains("gear_talent_wicked")));
+        var build = Equip(pack.Pack, ["primary_weapon_acr"]).WithEquipment(item.Slot, item.ID)
+            .WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains("gear_talent_wicked")).ID, "gear_talent_wicked")
+            .WithActiveSkillSelection("skill_slot_1", "skill_riot_foam_chem_launcher");
+        DummyFightResult Fight(CompiledPackExpressions fightPack) => DummyWeaponSimulator.RunAgainstTargets(fightPack, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("practical_headshot_share", "30").Add("enemy_target", "1").Add("enemy_difficulty", "4").Add("enemy_hit_rate", "0"),
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 4, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true, EnemiesAtOnce = 4, EnemySpacing = 3 },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var foamed = Fight(pack);
+        var plain = Fight(Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        {
+            Simulation = pack.Pack.Simulation with { Skills = [.. pack.Pack.Simulation.Skills.Select(rule => rule with { ControlStatus = false })] }
+        }).Compiled));
+        Assert.True(foamed.TargetStatusUptime["ensnared"].Seconds > 0);
+        Assert.False(plain.TargetStatusUptime.TryGetValue("ensnared", out var none) && none.Seconds > 0);
+        Assert.True(foamed.TotalDps!.Mean > plain.TotalDps!.Mean, $"{foamed.TotalDps.Mean} against {plain.TotalDps.Mean}");
+    }
+
+    [Fact]
+    public void CommittedSeekerMineReachesItsNeighbourWithFalloff()
+    {
+        // R107 and R108: an Explosive Seeker Mine's 4 m blast reaches an enemy 3 m away at about two thirds of the impact (full within
+        // 1 m, half at 4 m), and nothing reaches it without a spacing.
+        var pack = CommittedPack();
+        var build = Equip(pack.Pack, ["primary_weapon_acr"]).WithActiveSkillSelection("skill_slot_1", "skill_explosive_seeker_mine");
+        DummyFightResult Fight(double? spacing) => DummyWeaponSimulator.RunAgainstTargets(pack, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("practical_headshot_share", "30").Add("enemy_target", "1").Add("enemy_difficulty", "4").Add("enemy_hit_rate", "0"),
+            new() { Duration = 30, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true, EnemiesAtOnce = 4, EnemySpacing = spacing, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var spaced = Fight(3);
+        var impact = spaced.FirstFightEvents.First(entry => entry.Kind == DummyEventKind.SkillImpact);
+        var area = spaced.FirstFightEvents.First(entry => entry.Kind == DummyEventKind.SkillAreaHit && entry.Time == impact.Time);
+        Assert.Equal(1 - 0.5 * (3 - 1) / (4 - 1.0), area.Damage / impact.Damage, 3);
+        Assert.DoesNotContain(Fight(null).FirstFightEvents, entry => entry.Kind == DummyEventKind.SkillAreaHit);
+    }
+
+    [Fact]
+    public void CommittedCreepingDeathSpreadsABurnStickyBombsBurn()
+    {
+        // R105 with ADR 0015: with an ACR, a Burn Sticky Bomb and Creeping Death, the bomb's burn spreads to a neighbour 3 m away and
+        // ticks there. Without the row's field it doesn't, and the burn and bleed DPS has nothing to count. With the player's own burn
+        // tick at 0 the copies still deal damage: they carry the bomb's rate, not the player's. The bomb's own blast (R107) burns its
+        // neighbours as well, so every fight here takes the skills' areas away, leaving the spread as the only way a burn moves.
+        var pack = CommittedPack();
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains("gear_talent_creeping_death")));
+        var build = Equip(pack.Pack, ["primary_weapon_acr"]).WithEquipment(item.Slot, item.ID)
+            .WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains("gear_talent_creeping_death")).ID, "gear_talent_creeping_death")
+            .WithActiveSkillSelection("skill_slot_1", "skill_burn_sticky_bomb");
+        DummyFightResult Fight(CompiledPackExpressions fightPack) => DummyWeaponSimulator.RunAgainstTargets(fightPack, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("practical_headshot_share", "30").Add("enemy_target", "1").Add("enemy_difficulty", "4").Add("enemy_hit_rate", "0"),
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true, EnemiesAtOnce = 4, EnemySpacing = 3 },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var noAreas = pack.Pack with
+        {
+            Simulation = pack.Pack.Simulation with { Skills = [.. pack.Pack.Simulation.Skills.Select(rule => rule with { Area = "", AreaFull = "", AreaEdge = 0 })] }
+        };
+        var copied = Fight(Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(noAreas).Compiled));
+        var simulation = noAreas.Simulation;
+        var plain = Fight(Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(noAreas with
+        {
+            Simulation = simulation with { Spreads = [.. simulation.Spreads.Select(spread => spread with { SkillStatuses = false })] }
+        }).Compiled));
+        Assert.True(copied.StatusDps!.Mean > 0);
+        Assert.True(plain.StatusDps is null || plain.StatusDps.Mean == 0, $"{plain.StatusDps?.Mean}");
+        var noPlayerBurn = Fight(Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(noAreas with
+        {
+            Stats = [.. noAreas.Stats.Select(stat => stat.ID == "burn_tick_damage" ? stat with { Formula = "0" } : stat)]
+        }).Compiled));
+        Assert.True(noPlayerBurn.StatusDps!.Mean > 0);
+    }
+
+    [Fact]
+    public void CommittedIndirectTransmissionStatsSayFightsReadThem()
+    {
+        // R102: the two stats Indirect Transmission's pass-on reads describe that, and no longer say nothing is simulated.
+        var pack = CommittedPack().Pack;
+        foreach (var id in new[] { "indirect_transmission_radius", "indirect_transmission_refresh" })
+        {
+            var description = pack.Stats.Single(stat => stat.ID == id).Description;
+            Assert.Contains("Driven fights read it at the fight's start", description, StringComparison.Ordinal);
+            Assert.DoesNotContain("No events", description, StringComparison.Ordinal);
+            Assert.DoesNotContain("No kills, spread", description, StringComparison.Ordinal);
+        }
     }
 
     [Fact]

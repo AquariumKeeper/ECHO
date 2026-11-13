@@ -87,6 +87,31 @@ public sealed class StatusTriggerStateTests
     { Talent = "gear_talent_dragon_s_glare", Key = "target_burning", On = "second", Kind = "status", Duration = 7, Every = 35, Status = "burning" };
 
     [Fact]
+    public void ACopysRateLastsOnlyItsOwnRun()
+    {
+        // ADR 0015: a copy of a skill's burn carries 4 a second while it runs. A talent's burn starting there later is the player's.
+        var state = With(Glare);
+        Assert.True(state.ApplyDirect("burning", 3, 1, 1, scale: false, perSecond: 4));
+        Assert.Equal(4, state.RunningCopyRate("burning"));
+        Assert.True(state.Fire("second", 10));
+        Assert.Null(state.RunningCopyRate("burning"));
+    }
+
+    [Fact]
+    public void AStatusASkillsRateOnlyCarriesHasNoRateOfItsOwn()
+    {
+        // A skill's own burn at 10 a second, then, after it ends, a burn a later skill's rate only carries (Stinger Hive's shape): a copy
+        // of the second has no skill damage to carry, whatever the first left behind.
+        var state = With(Glare);
+        state.DealSkillStatus("burning", 10, 0, 0.1, 5, true, out _);
+        state.NoteSkillSpan("burning", 3, 0.1);
+        Assert.Equal(10, state.SkillApplication("burning", 0.2)!.Value.Rate);
+        state.ApplyFromSkill("burning", 20, 12, 12, rateIsStatus: false);
+        state.NoteSkillSpan("burning", 0, 12);
+        Assert.Null(state.SkillApplication("burning", 12.5)!.Value.Rate);
+    }
+
+    [Fact]
     public void ASkillsStatusKeepsItsFirstAmountAndTwoUsesDontAdd()
     {
         var state = With(Glare);

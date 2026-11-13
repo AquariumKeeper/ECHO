@@ -83,7 +83,8 @@ public sealed class SkillViewModelTests : IDisposable
         var launcher = first.Mods.Single(mod => mod.Id == "launcher");
         launcher.Selected = launcher.Choices.Single(choice => choice.Id == "launcher_blast_radius");
         await Resolved();
-        string Radius() => first.Outputs.Single(output => output.Details.Any(line => line.StartsWith("Uses installed", StringComparison.Ordinal) && line.Contains("Blast Radius", StringComparison.Ordinal)))
+        // The radius itself; from R108 the full-damage radius reads the same input.
+        string Radius() => first.Outputs.Single(output => output.Name == "Estimated Radius Reference (m)")
             .Details.Single(line => line.Contains("Blast Radius", StringComparison.Ordinal) && line.StartsWith("Uses", StringComparison.Ordinal));
         Assert.StartsWith("Uses installed Launcher: Blast Radius: ", Radius(), StringComparison.Ordinal);
         var payload = first.Mods.Single(mod => mod.Id == "payload");

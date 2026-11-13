@@ -24,6 +24,10 @@ public sealed class TargetStatuses
     internal Dictionary<string, double> SkillDealt { get; } = new(StringComparer.Ordinal);
     // Those waiting for a talent's status to end, whose next damage is a new application.
     internal HashSet<string> SkillWaits { get; } = new(StringComparer.Ordinal);
+    // How long one application of a skill's own status lasts, for a copy on another enemy (ADR 0015).
+    internal Dictionary<string, double> SkillSpans { get; } = new(StringComparer.Ordinal);
+    // A copy's own damage per second, for the application that started at this time (R105: it carries the skill's damage).
+    internal Dictionary<string, (double At, double PerSecond)> CopyRates { get; } = new(StringComparer.Ordinal);
 
     /// <summary>Whether this status is on the enemy at this time, from a talent or a skill.</summary>
     public bool Has(string status, double time) => time < Deadlines.GetValueOrDefault(status, double.NegativeInfinity) ||
@@ -188,6 +192,8 @@ public sealed class StatusTriggerState
         {
             if (time < deadlines.GetValueOrDefault(status)) { continue; }
             held.StartFactors[status] = durationFactor;
+            // A talent's own run carries the player's rate, whatever a copy before it carried.
+            held.CopyRates.Remove(status);
             Started = true;
             if (!held.Has(status, time)) { newlyOnStatuses.Add(status); }
             newlyOn |= !held.Has(status, time);
@@ -210,7 +216,9 @@ public sealed class StatusTriggerState
     /// </summary>
     /// <param name="scale">False for a duration already scaled, such as what's left of a status spread from another enemy.</param>
     /// <returns>Whether it went on, or was extended; false when it yields to a skill's.</returns>
-    public bool ApplyDirect(string status, double duration, double time, double durationFactor, bool scale = true)
+    /// <param name="perSecond">For a copy of a skill's own status (ADR 0015), the damage per second it carries; null for the player's rate.
+    /// It applies only when the status starts here: one already running keeps its amount.</param>
+    public bool ApplyDirect(string status, double duration, double time, double durationFactor, bool scale = true, double? perSecond = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(status);
         CheckTime(time);
@@ -219,7 +227,11 @@ public sealed class StatusTriggerState
         var until = time + duration * (scale ? FactorFor(status, time, durationFactor) : 1);
         if (!double.IsFinite(until) || until <= time) { throw new SimulationException("trigger-time-invalid", "Status duration cannot advance time"); }
         Advance(time);
-        if (!(time < deadlines.GetValueOrDefault(status))) { held.StartFactors[status] = durationFactor; }
+        if (!(time < deadlines.GetValueOrDefault(status)))
+        {
+            held.StartFactors[status] = durationFactor;
+            if (perSecond is { } rate) { held.CopyRates[status] = (time, rate); } else { held.CopyRates.Remove(status); }
+        }
         Accumulate("any", time);
         Accumulate(status, time);
         deadlines[status] = Math.Max(deadlines.GetValueOrDefault(status), until);
@@ -227,6 +239,14 @@ public sealed class StatusTriggerState
         version++;
         return true;
     }
+
+    /// <summary>The damage per second the status running now carries, if its run started as a copy (ADR 0015). Each fresh start replaces
+    /// or clears the entry, so one there belongs to the run in progress.</summary>
+    public double? RunningCopyRate(string status) => held.CopyRates.TryGetValue(status, out var copy) ? copy.PerSecond : null;
+
+    /// <summary>The damage per second a copy carries, if the status's run that started at this time is one (ADR 0015).</summary>
+    public double? CopyRate(string status, double startedAt) =>
+        held.CopyRates.TryGetValue(status, out var copy) && copy.At == startedAt ? copy.PerSecond : null;
 
     /// <summary>
     /// A skill's status is on the current target until this time, and it starts no ticks. Returns
@@ -283,6 +303,25 @@ public sealed class StatusTriggerState
         return held.SkillRates[status] * (time - from);
     }
 
+    /// <summary>
+    /// Notes how long one application of a skill's own status lasts on the current target (ADR 0015), as a use applies it: its
+    /// <paramref name="statusWindow"/>, or with none, the longest the use has given it from an application.
+    /// </summary>
+    public void NoteSkillSpan(string status, double statusWindow, double time)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(status);
+        if (!double.IsFinite(statusWindow) || statusWindow < 0) { throw new ArgumentOutOfRangeException(nameof(statusWindow)); }
+        if (!held.FromSkills.TryGetValue(status, out var until) || !(time < until)) { return; }
+        held.SkillSpans[status] = statusWindow > 0 ? statusWindow : Math.Max(held.SkillSpans.GetValueOrDefault(status), until - time);
+    }
+
+    /// <summary>A skill's own status on the current target now: when it ends, and how long one application of it lasts.</summary>
+    /// <remarks>Its rate is the damage per second it went on with there, or null when the skill's rate only carries it.</remarks>
+    public (double Until, double Span, double? Rate)? SkillApplication(string status, double time) =>
+        held.FromSkills.TryGetValue(status, out var until) && time < until && held.SkillSpans.TryGetValue(status, out var span)
+            // A rate of its own only while the status's damage is the skill's rate; one an earlier skill left behind isn't this one's.
+            ? (until, span, time < held.RateIsStatus.GetValueOrDefault(status) && held.SkillRates.TryGetValue(status, out var rate) ? rate : null) : null;
+
     /// <summary>When a talent's status ends on the current target, so a skill's own deals nothing until then.</summary>
     internal double TalentUntil(string status) => deadlines.GetValueOrDefault(status);
 
@@ -325,6 +364,8 @@ public sealed class StatusTriggerState
         held.SkillRates.Clear();
         held.SkillDealt.Clear();
         held.SkillWaits.Clear();
+        held.SkillSpans.Clear();
+        held.CopyRates.Clear();
         version++;
     }
 

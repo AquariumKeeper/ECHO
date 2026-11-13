@@ -465,6 +465,26 @@ only to an id that exists in the same collection.
 - The event `status_applied` fires when a status goes on a target that didn't have it. Refreshing a running status extends it and doesn't fire this (R59), so a shot that keeps a bleed up fires it once.
 - `everyGroup` is new on 2026-11-07, on `buff`, `stacks` and `ready` rules with an `every` above 0. Rules naming the same group share their cooldown: one fires only if no rule in its group fired within the `every`, and when two answer one event, the first in the pack fires. A group has rules from two or more talents in the pack, all with the same `every`, and none with `cooldownFromEnd`. A fight holds only the build's rules, so it may hold one of a group, which keeps its own `every`.
 - `whileStatAtLeast` is new on 2026-11-06, on `buff` and `ready` rules with an event and no other gate: `{ "stat": "skill_tier", "value": 6 }`. The rule fires only while that stat is at the value or above, resolved as the build stood before the event, so stacks count but the event's own don't, nor those of the bullet's other events. A rule on a swap reads the weapon it belongs to as held. A closed rule neither counts nor fires, and its `every` doesn't start. A rule with this on a selected talent is checked against a shield before the fight, as a set talent's is, unless the stat can't reach the value with every other rule in the fight at its height.
+- `area` is new on 2026-11-13 (ADR 0016), optional, on a `simulation.skills` rule with an `impact`. It names the output with a
+  radius in metres, up to 50 (`radius_meters`, which already reads the skill's overcharged tier). Each impact then also lands, at
+  full damage and on each enemy's own pools, on every living enemy in the group within that radius of the enemy being shot, on the
+  line `enemySpacing` sets. The impact's burn or bleed goes on each of them for one application (`statusWindow`), as the player's
+  status carrying the skill's `statusRate`, counted in burn and bleed DPS, and can set off a spread that takes skill statuses
+  around each, nearest first, which leaves the enemy being shot alone. Its hits there are `SkillAreaHit` events in the trace. An
+  area over 50 m refuses a fight it can reach someone in. The impact's damage there counts in skill DPS. A kill there is a kill elsewhere (ADR 0013). Hit and
+  status events stay the enemy being shot's. Without a spacing, or with one enemy at a time, it reaches nobody else, and the result
+  names the skill. A rate, a window or a shield takes no area. From 2026-11-13 (R107) an area may fall off: `areaFull` names
+  the output with the radius in metres of full damage, and `areaEdge` (above 0 up to 1) is the share an enemy at the area's
+  radius takes. Between the two the share falls in a straight line, an assumption, since the source gives the ends, not the curve.
+  The two go together, and the status goes on whole. A full radius at or past the area's own leaves the whole area at full damage.
+- `controlStatus` is new on 2026-11-13 (ADR 0017), optional, on a `simulation.skills` rule whose `status` is shocked,
+  disoriented, ensnared or blinded, with a `window`. In fights with talent triggers, the status goes on the enemy being shot
+  as the skill is used, for the `window` output's duration as it stands (it already reads status-duration bonuses), as the
+  player's status: it fires `status_applied` there if newly on, reads as on for keys, `whileStatus` and counts, counts in
+  target status uptime, and a shocked enemy's fire is stopped as a talent's shock stops it. A second use while it's on
+  refreshes it. A use with no living enemy being shot puts it on nobody. With an `area` (which a control rule may name without
+  an impact) it also goes on every living enemy within the radius, with no events. A trap's goes on once per use, and no
+  immunity is modeled. Without the field a control skill's rule is a cooldown only, as before.
 - `impactInterval` is new on 2026-11-06, on a `simulation.skills` rule with `impacts`. It names the output with the seconds between a use's impacts, which must be above zero. Each then lands on its own, with `impact` alone, on the enemy there at that moment, as its own `skill_hit`, and one due with no enemy there is lost. Those due after the fight ends don't land. A use with a cooldown from its end isn't over until its last impact. Without it a use's impacts land together, as their total, as it deploys.
 - `statusRate`, `statusWindow` and `statusArmorBonus` are new on 2026-11-06, on a `simulation.skills` rule with a burn or bleed. `statusRate` names the output with the status's own damage per second, and is the only way a rule says it has that damage: since R68's rows, a `rate`'s name no longer does. `statusWindow` names the output with how long the status lasts after its last application; the two go together. `statusArmorBonus` is `rateArmorBonus` for the status's damage. With neither `rate` nor `window` the status goes on once, as the use deploys, and the rule needs only a `cooldown`. With a `window` it applies through that window, so it runs from the first application to the end of the window plus `statusWindow`, and `rateRead` stays on `rate` only. With spaced impacts each one puts it on, so it applies until the last impact if that's later, including to an enemy that arrived between them. There's one per enemy: it keeps the amount it first went on with, two uses don't add, and while a talent's runs it deals nothing and waits for that to end, which counts as a new application. After a use stops applying, it runs on only on an enemy it landed on. Its ticks are no `skill_hit`, as a talent's aren't.
 - `stock` and `stockInterval` are new on 2026-11-06, on a `simulation.skills` rule with a `cooldown` that doesn't run from a use's end. `stock` names the output counting the charges a full skill holds, a whole number, and `stockInterval` is the least seconds between uses. The skill starts full, and one charge comes back each cooldown while any are missing. A skill keeps the stock it first deployed with for the whole fight.
@@ -933,7 +953,13 @@ other numeric inputs. It never reads or separately parses the raw context string
   `within` (metres, above 0 up to 50) and `every` (seconds, 0 to 600; default 0). When a talent's status newly goes on
   the enemy being shot (a refresh isn't one), the same status goes on each living enemy in the group within `within` of
   it, for what's left of its duration, unscaled again. The spread then waits `every` seconds; the wait starts only when it
-  reached someone. A spread status sets off no other, and no `status_applied`. A skill's own status doesn't spread.
+  reached someone. A spread status sets off no other, and no `status_applied`. A skill's own status doesn't spread,
+  unless the entry has `skillStatuses: true` (2026-11-13, ADR 0015). Then a skill's own burn or bleed newly on the enemy
+  being shot spreads too: at its first application there, or when it deals again after a talent's ends. It goes on as the
+  player's status for what's left of it, up to one application (the skill's `statusWindow`, or what the use gave it without
+  one). It carries the skill's own damage per second (its `statusRate`, as it went on there; R105), or ticks at the player's
+  `statusDamage` rate where the skill's status has no rate of its own. The spread's one `every` covers both kinds; at the same moment a
+  talent's own spread goes first. `skillStatuses` needs `statusDamage` rows for both burning and bleeding.
   Enemies stand on the line `enemySpacing` sets; without it the spread finds nobody, and the result names the talent.
   One spread per talent.
 
@@ -971,7 +997,12 @@ other numeric inputs. It never reads or separately parses the raw context string
   (a known status, or `any` for each on the dying enemy), with `share` (above 0 up to 1) and `to` (`nearest`, the
   default, or `all`): each such status a talent put on the dying enemy goes on the nearest living enemy in reach, or all
   of them, for `share` of the duration it went on with (Indirect Transmission's 50%). The talent needs no
-  `talentDamage` row then. A skill's own status doesn't pass on. A debuff pass-on takes neither `share` nor `all`.
+  `talentDamage` row then. A skill's own status doesn't pass on, unless a status pass-on has `skillStatuses: true`
+  (2026-11-13, ADR 0015). Then, for a status with no talent's running on the dying enemy, a skill's own burn or bleed passes
+  on as the player's status, for `share` of one full application however little was left, carrying the skill's damage as a
+  spread's copy does (R105). A copy passed on again keeps the damage it carries. Only a pass-on of `any`, `burning` or
+  `bleeding` takes it, and it needs `statusDamage` rows for both. A debuff pass-on takes neither `share` nor `all`, nor
+  `skillStatuses`.
   Marks passing on come later. From 2026-11-11 a pass-on may name `withinStat`, a declared stat, in place of `within`,
   and a status pass-on `shareStat` in place of `share` (Proliferation's 15 m and 75%). Each is the stat's value at the
   fight's start, within the field's own limits, or the fight is refused. A debuff pass-on takes no `shareStat`.

@@ -116,3 +116,5 @@ Each is reviewed before merging.
 
 - Reaching talents gain in fights with several enemies and a spacing; fights without either keep their results.
 - Contracts advance when the option arrives.
+- Spreads and status pass-ons take only statuses talents put on; a skill's own burn or bleed is left out. ADR 0015 (accepted
+  2026-11-13) takes it in, as the owner decided.

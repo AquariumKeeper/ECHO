@@ -6,14 +6,17 @@ namespace CharacterPlanner.Simulation;
 
 /// <summary>One deployment's resolved impact and continuous active window. A fight puts its status on the enemy; this plan doesn't.</summary>
 public sealed record SkillUse(string Slot, string Skill, double Time, double WindowEnd, double Rate, double Impact, double StatusRate = 0, double StatusEnd = 0,
-    double Impacts = 1, double ImpactInterval = 0)
+    double Impacts = 1, double ImpactInterval = 0, bool Control = false)
 {
     /// <summary>Until when the use puts its status on an enemy: its window, or its last impact if later (Artillery Turret's shells).</summary>
     public double ApplyingEnd => Math.Max(WindowEnd, Time + (Impacts - 1) * ImpactInterval);
 }
 
-/// <summary>Damage meaning is separate from timing. StatusDot is the damage of a skill's own burn or bleed (R65).</summary>
-public enum SkillDamageKind { Impact, ContinuousWindow, StatusDot, Deployment }
+/// <summary>
+/// Damage meaning is separate from timing. StatusDot is the damage of a skill's own burn or bleed (R65). Control is a control skill's use
+/// putting its status on (ADR 0017), with no damage.
+/// </summary>
+public enum SkillDamageKind { Impact, ContinuousWindow, StatusDot, Deployment, Control }
 
 internal static class SkillDamageKinds
 {
@@ -42,13 +45,33 @@ public sealed class SkillDamageSchedule
         /// <summary>The skill's cooldown itself; <see cref="Cycle"/> adds the use's length to it when the cooldown runs from a use's end.</summary>
         public double Cooldown { get; init; } = Cycle;
 
+        /// <summary>The radius, in metres, of each impact's area (ADR 0016); 0 for the enemy being shot alone.</summary>
+        public double Area { get; init; }
+
+        /// <summary>Within this radius an area's impact deals full damage; beyond it, falling in a straight line to <see cref="AreaEdge"/> (R107).</summary>
+        public double AreaFull { get; init; }
+
+        /// <summary>A control skill's status, put on as the skill is used (ADR 0017); empty for none.</summary>
+        public string ControlStatus { get; init; } = "";
+
+        /// <summary>The share of the impact at the area's radius; 1 for no falloff.</summary>
+        public double AreaEdge { get; init; } = 1;
+
+        /// <summary>
+        /// The share of the impact an enemy this far from the enemy being shot takes. A full-damage radius at or past the area's own, as a
+        /// Seeker's fixed 1 m can be when mods shrink its radius, leaves the whole area at full damage, as the source's would be.
+        /// </summary>
+        public double AreaShare(double distance) => AreaEdge >= 1 || distance <= AreaFull || Area <= AreaFull ? 1
+            : Math.Max(AreaEdge, 1 - (1 - AreaEdge) * (distance - AreaFull) / (Area - AreaFull));
+
         /// <summary>The use deployed at this time, in a fight of this length, whose impacts end with it.</summary>
         public SkillUse UseAt(double time, double duration)
         {
             var impacts = ImpactsBefore(time, duration);
             // Each impact puts the status on, so it applies until the last and runs its own window after that.
             var applying = Math.Max(Window, (impacts - 1) * ImpactInterval);
-            return new(Slot, Skill, time, Math.Min(duration, time + Window), Rate, Impact, StatusRate, Math.Min(duration, time + applying + StatusWindow), impacts, ImpactInterval);
+            return new(Slot, Skill, time, Math.Min(duration, time + Window), Rate, Impact, StatusRate, Math.Min(duration, time + applying + StatusWindow), impacts, ImpactInterval,
+                ControlStatus.Length > 0);
         }
 
         // The division can round up, and an impact at the fight's very end has no timeline bucket.
@@ -122,13 +145,16 @@ public sealed class SkillDamageSchedule
             if (stock < 1 || stock != Math.Floor(stock)) { throw new SimulationException("skill-output-invalid", $"Invalid stock for {preview.SkillId}"); }
             var statusRate = Read(rule.StatusRate);
             var statusWindow = Read(rule.StatusWindow);
+            // Checked against its limit only where it can reach someone, so a fight it plays no part in isn't refused.
+            var area = Read(rule.Area);
+            var areaFull = Read(rule.AreaFull);
             // A use that runs from its end isn't over until its last impact.
             var cycle = cooldown + (rule.CooldownFromEnd ? Math.Max(window, (impacts - 1) * interval) : 0);
             if (!double.IsFinite(cycle) || cycle <= 0 || !double.IsFinite(impact) || !double.IsFinite(rate * window) || !double.IsFinite(statusRate * (window + statusWindow)))
             { throw new SimulationException("skill-cycle-invalid", $"Invalid cycle or damage for {preview.SkillId}"); }
             plans.Add(new(slot.ID, preview.SkillId, window, cycle, rate, impact, rule.RateArmorBonus, rule.RateRead == "live", StatusDamageState.Damaging.Contains(rule.Status) ? rule.Status : "",
                 null, stock, rule.StockInterval, statusRate, statusWindow, rule.StatusArmorBonus, impacts, interval)
-            { Cooldown = cooldown });
+            { Cooldown = cooldown, Area = area, AreaFull = areaFull, AreaEdge = rule.AreaFull.Length > 0 ? rule.AreaEdge : 1, ControlStatus = rule.ControlStatus ? rule.Status : "" });
         }
         return new(plans.ToImmutable());
     }
@@ -178,6 +204,8 @@ public sealed class SkillDamageSchedule
     /// <summary>One use's impacts, then its rate's batches in order, then its status's.</summary>
     internal static IEnumerable<SkillDamageEvent> UseEvents(SkillUse use, CancellationToken cancellationToken)
     {
+        // A control skill's status goes on as it's used (ADR 0017), ahead of anything else the use does at that moment.
+        if (use.Control) { yield return new(use.Time, 0, use.Slot, SkillDamageKind.Control, use.Time); }
         for (var index = 0d; use.Impact > 0 && index < use.Impacts; index++)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -260,12 +288,12 @@ public sealed class SkillDamageSchedule
     internal static void Cut(SkillDamageEvent entry, ImmutableArray<double> boundaries, Action<SkillDamageEvent> add, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        if (entry.Kind != SkillDamageKind.Impact && !entry.Kind.IsBatch())
+        if (entry.Kind is not (SkillDamageKind.Impact or SkillDamageKind.Control) && !entry.Kind.IsBatch())
         { throw new SimulationException("skill-event-kind-unsupported", "Unknown skill damage kinds are not modeled"); }
         if (!double.IsFinite(entry.Start) || !double.IsFinite(entry.Time) || entry.Start < 0 || entry.Time < entry.Start ||
             entry.Kind.IsBatch() && entry.Time == entry.Start || !double.IsFinite(entry.Damage) || entry.Damage < 0)
         { throw new SimulationException("skill-event-invalid", "Skill events require finite times and nonnegative damage; continuous intervals must be positive"); }
-        if (entry.Kind == SkillDamageKind.Impact) { add(entry); return; }
+        if (entry.Kind is SkillDamageKind.Impact or SkillDamageKind.Control) { add(entry); return; }
         var index = boundaries.BinarySearch(entry.Start);
         index = index < 0 ? ~index : index + 1;
         var start = entry.Start;

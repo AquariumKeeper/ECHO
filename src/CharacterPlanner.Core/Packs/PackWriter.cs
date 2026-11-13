@@ -356,6 +356,10 @@ public static class PackWriter
             CooldownFromEnd = Optional(skill.CooldownFromEnd),
             Impacts = Optional(skill.Impacts),
             ImpactInterval = Optional(skill.ImpactInterval),
+            Area = Optional(skill.Area),
+            AreaFull = Optional(skill.AreaFull),
+            AreaEdge = Optional(skill.AreaEdge),
+            ControlStatus = Optional(skill.ControlStatus),
             Shield = Optional(skill.Shield),
             Regeneration = Optional(skill.Regeneration),
             Weapons = Optional(skill.Weapons),
@@ -386,8 +390,8 @@ public static class PackWriter
             Period = damage.Period,
             MaxStacks = damage.MaxStacks == 1 ? null : damage.MaxStacks
         })),
-        PassOns = NullIfEmpty(simulation.PassOns.Select(passOn => new PassOnWire { Talent = passOn.Talent, Within = Optional(passOn.Within), WithinStat = Optional(passOn.WithinStat), Status = Optional(passOn.Status), Share = Optional(passOn.Share), ShareStat = Optional(passOn.ShareStat), To = Optional(passOn.To) })),
-        Spreads = NullIfEmpty(simulation.Spreads.Select(spread => new SpreadWire { Talent = spread.Talent, Within = spread.Within, Every = Optional(spread.Every) })),
+        PassOns = NullIfEmpty(simulation.PassOns.Select(passOn => new PassOnWire { Talent = passOn.Talent, Within = Optional(passOn.Within), WithinStat = Optional(passOn.WithinStat), Status = Optional(passOn.Status), Share = Optional(passOn.Share), ShareStat = Optional(passOn.ShareStat), To = Optional(passOn.To), SkillStatuses = Optional(passOn.SkillStatuses) })),
+        Spreads = NullIfEmpty(simulation.Spreads.Select(spread => new SpreadWire { Talent = spread.Talent, Within = spread.Within, Every = Optional(spread.Every), SkillStatuses = Optional(spread.SkillStatuses) })),
         Redirects = NullIfEmpty(simulation.Redirects.Select(redirect => new RedirectWire { Talent = redirect.Talent, Share = redirect.Share, Within = redirect.Within })),
         Traps = NullIfEmpty(simulation.Traps.Select(trap => new TrapWire
         {

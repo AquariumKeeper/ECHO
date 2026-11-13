@@ -579,6 +579,25 @@ public sealed record SimSkillDefinition
     public string Impacts { get; init; } = "";
     /// <summary>The output with the seconds between a use's impacts. Without it they land together, as the use deploys.</summary>
     public string ImpactInterval { get; init; } = "";
+    /// <summary>
+    /// The output with the radius, in metres, of each impact's area (ADR 0016): an impact lands on every living enemy within it of the
+    /// enemy being shot, with the burn or bleed it puts on. Empty for one enemy.
+    /// </summary>
+    public string Area { get; init; } = "";
+    /// <summary>
+    /// The output with the radius, in metres, within which an area's impact deals full damage (R107). Beyond it the damage falls in a
+    /// straight line to <see cref="AreaEdge"/> of it at the area's radius. Empty for full damage throughout.
+    /// </summary>
+    public string AreaFull { get; init; } = "";
+    /// <summary>The share of an area's impact an enemy at its radius takes, above 0 up to 1, with <see cref="AreaFull"/>.</summary>
+    public double AreaEdge { get; init; }
+    /// <summary>The widest skill area, in metres.</summary>
+    public const double MaximumArea = 50;
+    /// <summary>
+    /// Whether a control skill's <see cref="Status"/> (shocked, disoriented, ensnared or blinded) goes on the enemy being shot as the
+    /// skill is used, for the duration its <see cref="Window"/> output gives, and with an <see cref="Area"/> on those in it (ADR 0017).
+    /// </summary>
+    public bool ControlStatus { get; init; }
     public string Shield { get; init; } = "";
     public string Regeneration { get; init; } = "";
     public ImmutableArray<string> Weapons { get; init; } = [];
@@ -674,6 +693,11 @@ public sealed record SimPassOnDefinition
     public double Share { get; init; }
     /// <summary>A stat giving a status pass-on's share at the fight's start, in place of <see cref="Share"/> (Proliferation's 75%). Empty for none.</summary>
     public string ShareStat { get; init; } = "";
+    /// <summary>
+    /// Whether a status pass-on also takes a skill's own burn or bleed on the dying enemy (ADR 0015), as the player's status, for its
+    /// share of one application.
+    /// </summary>
+    public bool SkillStatuses { get; init; }
     /// <summary>"nearest" (the default) or, for a status, "all" the living enemies in reach.</summary>
     public string To { get; init; } = "";
     /// <summary>The farthest pass-on, in metres.</summary>
@@ -690,6 +714,11 @@ public sealed record SimSpreadDefinition
     public string Talent { get; init; } = "";
     public double Within { get; init; }
     public double Every { get; init; }
+    /// <summary>
+    /// Whether a skill's own burn or bleed newly on the enemy being shot spreads too (ADR 0015), as the player's status, for what's left
+    /// of it up to one application.
+    /// </summary>
+    public bool SkillStatuses { get; init; }
     /// <summary>The widest spread, in metres.</summary>
     public const double MaximumWithin = 50;
 }

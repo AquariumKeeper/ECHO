@@ -25,8 +25,8 @@ Windows version, the ZIP's SHA-256, and each step's outcome).
    - the window opens within a few seconds, with the orange card icon in the title bar
      and taskbar;
    - the Build tab shows slot tiles with grey slot images;
-   - About shows the release's version (for example `0.2.0-beta.6`) and the bundled pack
-     (`r100.candidate.1`);
+   - About shows the release's version (for example `0.2.0-beta.7`) and the bundled pack
+     (`r110.candidate.1`);
    - equipping an item, then Save, then closing and reopening the app shows the saved
      build in Saved builds;
    - the Simulate tab runs a simulation and shows results.

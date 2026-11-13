@@ -14,7 +14,7 @@ public sealed class SkillFights
     private readonly CancellationToken cancellationToken;
     // Fights whose cooldowns follow the state deploy at different times, so what's kept for reuse is bounded.
     private const int MadeLimit = 4096;
-    private readonly Dictionary<(int Slot, double Time, double Window, double Rate, double Impact, double StatusRate, double StatusWindow, double Impacts, double ImpactInterval), SkillUseEvent[]> made = [];
+    private readonly Dictionary<(int Slot, double Time, double Window, double Rate, double Impact, double StatusRate, double StatusWindow, double Impacts, double ImpactInterval, string ControlStatus), SkillUseEvent[]> made = [];
     private int hitGroups;
 
     internal SkillFights(ImmutableArray<SkillDamageSchedule.Plan> plans, double duration, ImmutableArray<double> boundaries, CancellationToken cancellationToken) =>
@@ -35,7 +35,7 @@ public sealed class SkillFights
     // A use's impact and batches, in order. A batch's pieces carry the time the whole batch ends.
     internal SkillUseEvent[] Use(int index, double time, SkillDamageSchedule.Plan plan)
     {
-        var key = (index, time, plan.Window, plan.Rate, plan.Impact, plan.StatusRate, plan.StatusWindow, plan.Impacts, plan.ImpactInterval);
+        var key = (index, time, plan.Window, plan.Rate, plan.Impact, plan.StatusRate, plan.StatusWindow, plan.Impacts, plan.ImpactInterval, plan.ControlStatus);
         if (made.TryGetValue(key, out var events)) { return events; }
         if (made.Count == MadeLimit) { made.Clear(); }
         var builder = new List<SkillUseEvent>();

@@ -149,7 +149,8 @@ public sealed class StatusDamageState
                 var active = !double.IsNaN(applied[index]) && application.AppliedAt < until[index];
                 if (!active)
                 {
-                    var tick = ticks[rule.Status];
+                    // A copy of a skill's own status carries the skill's damage per second (ADR 0015, R105); otherwise the player's tick.
+                    var tick = statuses.CopyRate(rule.Status, application.AppliedAt) is { } perSecond ? perSecond * rule.Period : ticks[rule.Status];
                     if (!double.IsFinite(tick) || tick < 0) { throw new SimulationException("status-damage-invalid", $"Invalid {rule.Status} tick damage"); }
                     next[index] = application.AppliedAt + (rule.TickOnApply ? 0 : rule.Period);
                     amount[index] = tick;

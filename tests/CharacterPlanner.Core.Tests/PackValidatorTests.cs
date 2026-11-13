@@ -211,6 +211,19 @@ public sealed class PackValidatorTests
         ["pass-on with an unknown withinStat"] = (() => Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, WithinStat = "missing", Status = "any", Share = 0.5 }] } }, "unknown-stat", "simulation.passOns[0].withinStat"),
         ["status pass-on with share and shareStat"] = (() => Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10, Status = "any", Share = 0.5, ShareStat = Pack.Stats[0].ID }] } }, "bad-sim-pass-on", "simulation.passOns[0].status"),
         ["status pass-on with an unknown shareStat"] = (() => Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10, Status = "any", ShareStat = "missing" }] } }, "unknown-stat", "simulation.passOns[0].shareStat"),
+        ["control status on a shield"] = (() => Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Status = "shocked", ControlStatus = true, Shield = Pack.Simulation.Skills[0].Cooldown }] } }, "bad-sim-skill", "simulation.skills[0].controlStatus"),
+        ["falloff on a control area"] = (() => Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Rate = "", Impact = "", Status = "shocked", ControlStatus = true, Area = Pack.Simulation.Skills[0].Window, AreaFull = Pack.Simulation.Skills[0].Window, AreaEdge = 0.5 }] } }, "bad-sim-skill", "simulation.skills[0].areaFull"),
+        ["control status on a burn"] = (() => Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Status = "burning", ControlStatus = true }] } }, "bad-sim-skill", "simulation.skills[0].controlStatus"),
+        ["control status without a window"] = (() => Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Rate = "", Window = "", Status = "shocked", ControlStatus = true }] } }, "bad-sim-skill", "simulation.skills[0].controlStatus"),
+        ["skill area falloff without an edge"] = (() => Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Area = Pack.Simulation.Skills[0].Cooldown, AreaFull = Pack.Simulation.Skills[0].Cooldown }] } }, "bad-sim-skill", "simulation.skills[0].areaEdge"),
+        ["skill area edge over 1"] = (() => Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Area = Pack.Simulation.Skills[0].Cooldown, AreaFull = Pack.Simulation.Skills[0].Cooldown, AreaEdge = 1.5 }] } }, "bad-sim-skill", "simulation.skills[0].areaEdge"),
+        ["skill area edge without a full radius"] = (() => Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Area = Pack.Simulation.Skills[0].Cooldown, AreaEdge = 0.5 }] } }, "bad-sim-skill", "simulation.skills[0].areaFull"),
+        ["skill area falloff without an area"] = (() => Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { AreaFull = Pack.Simulation.Skills[0].Cooldown, AreaEdge = 0.5 }] } }, "bad-sim-skill", "simulation.skills[0].areaFull"),
+        ["skill area on a shield"] = (() => Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Shield = Pack.Simulation.Skills[0].Cooldown, Area = Pack.Simulation.Skills[0].Cooldown }] } }, "bad-sim-skill", "simulation.skills[0].area"),
+        ["skill area without an impact"] = (() => Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Impact = "", Area = Pack.Simulation.Skills[0].Cooldown }] } }, "bad-sim-skill", "simulation.skills[0].area"),
+        ["shock pass-on with skillStatuses"] = (() => Pack with { Simulation = Pack.Simulation with { PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10, Status = "shocked", Share = 0.5, SkillStatuses = true }] } }, "bad-sim-pass-on", "simulation.passOns[0].skillStatuses"),
+        ["skill status spread without tick rows"] = (() => Pack with { Simulation = Pack.Simulation with { StatusDamage = [], Spreads = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 8, SkillStatuses = true }] } }, "bad-sim-spread", "simulation.spreads[0].skillStatuses"),
+        ["debuff pass-on with skillStatuses"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "hit", Total = Pack.Stats[0].ID, Duration = 10, Period = 1 }], PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 25, SkillStatuses = true }] } }, "bad-sim-pass-on", "simulation.passOns[0].skillStatuses"),
         ["debuff pass-on with a shareStat"] = (() => Pack with { Simulation = Pack.Simulation with { TalentDamage = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "hit", Total = Pack.Stats[0].ID, Duration = 10, Period = 1 }], PassOns = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 25, ShareStat = Pack.Stats[0].ID }] } }, "bad-sim-pass-on", "simulation.passOns[0].status"),
         ["spread unknown talent"] = (() => Pack with { Simulation = Pack.Simulation with { Spreads = [new() { Talent = "nobody", Within = 8, Every = 15 }] } }, "bad-sim-spread", "simulation.spreads[0].talent"),
         ["spread twice for a talent"] = (() => Pack with { Simulation = Pack.Simulation with { Spreads = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 8 }, new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 10 }] } }, "bad-sim-spread", "simulation.spreads[1].talent"),
@@ -694,7 +707,35 @@ public sealed class PackValidatorTests
         var spreading = Pack with { Simulation = Pack.Simulation with { Spreads = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 8, Every = 15 }] } };
         var loadedSpread = PackValidator.Load(PackWriter.Write(spreading));
         Assert.Empty(loadedSpread.Diagnostics);
-        Assert.Equal((8d, 15d), (loadedSpread.Compiled!.Pack.Simulation.Spreads[0].Within, loadedSpread.Compiled.Pack.Simulation.Spreads[0].Every));
+        Assert.Equal((8d, 15d, false), (loadedSpread.Compiled!.Pack.Simulation.Spreads[0].Within, loadedSpread.Compiled.Pack.Simulation.Spreads[0].Every, loadedSpread.Compiled.Pack.Simulation.Spreads[0].SkillStatuses));
+        // ADR 0015: a spread and a status pass-on that take skills' own statuses keep the field; without it, it isn't written.
+        var copying = Pack with
+        {
+            Simulation = Pack.Simulation with
+            {
+                StatusDamage = [new() { Status = "burning", Tick = Pack.Stats[0].ID, Period = 1 }, new() { Status = "bleeding", Tick = Pack.Stats[0].ID, Period = 1 }],
+                Spreads = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Within = 8, Every = 15, SkillStatuses = true }],
+                PassOns = [new() { Talent = Pack.Simulation.Triggers[1].Talent, Within = 10, Status = "any", Share = 0.5, SkillStatuses = true }]
+            }
+        };
+        // ADR 0016: a skill's area keeps its output through a write and load.
+        var withArea = Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Area = Pack.Simulation.Skills[0].Cooldown, AreaFull = Pack.Simulation.Skills[0].Cooldown, AreaEdge = 0.5 }] } };
+        var loadedArea = PackValidator.Load(PackWriter.Write(withArea));
+        Assert.Empty(loadedArea.Diagnostics);
+        var areaRule = loadedArea.Compiled!.Pack.Simulation.Skills[0];
+        Assert.Equal((Pack.Simulation.Skills[0].Cooldown, Pack.Simulation.Skills[0].Cooldown, 0.5), (areaRule.Area, areaRule.AreaFull, areaRule.AreaEdge));
+        // ADR 0017: a control skill with an area and no impact keeps its field.
+        var control = Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Rate = "", Impact = "", Status = "shocked", ControlStatus = true, Area = Pack.Simulation.Skills[0].Window }] } };
+        var loadedControl = PackValidator.Load(PackWriter.Write(control));
+        Assert.Empty(loadedControl.Diagnostics);
+        Assert.True(loadedControl.Compiled!.Pack.Simulation.Skills[0].ControlStatus);
+        var copyingBytes = PackWriter.Write(copying);
+        var loadedCopying = PackValidator.Load(copyingBytes);
+        Assert.Empty(loadedCopying.Diagnostics);
+        Assert.True(loadedCopying.Compiled!.Pack.Simulation.Spreads[0].SkillStatuses);
+        Assert.True(loadedCopying.Compiled.Pack.Simulation.PassOns[0].SkillStatuses);
+        Assert.Contains("\"skillStatuses\": true", System.Text.Encoding.UTF8.GetString(copyingBytes[PackFiles.Simulation].Span), StringComparison.Ordinal);
+        Assert.DoesNotContain("skillStatuses", System.Text.Encoding.UTF8.GetString(PackWriter.Write(spreading)[PackFiles.Simulation].Span), StringComparison.Ordinal);
         var blasting = Pack with { Simulation = Pack.Simulation with { StatusDamage = [new() { Status = "bleeding", Tick = Pack.Stats[0].ID, Period = 1 }], Blasts = [new() { Talent = Pack.Simulation.Triggers[0].Talent, On = "headshot_kill", Amount = Pack.Stats[0].ID, Within = 5, Status = "bleeding", StatusDuration = 8 }] } };
         var loadedBlast = PackValidator.Load(PackWriter.Write(blasting));
         Assert.Empty(loadedBlast.Diagnostics);

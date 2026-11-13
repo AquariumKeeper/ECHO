@@ -34,6 +34,7 @@ public sealed record SimulationEventRow(DummyEvent Event, string Slot)
         DummyEventKind.EnemyMarked => "Enemy Marked",
         DummyEventKind.DamageRedirected => "Damage Redirected",
         DummyEventKind.TrapSprung => "Trap Sprung",
+        DummyEventKind.SkillAreaHit => "Skill Area Hit",
         DummyEventKind.ShieldRaised => "Shield Raised",
         DummyEventKind.ShieldHit => "Shield Hit",
         DummyEventKind.ShieldBreak => "Shield Break",

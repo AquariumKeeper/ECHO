@@ -3,7 +3,7 @@
 The planner's numbers come from sources that sometimes disagree.
 One reading on the item card or stats screen usually
 settles it. Values below are for the bundled pack
-(`y8s3.3-pve.2026-11-11.r100.candidate.1`).
+(`y8s3.3-pve.2026-11-13.r110.candidate.1`).
 
 ## How to report a reading
 

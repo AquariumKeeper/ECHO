@@ -1,99 +1,231 @@
 {
   "format": "shade-tech.planner-v2-assembly",
   "version": 1,
-  "plan_sha256": "1f5f535ea2cd2d5364b78b3161c60912bb0632c624b03b154449c8dc926e17ea",
-  "pack_manifest_sha256": "80b7eaae787c0eb494729c69e075312da309184d952d1eb24e500b1792b82495",
+  "plan_sha256": "bbba3f7f79af75b1c2f37b1198f12dd437ce674ac522799c3ca23c58d33af2fb",
+  "pack_manifest_sha256": "55a08bec76063163ee0fbd96b146d217e229fd163ed0503a6dad6d8149f122ac",
   "complete_pack_assembled": true,
   "complete_native_source_derivation": false,
   "consumer_accepted": false,
   "runtime_verified": false,
   "outputs": {
     "support/base-pack/manifest.json": {
-      "sha256": "97dede892860c345ed9e58170b3d20c4c09840d4c104ab407f0d32c64ccfe90a",
-      "bytes": 1828
+      "sha256": "4aaeaa76099fa053266561642026cc81a676889c98379a7004f47dff3dda54b4",
+      "bytes": 1829
     },
     "support/base-pack/presentation.json": {
       "sha256": "ff5c53ebe81229b726e2e427c934d3353e0316f5a960aac6c5682bac78452047",
       "bytes": 20263
     },
     "support/base-pack/provenance.md": {
-      "sha256": "4fcd221c0cfa9457cbc5d17d8b95f93ad0a73bf674ee96c8577a3a99743473df",
-      "bytes": 223814
+      "sha256": "b67fc0b708390119e6e6aec4d54591272ecd1e7aa4aa2fec2f8082e46ae81138",
+      "bytes": 231896
     },
     "support/base-pack/share-codes.json": {
       "sha256": "7ad28718e2f57edbee9512fcbe778df324b3a931ccccf976efaeeb7fa02c4087",
       "bytes": 209
     },
     "support/base-pack/simulation.json": {
-      "sha256": "1493ca75a659538ab58e10c6da7edbc0731e113a8faff3182c33843002ca5937",
-      "bytes": 44289
+      "sha256": "4573fbb9c8769aac7ed002dfbcf4a4a23d1a31efa4756b1d5bd82ed57ce8ab8f",
+      "bytes": 44890
     },
     "support/base-pack/rules.json": {
-      "sha256": "1aae5ed9e3bfe70dbabbd272702c7f21778b55eeb21d4498ea40c87336067558",
-      "bytes": 2564945
+      "sha256": "369bd8e81a529c3e4a4b3bf43170f58a795518ceb9d7a5a2bea0d740edfac17a",
+      "bytes": 2569291
     },
     "support/evidence/packet.json": {
-      "sha256": "a6ffd8473df4cf228430e476b2a60c974fd5e89d898bd58dd65b10fcfffafacb",
-      "bytes": 1690
+      "sha256": "e6d18d7ee3b616b4ec87e4aaf314c862d15b630a966df7917c76c69c80813904",
+      "bytes": 7123
     },
-    "support/evidence/docs/R88_R91_SOURCE_REVIEW.md": {
-      "sha256": "12677146d19d9558f9105ff5b567f8de890a6c77b4105072a1876cae994596d6",
-      "bytes": 10878
+    "support/evidence/docs/R107_SOURCE_REVIEW.md": {
+      "sha256": "1bd595ce18ffda44e6e4aa553b33f30b1d0f7d12dcc6c4815a2adb36bc7ea708",
+      "bytes": 5047
     },
-    "support/evidence/sources/skillscript_gearset_contagion_4pc.mskillscriptgraph": {
-      "sha256": "0bce4ed5c193c82b52b2269857941ff44cff4a25719ded856fcb57094751a65f",
-      "bytes": 3653
+    "support/evidence/docs/R110_SOURCE_REVIEW.md": {
+      "sha256": "692d7d3d4e631d81ac2efaaffd547a2d0a7b67d984bfe2f4f2109de65c2ce9f1",
+      "bytes": 7470
     },
-    "support/evidence/sources/skillscript_gearset_contagion_4pc.mskillscriptgraph.json": {
-      "sha256": "4bf4d36033a42e869758ba70c9f222e08b1de8448d210d11b6bf07ab8f523dc7",
-      "bytes": 852
+    "support/evidence/sources/blind.mstatuseffect": {
+      "sha256": "432907911b149f7e003f992010c1f5fa7511e624cf91f3d52c58920b515c4fa3",
+      "bytes": 1392
     },
-    "support/evidence/sources/talent_dictionary.mdict": {
-      "sha256": "1a7c4a6426bc66888fbfff4b5b176af2b94ceb15ed03cadf83ec104970d41d14",
-      "bytes": 292001
+    "support/evidence/sources/blind.mstatuseffect.json": {
+      "sha256": "a53129b8949924e6655e1ade4e668a20d24f4877bcc1e827300a27045f634b73",
+      "bytes": 843
     },
-    "support/evidence/sources/talent_dictionary.mdict.json": {
-      "sha256": "42171b7f09b8cf7ed09ce66c437674e69797c3cbfce79b100bb684d0ceb8fb02",
-      "bytes": 929
+    "support/evidence/sources/confuse.mstatuseffect": {
+      "sha256": "0df473164d08adc6d32a2b28febb6b76b1078a7f69b36719d2239312ee95c21e",
+      "bytes": 1312
     },
-    "support/evidence/sources/talent_gearset_contagion_4pc.mtalent": {
-      "sha256": "70422eed8add7ce6701b7c30e7d50f3b9c6019b7b2dddd509cfb3f7ddcf0180a",
-      "bytes": 1992
+    "support/evidence/sources/confuse.mstatuseffect.json": {
+      "sha256": "c728a15c645e1f21ed4438b53930a25590ff59d98cc14ebe566655481cb84e62",
+      "bytes": 846
     },
-    "support/evidence/sources/talent_gearset_contagion_4pc.mtalent.json": {
-      "sha256": "e6a0cc30695c48f03066c15790bc170867a0b4ec8a0588360d9de80c7f223bae",
-      "bytes": 855
+    "support/evidence/sources/confuse_shieldbreak.mstatuseffect": {
+      "sha256": "a25ccc7e852d9d8ada97bea221c6475beffae634e0572a23b146368c07c9dea6",
+      "bytes": 561
     },
-    "support/evidence/sources/talent_gearset_contagion_chest.mtalent": {
-      "sha256": "7c98e80740d77bb70834116c08411e1d6e226049f06f5925d62411c4a2dd5203",
-      "bytes": 3535
-    },
-    "support/evidence/sources/talent_gearset_contagion_chest.mtalent.json": {
-      "sha256": "a46562ff9c17efd2a5ac86d6c5f912f60feb33e9dd38fa425e56b8a64f855e56",
+    "support/evidence/sources/confuse_shieldbreak.mstatuseffect.json": {
+      "sha256": "e11a7e8af8ca97fbc1631043e6d7e5eba10f0f5202b6393fcf4eaa9890f497cd",
       "bytes": 857
+    },
+    "support/evidence/sources/ensnare.mstatuseffect": {
+      "sha256": "b70372f257e8b9f971c2f0c22f03867245d958d1a0705eaf269f56addef22a7b",
+      "bytes": 1290
+    },
+    "support/evidence/sources/ensnare.mstatuseffect.json": {
+      "sha256": "287186bc7820bde54f8551adad453e76a7f12bf48357bc645379b3440ec5161a",
+      "bytes": 846
+    },
+    "support/evidence/sources/player_skill_firefly_base.mbehavior": {
+      "sha256": "b74258c1ac3025d7cbedbb3543eb36b798783576dc89c6949f27e03da34e8ba2",
+      "bytes": 27637
+    },
+    "support/evidence/sources/player_skill_firefly_base.mbehavior.json": {
+      "sha256": "30e6116f654ba69abec481e4670b0dc6cf1460ff9fb98a671c71dc683f1ee09d",
+      "bytes": 860
+    },
+    "support/evidence/sources/player_skill_firefly_payload_drop.mskillscriptgraph": {
+      "sha256": "b0c525ee69c4e8a0b46d43ff1b8e69fc6c84a93191aef308a64a1e4f41ad6233",
+      "bytes": 15147
+    },
+    "support/evidence/sources/player_skill_firefly_payload_drop.mskillscriptgraph.json": {
+      "sha256": "b8192b560d1de8e758547b33dbca5997f2154692f4b10a0a26fa7a8598f08e7c",
+      "bytes": 851
+    },
+    "support/evidence/sources/player_skill_trap_base.mbehavior": {
+      "sha256": "30b8a589211aaf4b63e0245273898f24114a361d43c48811d6e53235e167bd44",
+      "bytes": 792
+    },
+    "support/evidence/sources/player_skill_trap_base.mbehavior.json": {
+      "sha256": "cd79f881d699b914062365c1ca17992137d3c850b2363c55d57d08962eae378d",
+      "bytes": 853
+    },
+    "support/evidence/sources/player_skill_trap_deathaction.mbehavior": {
+      "sha256": "806a1fffe998314372878b3812a5923887a086286f881c2478532956e4b87c5e",
+      "bytes": 860
+    },
+    "support/evidence/sources/player_skill_trap_deathaction.mbehavior.json": {
+      "sha256": "e804edef29b66da1c819e96685613f14d00bbb77269a6180e206647f98b31583",
+      "bytes": 860
+    },
+    "support/evidence/sources/player_trap_shock.mnpc": {
+      "sha256": "165856c26737c201162a2322a53dd40dc63423a0ea6bcf20f899fd8c5b9e328b",
+      "bytes": 312
+    },
+    "support/evidence/sources/player_trap_shock.mnpc.json": {
+      "sha256": "1ad8f779249c106b5c55e11a98c9a53ee06d605f18e9242a870987e5c8271c72",
+      "bytes": 838
+    },
+    "support/evidence/sources/player_weapon_skill_chemlauncher_weapon.mweapon": {
+      "sha256": "e81cdeb80996f7a0798c4ad383cb0835e97608136e4d7862243089b930a13373",
+      "bytes": 4870
+    },
+    "support/evidence/sources/player_weapon_skill_chemlauncher_weapon.mweapon.json": {
+      "sha256": "7c6e1dea9172ea9effeea988c59cf4a14aa6e3d54c46da7e34fc8cc02e0848b0",
+      "bytes": 866
+    },
+    "support/evidence/sources/shock.mstatuseffect": {
+      "sha256": "a7255882799c2404c1f9690515b00fff208db3e55dc9596bd41f947d4b99d803",
+      "bytes": 1439
+    },
+    "support/evidence/sources/shock.mstatuseffect.json": {
+      "sha256": "69b0dfee704ec06e6d26d336d9e8db8fde225af9c7b1e33b515e06e11113bf24",
+      "bytes": 843
+    },
+    "support/evidence/sources/skill_player_chem_heal.mskillscriptgraph": {
+      "sha256": "39264bcdfed1f83449b6ca6358d541f81b50ff86e6ddb0264fdca27cf72a48d7",
+      "bytes": 12450
+    },
+    "support/evidence/sources/skill_player_chem_heal.mskillscriptgraph.json": {
+      "sha256": "08c97064c3fc67a73ed3c9c68d0c20fadf8b7087eb80c4598929b274c7643138",
+      "bytes": 842
+    },
+    "support/evidence/sources/skill_player_pulse_banshee.mskillscriptgraph": {
+      "sha256": "d2919eace8d1d15042f9b6d5c6066b3ae912efe2a10301f122221bb5614c0b02",
+      "bytes": 14769
+    },
+    "support/evidence/sources/skill_player_pulse_banshee.mskillscriptgraph.json": {
+      "sha256": "b8ac48423dd9ba38c16fcc7fb4ecb2643af1203a9bbdbba46eea2c4c28dc016f",
+      "bytes": 847
+    },
+    "support/evidence/sources/skill_player_trap_deploy.mskillscriptgraph": {
+      "sha256": "ac5e6a0671d462895b43f867385b3f859fe8b91aaf22b553c9758e7da48d26df",
+      "bytes": 32474
+    },
+    "support/evidence/sources/skill_player_trap_deploy.mskillscriptgraph.json": {
+      "sha256": "33893af0fc5536005547393fef20f53acd1ffe50f1422f316397f7057430bdd7",
+      "bytes": 844
+    },
+    "support/evidence/sources/skill_player_trap_explode.mskillscriptgraph": {
+      "sha256": "fcb48711d84ee0eeac65fce69091fd1c45cc14d9e38948373060738c8ec5108f",
+      "bytes": 32338
+    },
+    "support/evidence/sources/skill_player_trap_explode.mskillscriptgraph.json": {
+      "sha256": "67005f54421dcaac6642d662a99c975669096c995f6ec9704efb76d3f9bab346",
+      "bytes": 846
+    },
+    "support/evidence/sources/skill_player_trap_mine_deploy.mskillscriptgraph": {
+      "sha256": "85c006a23570f3cdf0fb0a2929ff0481c2bc127c414240a388a2855c256e981f",
+      "bytes": 17167
+    },
+    "support/evidence/sources/skill_player_trap_mine_deploy.mskillscriptgraph.json": {
+      "sha256": "f954fec462ed4bf42c3094824d2d664e9a1d0269328b85d79f67f1c2f1468a4d",
+      "bytes": 848
+    },
+    "support/evidence/sources/skill_player_trap_preexplode.mskillscriptgraph": {
+      "sha256": "873f08b3dcb5963018409e188dda47f60228e9c02fc44e2abc0af8b032f6a9a0",
+      "bytes": 9213
+    },
+    "support/evidence/sources/skill_player_trap_preexplode.mskillscriptgraph.json": {
+      "sha256": "303908579da95f73747701513009dccf7ebba6fe069b99e4dcef86df4403e887",
+      "bytes": 846
+    },
+    "support/evidence/sources/skill_tier_pulse_banshee.mskilltier": {
+      "sha256": "13e3ee4180400af226ca6ae9815c7a09a7e44d95d4493b27558953966df770e0",
+      "bytes": 3947
+    },
+    "support/evidence/sources/skill_tier_pulse_banshee.mskilltier.json": {
+      "sha256": "73d3d0c7d72b14acd20d456c7d95d91bec01954160eeea8527b9b44bf75868a5",
+      "bytes": 853
+    },
+    "support/evidence/sources/statuseffect_ensnare.mcompoundnode": {
+      "sha256": "beccf061a2bb1b4e543ad9393c9ce86de55176df2836e52edc230a583a91f5f4",
+      "bytes": 8524
+    },
+    "support/evidence/sources/statuseffect_ensnare.mcompoundnode.json": {
+      "sha256": "276db7169313dcfca273c9d72f42df0e8393e9b9b2259737d5bbcfc7114448e0",
+      "bytes": 838
+    },
+    "support/evidence/sources/statuseffecttalentrule_ensnare.mtalentrules": {
+      "sha256": "52876037ec9b1a73595f69c27527bd11ab42b8513ab717969e80d52829bdb7a6",
+      "bytes": 4456
+    },
+    "support/evidence/sources/statuseffecttalentrule_ensnare.mtalentrules.json": {
+      "sha256": "d8d1835272456ee5ba5bbeacdf82205f7102ac5c57752d37e2b9f887fc259672",
+      "bytes": 867
     },
     "pack/presentation.json": {
       "sha256": "ff5c53ebe81229b726e2e427c934d3353e0316f5a960aac6c5682bac78452047",
       "bytes": 20263
     },
     "pack/provenance.md": {
-      "sha256": "3e05dcd44c1da351143efe271a2d7129d72062f3f98acfb3291798497bd3c12c",
-      "bytes": 224844
+      "sha256": "0b1e2781722ef8dbdd7f2bb0c96754079ac135c8382f8ae04f13292077b4d1ca",
+      "bytes": 232893
     },
     "pack/share-codes.json": {
       "sha256": "7ad28718e2f57edbee9512fcbe778df324b3a931ccccf976efaeeb7fa02c4087",
       "bytes": 209
     },
     "pack/simulation.json": {
-      "sha256": "cb396edfef0f2b7ab81394f23849f8754ee934bfbc9aa9c557e92ae098bbe012",
-      "bytes": 44353
+      "sha256": "af9c430f6de586464964b6cac43a6124efe3f36fa49a7ce260a2b740620575f0",
+      "bytes": 45068
     },
     "pack/rules.json": {
-      "sha256": "862b2abaf16d3892ef4fe3073c7cfec9bce5f7f953a38e0b7502a4b5bfd7b219",
-      "bytes": 2564581
+      "sha256": "34b6745860669abbfc363a0aa2164ccf48e81cb4c5ae3b5eb7d50fe351a3d12d",
+      "bytes": 2571726
     },
     "pack/manifest.json": {
-      "sha256": "80b7eaae787c0eb494729c69e075312da309184d952d1eb24e500b1792b82495",
+      "sha256": "55a08bec76063163ee0fbd96b146d217e229fd163ed0503a6dad6d8149f122ac",
       "bytes": 1829
     },
     "pack/assets/original-slots/slot_backpack.png": {
@@ -129,24 +261,24 @@
       "bytes": 1712
     },
     "overlay-plan.json": {
-      "sha256": "2ac24613d8359fb744f6a12c87b24d60c055642af6e0c129be28caf0df707dce",
-      "bytes": 5781
+      "sha256": "ad2e81172bf79f99378f13b4fa2d5d601db1faa06b7dcc6216192429241a1085",
+      "bytes": 122419
     },
     "support/intermediate-manifest.json": {
-      "sha256": "9313f220e813e0d7d775a9b2d68ba4d1c271828be07068bd7a8e25799a50af36",
-      "bytes": 1832
+      "sha256": "8704ca9d72fdf280980e7a470f389b7f33a12073f5f9cfb641dc6255b0a6fdb2",
+      "bytes": 1833
     },
     "reports/artwork.json": {
-      "sha256": "3e0a51221091aab7b6bb925d87ff8e1203a93dab35d493f040a5d605490fcd30",
+      "sha256": "8de7975be02432ef74f9b75aa60e4264f3f504142e79d6b448f7b4c8dfa85e8b",
       "bytes": 11813
     },
     "composition-plan.json": {
-      "sha256": "1f5f535ea2cd2d5364b78b3161c60912bb0632c624b03b154449c8dc926e17ea",
+      "sha256": "bbba3f7f79af75b1c2f37b1198f12dd437ce674ac522799c3ca23c58d33af2fb",
       "bytes": 506
     },
     "reports/talent-overlay.json": {
-      "sha256": "2f82493574d611ea7d3b32cfef3d0fd1a59d221826eb798236a4cfcc3b839737",
-      "bytes": 6360
+      "sha256": "851ea9d46725e825d449e9ebd5fa02c921704240a6fc891e015f201f117a043a",
+      "bytes": 123138
     }
   }
 }

@@ -3,145 +3,1618 @@
   "format": "shade-tech.planner-talent-rule-candidate",
   "version": 1,
   "implementation_sha256": "eef4f31d3d28755183f54ee93d5f9250dd280f5e17508c610accc5d93ed89214",
-  "base_manifest_sha256": "97dede892860c345ed9e58170b3d20c4c09840d4c104ab407f0d32c64ccfe90a",
-  "overlay_plan_sha256": "2ac24613d8359fb744f6a12c87b24d60c055642af6e0c129be28caf0df707dce",
-  "evidence_packet_sha256": "a6ffd8473df4cf228430e476b2a60c974fd5e89d898bd58dd65b10fcfffafacb",
-  "pack_manifest_sha256": "80b7eaae787c0eb494729c69e075312da309184d952d1eb24e500b1792b82495",
-  "candidate_version": "y8s3.3-pve.2026-11-11.r100.candidate.1",
+  "base_manifest_sha256": "4aaeaa76099fa053266561642026cc81a676889c98379a7004f47dff3dda54b4",
+  "overlay_plan_sha256": "ad2e81172bf79f99378f13b4fa2d5d601db1faa06b7dcc6216192429241a1085",
+  "evidence_packet_sha256": "e6d18d7ee3b616b4ec87e4aaf314c862d15b630a966df7917c76c69c80813904",
+  "pack_manifest_sha256": "55a08bec76063163ee0fbd96b146d217e229fd163ed0503a6dad6d8149f122ac",
+  "candidate_version": "y8s3.3-pve.2026-11-13.r110.candidate.1",
   "changes": [
     {
       "document": "simulation.json",
-      "collection": "passOns",
+      "collection": "skills",
       "op": "replace",
       "match": {
-        "talent": "gear_talent_indirect_transmission"
+        "skill": "skill_shock_trap"
       },
       "before": {
-        "talent": "gear_talent_indirect_transmission",
-        "within": 10,
-        "status": "any",
-        "share": 0.5,
-        "to": "all"
+        "skill": "skill_shock_trap",
+        "window": "shock_duration_seconds",
+        "cooldown": "cooldown_seconds",
+        "status": "shocked"
       },
       "after": {
-        "talent": "gear_talent_indirect_transmission",
-        "withinStat": "indirect_transmission_radius",
-        "status": "any",
-        "shareStat": "indirect_transmission_refresh",
-        "to": "all"
+        "skill": "skill_shock_trap",
+        "window": "shock_duration_seconds",
+        "cooldown": "cooldown_seconds",
+        "status": "shocked",
+        "controlStatus": true,
+        "area": "radius_meters"
       },
       "evidence_paths": [
-        "docs/R88_R91_SOURCE_REVIEW.md",
-        "sources/talent_gearset_contagion_4pc.mtalent",
-        "sources/talent_gearset_contagion_chest.mtalent",
-        "sources/skillscript_gearset_contagion_4pc.mskillscriptgraph",
-        "sources/talent_dictionary.mdict"
+        "docs/R110_SOURCE_REVIEW.md",
+        "docs/R107_SOURCE_REVIEW.md",
+        "sources/skill_player_trap_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_mine_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_preexplode.mskillscriptgraph",
+        "sources/skill_player_trap_explode.mskillscriptgraph",
+        "sources/player_skill_trap_base.mbehavior",
+        "sources/player_skill_trap_deathaction.mbehavior",
+        "sources/player_trap_shock.mnpc",
+        "sources/skill_player_chem_heal.mskillscriptgraph",
+        "sources/player_weapon_skill_chemlauncher_weapon.mweapon",
+        "sources/statuseffect_ensnare.mcompoundnode",
+        "sources/statuseffecttalentrule_ensnare.mtalentrules",
+        "sources/skill_player_pulse_banshee.mskillscriptgraph",
+        "sources/skill_tier_pulse_banshee.mskilltier",
+        "sources/player_skill_firefly_payload_drop.mskillscriptgraph",
+        "sources/player_skill_firefly_base.mbehavior",
+        "sources/shock.mstatuseffect",
+        "sources/confuse.mstatuseffect",
+        "sources/confuse_shieldbreak.mstatuseffect",
+        "sources/ensnare.mstatuseffect",
+        "sources/blind.mstatuseffect"
       ],
-      "rationale": "talent_gearset_contagion_4pc_range 10 m and refreshpercentage 0.5, each raised by the chest talent (Proliferation) by 5 m and 0.25; the four-piece stats indirect_transmission_radius and indirect_transmission_refresh hold the same 10 or 15 and 50% or 75% (R91, R100).",
-      "position": 1
+      "rationale": "Each Shock Trap mine shocks every agent within its radius as it blasts (R110).",
+      "position": 9
     },
     {
       "document": "rules.json",
-      "collection": "talents",
+      "collection": "skills",
       "op": "replace",
       "match": {
-        "id": "gear_talent_indirect_transmission"
+        "id": "skill_shock_trap"
       },
       "before": {
-        "id": "gear_talent_indirect_transmission",
-        "name": "Indirect Transmission",
-        "description": "On kill: Spread status effects of that enemy to all enemies within 10m. Refresh 50% of status effect durations.",
-        "modeledBySets": [
-          "gear_set_eclipse_protocol"
+        "id": "skill_shock_trap",
+        "name": "Shock Trap",
+        "family": "trap",
+        "upgrade": {
+          "name": "Expertise",
+          "description": "Installed grade on this exact variant, 0-30. Source Skill Info!R31:R32 (TU27): +1% Shock Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs.",
+          "maxRank": 30
+        },
+        "previewOutputs": [
+          {
+            "id": "effective_skill_tier",
+            "name": "Effective Skill Tier",
+            "description": "Modeled tier floored and capped at 0-6, plus the Overcharge bonus, up to 7.",
+            "format": "integer",
+            "formula": "overcharged_skill_tier"
+          },
+          {
+            "id": "cooldown_seconds",
+            "name": "Estimated Ordinary Cooldown (s)",
+            "description": "Community level-40 ordinary PvE cooldown reference from Skill List!C43:J43 (TU27 workbook). Base 60s, divided by one plus Skill Haste and Skill Efficiency counted once. Only explicitly reviewed tier Skill Haste enters the additive haste pool; dashed entries contribute zero. Nonpositive speed yields zero as an invalid-boundary estimate, not readiness. Excludes charge refill, skill mods, skill Expertise, timers, use/cancellation/destruction, deployment delays and actual resets. Existing conditional reset capability remains separate. Source baselines and stacking require live verification.",
+            "format": "decimal",
+            "formula": "1 + effective_skill_haste > 0 ? 60 / (1 + effective_skill_haste) : 0"
+          },
+          {
+            "id": "duration_seconds",
+            "name": "Estimated Duration Reference (s)",
+            "description": "Community level-40 PvE duration reference from Skill List!C47:J47 (TU27 workbook). Source tier duration and Combined Skill Duration (Skill Efficiency once). Legal permanent Nanite duration reductions apply only to reviewed healing variants. A source duration capacity estimate, not time remaining, fuel/ammo consumption, health-based survival, uptime, talent-buff duration or DPS. No skill Expertise. Source values and stacking require live verification.",
+            "format": "decimal",
+            "formula": "60 * (1 + skill_mod_duration) * max(0, 1 + effective_skill_duration)"
+          },
+          {
+            "id": "deployable_capacity",
+            "name": "Estimated Trap Capacity",
+            "description": "Integral community PvE capacity reference from Skill List!C44:J44; reviewed additive tier table. Independent of player ammo, magazine size, damage, repair and Skill Efficiency. Maximum capacity, not current count, targets hit or events. No mods or Expertise; live verification required.",
+            "format": "integer",
+            "formula": "max(0, floor(6 + curve('skill_shock_trap_deployable_capacity_tiers', overcharged_skill_tier)))"
+          },
+          {
+            "id": "radius_meters",
+            "name": "Estimated Radius Reference (m)",
+            "description": "Community level-40 PvE Shock Radius reference from Skill List!C45:J45 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. This is a radius reference, not area, targets hit, range detection, damage falloff or uptime. Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
+            "format": "decimal",
+            "formula": "2.5 * (1 + curve('skill_shock_trap_radius_meters_tiers', overcharged_skill_tier) + skill_mod_radius)"
+          },
+          {
+            "id": "shock_duration_seconds",
+            "name": "Estimated Shock Duration Reference (s)",
+            "description": "Community unresisted PvE Shock duration reference from Skill List!C46:J46; exact tier curve and Combined Status Effects (Skill Efficiency once). Generic Skill Duration, repair, damage and Nanite do not scale status duration. No enemy resistance, immunity, application, remaining timer or PvP diminishing returns. No mods or Expertise; live verification required.",
+            "format": "decimal",
+            "formula": "3 * (1 + curve('skill_shock_trap_shock_duration_seconds_tiers', overcharged_skill_tier)) * max(0, 1 + effective_status_effects + status_effect_duration)"
+          },
+          {
+            "id": "expertise_bonus_reference",
+            "name": "Installed Expertise Shock Duration Bonus Reference",
+            "description": "Installed grade on this exact variant, 0-30. Source Skill Info!R31:R32 (TU27): +1% Shock Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs. This is the source increment, not a separate multiplier on the final estimate or a claim about caps.",
+            "format": "percent",
+            "formula": "skill_upgrade_rank * 0.01",
+            "when": "skill_upgrade_rank > 0"
+          },
+          {
+            "id": "overcharge_radius_meters",
+            "name": "Overcharge Estimated Radius Reference (m)",
+            "description": "Hypothetical level-40 PvE Overcharge geometry from Skill List!K45 (TU27 workbook). Replaces ordinary tier scaling with the exact source percentage; a reviewed dash contributes zero bonus. Retains the ordinary meter or degree reference interpretation. Independent of player bonuses, Skill Efficiency, installed Expertise, skill mods, damage and healing assumptions. No area, enemies inside a cone, detection, target hits, damage falloff, recipients, amplification, charge-dependent shape, duration or activation is inferred. Ordinary outputs remain unchanged. Source values and geometry interpretation require live-game verification.",
+            "format": "decimal",
+            "formula": "2.5 * (1 + 0.7)",
+            "when": "context_value('overcharge_geometry_preview') == 1"
+          },
+          {
+            "id": "overcharge_deployable_capacity",
+            "name": "Overcharge Estimated Trap Capacity",
+            "description": "Hypothetical level-40 PvE Overcharge maximum capacity from Skill List!K44 (TU27 workbook). Adds 12 to the base count of 6, replacing the ordinary tier addition; this is not a percentage or an extra bonus on top of tier 6. Independent of player ammo, magazine size, Skill Efficiency, installed Expertise, skill mods and other comparison assumptions. Maximum count only: no current charges, remaining ammo, refill time, self-revive consumption, simultaneous deployment, zones detected, targets hit, event counts or activation is inferred. Ordinary outputs and stats remain unchanged. Source values and capacity interpretation require live-game verification.",
+            "format": "integer",
+            "formula": "max(0, floor(6 + 12))",
+            "when": "context_value('overcharge_capacity_preview') == 1"
+          },
+          {
+            "id": "overcharge_duration_seconds",
+            "name": "Overcharge Estimated Duration Reference (s)",
+            "description": "Hypothetical level-40 PvE Overcharge lifetime from Skill List!K47 (TU27 workbook). Replaces the ordinary tier lifetime bonus with 0%; preserves Combined Skill Duration (Skill Efficiency once) and the existing reviewed Nanite duration reduction where applicable. A reviewed dash contributes zero tier bonus. Deployment, cloud and effect lifetimes remain separate from status duration and recipient buff duration. Lifetime reference only: no time remaining, charge/fuel depletion, survival, event count, ticks, uptime, DPS or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "60 * (1 + 0) * max(0, 1 + effective_skill_duration)",
+            "when": "context_value('overcharge_lifetime_preview') == 1"
+          },
+          {
+            "id": "overcharge_shock_duration_seconds",
+            "name": "Overcharge Estimated Shock Duration Reference (s)",
+            "description": "Hypothetical unresisted level-40 PvE Overcharge status duration from Skill List!K46 (TU27 workbook). Replaces the ordinary tier bonus with 200%; preserves Combined Status Effects (Skill Efficiency once), additive Burn Duration for burn and the separate reviewed Trauma Specialist multiplier for bleed. A reviewed dash contributes zero tier bonus. Separate from deployment lifetime and recipient buff duration. No actual status application, resistance, immunity, PvP diminishing returns, ticks, lifetime damage, time remaining or activation is inferred. Generic Skill Duration, Nanite, damage, repair, installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "3 * (1 + 2.0) * max(0, 1 + effective_status_effects + status_effect_duration)",
+            "when": "context_value('overcharge_status_preview') == 1"
+          },
+          {
+            "id": "overcharge_cooldown_seconds",
+            "name": "Overcharge Estimated Ordinary Cooldown (s)",
+            "description": "Hypothetical level-40 PvE Overcharge recovery from Skill List!K43 (TU27 workbook). Replaces the ordinary tier haste bonus with 0%; preserves Combined Skill Haste (Skill Efficiency once) in the additive recovery-speed pool. A reviewed dash contributes zero tier bonus. Ordinary cooldown and single-ammo recovery remain distinct. Nonpositive recovery speed yields a guarded zero estimate, not readiness. No current timer, Hive charge recovery, full refill, remaining ammo, charge speed, cancellation/destruction, actual reset, deployment delay or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs, cooldown factors and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "1 + effective_skill_haste + 0 > 0 ? 60 / (1 + effective_skill_haste + 0) : 0",
+            "when": "context_value('overcharge_recovery_preview') == 1"
+          }
         ],
-        "coverage": {
-          "status": "partial",
-          "omits": [
-            "Proliferation's 15 m and 75%: a pass-on's reach and share are numbers, so fights pass on within 10 m at 50%; the four-piece stats show 15 m and 75% (R91).",
-            "A skill's own status: the script also records statuses a skill's own agent applies, so the source passes those on too; fights don't (R91)."
-          ],
-          "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (skillscript_gearset_contagion_4pc)"
-        }
+        "modSlots": [
+          {
+            "id": "charge",
+            "name": "Charge Slot",
+            "choices": [
+              {
+                "id": "charge_duration",
+                "name": "Charge: Duration",
+                "description": "Ordinary Trap pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.025,
+                "max": 0.05,
+                "format": "percent",
+                "statName": "Duration"
+              }
+            ]
+          },
+          {
+            "id": "electronics",
+            "name": "Electronics Slot",
+            "choices": [
+              {
+                "id": "electronics_duration",
+                "name": "Electronics: Duration",
+                "description": "Ordinary Trap pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Duration"
+              },
+              {
+                "id": "electronics_radius",
+                "name": "Electronics: Radius",
+                "description": "Ordinary Trap pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_radius",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Radius"
+              }
+            ]
+          }
+        ]
       },
       "after": {
-        "id": "gear_talent_indirect_transmission",
-        "name": "Indirect Transmission",
-        "description": "On kill: Spread status effects of that enemy to all enemies within 10m. Refresh 50% of status effect durations.",
-        "modeledBySets": [
-          "gear_set_eclipse_protocol"
+        "id": "skill_shock_trap",
+        "name": "Shock Trap",
+        "family": "trap",
+        "upgrade": {
+          "name": "Expertise",
+          "description": "Installed grade on this exact variant, 0-30. Source Skill Info!R31:R32 (TU27): +1% Shock Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs.",
+          "maxRank": 30
+        },
+        "previewOutputs": [
+          {
+            "id": "effective_skill_tier",
+            "name": "Effective Skill Tier",
+            "description": "Modeled tier floored and capped at 0-6, plus the Overcharge bonus, up to 7.",
+            "format": "integer",
+            "formula": "overcharged_skill_tier"
+          },
+          {
+            "id": "cooldown_seconds",
+            "name": "Estimated Ordinary Cooldown (s)",
+            "description": "Community level-40 ordinary PvE cooldown reference from Skill List!C43:J43 (TU27 workbook). Base 60s, divided by one plus Skill Haste and Skill Efficiency counted once. Only explicitly reviewed tier Skill Haste enters the additive haste pool; dashed entries contribute zero. Nonpositive speed yields zero as an invalid-boundary estimate, not readiness. Excludes charge refill, skill mods, skill Expertise, timers, use/cancellation/destruction, deployment delays and actual resets. Existing conditional reset capability remains separate. Source baselines and stacking require live verification.",
+            "format": "decimal",
+            "formula": "1 + effective_skill_haste > 0 ? 60 / (1 + effective_skill_haste) : 0"
+          },
+          {
+            "id": "duration_seconds",
+            "name": "Estimated Duration Reference (s)",
+            "description": "Community level-40 PvE duration reference from Skill List!C47:J47 (TU27 workbook). Source tier duration and Combined Skill Duration (Skill Efficiency once). Legal permanent Nanite duration reductions apply only to reviewed healing variants. A source duration capacity estimate, not time remaining, fuel/ammo consumption, health-based survival, uptime, talent-buff duration or DPS. No skill Expertise. Source values and stacking require live verification.",
+            "format": "decimal",
+            "formula": "60 * (1 + skill_mod_duration) * max(0, 1 + effective_skill_duration)"
+          },
+          {
+            "id": "deployable_capacity",
+            "name": "Estimated Trap Capacity",
+            "description": "Integral community PvE capacity reference from Skill List!C44:J44; reviewed additive tier table. Independent of player ammo, magazine size, damage, repair and Skill Efficiency. Maximum capacity, not current count, targets hit or events. No mods or Expertise; live verification required.",
+            "format": "integer",
+            "formula": "max(0, floor(6 + curve('skill_shock_trap_deployable_capacity_tiers', overcharged_skill_tier)))"
+          },
+          {
+            "id": "radius_meters",
+            "name": "Estimated Radius Reference (m)",
+            "description": "Community level-40 PvE Shock Radius reference from Skill List!C45:J45 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. Fights use it as the shock's area (ADR 0017): the source's blast is a sphere at each mine with this radius and no falloff, which is also the mine's detection radius; fights centre it on the enemy being shot (R110). Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
+            "format": "decimal",
+            "formula": "2.5 * (1 + curve('skill_shock_trap_radius_meters_tiers', overcharged_skill_tier) + skill_mod_radius)"
+          },
+          {
+            "id": "shock_duration_seconds",
+            "name": "Estimated Shock Duration Reference (s)",
+            "description": "Community unresisted PvE Shock duration reference from Skill List!C46:J46; exact tier curve and Combined Status Effects (Skill Efficiency once). Generic Skill Duration, repair, damage and Nanite do not scale status duration. No enemy resistance, immunity, application, remaining timer or PvP diminishing returns. No mods or Expertise; live verification required. Fights put it on the enemy being shot as the skill is used, and on every enemy within radius_meters, once per use (ADR 0017). The source shocks every agent within each mine's radius as that mine blasts, with no check for a shock already on; a use lays deployable_capacity mines, each blasting once, and fights model one. Mines that reach their lifetime don't blast. The source passes this duration explicitly; how the engine combines it with the status's NPC duration and the enemy's resistance, and the global diminishing returns the status doesn't opt out of, aren't in the data (R110).",
+            "format": "decimal",
+            "formula": "3 * (1 + curve('skill_shock_trap_shock_duration_seconds_tiers', overcharged_skill_tier)) * max(0, 1 + effective_status_effects + status_effect_duration)"
+          },
+          {
+            "id": "expertise_bonus_reference",
+            "name": "Installed Expertise Shock Duration Bonus Reference",
+            "description": "Installed grade on this exact variant, 0-30. Source Skill Info!R31:R32 (TU27): +1% Shock Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs. This is the source increment, not a separate multiplier on the final estimate or a claim about caps.",
+            "format": "percent",
+            "formula": "skill_upgrade_rank * 0.01",
+            "when": "skill_upgrade_rank > 0"
+          },
+          {
+            "id": "overcharge_radius_meters",
+            "name": "Overcharge Estimated Radius Reference (m)",
+            "description": "Hypothetical level-40 PvE Overcharge geometry from Skill List!K45 (TU27 workbook). Replaces ordinary tier scaling with the exact source percentage; a reviewed dash contributes zero bonus. Retains the ordinary meter or degree reference interpretation. Independent of player bonuses, Skill Efficiency, installed Expertise, skill mods, damage and healing assumptions. No area, enemies inside a cone, detection, target hits, damage falloff, recipients, amplification, charge-dependent shape, duration or activation is inferred. Ordinary outputs remain unchanged. Source values and geometry interpretation require live-game verification.",
+            "format": "decimal",
+            "formula": "2.5 * (1 + 0.7)",
+            "when": "context_value('overcharge_geometry_preview') == 1"
+          },
+          {
+            "id": "overcharge_deployable_capacity",
+            "name": "Overcharge Estimated Trap Capacity",
+            "description": "Hypothetical level-40 PvE Overcharge maximum capacity from Skill List!K44 (TU27 workbook). Adds 12 to the base count of 6, replacing the ordinary tier addition; this is not a percentage or an extra bonus on top of tier 6. Independent of player ammo, magazine size, Skill Efficiency, installed Expertise, skill mods and other comparison assumptions. Maximum count only: no current charges, remaining ammo, refill time, self-revive consumption, simultaneous deployment, zones detected, targets hit, event counts or activation is inferred. Ordinary outputs and stats remain unchanged. Source values and capacity interpretation require live-game verification.",
+            "format": "integer",
+            "formula": "max(0, floor(6 + 12))",
+            "when": "context_value('overcharge_capacity_preview') == 1"
+          },
+          {
+            "id": "overcharge_duration_seconds",
+            "name": "Overcharge Estimated Duration Reference (s)",
+            "description": "Hypothetical level-40 PvE Overcharge lifetime from Skill List!K47 (TU27 workbook). Replaces the ordinary tier lifetime bonus with 0%; preserves Combined Skill Duration (Skill Efficiency once) and the existing reviewed Nanite duration reduction where applicable. A reviewed dash contributes zero tier bonus. Deployment, cloud and effect lifetimes remain separate from status duration and recipient buff duration. Lifetime reference only: no time remaining, charge/fuel depletion, survival, event count, ticks, uptime, DPS or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "60 * (1 + 0) * max(0, 1 + effective_skill_duration)",
+            "when": "context_value('overcharge_lifetime_preview') == 1"
+          },
+          {
+            "id": "overcharge_shock_duration_seconds",
+            "name": "Overcharge Estimated Shock Duration Reference (s)",
+            "description": "Hypothetical unresisted level-40 PvE Overcharge status duration from Skill List!K46 (TU27 workbook). Replaces the ordinary tier bonus with 200%; preserves Combined Status Effects (Skill Efficiency once), additive Burn Duration for burn and the separate reviewed Trauma Specialist multiplier for bleed. A reviewed dash contributes zero tier bonus. Separate from deployment lifetime and recipient buff duration. No actual status application, resistance, immunity, PvP diminishing returns, ticks, lifetime damage, time remaining or activation is inferred. Generic Skill Duration, Nanite, damage, repair, installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "3 * (1 + 2.0) * max(0, 1 + effective_status_effects + status_effect_duration)",
+            "when": "context_value('overcharge_status_preview') == 1"
+          },
+          {
+            "id": "overcharge_cooldown_seconds",
+            "name": "Overcharge Estimated Ordinary Cooldown (s)",
+            "description": "Hypothetical level-40 PvE Overcharge recovery from Skill List!K43 (TU27 workbook). Replaces the ordinary tier haste bonus with 0%; preserves Combined Skill Haste (Skill Efficiency once) in the additive recovery-speed pool. A reviewed dash contributes zero tier bonus. Ordinary cooldown and single-ammo recovery remain distinct. Nonpositive recovery speed yields a guarded zero estimate, not readiness. No current timer, Hive charge recovery, full refill, remaining ammo, charge speed, cancellation/destruction, actual reset, deployment delay or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs, cooldown factors and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "1 + effective_skill_haste + 0 > 0 ? 60 / (1 + effective_skill_haste + 0) : 0",
+            "when": "context_value('overcharge_recovery_preview') == 1"
+          }
         ],
-        "coverage": {
-          "status": "partial",
-          "omits": [
-            "A skill's own status: the script also records statuses a skill's own agent applies, so the source passes those on too; fights don't (R91)."
-          ],
-          "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (skillscript_gearset_contagion_4pc)"
-        }
+        "modSlots": [
+          {
+            "id": "charge",
+            "name": "Charge Slot",
+            "choices": [
+              {
+                "id": "charge_duration",
+                "name": "Charge: Duration",
+                "description": "Ordinary Trap pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.025,
+                "max": 0.05,
+                "format": "percent",
+                "statName": "Duration"
+              }
+            ]
+          },
+          {
+            "id": "electronics",
+            "name": "Electronics Slot",
+            "choices": [
+              {
+                "id": "electronics_duration",
+                "name": "Electronics: Duration",
+                "description": "Ordinary Trap pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Duration"
+              },
+              {
+                "id": "electronics_radius",
+                "name": "Electronics: Radius",
+                "description": "Ordinary Trap pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_radius",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Radius"
+              }
+            ]
+          }
+        ]
       },
       "evidence_paths": [
-        "docs/R88_R91_SOURCE_REVIEW.md",
-        "sources/talent_gearset_contagion_4pc.mtalent",
-        "sources/talent_gearset_contagion_chest.mtalent",
-        "sources/skillscript_gearset_contagion_4pc.mskillscriptgraph",
-        "sources/talent_dictionary.mdict"
+        "docs/R110_SOURCE_REVIEW.md",
+        "docs/R107_SOURCE_REVIEW.md",
+        "sources/skill_player_trap_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_mine_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_preexplode.mskillscriptgraph",
+        "sources/skill_player_trap_explode.mskillscriptgraph",
+        "sources/player_skill_trap_base.mbehavior",
+        "sources/player_skill_trap_deathaction.mbehavior",
+        "sources/player_trap_shock.mnpc",
+        "sources/skill_player_chem_heal.mskillscriptgraph",
+        "sources/player_weapon_skill_chemlauncher_weapon.mweapon",
+        "sources/statuseffect_ensnare.mcompoundnode",
+        "sources/statuseffecttalentrule_ensnare.mtalentrules",
+        "sources/skill_player_pulse_banshee.mskillscriptgraph",
+        "sources/skill_tier_pulse_banshee.mskilltier",
+        "sources/player_skill_firefly_payload_drop.mskillscriptgraph",
+        "sources/player_skill_firefly_base.mbehavior",
+        "sources/shock.mstatuseffect",
+        "sources/confuse.mstatuseffect",
+        "sources/confuse_shieldbreak.mstatuseffect",
+        "sources/ensnare.mstatuseffect",
+        "sources/blind.mstatuseffect"
       ],
-      "rationale": "Coverage after Indirect Transmission's row reads the four-piece stats (R100).",
-      "position": 178
+      "rationale": "What fights do with the status, and what the source adds (R110).",
+      "position": 6
+    },
+    {
+      "document": "simulation.json",
+      "collection": "skills",
+      "op": "replace",
+      "match": {
+        "skill": "skill_riot_foam_chem_launcher"
+      },
+      "before": {
+        "skill": "skill_riot_foam_chem_launcher",
+        "window": "ensnare_duration_seconds",
+        "cooldown": "ammo_recovery_seconds",
+        "status": "ensnared",
+        "stock": "charge_capacity",
+        "stockInterval": 2
+      },
+      "after": {
+        "skill": "skill_riot_foam_chem_launcher",
+        "window": "ensnare_duration_seconds",
+        "cooldown": "ammo_recovery_seconds",
+        "status": "ensnared",
+        "stock": "charge_capacity",
+        "stockInterval": 2,
+        "controlStatus": true,
+        "area": "radius_meters"
+      },
+      "evidence_paths": [
+        "docs/R110_SOURCE_REVIEW.md",
+        "docs/R107_SOURCE_REVIEW.md",
+        "sources/skill_player_trap_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_mine_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_preexplode.mskillscriptgraph",
+        "sources/skill_player_trap_explode.mskillscriptgraph",
+        "sources/player_skill_trap_base.mbehavior",
+        "sources/player_skill_trap_deathaction.mbehavior",
+        "sources/player_trap_shock.mnpc",
+        "sources/skill_player_chem_heal.mskillscriptgraph",
+        "sources/player_weapon_skill_chemlauncher_weapon.mweapon",
+        "sources/statuseffect_ensnare.mcompoundnode",
+        "sources/statuseffecttalentrule_ensnare.mtalentrules",
+        "sources/skill_player_pulse_banshee.mskillscriptgraph",
+        "sources/skill_tier_pulse_banshee.mskilltier",
+        "sources/player_skill_firefly_payload_drop.mskillscriptgraph",
+        "sources/player_skill_firefly_base.mbehavior",
+        "sources/shock.mstatuseffect",
+        "sources/confuse.mstatuseffect",
+        "sources/confuse_shieldbreak.mstatuseffect",
+        "sources/ensnare.mstatuseffect",
+        "sources/blind.mstatuseffect"
+      ],
+      "rationale": "Riot Foam ensnares every hostile in line of sight within its radius of the impact, once (R110).",
+      "position": 10
     },
     {
       "document": "rules.json",
-      "collection": "talents",
+      "collection": "skills",
       "op": "replace",
       "match": {
-        "id": "gear_talent_proliferation"
+        "id": "skill_riot_foam_chem_launcher"
       },
       "before": {
-        "id": "gear_talent_proliferation",
-        "name": "Proliferation",
-        "description": "Increases Indirect Transmission range from 10m to 15m. Increases refresh percentage from 50% to 75%.",
-        "modeledBySets": [
-          "gear_set_eclipse_protocol"
+        "id": "skill_riot_foam_chem_launcher",
+        "name": "Riot Foam Chem Launcher",
+        "family": "chem_launcher",
+        "upgrade": {
+          "name": "Expertise",
+          "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G24:G25 (TU27): +1% Ensnare Health per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs.",
+          "maxRank": 30
+        },
+        "previewOutputs": [
+          {
+            "id": "effective_skill_tier",
+            "name": "Effective Skill Tier",
+            "description": "Modeled tier floored and capped at 0-6, plus the Overcharge bonus, up to 7.",
+            "format": "integer",
+            "formula": "overcharged_skill_tier"
+          },
+          {
+            "id": "charge_capacity",
+            "name": "Estimated Charges / Ammo Capacity",
+            "description": "Community level-40 PvE charge/ammunition capacity from Skill List!C178:J178 (TU27 workbook). Integral base plus the reviewed additive tier table, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. Capacity is not current remaining ammo or an assertion of readiness. Player Ammo Capacity, Magazine Size, Skill Efficiency, damage, repair, duration and haste do not scale this quantity. No charge consumption, refill or skill Expertise. Source values require live verification.",
+            "format": "integer",
+            "formula": "max(0, floor(1 + curve('skill_riot_foam_chem_launcher_charge_capacity_tiers', overcharged_skill_tier) + skill_mod_capacity))"
+          },
+          {
+            "id": "radius_meters",
+            "name": "Estimated Radius Reference (m)",
+            "description": "Community level-40 PvE Cloud Radius reference from Skill List!C180:J180 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. This is a radius reference, not area, targets hit, range detection, damage falloff or uptime. Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
+            "format": "decimal",
+            "formula": "3 * (1 + curve('skill_riot_foam_chem_launcher_radius_meters_tiers', overcharged_skill_tier) + skill_mod_radius)"
+          },
+          {
+            "id": "ensnare_duration_seconds",
+            "name": "Estimated Ensnare Duration Reference (s)",
+            "description": "Community unresisted PvE Ensnare duration reference from Skill List!C181:J181; exact tier curve and Combined Status Effects (Skill Efficiency once). Generic Skill Duration, repair, damage and Nanite do not scale status duration. No enemy resistance, immunity, application, remaining timer or PvP diminishing returns. No Expertise; live verification required.",
+            "format": "decimal",
+            "formula": "6 * (1 + curve('skill_riot_foam_chem_launcher_ensnare_duration_seconds_tiers', overcharged_skill_tier) + skill_mod_duration) * max(0, 1 + effective_status_effects + status_effect_duration)"
+          },
+          {
+            "id": "ammo_recovery_seconds",
+            "name": "Estimated Single Ammo Recovery (s)",
+            "description": "Reviewed community PvE Ammo Cooldown from Skill List!C179:J179; estimated single-ammo recovery using Combined Skill Haste once. Dashed source tier cells add no haste. Independent of ordinary cooldown, capacity, Nanite, damage, repair and duration. Nonpositive speed yields a guarded zero estimate, not readiness. No timer, full refill or Expertise; source baseline and haste interpretation need live verification.",
+            "format": "decimal",
+            "formula": "(1 + skill_mod_cooldown) * (1 + effective_skill_haste) > 0 ? 30 / ((1 + skill_mod_cooldown) * (1 + effective_skill_haste)) : 0"
+          },
+          {
+            "id": "foam_health_reference",
+            "name": "Source Foam Health Reference",
+            "description": "Reviewed community PvE source property from Skill List!C182:J182; exact base and tier table only. Riot Foam gains a source foam-health reference with its exact tier curve, separate from device health. Striker Shield gains source buff angle and range references. Skill Health scales foam health in its own factor. Skill Efficiency, damage, repair, duration and weapon range do not alter it. No foam breaking, enemies inside the cone, recipient buffs, damage amplification or Expertise is inferred; live verification required.",
+            "format": "integer",
+            "formula": "452470 * (1 + curve('skill_riot_foam_chem_launcher_foam_health_reference_tiers', overcharged_skill_tier) + skill_mod_health) * max(0, 1 + effective_skill_health)"
+          },
+          {
+            "id": "expertise_bonus_reference",
+            "name": "Installed Expertise Ensnare Health Bonus Reference",
+            "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G24:G25 (TU27): +1% Ensnare Health per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs. This is the source increment, not a separate multiplier on the final estimate or a claim about caps.",
+            "format": "percent",
+            "formula": "skill_upgrade_rank * 0.01",
+            "when": "skill_upgrade_rank > 0"
+          },
+          {
+            "id": "overcharge_radius_meters",
+            "name": "Overcharge Estimated Radius Reference (m)",
+            "description": "Hypothetical level-40 PvE Overcharge geometry from Skill List!K180 (TU27 workbook). Replaces ordinary tier scaling with the exact source percentage; a reviewed dash contributes zero bonus. Retains the ordinary meter or degree reference interpretation. Independent of player bonuses, Skill Efficiency, installed Expertise, skill mods, damage and healing assumptions. No area, enemies inside a cone, detection, target hits, damage falloff, recipients, amplification, charge-dependent shape, duration or activation is inferred. Ordinary outputs remain unchanged. Source values and geometry interpretation require live-game verification.",
+            "format": "decimal",
+            "formula": "3 * (1 + 1.35)",
+            "when": "context_value('overcharge_geometry_preview') == 1"
+          },
+          {
+            "id": "overcharge_charge_capacity",
+            "name": "Overcharge Estimated Charges / Ammo Capacity",
+            "description": "Hypothetical level-40 PvE Overcharge maximum capacity from Skill List!K178 (TU27 workbook). Adds 6 to the base count of 1, replacing the ordinary tier addition; this is not a percentage or an extra bonus on top of tier 6. Independent of player ammo, magazine size, Skill Efficiency, installed Expertise, skill mods and other comparison assumptions. Maximum count only: no current charges, remaining ammo, refill time, self-revive consumption, simultaneous deployment, zones detected, targets hit, event counts or activation is inferred. Ordinary outputs and stats remain unchanged. Source values and capacity interpretation require live-game verification.",
+            "format": "integer",
+            "formula": "max(0, floor(1 + 6))",
+            "when": "context_value('overcharge_capacity_preview') == 1"
+          },
+          {
+            "id": "overcharge_ensnare_duration_seconds",
+            "name": "Overcharge Estimated Ensnare Duration Reference (s)",
+            "description": "Hypothetical unresisted level-40 PvE Overcharge status duration from Skill List!K181 (TU27 workbook). Replaces the ordinary tier bonus with 100%; preserves Combined Status Effects (Skill Efficiency once), additive Burn Duration for burn and the separate reviewed Trauma Specialist multiplier for bleed. A reviewed dash contributes zero tier bonus. Separate from deployment lifetime and recipient buff duration. No actual status application, resistance, immunity, PvP diminishing returns, ticks, lifetime damage, time remaining or activation is inferred. Generic Skill Duration, Nanite, damage, repair, installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "6 * (1 + 1.0) * max(0, 1 + effective_status_effects + status_effect_duration)",
+            "when": "context_value('overcharge_status_preview') == 1"
+          },
+          {
+            "id": "overcharge_foam_health_reference",
+            "name": "Overcharge Source Foam Health Reference",
+            "description": "Hypothetical level-40 PvE Overcharge health capacity from Skill List!K182 (TU27 workbook). Replaces the ordinary tier health bonus with 500%; a reviewed dash contributes zero tier bonus. Source zone or foam reference; Skill Health scales it, and Shield Health and Skill Efficiency do not. No current health, damage taken, survival, foam break time, depleted zones, shield invulnerability, event count or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "integer",
+            "formula": "452470 * (1 + 5.0) * max(0, 1 + effective_skill_health)",
+            "when": "context_value('overcharge_health_preview') == 1"
+          },
+          {
+            "id": "overcharge_ammo_recovery_seconds",
+            "name": "Overcharge Estimated Single Ammo Recovery (s)",
+            "description": "Hypothetical level-40 PvE Overcharge recovery from Skill List!K179 (TU27 workbook). Replaces the ordinary tier haste bonus with 0%; preserves Combined Skill Haste (Skill Efficiency once) in the additive recovery-speed pool. A reviewed dash contributes zero tier bonus. Ordinary cooldown and single-ammo recovery remain distinct. Nonpositive recovery speed yields a guarded zero estimate, not readiness. No current timer, Hive charge recovery, full refill, remaining ammo, charge speed, cancellation/destruction, actual reset, deployment delay or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs, cooldown factors and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "1 + effective_skill_haste + 0 > 0 ? 30 / (1 + effective_skill_haste + 0) : 0",
+            "when": "context_value('overcharge_recovery_preview') == 1"
+          }
         ],
-        "coverage": {
-          "status": "partial",
-          "omits": [
-            "Proliferation's 15 m and 75%: a pass-on's reach and share are numbers, so fights pass on within 10 m at 50%; the four-piece stats show 15 m and 75% (R91)."
-          ],
-          "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (talent_gearset_contagion_chest)"
-        }
+        "modSlots": [
+          {
+            "id": "agitator",
+            "name": "Agitator Slot",
+            "choices": [
+              {
+                "id": "agitator_ensnare_duration",
+                "name": "Agitator: Ensnare Duration",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.025,
+                "max": 0.1,
+                "format": "percent",
+                "statName": "Ensnare Duration"
+              },
+              {
+                "id": "agitator_foam_health",
+                "name": "Agitator: Foam Health",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_health",
+                "min": 0.025,
+                "max": 0.18600000000000003,
+                "format": "percent",
+                "statName": "Foam Health"
+              }
+            ]
+          },
+          {
+            "id": "pneumatics",
+            "name": "Pneumatics Slot",
+            "choices": [
+              {
+                "id": "pneumatics_radius",
+                "name": "Pneumatics: Radius",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_radius",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Radius"
+              },
+              {
+                "id": "pneumatics_ammo",
+                "name": "Pneumatics: Ammo",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_capacity",
+                "min": 1.0,
+                "max": 1.0,
+                "format": "integer",
+                "statName": "Ammo"
+              },
+              {
+                "id": "pneumatics_duration",
+                "name": "Pneumatics: Duration",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.025,
+                "max": 0.05,
+                "format": "percent",
+                "statName": "Duration"
+              },
+              {
+                "id": "pneumatics_cooldown",
+                "name": "Pneumatics: Ammo Recovery",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_cooldown",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Ammo Recovery"
+              }
+            ]
+          }
+        ]
       },
       "after": {
-        "id": "gear_talent_proliferation",
-        "name": "Proliferation",
-        "description": "Increases Indirect Transmission range from 10m to 15m. Increases refresh percentage from 50% to 75%.",
-        "modeledBySets": [
-          "gear_set_eclipse_protocol"
+        "id": "skill_riot_foam_chem_launcher",
+        "name": "Riot Foam Chem Launcher",
+        "family": "chem_launcher",
+        "upgrade": {
+          "name": "Expertise",
+          "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G24:G25 (TU27): +1% Ensnare Health per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs.",
+          "maxRank": 30
+        },
+        "previewOutputs": [
+          {
+            "id": "effective_skill_tier",
+            "name": "Effective Skill Tier",
+            "description": "Modeled tier floored and capped at 0-6, plus the Overcharge bonus, up to 7.",
+            "format": "integer",
+            "formula": "overcharged_skill_tier"
+          },
+          {
+            "id": "charge_capacity",
+            "name": "Estimated Charges / Ammo Capacity",
+            "description": "Community level-40 PvE charge/ammunition capacity from Skill List!C178:J178 (TU27 workbook). Integral base plus the reviewed additive tier table, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. Capacity is not current remaining ammo or an assertion of readiness. Player Ammo Capacity, Magazine Size, Skill Efficiency, damage, repair, duration and haste do not scale this quantity. No charge consumption, refill or skill Expertise. Source values require live verification.",
+            "format": "integer",
+            "formula": "max(0, floor(1 + curve('skill_riot_foam_chem_launcher_charge_capacity_tiers', overcharged_skill_tier) + skill_mod_capacity))"
+          },
+          {
+            "id": "radius_meters",
+            "name": "Estimated Radius Reference (m)",
+            "description": "Community level-40 PvE Cloud Radius reference from Skill List!C180:J180 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. Fights use it as the ensnare's area (ADR 0017): the source queries a sphere of this radius at the impact once, with no lingering cloud, and ensnares the hostiles in line of sight of it; fights centre it on the enemy being shot (R110). Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
+            "format": "decimal",
+            "formula": "3 * (1 + curve('skill_riot_foam_chem_launcher_radius_meters_tiers', overcharged_skill_tier) + skill_mod_radius)"
+          },
+          {
+            "id": "ensnare_duration_seconds",
+            "name": "Estimated Ensnare Duration Reference (s)",
+            "description": "Community unresisted PvE Ensnare duration reference from Skill List!C181:J181; exact tier curve and Combined Status Effects (Skill Efficiency once). Generic Skill Duration, repair, damage and Nanite do not scale status duration. No enemy resistance, immunity, application, remaining timer or PvP diminishing returns. No Expertise; live verification required. Fights put it on the enemy being shot and on every enemy within radius_meters, once per shot (ADR 0017). The source ensnares, once at impact, every hostile within the radius that passes a line-of-sight test from the impact point; the ensnare ends early if its foam is destroyed. Fights test no line of sight and don't model the foam. The source passes this duration explicitly; how the engine combines it with the status's NPC duration and the enemy's resistance, and the global diminishing returns the status doesn't opt out of, aren't in the data (R110).",
+            "format": "decimal",
+            "formula": "6 * (1 + curve('skill_riot_foam_chem_launcher_ensnare_duration_seconds_tiers', overcharged_skill_tier) + skill_mod_duration) * max(0, 1 + effective_status_effects + status_effect_duration)"
+          },
+          {
+            "id": "ammo_recovery_seconds",
+            "name": "Estimated Single Ammo Recovery (s)",
+            "description": "Reviewed community PvE Ammo Cooldown from Skill List!C179:J179; estimated single-ammo recovery using Combined Skill Haste once. Dashed source tier cells add no haste. Independent of ordinary cooldown, capacity, Nanite, damage, repair and duration. Nonpositive speed yields a guarded zero estimate, not readiness. No timer, full refill or Expertise; source baseline and haste interpretation need live verification.",
+            "format": "decimal",
+            "formula": "(1 + skill_mod_cooldown) * (1 + effective_skill_haste) > 0 ? 30 / ((1 + skill_mod_cooldown) * (1 + effective_skill_haste)) : 0"
+          },
+          {
+            "id": "foam_health_reference",
+            "name": "Source Foam Health Reference",
+            "description": "Reviewed community PvE source property from Skill List!C182:J182; exact base and tier table only. Riot Foam gains a source foam-health reference with its exact tier curve, separate from device health. Striker Shield gains source buff angle and range references. Skill Health scales foam health in its own factor. Skill Efficiency, damage, repair, duration and weapon range do not alter it. No foam breaking, enemies inside the cone, recipient buffs, damage amplification or Expertise is inferred; live verification required.",
+            "format": "integer",
+            "formula": "452470 * (1 + curve('skill_riot_foam_chem_launcher_foam_health_reference_tiers', overcharged_skill_tier) + skill_mod_health) * max(0, 1 + effective_skill_health)"
+          },
+          {
+            "id": "expertise_bonus_reference",
+            "name": "Installed Expertise Ensnare Health Bonus Reference",
+            "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G24:G25 (TU27): +1% Ensnare Health per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs. This is the source increment, not a separate multiplier on the final estimate or a claim about caps.",
+            "format": "percent",
+            "formula": "skill_upgrade_rank * 0.01",
+            "when": "skill_upgrade_rank > 0"
+          },
+          {
+            "id": "overcharge_radius_meters",
+            "name": "Overcharge Estimated Radius Reference (m)",
+            "description": "Hypothetical level-40 PvE Overcharge geometry from Skill List!K180 (TU27 workbook). Replaces ordinary tier scaling with the exact source percentage; a reviewed dash contributes zero bonus. Retains the ordinary meter or degree reference interpretation. Independent of player bonuses, Skill Efficiency, installed Expertise, skill mods, damage and healing assumptions. No area, enemies inside a cone, detection, target hits, damage falloff, recipients, amplification, charge-dependent shape, duration or activation is inferred. Ordinary outputs remain unchanged. Source values and geometry interpretation require live-game verification.",
+            "format": "decimal",
+            "formula": "3 * (1 + 1.35)",
+            "when": "context_value('overcharge_geometry_preview') == 1"
+          },
+          {
+            "id": "overcharge_charge_capacity",
+            "name": "Overcharge Estimated Charges / Ammo Capacity",
+            "description": "Hypothetical level-40 PvE Overcharge maximum capacity from Skill List!K178 (TU27 workbook). Adds 6 to the base count of 1, replacing the ordinary tier addition; this is not a percentage or an extra bonus on top of tier 6. Independent of player ammo, magazine size, Skill Efficiency, installed Expertise, skill mods and other comparison assumptions. Maximum count only: no current charges, remaining ammo, refill time, self-revive consumption, simultaneous deployment, zones detected, targets hit, event counts or activation is inferred. Ordinary outputs and stats remain unchanged. Source values and capacity interpretation require live-game verification.",
+            "format": "integer",
+            "formula": "max(0, floor(1 + 6))",
+            "when": "context_value('overcharge_capacity_preview') == 1"
+          },
+          {
+            "id": "overcharge_ensnare_duration_seconds",
+            "name": "Overcharge Estimated Ensnare Duration Reference (s)",
+            "description": "Hypothetical unresisted level-40 PvE Overcharge status duration from Skill List!K181 (TU27 workbook). Replaces the ordinary tier bonus with 100%; preserves Combined Status Effects (Skill Efficiency once), additive Burn Duration for burn and the separate reviewed Trauma Specialist multiplier for bleed. A reviewed dash contributes zero tier bonus. Separate from deployment lifetime and recipient buff duration. No actual status application, resistance, immunity, PvP diminishing returns, ticks, lifetime damage, time remaining or activation is inferred. Generic Skill Duration, Nanite, damage, repair, installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "6 * (1 + 1.0) * max(0, 1 + effective_status_effects + status_effect_duration)",
+            "when": "context_value('overcharge_status_preview') == 1"
+          },
+          {
+            "id": "overcharge_foam_health_reference",
+            "name": "Overcharge Source Foam Health Reference",
+            "description": "Hypothetical level-40 PvE Overcharge health capacity from Skill List!K182 (TU27 workbook). Replaces the ordinary tier health bonus with 500%; a reviewed dash contributes zero tier bonus. Source zone or foam reference; Skill Health scales it, and Shield Health and Skill Efficiency do not. No current health, damage taken, survival, foam break time, depleted zones, shield invulnerability, event count or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "integer",
+            "formula": "452470 * (1 + 5.0) * max(0, 1 + effective_skill_health)",
+            "when": "context_value('overcharge_health_preview') == 1"
+          },
+          {
+            "id": "overcharge_ammo_recovery_seconds",
+            "name": "Overcharge Estimated Single Ammo Recovery (s)",
+            "description": "Hypothetical level-40 PvE Overcharge recovery from Skill List!K179 (TU27 workbook). Replaces the ordinary tier haste bonus with 0%; preserves Combined Skill Haste (Skill Efficiency once) in the additive recovery-speed pool. A reviewed dash contributes zero tier bonus. Ordinary cooldown and single-ammo recovery remain distinct. Nonpositive recovery speed yields a guarded zero estimate, not readiness. No current timer, Hive charge recovery, full refill, remaining ammo, charge speed, cancellation/destruction, actual reset, deployment delay or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs, cooldown factors and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "1 + effective_skill_haste + 0 > 0 ? 30 / (1 + effective_skill_haste + 0) : 0",
+            "when": "context_value('overcharge_recovery_preview') == 1"
+          }
         ],
-        "coverage": {
-          "status": "complete",
-          "evidence": "R35_PRIORITY3_REVIEW.md (talent parameters); R88_R91_SOURCE_REVIEW.md (talent_gearset_contagion_chest)"
-        }
+        "modSlots": [
+          {
+            "id": "agitator",
+            "name": "Agitator Slot",
+            "choices": [
+              {
+                "id": "agitator_ensnare_duration",
+                "name": "Agitator: Ensnare Duration",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.025,
+                "max": 0.1,
+                "format": "percent",
+                "statName": "Ensnare Duration"
+              },
+              {
+                "id": "agitator_foam_health",
+                "name": "Agitator: Foam Health",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_health",
+                "min": 0.025,
+                "max": 0.18600000000000003,
+                "format": "percent",
+                "statName": "Foam Health"
+              }
+            ]
+          },
+          {
+            "id": "pneumatics",
+            "name": "Pneumatics Slot",
+            "choices": [
+              {
+                "id": "pneumatics_radius",
+                "name": "Pneumatics: Radius",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_radius",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Radius"
+              },
+              {
+                "id": "pneumatics_ammo",
+                "name": "Pneumatics: Ammo",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_capacity",
+                "min": 1.0,
+                "max": 1.0,
+                "format": "integer",
+                "statName": "Ammo"
+              },
+              {
+                "id": "pneumatics_duration",
+                "name": "Pneumatics: Duration",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.025,
+                "max": 0.05,
+                "format": "percent",
+                "statName": "Duration"
+              },
+              {
+                "id": "pneumatics_cooldown",
+                "name": "Pneumatics: Ammo Recovery",
+                "description": "Ordinary Chem Launcher pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_cooldown",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Ammo Recovery"
+              }
+            ]
+          }
+        ]
       },
       "evidence_paths": [
-        "docs/R88_R91_SOURCE_REVIEW.md",
-        "sources/talent_gearset_contagion_4pc.mtalent",
-        "sources/talent_gearset_contagion_chest.mtalent",
-        "sources/skillscript_gearset_contagion_4pc.mskillscriptgraph",
-        "sources/talent_dictionary.mdict"
+        "docs/R110_SOURCE_REVIEW.md",
+        "docs/R107_SOURCE_REVIEW.md",
+        "sources/skill_player_trap_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_mine_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_preexplode.mskillscriptgraph",
+        "sources/skill_player_trap_explode.mskillscriptgraph",
+        "sources/player_skill_trap_base.mbehavior",
+        "sources/player_skill_trap_deathaction.mbehavior",
+        "sources/player_trap_shock.mnpc",
+        "sources/skill_player_chem_heal.mskillscriptgraph",
+        "sources/player_weapon_skill_chemlauncher_weapon.mweapon",
+        "sources/statuseffect_ensnare.mcompoundnode",
+        "sources/statuseffecttalentrule_ensnare.mtalentrules",
+        "sources/skill_player_pulse_banshee.mskillscriptgraph",
+        "sources/skill_tier_pulse_banshee.mskilltier",
+        "sources/player_skill_firefly_payload_drop.mskillscriptgraph",
+        "sources/player_skill_firefly_base.mbehavior",
+        "sources/shock.mstatuseffect",
+        "sources/confuse.mstatuseffect",
+        "sources/confuse_shieldbreak.mstatuseffect",
+        "sources/ensnare.mstatuseffect",
+        "sources/blind.mstatuseffect"
       ],
-      "rationale": "Coverage after Indirect Transmission's row reads the four-piece stats (R100).",
-      "position": 131
+      "rationale": "What fights do with the status, and what the source adds (R110).",
+      "position": 25
+    },
+    {
+      "document": "simulation.json",
+      "collection": "skills",
+      "op": "replace",
+      "match": {
+        "skill": "skill_banshee_pulse"
+      },
+      "before": {
+        "skill": "skill_banshee_pulse",
+        "window": "disorient_duration_seconds",
+        "cooldown": "cooldown_seconds",
+        "status": "disoriented"
+      },
+      "after": {
+        "skill": "skill_banshee_pulse",
+        "window": "disorient_duration_seconds",
+        "cooldown": "cooldown_seconds",
+        "status": "disoriented",
+        "controlStatus": true
+      },
+      "evidence_paths": [
+        "docs/R110_SOURCE_REVIEW.md",
+        "docs/R107_SOURCE_REVIEW.md",
+        "sources/skill_player_trap_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_mine_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_preexplode.mskillscriptgraph",
+        "sources/skill_player_trap_explode.mskillscriptgraph",
+        "sources/player_skill_trap_base.mbehavior",
+        "sources/player_skill_trap_deathaction.mbehavior",
+        "sources/player_trap_shock.mnpc",
+        "sources/skill_player_chem_heal.mskillscriptgraph",
+        "sources/player_weapon_skill_chemlauncher_weapon.mweapon",
+        "sources/statuseffect_ensnare.mcompoundnode",
+        "sources/statuseffecttalentrule_ensnare.mtalentrules",
+        "sources/skill_player_pulse_banshee.mskillscriptgraph",
+        "sources/skill_tier_pulse_banshee.mskilltier",
+        "sources/player_skill_firefly_payload_drop.mskillscriptgraph",
+        "sources/player_skill_firefly_base.mbehavior",
+        "sources/shock.mstatuseffect",
+        "sources/confuse.mstatuseffect",
+        "sources/confuse_shieldbreak.mstatuseffect",
+        "sources/ensnare.mstatuseffect",
+        "sources/blind.mstatuseffect"
+      ],
+      "rationale": "Banshee Pulse disorients every hostile in its pie for this duration; fights reach the enemy being shot (R110).",
+      "position": 12
+    },
+    {
+      "document": "rules.json",
+      "collection": "skills",
+      "op": "replace",
+      "match": {
+        "id": "skill_banshee_pulse"
+      },
+      "before": {
+        "id": "skill_banshee_pulse",
+        "name": "Banshee Pulse",
+        "family": "pulse",
+        "upgrade": {
+          "name": "Expertise",
+          "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G7:G8 (TU27): +1% Disorient Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs.",
+          "maxRank": 30
+        },
+        "previewOutputs": [
+          {
+            "id": "effective_skill_tier",
+            "name": "Effective Skill Tier",
+            "description": "Modeled tier floored and capped at 0-6, plus the Overcharge bonus, up to 7.",
+            "format": "integer",
+            "formula": "overcharged_skill_tier"
+          },
+          {
+            "id": "cooldown_seconds",
+            "name": "Estimated Ordinary Cooldown (s)",
+            "description": "Community level-40 ordinary PvE cooldown reference from Skill List!C80:J80 (TU27 workbook). Base 30s, divided by one plus Skill Haste and Skill Efficiency counted once. Only explicitly reviewed tier Skill Haste enters the additive haste pool; dashed entries contribute zero. Nonpositive speed yields zero as an invalid-boundary estimate, not readiness. Excludes charge refill, skill Expertise, timers, use/cancellation/destruction, deployment delays and actual resets. Existing conditional reset capability remains separate. Source baselines and stacking require live verification.",
+            "format": "decimal",
+            "formula": "(1 + skill_mod_cooldown) * (1 + effective_skill_haste) > 0 ? 30 / ((1 + skill_mod_cooldown) * (1 + effective_skill_haste)) : 0"
+          },
+          {
+            "id": "radius_meters",
+            "name": "Estimated Radius Reference (m)",
+            "description": "Community level-40 PvE Radius reference from Skill List!C83:J83 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. This is a radius reference, not area, targets hit, range detection, damage falloff or uptime. Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
+            "format": "decimal",
+            "formula": "30 * (1 + curve('skill_banshee_pulse_cone_angle_degrees_tiers', overcharged_skill_tier) + skill_mod_radius + skill_mod_cone)"
+          },
+          {
+            "id": "cone_angle_degrees",
+            "name": "Estimated Cone Angle Reference (degrees)",
+            "description": "Community PvE geometry reference from Skill List!C84:J84; scan range adds exact source meters, cone angle uses source percentages. Independent of player bonuses and Skill Efficiency. No detection, charge-dependent shape, targets, area or hit events. No Expertise; live verification required.",
+            "format": "decimal",
+            "formula": "20 * (1 + curve('skill_banshee_pulse_cone_angle_degrees_tiers', overcharged_skill_tier) + skill_mod_cone)"
+          },
+          {
+            "id": "disorient_duration_seconds",
+            "name": "Estimated Disorient Duration Reference (s)",
+            "description": "Community unresisted PvE Disorient duration reference from Skill List!C82:J82; exact tier curve and Combined Status Effects (Skill Efficiency once). Generic Skill Duration, repair, damage and Nanite do not scale status duration. No enemy resistance, immunity, application, remaining timer or PvP diminishing returns. No Expertise; live verification required.",
+            "format": "decimal",
+            "formula": "4 * (1 + curve('skill_banshee_pulse_disorient_duration_seconds_tiers', overcharged_skill_tier) + skill_mod_duration) * max(0, 1 + effective_status_effects + status_effect_duration)"
+          },
+          {
+            "id": "effect_duration_seconds",
+            "name": "Estimated Effect Lifetime Reference (s)",
+            "description": "Community PvE source property from Skill List!C81:J81; exact tier table. Only effect lifetime consumes Combined Skill Duration, separately from status duration. Zone health and charging time receive no player/device health, haste, Status Effects or Skill Efficiency bonuses. No target zones depleted, detection, charge progress, damage amplification or actual timing. No mods or Expertise; live verification required.",
+            "format": "decimal",
+            "formula": "10 * 1 * max(0, 1 + effective_skill_duration)"
+          },
+          {
+            "id": "expertise_bonus_reference",
+            "name": "Installed Expertise Disorient Duration Bonus Reference",
+            "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G7:G8 (TU27): +1% Disorient Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs. This is the source increment, not a separate multiplier on the final estimate or a claim about caps.",
+            "format": "percent",
+            "formula": "skill_upgrade_rank * 0.01",
+            "when": "skill_upgrade_rank > 0"
+          },
+          {
+            "id": "overcharge_radius_meters",
+            "name": "Overcharge Estimated Radius Reference (m)",
+            "description": "Hypothetical level-40 PvE Overcharge geometry from Skill List!K83 (TU27 workbook). Replaces ordinary tier scaling with the exact source percentage; a reviewed dash contributes zero bonus. Retains the ordinary meter or degree reference interpretation. Independent of player bonuses, Skill Efficiency, installed Expertise, skill mods, damage and healing assumptions. No area, enemies inside a cone, detection, target hits, damage falloff, recipients, amplification, charge-dependent shape, duration or activation is inferred. Ordinary outputs remain unchanged. Source values and geometry interpretation require live-game verification.",
+            "format": "decimal",
+            "formula": "30 * (1 + 1.5)",
+            "when": "context_value('overcharge_geometry_preview') == 1"
+          },
+          {
+            "id": "overcharge_cone_angle_degrees",
+            "name": "Overcharge Estimated Cone Angle Reference (degrees)",
+            "description": "Hypothetical level-40 PvE Overcharge geometry from Skill List!K84 (TU27 workbook). Replaces ordinary tier scaling with the exact source percentage; a reviewed dash contributes zero bonus. Retains the ordinary meter or degree reference interpretation. Independent of player bonuses, Skill Efficiency, installed Expertise, skill mods, damage and healing assumptions. No area, enemies inside a cone, detection, target hits, damage falloff, recipients, amplification, charge-dependent shape, duration or activation is inferred. Ordinary outputs remain unchanged. Source values and geometry interpretation require live-game verification.",
+            "format": "decimal",
+            "formula": "20 * (1 + 1.5)",
+            "when": "context_value('overcharge_geometry_preview') == 1"
+          },
+          {
+            "id": "overcharge_effect_duration_seconds",
+            "name": "Overcharge Estimated Effect Lifetime Reference (s)",
+            "description": "Hypothetical level-40 PvE Overcharge lifetime from Skill List!K81 (TU27 workbook). Replaces the ordinary tier lifetime bonus with 0%; preserves Combined Skill Duration (Skill Efficiency once) and the existing reviewed Nanite duration reduction where applicable. A reviewed dash contributes zero tier bonus. Deployment, cloud and effect lifetimes remain separate from status duration and recipient buff duration. Lifetime reference only: no time remaining, charge/fuel depletion, survival, event count, ticks, uptime, DPS or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "10 * (1 + 0) * max(0, 1 + effective_skill_duration)",
+            "when": "context_value('overcharge_lifetime_preview') == 1"
+          },
+          {
+            "id": "overcharge_disorient_duration_seconds",
+            "name": "Overcharge Estimated Disorient Duration Reference (s)",
+            "description": "Hypothetical unresisted level-40 PvE Overcharge status duration from Skill List!K82 (TU27 workbook). Replaces the ordinary tier bonus with 100%; preserves Combined Status Effects (Skill Efficiency once), additive Burn Duration for burn and the separate reviewed Trauma Specialist multiplier for bleed. A reviewed dash contributes zero tier bonus. Separate from deployment lifetime and recipient buff duration. No actual status application, resistance, immunity, PvP diminishing returns, ticks, lifetime damage, time remaining or activation is inferred. Generic Skill Duration, Nanite, damage, repair, installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "4 * (1 + 1.0) * max(0, 1 + effective_status_effects + status_effect_duration)",
+            "when": "context_value('overcharge_status_preview') == 1"
+          }
+        ],
+        "modSlots": [
+          {
+            "id": "housing",
+            "name": "Housing Slot",
+            "choices": [
+              {
+                "id": "housing_cooldown",
+                "name": "Housing: Cooldown",
+                "description": "Ordinary Pulse pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_cooldown",
+                "min": 0.025,
+                "max": 0.06,
+                "format": "percent",
+                "statName": "Cooldown"
+              },
+              {
+                "id": "housing_effect_duration",
+                "name": "Housing: Effect Duration",
+                "description": "Ordinary Pulse pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.06,
+                "max": 0.1,
+                "format": "percent",
+                "statName": "Effect Duration"
+              }
+            ]
+          },
+          {
+            "id": "coil",
+            "name": "Coil Slot",
+            "choices": [
+              {
+                "id": "coil_radius",
+                "name": "Coil: Radius",
+                "description": "Ordinary Pulse pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_radius",
+                "min": 0.06,
+                "max": 0.1,
+                "format": "percent",
+                "statName": "Radius"
+              },
+              {
+                "id": "coil_cone",
+                "name": "Coil: Cone Size",
+                "description": "Ordinary Pulse pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_cone",
+                "min": 0.04,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Cone Size"
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "id": "skill_banshee_pulse",
+        "name": "Banshee Pulse",
+        "family": "pulse",
+        "upgrade": {
+          "name": "Expertise",
+          "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G7:G8 (TU27): +1% Disorient Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs.",
+          "maxRank": 30
+        },
+        "previewOutputs": [
+          {
+            "id": "effective_skill_tier",
+            "name": "Effective Skill Tier",
+            "description": "Modeled tier floored and capped at 0-6, plus the Overcharge bonus, up to 7.",
+            "format": "integer",
+            "formula": "overcharged_skill_tier"
+          },
+          {
+            "id": "cooldown_seconds",
+            "name": "Estimated Ordinary Cooldown (s)",
+            "description": "Community level-40 ordinary PvE cooldown reference from Skill List!C80:J80 (TU27 workbook). Base 30s, divided by one plus Skill Haste and Skill Efficiency counted once. Only explicitly reviewed tier Skill Haste enters the additive haste pool; dashed entries contribute zero. Nonpositive speed yields zero as an invalid-boundary estimate, not readiness. Excludes charge refill, skill Expertise, timers, use/cancellation/destruction, deployment delays and actual resets. Existing conditional reset capability remains separate. Source baselines and stacking require live verification.",
+            "format": "decimal",
+            "formula": "(1 + skill_mod_cooldown) * (1 + effective_skill_haste) > 0 ? 30 / ((1 + skill_mod_cooldown) * (1 + effective_skill_haste)) : 0"
+          },
+          {
+            "id": "radius_meters",
+            "name": "Estimated Radius Reference (m)",
+            "description": "Community level-40 PvE Radius reference from Skill List!C83:J83 (TU27 workbook). Base radius plus exact source tier percentages, tier floored/clamped to 0-6, plus the Overcharge bonus, up to 7. No generic Skill Efficiency, damage, repair, duration, weapon-range or blast-damage scaling. This is a radius reference, not area, targets hit, range detection, damage falloff or uptime. Healing ranges, unreviewed overrides and skill Expertise are excluded. Source values require live verification.",
+            "format": "decimal",
+            "formula": "30 * (1 + curve('skill_banshee_pulse_cone_angle_degrees_tiers', overcharged_skill_tier) + skill_mod_radius + skill_mod_cone)"
+          },
+          {
+            "id": "cone_angle_degrees",
+            "name": "Estimated Cone Angle Reference (degrees)",
+            "description": "Community PvE geometry reference from Skill List!C84:J84; scan range adds exact source meters, cone angle uses source percentages. Independent of player bonuses and Skill Efficiency. No detection, charge-dependent shape, targets, area or hit events. No Expertise; live verification required.",
+            "format": "decimal",
+            "formula": "20 * (1 + curve('skill_banshee_pulse_cone_angle_degrees_tiers', overcharged_skill_tier) + skill_mod_cone)"
+          },
+          {
+            "id": "disorient_duration_seconds",
+            "name": "Estimated Disorient Duration Reference (s)",
+            "description": "Community unresisted PvE Disorient duration reference from Skill List!C82:J82; exact tier curve and Combined Status Effects (Skill Efficiency once). Generic Skill Duration, repair, damage and Nanite do not scale status duration. No enemy resistance, immunity, application, remaining timer or PvP diminishing returns. No Expertise; live verification required. Fights put it on the enemy being shot as the skill is used (ADR 0017). The source disorients every hostile in a pie from the player, whose range grows from 10 m to radius_meters and whose angle narrows from 135\u00b0 to cone_angle_degrees as it charges; fights don't model the pie. The source passes this duration explicitly; how the engine combines it with the status's NPC duration and the enemy's resistance, and the global diminishing returns the status doesn't opt out of, aren't in the data (R110).",
+            "format": "decimal",
+            "formula": "4 * (1 + curve('skill_banshee_pulse_disorient_duration_seconds_tiers', overcharged_skill_tier) + skill_mod_duration) * max(0, 1 + effective_status_effects + status_effect_duration)"
+          },
+          {
+            "id": "effect_duration_seconds",
+            "name": "Estimated Effect Lifetime Reference (s)",
+            "description": "Community PvE source property from Skill List!C81:J81; exact tier table. Only effect lifetime consumes Combined Skill Duration, separately from status duration. Zone health and charging time receive no player/device health, haste, Status Effects or Skill Efficiency bonuses. No target zones depleted, detection, charge progress, damage amplification or actual timing. No mods or Expertise; live verification required.",
+            "format": "decimal",
+            "formula": "10 * 1 * max(0, 1 + effective_skill_duration)"
+          },
+          {
+            "id": "expertise_bonus_reference",
+            "name": "Installed Expertise Disorient Duration Bonus Reference",
+            "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G7:G8 (TU27): +1% Disorient Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs. This is the source increment, not a separate multiplier on the final estimate or a claim about caps.",
+            "format": "percent",
+            "formula": "skill_upgrade_rank * 0.01",
+            "when": "skill_upgrade_rank > 0"
+          },
+          {
+            "id": "overcharge_radius_meters",
+            "name": "Overcharge Estimated Radius Reference (m)",
+            "description": "Hypothetical level-40 PvE Overcharge geometry from Skill List!K83 (TU27 workbook). Replaces ordinary tier scaling with the exact source percentage; a reviewed dash contributes zero bonus. Retains the ordinary meter or degree reference interpretation. Independent of player bonuses, Skill Efficiency, installed Expertise, skill mods, damage and healing assumptions. No area, enemies inside a cone, detection, target hits, damage falloff, recipients, amplification, charge-dependent shape, duration or activation is inferred. Ordinary outputs remain unchanged. Source values and geometry interpretation require live-game verification.",
+            "format": "decimal",
+            "formula": "30 * (1 + 1.5)",
+            "when": "context_value('overcharge_geometry_preview') == 1"
+          },
+          {
+            "id": "overcharge_cone_angle_degrees",
+            "name": "Overcharge Estimated Cone Angle Reference (degrees)",
+            "description": "Hypothetical level-40 PvE Overcharge geometry from Skill List!K84 (TU27 workbook). Replaces ordinary tier scaling with the exact source percentage; a reviewed dash contributes zero bonus. Retains the ordinary meter or degree reference interpretation. Independent of player bonuses, Skill Efficiency, installed Expertise, skill mods, damage and healing assumptions. No area, enemies inside a cone, detection, target hits, damage falloff, recipients, amplification, charge-dependent shape, duration or activation is inferred. Ordinary outputs remain unchanged. Source values and geometry interpretation require live-game verification.",
+            "format": "decimal",
+            "formula": "20 * (1 + 1.5)",
+            "when": "context_value('overcharge_geometry_preview') == 1"
+          },
+          {
+            "id": "overcharge_effect_duration_seconds",
+            "name": "Overcharge Estimated Effect Lifetime Reference (s)",
+            "description": "Hypothetical level-40 PvE Overcharge lifetime from Skill List!K81 (TU27 workbook). Replaces the ordinary tier lifetime bonus with 0%; preserves Combined Skill Duration (Skill Efficiency once) and the existing reviewed Nanite duration reduction where applicable. A reviewed dash contributes zero tier bonus. Deployment, cloud and effect lifetimes remain separate from status duration and recipient buff duration. Lifetime reference only: no time remaining, charge/fuel depletion, survival, event count, ticks, uptime, DPS or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "10 * (1 + 0) * max(0, 1 + effective_skill_duration)",
+            "when": "context_value('overcharge_lifetime_preview') == 1"
+          },
+          {
+            "id": "overcharge_disorient_duration_seconds",
+            "name": "Overcharge Estimated Disorient Duration Reference (s)",
+            "description": "Hypothetical unresisted level-40 PvE Overcharge status duration from Skill List!K82 (TU27 workbook). Replaces the ordinary tier bonus with 100%; preserves Combined Status Effects (Skill Efficiency once), additive Burn Duration for burn and the separate reviewed Trauma Specialist multiplier for bleed. A reviewed dash contributes zero tier bonus. Separate from deployment lifetime and recipient buff duration. No actual status application, resistance, immunity, PvP diminishing returns, ticks, lifetime damage, time remaining or activation is inferred. Generic Skill Duration, Nanite, damage, repair, installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "4 * (1 + 1.0) * max(0, 1 + effective_status_effects + status_effect_duration)",
+            "when": "context_value('overcharge_status_preview') == 1"
+          }
+        ],
+        "modSlots": [
+          {
+            "id": "housing",
+            "name": "Housing Slot",
+            "choices": [
+              {
+                "id": "housing_cooldown",
+                "name": "Housing: Cooldown",
+                "description": "Ordinary Pulse pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_cooldown",
+                "min": 0.025,
+                "max": 0.06,
+                "format": "percent",
+                "statName": "Cooldown"
+              },
+              {
+                "id": "housing_effect_duration",
+                "name": "Housing: Effect Duration",
+                "description": "Ordinary Pulse pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.06,
+                "max": 0.1,
+                "format": "percent",
+                "statName": "Effect Duration"
+              }
+            ]
+          },
+          {
+            "id": "coil",
+            "name": "Coil Slot",
+            "choices": [
+              {
+                "id": "coil_radius",
+                "name": "Coil: Radius",
+                "description": "Ordinary Pulse pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_radius",
+                "min": 0.06,
+                "max": 0.1,
+                "format": "percent",
+                "statName": "Radius"
+              },
+              {
+                "id": "coil_cone",
+                "name": "Coil: Cone Size",
+                "description": "Ordinary Pulse pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_cone",
+                "min": 0.04,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Cone Size"
+              }
+            ]
+          }
+        ]
+      },
+      "evidence_paths": [
+        "docs/R110_SOURCE_REVIEW.md",
+        "docs/R107_SOURCE_REVIEW.md",
+        "sources/skill_player_trap_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_mine_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_preexplode.mskillscriptgraph",
+        "sources/skill_player_trap_explode.mskillscriptgraph",
+        "sources/player_skill_trap_base.mbehavior",
+        "sources/player_skill_trap_deathaction.mbehavior",
+        "sources/player_trap_shock.mnpc",
+        "sources/skill_player_chem_heal.mskillscriptgraph",
+        "sources/player_weapon_skill_chemlauncher_weapon.mweapon",
+        "sources/statuseffect_ensnare.mcompoundnode",
+        "sources/statuseffecttalentrule_ensnare.mtalentrules",
+        "sources/skill_player_pulse_banshee.mskillscriptgraph",
+        "sources/skill_tier_pulse_banshee.mskilltier",
+        "sources/player_skill_firefly_payload_drop.mskillscriptgraph",
+        "sources/player_skill_firefly_base.mbehavior",
+        "sources/shock.mstatuseffect",
+        "sources/confuse.mstatuseffect",
+        "sources/confuse_shieldbreak.mstatuseffect",
+        "sources/ensnare.mstatuseffect",
+        "sources/blind.mstatuseffect"
+      ],
+      "rationale": "What fights do with the status, and what the source adds (R110).",
+      "position": 12
+    },
+    {
+      "document": "simulation.json",
+      "collection": "skills",
+      "op": "replace",
+      "match": {
+        "skill": "skill_blinder_firefly"
+      },
+      "before": {
+        "skill": "skill_blinder_firefly",
+        "window": "blind_duration_seconds",
+        "cooldown": "cooldown_seconds",
+        "status": "blinded"
+      },
+      "after": {
+        "skill": "skill_blinder_firefly",
+        "window": "blind_duration_seconds",
+        "cooldown": "cooldown_seconds",
+        "status": "blinded",
+        "controlStatus": true
+      },
+      "evidence_paths": [
+        "docs/R110_SOURCE_REVIEW.md",
+        "docs/R107_SOURCE_REVIEW.md",
+        "sources/skill_player_trap_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_mine_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_preexplode.mskillscriptgraph",
+        "sources/skill_player_trap_explode.mskillscriptgraph",
+        "sources/player_skill_trap_base.mbehavior",
+        "sources/player_skill_trap_deathaction.mbehavior",
+        "sources/player_trap_shock.mnpc",
+        "sources/skill_player_chem_heal.mskillscriptgraph",
+        "sources/player_weapon_skill_chemlauncher_weapon.mweapon",
+        "sources/statuseffect_ensnare.mcompoundnode",
+        "sources/statuseffecttalentrule_ensnare.mtalentrules",
+        "sources/skill_player_pulse_banshee.mskillscriptgraph",
+        "sources/skill_tier_pulse_banshee.mskilltier",
+        "sources/player_skill_firefly_payload_drop.mskillscriptgraph",
+        "sources/player_skill_firefly_base.mbehavior",
+        "sources/shock.mstatuseffect",
+        "sources/confuse.mstatuseffect",
+        "sources/confuse_shieldbreak.mstatuseffect",
+        "sources/ensnare.mstatuseffect",
+        "sources/blind.mstatuseffect"
+      ],
+      "rationale": "Blinder Firefly blinds each marked target it reaches and hostiles in two pies around it (R110).",
+      "position": 11
+    },
+    {
+      "document": "rules.json",
+      "collection": "skills",
+      "op": "replace",
+      "match": {
+        "id": "skill_blinder_firefly"
+      },
+      "before": {
+        "id": "skill_blinder_firefly",
+        "name": "Blinder Firefly",
+        "family": "firefly",
+        "upgrade": {
+          "name": "Expertise",
+          "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G29:G30 (TU27): +1% Blind Effect Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs.",
+          "maxRank": 30
+        },
+        "previewOutputs": [
+          {
+            "id": "effective_skill_tier",
+            "name": "Effective Skill Tier",
+            "description": "Modeled tier floored and capped at 0-6, plus the Overcharge bonus, up to 7.",
+            "format": "integer",
+            "formula": "overcharged_skill_tier"
+          },
+          {
+            "id": "skill_health",
+            "name": "Estimated Skill Health",
+            "description": "Community level-40 PvE skill-health reference from Skill List!C192:J192 (TU27 workbook). Tier curve follows the retained source cells; Skill Health plus Skill Efficiency adds once, independently of damage, repair and player armor/health. Armor cores and shield-specific Health do not scale this variant. This is capacity, not current health, mitigation, regeneration or destruction prediction. No skill mods, skill Expertise or combat events. Source values and bonus stacking need live verification.",
+            "format": "integer",
+            "formula": "663623 * max(0, 1) * max(0, 1 + effective_skill_health)"
+          },
+          {
+            "id": "cooldown_seconds",
+            "name": "Estimated Ordinary Cooldown (s)",
+            "description": "Community level-40 ordinary PvE cooldown reference from Skill List!C190:J190 (TU27 workbook). Base 50s, divided by one plus Skill Haste and Skill Efficiency counted once. Only explicitly reviewed tier Skill Haste enters the additive haste pool; dashed entries contribute zero. Nonpositive speed yields zero as an invalid-boundary estimate, not readiness. Excludes charge refill, skill Expertise, timers, use/cancellation/destruction, deployment delays and actual resets. Existing conditional reset capability remains separate. Source baselines and stacking require live verification.",
+            "format": "decimal",
+            "formula": "(1 + skill_mod_cooldown) * (1 + effective_skill_haste) > 0 ? 50 / ((1 + skill_mod_cooldown) * (1 + effective_skill_haste)) : 0"
+          },
+          {
+            "id": "target_capacity",
+            "name": "Estimated Maximum Targets",
+            "description": "Integral community PvE capacity reference from Skill List!C191:J191; reviewed additive tier table. Independent of player ammo, magazine size, damage, repair and Skill Efficiency. Maximum capacity, not current count, targets hit or events. No Expertise; live verification required.",
+            "format": "integer",
+            "formula": "max(0, floor(3 + curve('skill_blinder_firefly_target_capacity_tiers', overcharged_skill_tier) + skill_mod_capacity))"
+          },
+          {
+            "id": "speed_multiplier",
+            "name": "Estimated Normalized Movement Speed",
+            "description": "Normalized community PvE movement-speed reference from Skill List!C193:J193; exact source tier percentages. Not meters per second, travel time, current movement, targets reached, or player speed. Independent of Skill Efficiency and player bonuses. No Expertise; live verification required.",
+            "format": "decimal",
+            "formula": "1 * (1 + curve('skill_blinder_firefly_speed_multiplier_tiers', overcharged_skill_tier) + skill_mod_speed)"
+          },
+          {
+            "id": "blind_duration_seconds",
+            "name": "Estimated Blind Duration Reference (s)",
+            "description": "Community unresisted PvE Blind duration reference from Skill List!C194:J194; exact tier curve and Combined Status Effects (Skill Efficiency once). Generic Skill Duration, repair, damage and Nanite do not scale status duration. No enemy resistance, immunity, application, remaining timer or PvP diminishing returns. No Expertise; live verification required.",
+            "format": "decimal",
+            "formula": "5 * (1 + curve('skill_blinder_firefly_blind_duration_seconds_tiers', overcharged_skill_tier) + skill_mod_duration) * max(0, 1 + effective_status_effects + status_effect_duration)"
+          },
+          {
+            "id": "expertise_bonus_reference",
+            "name": "Installed Expertise Blind Effect Duration Bonus Reference",
+            "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G29:G30 (TU27): +1% Blind Effect Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs. This is the source increment, not a separate multiplier on the final estimate or a claim about caps.",
+            "format": "percent",
+            "formula": "skill_upgrade_rank * 0.01",
+            "when": "skill_upgrade_rank > 0"
+          },
+          {
+            "id": "overcharge_target_capacity",
+            "name": "Overcharge Estimated Maximum Targets",
+            "description": "Hypothetical level-40 PvE Overcharge maximum capacity from Skill List!K191 (TU27 workbook). Adds 10 to the base count of 3, replacing the ordinary tier addition; this is not a percentage or an extra bonus on top of tier 6. Independent of player ammo, magazine size, Skill Efficiency, installed Expertise, skill mods and other comparison assumptions. Maximum count only: no current charges, remaining ammo, refill time, self-revive consumption, simultaneous deployment, zones detected, targets hit, event counts or activation is inferred. Ordinary outputs and stats remain unchanged. Source values and capacity interpretation require live-game verification.",
+            "format": "integer",
+            "formula": "max(0, floor(3 + 10))",
+            "when": "context_value('overcharge_capacity_preview') == 1"
+          },
+          {
+            "id": "overcharge_blind_duration_seconds",
+            "name": "Overcharge Estimated Blind Duration Reference (s)",
+            "description": "Hypothetical unresisted level-40 PvE Overcharge status duration from Skill List!K194 (TU27 workbook). Replaces the ordinary tier bonus with 100%; preserves Combined Status Effects (Skill Efficiency once), additive Burn Duration for burn and the separate reviewed Trauma Specialist multiplier for bleed. A reviewed dash contributes zero tier bonus. Separate from deployment lifetime and recipient buff duration. No actual status application, resistance, immunity, PvP diminishing returns, ticks, lifetime damage, time remaining or activation is inferred. Generic Skill Duration, Nanite, damage, repair, installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "5 * (1 + 1.0) * max(0, 1 + effective_status_effects + status_effect_duration)",
+            "when": "context_value('overcharge_status_preview') == 1"
+          },
+          {
+            "id": "overcharge_skill_health",
+            "name": "Overcharge Estimated Skill Health",
+            "description": "Hypothetical level-40 PvE Overcharge health capacity from Skill List!K192 (TU27 workbook). Replaces the ordinary tier health bonus with 0%; a reviewed dash contributes zero tier bonus. Preserves Combined Skill Health (Skill Efficiency once) and the existing additive Shield Health pool for shields. No current health, damage taken, survival, foam break time, depleted zones, shield invulnerability, event count or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "integer",
+            "formula": "663623 * max(0, 1 + 0) * max(0, 1 + effective_skill_health)",
+            "when": "context_value('overcharge_health_preview') == 1"
+          },
+          {
+            "id": "overcharge_speed_multiplier",
+            "name": "Overcharge Estimated Normalized Movement Speed",
+            "description": "Hypothetical level-40 PvE Overcharge utility reference from Skill List!K193 (TU27 workbook). Replaces the ordinary tier bonus with 250%; reviewed dashes contribute zero tier bonus. Movement speed and threat remain normalized multipliers; support shares and seconds retain their source units. Generic Skill Efficiency, damage, repair, duration, status, health, installed Expertise, skill mods and other comparison assumptions do not scale these properties. No recipient buffs, player stats, actual skill repair, refreshed deployment timers, target selection, travel time, event count or Overcharge activation is inferred. Ordinary outputs and stats remain unchanged. Source values and interpretation require live-game verification.",
+            "format": "decimal",
+            "formula": "1 * (1 + 2.5)",
+            "when": "context_value('overcharge_utility_preview') == 1"
+          },
+          {
+            "id": "overcharge_cooldown_seconds",
+            "name": "Overcharge Estimated Ordinary Cooldown (s)",
+            "description": "Hypothetical level-40 PvE Overcharge recovery from Skill List!K190 (TU27 workbook). Replaces the ordinary tier haste bonus with 0%; preserves Combined Skill Haste (Skill Efficiency once) in the additive recovery-speed pool. A reviewed dash contributes zero tier bonus. Ordinary cooldown and single-ammo recovery remain distinct. Nonpositive recovery speed yields a guarded zero estimate, not readiness. No current timer, Hive charge recovery, full refill, remaining ammo, charge speed, cancellation/destruction, actual reset, deployment delay or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs, cooldown factors and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "1 + effective_skill_haste + 0 > 0 ? 50 / (1 + effective_skill_haste + 0) : 0",
+            "when": "context_value('overcharge_recovery_preview') == 1"
+          }
+        ],
+        "modSlots": [
+          {
+            "id": "targeting",
+            "name": "Targeting Slot",
+            "choices": [
+              {
+                "id": "targeting_targets",
+                "name": "Targeting: Targets",
+                "description": "Ordinary Firefly pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_capacity",
+                "min": 1.0,
+                "max": 1.0,
+                "format": "integer",
+                "statName": "Targets"
+              }
+            ]
+          },
+          {
+            "id": "payload",
+            "name": "Payload Slot",
+            "choices": [
+              {
+                "id": "payload_blind_duration",
+                "name": "Payload: Blind Duration",
+                "description": "Ordinary Firefly pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Blind Duration"
+              }
+            ]
+          },
+          {
+            "id": "propulsion",
+            "name": "Propulsion Slot",
+            "choices": [
+              {
+                "id": "propulsion_speed",
+                "name": "Propulsion: Speed",
+                "description": "Ordinary Firefly pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_speed",
+                "min": 0.04,
+                "max": 0.1,
+                "format": "percent",
+                "statName": "Speed"
+              },
+              {
+                "id": "propulsion_cooldown",
+                "name": "Propulsion: Cooldown",
+                "description": "Ordinary Firefly pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_cooldown",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Cooldown"
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "id": "skill_blinder_firefly",
+        "name": "Blinder Firefly",
+        "family": "firefly",
+        "upgrade": {
+          "name": "Expertise",
+          "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G29:G30 (TU27): +1% Blind Effect Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs.",
+          "maxRank": 30
+        },
+        "previewOutputs": [
+          {
+            "id": "effective_skill_tier",
+            "name": "Effective Skill Tier",
+            "description": "Modeled tier floored and capped at 0-6, plus the Overcharge bonus, up to 7.",
+            "format": "integer",
+            "formula": "overcharged_skill_tier"
+          },
+          {
+            "id": "skill_health",
+            "name": "Estimated Skill Health",
+            "description": "Community level-40 PvE skill-health reference from Skill List!C192:J192 (TU27 workbook). Tier curve follows the retained source cells; Skill Health plus Skill Efficiency adds once, independently of damage, repair and player armor/health. Armor cores and shield-specific Health do not scale this variant. This is capacity, not current health, mitigation, regeneration or destruction prediction. No skill mods, skill Expertise or combat events. Source values and bonus stacking need live verification.",
+            "format": "integer",
+            "formula": "663623 * max(0, 1) * max(0, 1 + effective_skill_health)"
+          },
+          {
+            "id": "cooldown_seconds",
+            "name": "Estimated Ordinary Cooldown (s)",
+            "description": "Community level-40 ordinary PvE cooldown reference from Skill List!C190:J190 (TU27 workbook). Base 50s, divided by one plus Skill Haste and Skill Efficiency counted once. Only explicitly reviewed tier Skill Haste enters the additive haste pool; dashed entries contribute zero. Nonpositive speed yields zero as an invalid-boundary estimate, not readiness. Excludes charge refill, skill Expertise, timers, use/cancellation/destruction, deployment delays and actual resets. Existing conditional reset capability remains separate. Source baselines and stacking require live verification.",
+            "format": "decimal",
+            "formula": "(1 + skill_mod_cooldown) * (1 + effective_skill_haste) > 0 ? 50 / ((1 + skill_mod_cooldown) * (1 + effective_skill_haste)) : 0"
+          },
+          {
+            "id": "target_capacity",
+            "name": "Estimated Maximum Targets",
+            "description": "Integral community PvE capacity reference from Skill List!C191:J191; reviewed additive tier table. Independent of player ammo, magazine size, damage, repair and Skill Efficiency. Maximum capacity, not current count, targets hit or events. No Expertise; live verification required.",
+            "format": "integer",
+            "formula": "max(0, floor(3 + curve('skill_blinder_firefly_target_capacity_tiers', overcharged_skill_tier) + skill_mod_capacity))"
+          },
+          {
+            "id": "speed_multiplier",
+            "name": "Estimated Normalized Movement Speed",
+            "description": "Normalized community PvE movement-speed reference from Skill List!C193:J193; exact source tier percentages. Not meters per second, travel time, current movement, targets reached, or player speed. Independent of Skill Efficiency and player bonuses. No Expertise; live verification required.",
+            "format": "decimal",
+            "formula": "1 * (1 + curve('skill_blinder_firefly_speed_multiplier_tiers', overcharged_skill_tier) + skill_mod_speed)"
+          },
+          {
+            "id": "blind_duration_seconds",
+            "name": "Estimated Blind Duration Reference (s)",
+            "description": "Community unresisted PvE Blind duration reference from Skill List!C194:J194; exact tier curve and Combined Status Effects (Skill Efficiency once). Generic Skill Duration, repair, damage and Nanite do not scale status duration. No enemy resistance, immunity, application, remaining timer or PvP diminishing returns. No Expertise; live verification required. Fights put it on the enemy being shot as the skill is used (ADR 0017). The source blinds, as the firefly drops on each marked target, that target if within 4 m and the hostiles in two pies ahead of the firefly (about 4 m at 120\u00b0 and 5 m at 60\u00b0); fights don't model the flight or the pies. The source passes this duration explicitly; how the engine combines it with the status's NPC duration and the enemy's resistance, and the global diminishing returns the status doesn't opt out of, aren't in the data (R110).",
+            "format": "decimal",
+            "formula": "5 * (1 + curve('skill_blinder_firefly_blind_duration_seconds_tiers', overcharged_skill_tier) + skill_mod_duration) * max(0, 1 + effective_status_effects + status_effect_duration)"
+          },
+          {
+            "id": "expertise_bonus_reference",
+            "name": "Installed Expertise Blind Effect Duration Bonus Reference",
+            "description": "Installed grade on this exact variant, 0-30. Source Skill Info!G29:G30 (TU27): +1% Blind Effect Duration per grade. Source bonus reference only; existing output estimates are unchanged because aggregation is unverified. Does not simulate proficiency, account eligibility or upgrade costs. This is the source increment, not a separate multiplier on the final estimate or a claim about caps.",
+            "format": "percent",
+            "formula": "skill_upgrade_rank * 0.01",
+            "when": "skill_upgrade_rank > 0"
+          },
+          {
+            "id": "overcharge_target_capacity",
+            "name": "Overcharge Estimated Maximum Targets",
+            "description": "Hypothetical level-40 PvE Overcharge maximum capacity from Skill List!K191 (TU27 workbook). Adds 10 to the base count of 3, replacing the ordinary tier addition; this is not a percentage or an extra bonus on top of tier 6. Independent of player ammo, magazine size, Skill Efficiency, installed Expertise, skill mods and other comparison assumptions. Maximum count only: no current charges, remaining ammo, refill time, self-revive consumption, simultaneous deployment, zones detected, targets hit, event counts or activation is inferred. Ordinary outputs and stats remain unchanged. Source values and capacity interpretation require live-game verification.",
+            "format": "integer",
+            "formula": "max(0, floor(3 + 10))",
+            "when": "context_value('overcharge_capacity_preview') == 1"
+          },
+          {
+            "id": "overcharge_blind_duration_seconds",
+            "name": "Overcharge Estimated Blind Duration Reference (s)",
+            "description": "Hypothetical unresisted level-40 PvE Overcharge status duration from Skill List!K194 (TU27 workbook). Replaces the ordinary tier bonus with 100%; preserves Combined Status Effects (Skill Efficiency once), additive Burn Duration for burn and the separate reviewed Trauma Specialist multiplier for bleed. A reviewed dash contributes zero tier bonus. Separate from deployment lifetime and recipient buff duration. No actual status application, resistance, immunity, PvP diminishing returns, ticks, lifetime damage, time remaining or activation is inferred. Generic Skill Duration, Nanite, damage, repair, installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "5 * (1 + 1.0) * max(0, 1 + effective_status_effects + status_effect_duration)",
+            "when": "context_value('overcharge_status_preview') == 1"
+          },
+          {
+            "id": "overcharge_skill_health",
+            "name": "Overcharge Estimated Skill Health",
+            "description": "Hypothetical level-40 PvE Overcharge health capacity from Skill List!K192 (TU27 workbook). Replaces the ordinary tier health bonus with 0%; a reviewed dash contributes zero tier bonus. Preserves Combined Skill Health (Skill Efficiency once) and the existing additive Shield Health pool for shields. No current health, damage taken, survival, foam break time, depleted zones, shield invulnerability, event count or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "integer",
+            "formula": "663623 * max(0, 1 + 0) * max(0, 1 + effective_skill_health)",
+            "when": "context_value('overcharge_health_preview') == 1"
+          },
+          {
+            "id": "overcharge_speed_multiplier",
+            "name": "Overcharge Estimated Normalized Movement Speed",
+            "description": "Hypothetical level-40 PvE Overcharge utility reference from Skill List!K193 (TU27 workbook). Replaces the ordinary tier bonus with 250%; reviewed dashes contribute zero tier bonus. Movement speed and threat remain normalized multipliers; support shares and seconds retain their source units. Generic Skill Efficiency, damage, repair, duration, status, health, installed Expertise, skill mods and other comparison assumptions do not scale these properties. No recipient buffs, player stats, actual skill repair, refreshed deployment timers, target selection, travel time, event count or Overcharge activation is inferred. Ordinary outputs and stats remain unchanged. Source values and interpretation require live-game verification.",
+            "format": "decimal",
+            "formula": "1 * (1 + 2.5)",
+            "when": "context_value('overcharge_utility_preview') == 1"
+          },
+          {
+            "id": "overcharge_cooldown_seconds",
+            "name": "Overcharge Estimated Ordinary Cooldown (s)",
+            "description": "Hypothetical level-40 PvE Overcharge recovery from Skill List!K190 (TU27 workbook). Replaces the ordinary tier haste bonus with 0%; preserves Combined Skill Haste (Skill Efficiency once) in the additive recovery-speed pool. A reviewed dash contributes zero tier bonus. Ordinary cooldown and single-ammo recovery remain distinct. Nonpositive recovery speed yields a guarded zero estimate, not readiness. No current timer, Hive charge recovery, full refill, remaining ammo, charge speed, cancellation/destruction, actual reset, deployment delay or Overcharge activation is inferred. Installed Expertise, skill mods and other comparison assumptions remain excluded. Ordinary outputs, cooldown factors and stats remain unchanged. Source values and stacking require live-game verification.",
+            "format": "decimal",
+            "formula": "1 + effective_skill_haste + 0 > 0 ? 50 / (1 + effective_skill_haste + 0) : 0",
+            "when": "context_value('overcharge_recovery_preview') == 1"
+          }
+        ],
+        "modSlots": [
+          {
+            "id": "targeting",
+            "name": "Targeting Slot",
+            "choices": [
+              {
+                "id": "targeting_targets",
+                "name": "Targeting: Targets",
+                "description": "Ordinary Firefly pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_capacity",
+                "min": 1.0,
+                "max": 1.0,
+                "format": "integer",
+                "statName": "Targets"
+              }
+            ]
+          },
+          {
+            "id": "payload",
+            "name": "Payload Slot",
+            "choices": [
+              {
+                "id": "payload_blind_duration",
+                "name": "Payload: Blind Duration",
+                "description": "Ordinary Firefly pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_duration",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Blind Duration"
+              }
+            ]
+          },
+          {
+            "id": "propulsion",
+            "name": "Propulsion Slot",
+            "choices": [
+              {
+                "id": "propulsion_speed",
+                "name": "Propulsion: Speed",
+                "description": "Ordinary Firefly pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_speed",
+                "min": 0.04,
+                "max": 0.1,
+                "format": "percent",
+                "statName": "Speed"
+              },
+              {
+                "id": "propulsion_cooldown",
+                "name": "Propulsion: Cooldown",
+                "description": "Ordinary Firefly pool roll; the item name does not select the stat. Level-40 Orange bounds at item power 3777, displayed. It adds inside the tier bracket, as the game formula has it. The source establishes endpoints, not a roll step.",
+                "input": "skill_mod_cooldown",
+                "min": 0.025,
+                "max": 0.075,
+                "format": "percent",
+                "statName": "Cooldown"
+              }
+            ]
+          }
+        ]
+      },
+      "evidence_paths": [
+        "docs/R110_SOURCE_REVIEW.md",
+        "docs/R107_SOURCE_REVIEW.md",
+        "sources/skill_player_trap_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_mine_deploy.mskillscriptgraph",
+        "sources/skill_player_trap_preexplode.mskillscriptgraph",
+        "sources/skill_player_trap_explode.mskillscriptgraph",
+        "sources/player_skill_trap_base.mbehavior",
+        "sources/player_skill_trap_deathaction.mbehavior",
+        "sources/player_trap_shock.mnpc",
+        "sources/skill_player_chem_heal.mskillscriptgraph",
+        "sources/player_weapon_skill_chemlauncher_weapon.mweapon",
+        "sources/statuseffect_ensnare.mcompoundnode",
+        "sources/statuseffecttalentrule_ensnare.mtalentrules",
+        "sources/skill_player_pulse_banshee.mskillscriptgraph",
+        "sources/skill_tier_pulse_banshee.mskilltier",
+        "sources/player_skill_firefly_payload_drop.mskillscriptgraph",
+        "sources/player_skill_firefly_base.mbehavior",
+        "sources/shock.mstatuseffect",
+        "sources/confuse.mstatuseffect",
+        "sources/confuse_shieldbreak.mstatuseffect",
+        "sources/ensnare.mstatuseffect",
+        "sources/blind.mstatuseffect"
+      ],
+      "rationale": "What fights do with the status, and what the source adds (R110).",
+      "position": 27
     }
   ],
   "exclusions": [
-    "Indirect Transmission's skill-agent statuses: as in R91.",
-    "The Trap's slow, aim tags and the scaling of its explicit 10 s: as in R97.",
-    "Bewildered's plates, excluded receivers and skill-script halving: as in R96."
+    "The Shock Trap's several mines: a use lays deployable_capacity mines that blast separately; fights model one (R110).",
+    "Banshee Pulse's pie and Blinder Firefly's flight and pies: not spheres, so no area (R110).",
+    "Resistance, NPC durations and diminishing returns: not in the data (R110).",
+    "Riot Foam's line of sight and foam health: not modeled (R110).",
+    "The Explosive Sticky Bomb's blind: its rule carries no status or window for it; not asked here (R107, R110)."
   ],
-  "evidence_files_verified": 9,
+  "evidence_files_verified": 42,
   "assets_sha256_unchanged": true,
   "presentation_and_share_bytes_unchanged": true,
-  "talent_modifiers_unchanged": false,
+  "talent_modifiers_unchanged": true,
   "stats_unchanged": true,
   "consumer_accepted": false,
   "runtime_verified": false,

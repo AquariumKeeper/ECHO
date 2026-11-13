@@ -1016,7 +1016,8 @@
       "kind": "status",
       "duration": 7,
       "every": 35,
-      "status": "burning"
+      "status": "burning",
+      "within": 20
     },
     {
       "talent": "gear_talent_concussion",
@@ -1589,7 +1590,10 @@
       "status": "burning",
       "statusRate": "assumed_ticking_dps",
       "statusWindow": "burn_duration_seconds",
-      "statusArmorBonus": "damage_to_armor"
+      "statusArmorBonus": "damage_to_armor",
+      "area": "radius_meters",
+      "areaFull": "area_full_meters",
+      "areaEdge": 0.1
     },
     {
       "skill": "skill_assault_turret",
@@ -1629,7 +1633,8 @@
       "statusWindow": "burn_duration_seconds",
       "statusArmorBonus": "damage_to_armor",
       "stock": "charge_capacity",
-      "stockInterval": 2
+      "stockInterval": 2,
+      "area": "radius_meters"
     },
     {
       "skill": "skill_oxidizer_chem_launcher",
@@ -1646,7 +1651,10 @@
       "status": "bleeding",
       "statusRate": "assumed_ticking_dps",
       "statusWindow": "bleed_duration_seconds",
-      "statusArmorBonus": "damage_to_armor"
+      "statusArmorBonus": "damage_to_armor",
+      "area": "radius_meters",
+      "areaFull": "area_full_meters",
+      "areaEdge": 0.5
     },
     {
       "skill": "skill_airburst_seeker_mine",
@@ -1667,13 +1675,16 @@
       "statusRate": "assumed_ticking_dps",
       "statusWindow": "bleed_duration_seconds",
       "statusArmorBonus": "damage_to_armor",
-      "impactInterval": "assumed_shell_interval_seconds"
+      "impactInterval": "assumed_shell_interval_seconds",
+      "area": "radius_meters"
     },
     {
       "skill": "skill_shock_trap",
       "window": "shock_duration_seconds",
       "cooldown": "cooldown_seconds",
-      "status": "shocked"
+      "status": "shocked",
+      "controlStatus": true,
+      "area": "radius_meters"
     },
     {
       "skill": "skill_riot_foam_chem_launcher",
@@ -1681,19 +1692,23 @@
       "cooldown": "ammo_recovery_seconds",
       "status": "ensnared",
       "stock": "charge_capacity",
-      "stockInterval": 2
+      "stockInterval": 2,
+      "controlStatus": true,
+      "area": "radius_meters"
     },
     {
       "skill": "skill_blinder_firefly",
       "window": "blind_duration_seconds",
       "cooldown": "cooldown_seconds",
-      "status": "blinded"
+      "status": "blinded",
+      "controlStatus": true
     },
     {
       "skill": "skill_banshee_pulse",
       "window": "disorient_duration_seconds",
       "cooldown": "cooldown_seconds",
-      "status": "disoriented"
+      "status": "disoriented",
+      "controlStatus": true
     },
     {
       "skill": "skill_bulwark_shield",
@@ -1744,7 +1759,10 @@
     {
       "skill": "skill_explosive_sticky_bomb",
       "impact": "damage",
-      "cooldown": "cooldown_seconds"
+      "cooldown": "cooldown_seconds",
+      "area": "radius_meters",
+      "areaFull": "area_full_meters",
+      "areaEdge": 0.1
     },
     {
       "skill": "skill_burster_firefly",
@@ -1756,7 +1774,10 @@
       "impact": "damage",
       "impacts": "deployable_capacity",
       "cooldown": "cooldown_seconds",
-      "impactInterval": "assumed_mine_interval_seconds"
+      "impactInterval": "assumed_mine_interval_seconds",
+      "area": "radius_meters",
+      "areaFull": "area_full_meters",
+      "areaEdge": 0.5
     },
     {
       "skill": "skill_sniper_turret",
@@ -1851,12 +1872,14 @@
     {
       "talent": "gear_talent_creeping_death",
       "within": 8,
-      "every": 15
+      "every": 15,
+      "skillStatuses": true
     },
     {
       "talent": "gear_talent_perfect_creeping_death",
       "within": 10,
-      "every": 10
+      "every": 10,
+      "skillStatuses": true
     }
   ],
   "passOns": [
@@ -1869,7 +1892,8 @@
       "withinStat": "indirect_transmission_radius",
       "status": "any",
       "shareStat": "indirect_transmission_refresh",
-      "to": "all"
+      "to": "all",
+      "skillStatuses": true
     }
   ],
   "redirects": [

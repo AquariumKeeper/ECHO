@@ -12,8 +12,8 @@ public sealed class ProducerDeliveryTests
     private static string Pack => Path.Combine(Data, "packs", "division-2");
     private static string Delivery => Path.Combine(Data, "deliveries", "division-2");
 
-    // The assembly's source evidence (the Apex talent sources extracted from the game, with sidecars) stays in the data project; only its hashes are pinned here, through assembly.json and the
-    // evidence packet.
+    // The assembly's source evidence (whatever the latest candidate cites: extracted game files, reviews, earlier handoffs) stays in the data project; only its hashes are pinned here,
+    // through assembly.json and the evidence packet.
     private const string Evidence = "support/evidence/";
 
     [Theory]
@@ -30,16 +30,16 @@ public sealed class ProducerDeliveryTests
     [Fact]
     public void AdoptedDeliveryMatchesItsPinnedManifestAndEveryOutput()
     {
-        Assert.Equal("80b7eaae787c0eb494729c69e075312da309184d952d1eb24e500b1792b82495", Hash(Path.Combine(Pack, "manifest.json")));
-        Assert.Equal("783147ac9e07d193c61e447d176f18ffbc35ddbe2ad0f3056cef4119ddc063f3", Hash(Path.Combine(Delivery, "assembly.json")));
+        Assert.Equal("55a08bec76063163ee0fbd96b146d217e229fd163ed0503a6dad6d8149f122ac", Hash(Path.Combine(Pack, "manifest.json")));
+        Assert.Equal("1c9c27f36b278f7a77ec0400b04389e9459ac7f802cf0e64a67841fbcbe9d585", Hash(Path.Combine(Delivery, "assembly.json")));
         using var assembly = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Delivery, "assembly.json")));
         Assert.True(assembly.RootElement.GetProperty("complete_pack_assembled").GetBoolean());
         Assert.False(assembly.RootElement.GetProperty("complete_native_source_derivation").GetBoolean());
         var outputs = assembly.RootElement.GetProperty("outputs").EnumerateObject().ToArray();
-        Assert.Equal(35, outputs.Length);
+        Assert.Equal(68, outputs.Length);
         var evidence = outputs.Where(output => output.Name.StartsWith(Evidence, StringComparison.Ordinal)).ToArray();
-        Assert.Equal(10, evidence.Length);
-        Assert.Equal("a6ffd8473df4cf228430e476b2a60c974fd5e89d898bd58dd65b10fcfffafacb",
+        Assert.Equal(43, evidence.Length);
+        Assert.Equal("e6d18d7ee3b616b4ec87e4aaf314c862d15b630a966df7917c76c69c80813904",
             evidence.Single(output => output.Name == Evidence + "packet.json").Value.GetProperty("sha256").GetString());
         var adopted = outputs.Except(evidence).ToArray();
         foreach (var output in adopted)
@@ -64,17 +64,16 @@ public sealed class ProducerDeliveryTests
         using var report = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Delivery, "reports", "talent-overlay.json")));
         var root = report.RootElement;
         Assert.True(root.GetProperty("ok").GetBoolean());
-        Assert.Equal("80b7eaae787c0eb494729c69e075312da309184d952d1eb24e500b1792b82495", root.GetProperty("pack_manifest_sha256").GetString());
-        // This sits on the r97 candidate.
-        Assert.Equal("97dede892860c345ed9e58170b3d20c4c09840d4c104ab407f0d32c64ccfe90a", root.GetProperty("base_manifest_sha256").GetString());
+        Assert.Equal("55a08bec76063163ee0fbd96b146d217e229fd163ed0503a6dad6d8149f122ac", root.GetProperty("pack_manifest_sha256").GetString());
+        // This sits on the r109 candidate.
+        Assert.Equal("4aaeaa76099fa053266561642026cc81a676889c98379a7004f47dff3dda54b4", root.GetProperty("base_manifest_sha256").GetString());
         Assert.Equal(Hash(Path.Combine(Delivery, "overlay-plan.json")), root.GetProperty("overlay_plan_sha256").GetString());
-        // R100: Indirect Transmission's row reading Proliferation's stats, and both talents' coverage.
-        Assert.Equal(3, root.GetProperty("changes").GetArrayLength());
+        // R110: controlStatus on four skill rules (areas on two), and those skills' output descriptions; no talent or stat moves.
+        Assert.Equal(8, root.GetProperty("changes").GetArrayLength());
         Assert.True(root.GetProperty("assets_sha256_unchanged").GetBoolean());
         Assert.True(root.GetProperty("presentation_and_share_bytes_unchanged").GetBoolean());
-        // The report counts a coverage edit on a talent as a talent change; no stat moves.
         Assert.True(root.GetProperty("stats_unchanged").GetBoolean());
-        Assert.False(root.GetProperty("talent_modifiers_unchanged").GetBoolean());
+        Assert.True(root.GetProperty("talent_modifiers_unchanged").GetBoolean());
         Assert.False(root.GetProperty("runtime_verified").GetBoolean());
     }
 

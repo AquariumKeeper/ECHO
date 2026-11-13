@@ -192,7 +192,7 @@ public sealed record DummyFightOptions
     }
 }
 
-public enum DummyEventKind { Shot, ReloadStarted, ReloadCompleted, Kill, TargetArrived, SwapStarted, SwapCompleted, SkillImpact, SkillTick, EnemyShot, EnemyHit, ArmorBreak, Downed, EnemyShotBlocked, ArmorRepaired, HealthRepaired, ShieldRaised, ShieldHit, ShieldBreak, ShieldRepaired, TargetMarked, PreservationStarted, BurnTick, BleedTick, BonusArmorGranted, Pickup, TalentTick, ArmorKitStarted, ArmorKitUsed, TalentBlast, DebuffPassedOn, StatusPassedOn, EnemyMarked, DamageRedirected, TrapSprung }
+public enum DummyEventKind { Shot, ReloadStarted, ReloadCompleted, Kill, TargetArrived, SwapStarted, SwapCompleted, SkillImpact, SkillTick, EnemyShot, EnemyHit, ArmorBreak, Downed, EnemyShotBlocked, ArmorRepaired, HealthRepaired, ShieldRaised, ShieldHit, ShieldBreak, ShieldRepaired, TargetMarked, PreservationStarted, BurnTick, BleedTick, BonusArmorGranted, Pickup, TalentTick, ArmorKitStarted, ArmorKitUsed, TalentBlast, DebuffPassedOn, StatusPassedOn, EnemyMarked, DamageRedirected, TrapSprung, SkillAreaHit }
 public sealed record DummyEvent(double Time, DummyEventKind Kind, double Damage = 0, string WeaponSlot = "");
 public static class DummyEventAmounts
 {
@@ -200,7 +200,7 @@ public static class DummyEventAmounts
     public static bool CarriesAmount(this DummyEventKind kind) => kind is DummyEventKind.Shot or DummyEventKind.SkillImpact
         or DummyEventKind.SkillTick or DummyEventKind.EnemyHit or DummyEventKind.ShieldHit or DummyEventKind.ShieldRepaired
         or DummyEventKind.ArmorRepaired or DummyEventKind.HealthRepaired or DummyEventKind.PreservationStarted
-        or DummyEventKind.BurnTick or DummyEventKind.BleedTick or DummyEventKind.BonusArmorGranted or DummyEventKind.TalentTick or DummyEventKind.ArmorKitUsed or DummyEventKind.TalentBlast or DummyEventKind.DebuffPassedOn or DummyEventKind.StatusPassedOn or DummyEventKind.DamageRedirected or DummyEventKind.TrapSprung;
+        or DummyEventKind.BurnTick or DummyEventKind.BleedTick or DummyEventKind.BonusArmorGranted or DummyEventKind.TalentTick or DummyEventKind.ArmorKitUsed or DummyEventKind.TalentBlast or DummyEventKind.DebuffPassedOn or DummyEventKind.StatusPassedOn or DummyEventKind.DamageRedirected or DummyEventKind.TrapSprung or DummyEventKind.SkillAreaHit;
 }
 public sealed record SimulationProgress(int CompletedFights, int TotalFights);
 public sealed record FightSummary(double Mean, double StdDev, double Min, double P5, double P50, double P95, double Max);

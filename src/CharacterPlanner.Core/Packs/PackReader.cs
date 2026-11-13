@@ -344,7 +344,7 @@ public static class PackReader
             Skills = [.. List(simulation.Skills).Select(skill => new SimSkillDefinition
             {
                 Skill = skill.Skill, Rate = skill.Rate ?? "", Window = skill.Window ?? "", Cooldown = skill.Cooldown ?? "", Impact = skill.Impact ?? "",
-                CooldownFromEnd = skill.CooldownFromEnd ?? false, Impacts = skill.Impacts ?? "", ImpactInterval = skill.ImpactInterval ?? "", Shield = skill.Shield ?? "", Regeneration = skill.Regeneration ?? "",
+                CooldownFromEnd = skill.CooldownFromEnd ?? false, Impacts = skill.Impacts ?? "", ImpactInterval = skill.ImpactInterval ?? "", Area = skill.Area ?? "", AreaFull = skill.AreaFull ?? "", AreaEdge = skill.AreaEdge ?? 0, ControlStatus = skill.ControlStatus ?? false, Shield = skill.Shield ?? "", Regeneration = skill.Regeneration ?? "",
                 Weapons = Strings(skill.Weapons), ExcludeTags = Strings(skill.ExcludeTags), Status = skill.Status ?? "", RateArmorBonus = skill.RateArmorBonus ?? "", RateRead = skill.RateRead ?? "", Stock = skill.Stock ?? "", StockInterval = skill.StockInterval ?? 0, StatusRate = skill.StatusRate ?? "", StatusWindow = skill.StatusWindow ?? "", StatusArmorBonus = skill.StatusArmorBonus ?? ""
             })],
             StatusDamage = [.. List(simulation.StatusDamage).Select(damage => new SimStatusDamageDefinition
@@ -355,8 +355,8 @@ public static class PackReader
             {
                 Talent = damage.Talent, On = damage.On, Total = damage.Total, Duration = damage.Duration, Period = damage.Period, MaxStacks = damage.MaxStacks ?? 1
             })],
-            PassOns = [.. List(simulation.PassOns).Select(passOn => new SimPassOnDefinition { Talent = passOn.Talent, Within = passOn.Within ?? 0, WithinStat = passOn.WithinStat ?? "", Status = passOn.Status ?? "", Share = passOn.Share ?? 0, ShareStat = passOn.ShareStat ?? "", To = passOn.To ?? "" })],
-            Spreads = [.. List(simulation.Spreads).Select(spread => new SimSpreadDefinition { Talent = spread.Talent, Within = spread.Within, Every = spread.Every ?? 0 })],
+            PassOns = [.. List(simulation.PassOns).Select(passOn => new SimPassOnDefinition { Talent = passOn.Talent, Within = passOn.Within ?? 0, WithinStat = passOn.WithinStat ?? "", Status = passOn.Status ?? "", Share = passOn.Share ?? 0, ShareStat = passOn.ShareStat ?? "", To = passOn.To ?? "", SkillStatuses = passOn.SkillStatuses ?? false })],
+            Spreads = [.. List(simulation.Spreads).Select(spread => new SimSpreadDefinition { Talent = spread.Talent, Within = spread.Within, Every = spread.Every ?? 0, SkillStatuses = spread.SkillStatuses ?? false })],
             Redirects = [.. List(simulation.Redirects).Select(redirect => new SimRedirectDefinition { Talent = redirect.Talent, Share = redirect.Share, Within = redirect.Within })],
             Traps = [.. List(simulation.Traps).Select(trap => new SimTrapDefinition
             {

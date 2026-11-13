@@ -207,8 +207,8 @@
       "characterplanner.application": {
         "type": "Project",
         "dependencies": {
-          "CharacterPlanner.Core": "[0.2.0-beta.6, )",
-          "CharacterPlanner.Simulation": "[0.2.0-beta.6, )"
+          "CharacterPlanner.Core": "[0.2.0-beta.7, )",
+          "CharacterPlanner.Simulation": "[0.2.0-beta.7, )"
         }
       },
       "characterplanner.core": {
@@ -217,20 +217,20 @@
       "characterplanner.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "CharacterPlanner.Application": "[0.2.0-beta.6, )",
-          "CharacterPlanner.Core": "[0.2.0-beta.6, )"
+          "CharacterPlanner.Application": "[0.2.0-beta.7, )",
+          "CharacterPlanner.Core": "[0.2.0-beta.7, )"
         }
       },
       "characterplanner.legacy": {
         "type": "Project",
         "dependencies": {
-          "CharacterPlanner.Core": "[0.2.0-beta.6, )"
+          "CharacterPlanner.Core": "[0.2.0-beta.7, )"
         }
       },
       "characterplanner.simulation": {
         "type": "Project",
         "dependencies": {
-          "CharacterPlanner.Core": "[0.2.0-beta.6, )"
+          "CharacterPlanner.Core": "[0.2.0-beta.7, )"
         }
       }
     },
