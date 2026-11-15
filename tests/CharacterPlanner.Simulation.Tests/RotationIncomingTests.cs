@@ -42,7 +42,7 @@ public sealed partial class IncomingFightTests
         var result = Run(fixture, SwappingUnderFire(8) with { PeekSeconds = 2, CoverSeconds = 2, PeekHitShare = 1 });
         Assert.Equal((15, 8, 7), (result.Incoming!.Attempts, result.Incoming.BlockedShots, result.Incoming.Hits));
         Assert.Contains(result.Limitations, note => note.Contains("a magazine is kept for the swap when empty", StringComparison.Ordinal));
-        Assert.StartsWith("d2p-incoming-random-v73/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-incoming-random-v75/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public sealed partial class IncomingFightTests
         Assert.True(result.Incoming.Hits > 0);
         // Swaps start at 1, 3 and 7 s; the one after the last kill would start at the 11 s horizon.
         Assert.Equal(3, result.Swaps);
-        Assert.StartsWith("d2p-incoming-random-v73/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-incoming-random-v75/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -95,7 +95,7 @@ public sealed partial class IncomingFightTests
         Assert.Equal(1, result.Incoming.ShieldBreaks);
         Assert.Equal(new[] { 0d, 4d }, result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.ShieldRaised).Select(e => e.Time));
         Assert.Equal(new[] { "primary_weapon", "secondary_weapon" }, result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot).Select(e => e.WeaponSlot));
-        Assert.StartsWith("d2p-incoming-random-v73/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-incoming-random-v75/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -209,7 +209,7 @@ public sealed partial class IncomingFightTests
         Assert.Equal(new[] { ("primary_weapon", 0d), ("secondary_weapon", 2d) },
             result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Kill).Select(e => (e.WeaponSlot, e.Time)));
         Assert.Equal(8, result.Incoming!.ArmorRepaired, 8);
-        Assert.StartsWith("d2p-incoming-random-v73/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-incoming-random-v75/", result.Contract, StringComparison.Ordinal);
     }
 
     [Theory]

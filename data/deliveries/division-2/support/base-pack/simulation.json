@@ -1580,6 +1580,19 @@
       "duration": 10,
       "refresh": true,
       "resetOn": "target_death"
+    },
+    {
+      "talent": "weapon_talent_cover_shooter",
+      "key": "cover_shooter_stacks",
+      "on": "shot",
+      "kind": "stacks",
+      "max": 100,
+      "duration": 15,
+      "requires": {
+        "in_cover": "true"
+      },
+      "resetOn": "reload_end",
+      "alsoResetOn": "swap"
     }
   ],
   "skills": [
@@ -1682,7 +1695,9 @@
       "skill": "skill_shock_trap",
       "window": "shock_duration_seconds",
       "cooldown": "cooldown_seconds",
-      "status": "shocked"
+      "status": "shocked",
+      "controlStatus": true,
+      "area": "radius_meters"
     },
     {
       "skill": "skill_riot_foam_chem_launcher",
@@ -1690,19 +1705,23 @@
       "cooldown": "ammo_recovery_seconds",
       "status": "ensnared",
       "stock": "charge_capacity",
-      "stockInterval": 2
+      "stockInterval": 2,
+      "controlStatus": true,
+      "area": "radius_meters"
     },
     {
       "skill": "skill_blinder_firefly",
       "window": "blind_duration_seconds",
       "cooldown": "cooldown_seconds",
-      "status": "blinded"
+      "status": "blinded",
+      "controlStatus": true
     },
     {
       "skill": "skill_banshee_pulse",
       "window": "disorient_duration_seconds",
       "cooldown": "cooldown_seconds",
-      "status": "disoriented"
+      "status": "disoriented",
+      "controlStatus": true
     },
     {
       "skill": "skill_bulwark_shield",
@@ -1906,6 +1925,12 @@
       "statusDuration": 10,
       "every": 30,
       "cut": 10
+    }
+  ],
+  "incomingDefaults": [
+    {
+      "input": "enemy_target",
+      "value": 3
     }
   ]
 }

@@ -3,7 +3,7 @@
 The planner's numbers come from sources that sometimes disagree.
 One reading on the item card or stats screen usually
 settles it. Values below are for the bundled pack
-(`y8s3.3-pve.2026-11-13.r110.candidate.1`).
+(`y8s3.3-pve.2026-11-14.r115.candidate.1`).
 
 ## How to report a reading
 
@@ -67,6 +67,18 @@ These matter most. Read them on the skill screen, and note the bonus you used:
 - **Burns on enemies that die fast:** a burn now ends with the enemy it's on, so Burn
   Sticky Bomb, Firestarter and Airburst Seeker lose most of their damage against enemies
   that die at once. If a burn carries on to the next enemy in the game, report it.
+
+- **Incoming damage from one elite:** at Heroic, stand in the open against a single elite
+  and time from its first shot to your armor breaking. Note your armor total from the
+  character screen and the enemy's faction and weapon. The planner estimates the time as
+  armor / (hit damage × shots a minute / 60 × 50% hits × 50% of the time firing); the
+  real time sets the scale of every fight with enemy fire.
+
+- **Cover Shooter's timer:** from cover, fire a short burst with Big Alejandro, pause about 10 s
+  without reloading, then fire a second burst. Watch whether every stack drops to 0 at 15 s from
+  the first shot (the source's single timer), or the second burst's stacks stay until 15 s after
+  it (the planner holds each stack 15 s from its own shot). A full magazine lasts about 11 s, so
+  continuous fire can't show the difference.
 
 ## Still open from earlier releases
 

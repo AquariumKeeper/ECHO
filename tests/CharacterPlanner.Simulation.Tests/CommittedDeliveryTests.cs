@@ -1136,6 +1136,95 @@ public sealed partial class DummyWeaponSimulatorTests
     }
 
     [Fact]
+    public void CommittedCoverShooterCountsShotsInCoverOnly()
+    {
+        // R112: a stack per bullet fired in cover, up to 100, each held 15 s, cleared by a completed reload or a swap. In a cover
+        // cycle Big Alejandro gains over the rule left out; in the open the key is held at 0 (#243), so nothing moves.
+        var pack = CommittedPack();
+        var rule = Assert.Single(pack.Pack.Simulation.Triggers, entry => entry.Talent == "weapon_talent_cover_shooter");
+        Assert.Equal(("cover_shooter_stacks", "shot", "stacks", 100.0, 15.0, "reload_end", "swap", "true"),
+            (rule.Key, rule.On, rule.Kind, rule.Max, rule.Duration, rule.ResetOn, rule.AlsoResetOn, rule.RequiresContext!["in_cover"]));
+        var build = Equip(pack.Pack, "primary_weapon_big_alejandro");
+        var without = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        { Simulation = pack.Pack.Simulation with { Triggers = [.. pack.Pack.Simulation.Triggers.Where(entry => entry != rule)] } }).Compiled);
+        double Dps(CompiledPackExpressions fought, bool cover) => DummyWeaponSimulator.RunAgainstTargets(fought, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("practical_headshot_share", "30").Add("enemy_difficulty", "4"),
+            new()
+            {
+                Duration = 60,
+                Mode = SimulationMode.Random,
+                Iterations = 2,
+                Seed = 1,
+                DriveSimpleBuffs = true,
+                PeekSeconds = cover ? 3 : null,
+                CoverSeconds = cover ? 1 : null,
+                PeekHitShare = cover ? 1 : null
+            },
+            cancellationToken: TestContext.Current.CancellationToken).TotalDps!.Mean;
+        Assert.True(Dps(pack, true) > Dps(without, true));
+        Assert.Equal(Dps(without, false), Dps(pack, false));
+    }
+
+    [Fact]
+    public void CoverShootersSourceTimerRunsInACommittedFight()
+    {
+        // The owner's call (2026-11-14), adopted with R115: Cover Shooter's row has the source's single timer and kill refresh. With the
+        // timer cut to 2 s so it ends before a reload clears it, the single timer holds fewer stacks than each stack's own 2 s.
+        var pack = CommittedPack();
+        var rule = Assert.Single(pack.Pack.Simulation.Triggers, entry => entry.Talent == "weapon_talent_cover_shooter");
+        double MeanStacks(SimTriggerDefinition changed)
+        {
+            var fought = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+            {
+                Simulation = pack.Pack.Simulation with { Triggers = [.. pack.Pack.Simulation.Triggers.Select(entry => entry == rule ? changed : entry)] }
+            }).Compiled);
+            var result = DummyWeaponSimulator.RunAgainstTargets(fought, Equip(pack.Pack, "primary_weapon_big_alejandro"),
+                Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("enemy_difficulty", "4"),
+                new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, PeekSeconds = 3, CoverSeconds = 1, PeekHitShare = 1 },
+                cancellationToken: TestContext.Current.CancellationToken);
+            return result.TimedTriggerUptime["cover_shooter_stacks"].MeanStacks!.Value;
+        }
+        Assert.Equal((true, "kill"), (rule.FromFirstGain, rule.RefreshOn));
+        var sourced = MeanStacks(rule with { Duration = 2 });
+        Assert.True(sourced > 0);
+        Assert.True(sourced < MeanStacks(rule with { Duration = 2, FromFirstGain = false, RefreshOn = "" }), $"{sourced}");
+    }
+
+    [Fact]
+    public void CommittedNailGunBleedsThePlayer()
+    {
+        // R115: target 5's hits put a 2 s bleed on the player, ticking 35 x the status curve every 0.5 s from the hit, shortened by
+        // hazard protection and bleed resistance down to 0.5 s.
+        var pack = CommittedPack().Pack;
+        var row = Assert.Single(pack.Simulation.EnemyStatuses);
+        Assert.Equal((5, "bleeding", 2.0, "npc_bleed_tick_damage", 0.5, true, 0.5), (row.Target, row.Status, row.Duration, row.Tick, row.Period, row.TickOnApply, row.MinDuration));
+        Assert.Equal(["hazard_protection", "bleed_resistance"], row.Resistances);
+        var build = Equip(pack, "primary_weapon_acr");
+        ImmutableDictionary<string, string> Against(string target) =>
+            Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("enemy_target", target).Add("enemy_difficulty", "1").Add("enemy_hit_rate", "20");
+        DummyFightResult Fight(string target) => DummyWeaponSimulator.RunAgainstTargets(CommittedPack(), build, Against(target),
+            new() { Duration = 20, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var nails = Fight("5");
+        Assert.True(nails.Incoming!.StatusDamageTaken > 0);
+        // Each tick deals the resolved stat while the pools last, so the first does.
+        var tick = BuildResolver.Resolve(CommittedPack(), build, Against("5")).Calculation.Stats["npc_bleed_tick_damage"];
+        Assert.InRange(tick, 20000, 30000);
+        Assert.Equal(tick, nails.FirstFightEvents.First(e => e.Kind == DummyEventKind.PlayerStatusTick).Damage, 6);
+        Assert.True(nails.Incoming.PlayerStatusUptime!["bleeding"].Seconds > 0);
+        Assert.Equal(0, Fight("3").Incoming!.StatusDamageTaken);
+    }
+
+    [Fact]
+    public void CommittedEnemyFireDefaultIsProfileThree()
+    {
+        // R113: fights with enemy fire start from profile 3 (normal, 1,200 health, no armor), the ordinary default staying 6.
+        var pack = CommittedPack().Pack;
+        Assert.Equal(("enemy_target", 3.0), Assert.Single(pack.Simulation.IncomingDefaults) is var entry ? (entry.Input, entry.Value) : default);
+        Assert.Equal(6, pack.NumericContextInputs.Single(input => input.ID == "enemy_target").Default);
+    }
+
+    [Fact]
     public void CommittedControlRowsAreTheR110Values()
     {
         // R110 with ADR 0017: all four control skills put their status on; the Shock Trap's and Riot Foam's spheres take an area, the

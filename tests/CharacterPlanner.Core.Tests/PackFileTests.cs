@@ -68,9 +68,35 @@ public sealed class PackFileTests
     }
 
     [Fact]
+    public void EnemyStatusesRoundTripAndOmitUnsetFields()
+    {
+        var pack = Tiny with
+        {
+            Simulation = Tiny.Simulation with
+            {
+                EnemyStatuses = [new() { Target = 5, Status = "bleeding", Duration = 2, Tick = "armor", Period = 0.5, TickOnApply = true, Resistances = ["armor"], MinDuration = 0.5 },
+                    new() { Target = 4, Status = "shocked", Duration = 3 }]
+            }
+        };
+        var files = PackWriter.Write(pack);
+        var rows = JsonNode.Parse(Encoding.UTF8.GetString(files[PackFiles.Simulation].Span))!["enemyStatuses"]!;
+        Assert.Equal(0.5, rows[0]!["minDuration"]!.GetValue<double>());
+        Assert.Null(rows[1]!["tick"]);
+        Assert.Null(rows[1]!["period"]);
+        Assert.Null(rows[1]!["tickOnApply"]);
+        Assert.Null(rows[1]!["resistances"]);
+        var read = Assert.IsType<GamePack>(Read(files).Pack).Simulation.EnemyStatuses;
+        Assert.Equal((4, "shocked", 3.0, "", 0.0, false, 0.0), (read[1].Target, read[1].Status, read[1].Duration, read[1].Tick, read[1].Period, read[1].TickOnApply, read[1].MinDuration));
+        Assert.Empty(read[1].Resistances);
+        Assert.Equal((5, "bleeding", 2.0, "armor", 0.5, true, 0.5), (read[0].Target, read[0].Status, read[0].Duration, read[0].Tick, read[0].Period, read[0].TickOnApply, read[0].MinDuration));
+        Assert.Equal(["armor"], read[0].Resistances);
+        Assert.Null(JsonNode.Parse(Encoding.UTF8.GetString(PackWriter.Write(Tiny)[PackFiles.Simulation].Span))!["enemyStatuses"]);
+    }
+
+    [Fact]
     public void CancelAndBankFieldsRoundTripAndAreOmittedWhenUnset()
     {
-        var trigger = new SimTriggerDefinition { Talent = "t", Key = "k", On = "swapped", Kind = "buff", Duration = 5, CancelOn = "swapped", CancelFor = 5 };
+        var trigger = new SimTriggerDefinition { Talent = "t", Key = "k", On = "swapped", Kind = "buff", Duration = 5, CancelOn = "swapped", CancelFor = 5, RefreshOn = "kill", WhilePlayerStatus = "bleeding" };
         var bank = new SimTriggerDefinition
         {
             Talent = "t",
@@ -84,18 +110,32 @@ public sealed class PackFileTests
             ResetOn = "reload",
             ClearGrant = "temporary_armor",
             ClearAmount = 0.05,
-            ClearDuration = 10
+            ClearDuration = 10,
+            FromFirstGain = true
         };
-        var pack = Tiny with { Simulation = Tiny.Simulation with { Triggers = [trigger, bank] } };
+        var primed = new SimTriggerDefinition { Talent = "t", Key = "p", Kind = "ready", PrimeHolstered = 10 };
+        var pack = Tiny with { Simulation = Tiny.Simulation with { Triggers = [trigger, bank, primed] } };
         var files = PackWriter.Write(pack);
         var triggers = JsonNode.Parse(Encoding.UTF8.GetString(files[PackFiles.Simulation].Span))!["triggers"]!;
         Assert.Equal("swapped", triggers[0]!["cancelOn"]!.GetValue<string>());
         Assert.Equal(5, triggers[0]!["cancelFor"]!.GetValue<double>());
+        Assert.Equal("kill", triggers[0]!["refreshOn"]!.GetValue<string>());
+        Assert.Null(triggers[1]!["refreshOn"]);
+        Assert.Equal("bleeding", triggers[0]!["whilePlayerStatus"]!.GetValue<string>());
+        Assert.Null(triggers[1]!["whilePlayerStatus"]);
         Assert.Equal("s_banked", triggers[1]!["bank"]!.GetValue<string>());
         Assert.Null(triggers[1]!["cancelOn"]);
         Assert.Null(triggers[0]!["bank"]);
         var read = Assert.IsType<GamePack>(Read(files).Pack).Simulation.Triggers;
         Assert.Equal(("swapped", 5.0, ""), (read[0].CancelOn, read[0].CancelFor, read[0].Bank));
+        Assert.Equal(("kill", ""), (read[0].RefreshOn, read[1].RefreshOn));
+        Assert.Equal(("bleeding", ""), (read[0].WhilePlayerStatus, read[1].WhilePlayerStatus));
+        Assert.Equal((false, true), (read[0].FromFirstGain, read[1].FromFirstGain));
+        Assert.True(triggers[1]!["fromFirstGain"]!.GetValue<bool>());
+        Assert.Null(triggers[0]!["fromFirstGain"]);
+        Assert.Equal(10, triggers[2]!["primeHolstered"]!.GetValue<double>());
+        Assert.Null(triggers[0]!["primeHolstered"]);
+        Assert.Equal(10, read[2].PrimeHolstered);
         Assert.Equal(("", 0.0, "s_banked"), (read[1].CancelOn, read[1].CancelFor, read[1].Bank));
         Assert.Equal(("temporary_armor", 0.05, 10.0), (read[1].ClearGrant, read[1].ClearAmount, read[1].ClearDuration));
         Assert.Null(triggers[0]!["clearGrant"]);

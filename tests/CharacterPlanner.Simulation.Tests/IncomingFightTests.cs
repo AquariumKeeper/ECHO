@@ -384,6 +384,30 @@ public sealed partial class IncomingFightTests
     }
 
     [Theory]
+    [InlineData(null, 20.0, "Enemy target takes its default for fights with enemy fire: 2")]
+    [InlineData("1", 10.0, "Enemy target is set to 1; its default in fights with enemy fire (2) is not used")]
+    [InlineData("2", 20.0, "Enemy target is set to 2, the same as its default in fights with enemy fire")]
+    public void TheTargetTakesItsEnemyFireDefaultUnlessSet(string? set, double hit, string note)
+    {
+        // The owner's separate target for fights with enemy fire (2026-11-14): profile 2 hits for 20 where the ordinary default,
+        // profile 1, hits for 10. An explicit setting wins, and the result says which applied.
+        var (original, build) = CadenceFixture();
+        var rules = original.Pack with { Simulation = original.Pack.Simulation with { IncomingDefaults = [new() { Input = "enemy_target", Value = 2 }] } };
+        var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+        var context = set is null ? Context : Context.Add("enemy_target", set);
+        var result = Run((pack, build), Options with { Duration = 3.5, DriveSimpleBuffs = true }, context);
+        Assert.All(result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.EnemyHit), e => Assert.Equal(hit, e.Damage));
+        Assert.Contains(note, result.Limitations);
+        Assert.Equal(set is null, result.Coverage.InputBasis.Contains("Set by the pack for fights with enemy fire, not chosen: Enemy target", StringComparison.Ordinal));
+        // A target sequence sets each profile itself, and says the default wasn't used.
+        var sequenced = Run((pack, build), Options with { Duration = 3.5, DriveSimpleBuffs = true, TargetSequence = [1] }, Context);
+        Assert.Contains("Enemy target's default in fights with enemy fire (2) is not used: the target sequence sets each target's profile", sequenced.Limitations);
+        // A fight without enemy fire neither takes nor reports it.
+        var quiet = Run((pack, build), Options with { Duration = 3.5, IncludeIncoming = false }, Context);
+        Assert.DoesNotContain(quiet.Limitations, text => text.Contains("fights with enemy fire", StringComparison.Ordinal));
+    }
+
+    [Theory]
     [InlineData(3, 2.0, 1.0)]
     [InlineData(100, null, 0.0)]
     public void TimeToClearIsTheNthKillsTimeInEachFight(int targets, double? clearedAt, double clearedFraction)
@@ -467,6 +491,114 @@ public sealed partial class IncomingFightTests
         return (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled), build);
     }
 
+    // ADR 0018: profile 1 hits for 10 each second from 1 s and puts a 2 s bleed on, ticking 3 every 0.5 s from 0.5 s after it starts.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) BleedFixture(double resistance = 0, double minDuration = 0, string tick = "3",
+        params (string Id, string Formula)[] changes)
+    {
+        var (original, build) = CadenceFixture(changes: [.. changes, ("npc_bleed_tick", tick), ("bleed_resistance", resistance.ToString(System.Globalization.CultureInfo.InvariantCulture))]);
+        var rules = original.Pack with
+        {
+            Simulation = original.Pack.Simulation with
+            {
+                EnemyStatuses = [new() { Target = 1, Status = "bleeding", Duration = 2, Tick = "npc_bleed_tick", Period = 0.5, Resistances = ["bleed_resistance"], MinDuration = minDuration }]
+            }
+        };
+        return (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled), build);
+    }
+
+    [Fact]
+    public void AnEnemyHitsStatusTicksOnThePlayerThroughArmorFirst()
+    {
+        // Hits at 1, 2 and 3 s keep the bleed on from 1 s to the end at 3.5 s, each extending it without moving its cadence. Ticks land
+        // at 1.5, 2, 2.5 and 3 s, after the hits at 2 and 3 s that share their time. The hit at 1 s breaks the 10 armor, so the first
+        // tick is on health.
+        var result = Run(BleedFixture(), Options with { Duration = 3.5 }, Context.Add("enemy_target", "1"));
+        var ticks = result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.PlayerStatusTick).ToArray();
+        Assert.Equal(new[] { 1.5, 2, 2.5, 3 }, ticks.Select(e => e.Time));
+        Assert.All(ticks, e => Assert.Equal(3, e.Damage));
+        var order = result.FirstFightEvents.Where(e => e.Time == 2 && e.Kind is DummyEventKind.EnemyHit or DummyEventKind.PlayerStatusTick).Select(e => e.Kind);
+        Assert.Equal(new[] { DummyEventKind.EnemyHit, DummyEventKind.PlayerStatusTick }, order);
+        Assert.Equal(42, result.Incoming!.DamageTaken);
+        Assert.Equal(12, result.Incoming.StatusDamageTaken);
+        Assert.Equal(2.5, result.Incoming.PlayerStatusUptime!["bleeding"].Seconds, 9);
+        Assert.Contains(result.Limitations, text => text.Contains("puts the pack's statuses for its enemy's profile on you", StringComparison.Ordinal));
+        // Another profile has no row: the status never goes on, though the result still reports none.
+        var other = Run(BleedFixture(), Options with { Duration = 3.5 }, Context.Add("enemy_target", "2"));
+        Assert.DoesNotContain(other.FirstFightEvents, e => e.Kind == DummyEventKind.PlayerStatusTick);
+        Assert.Equal(0, other.Incoming!.StatusDamageTaken);
+        Assert.Empty(other.Incoming.PlayerStatusUptime!);
+        // In a sequence, the enemy firing sets the profile: profile 2's hits put nothing on.
+        var sequenced = Run(BleedFixture(), Options with { Duration = 5.5, DriveSimpleBuffs = true, TargetSequence = [2] });
+        Assert.DoesNotContain(sequenced.FirstFightEvents, e => e.Kind == DummyEventKind.PlayerStatusTick);
+        var bleeding = Run(BleedFixture(), Options with { Duration = 5.5, DriveSimpleBuffs = true, TargetSequence = [1] });
+        Assert.Contains(bleeding.FirstFightEvents, e => e.Kind == DummyEventKind.PlayerStatusTick);
+        // A row's stats are read against its own profile: a tick of 3 per profile number deals 3 from profile 1 in a sequence, though
+        // the chosen target is profile 2.
+        var perProfile = Run(BleedFixture(tick: "3 * context_value('enemy_target')"), Options with { Duration = 5.5, DriveSimpleBuffs = true, TargetSequence = [1] },
+            Context.Add("enemy_target", "2"));
+        Assert.All(perProfile.FirstFightEvents.Where(e => e.Kind == DummyEventKind.PlayerStatusTick), e => Assert.Equal(3, e.Damage));
+        Assert.NotEmpty(perProfile.FirstFightEvents.Where(e => e.Kind == DummyEventKind.PlayerStatusTick));
+    }
+
+    [Fact]
+    public void ResistancesShortenAStatusOnThePlayerAndOneOfOneStopsIt()
+    {
+        // 90% resistance leaves 0.2 s, raised to the 0.6 s floor: on 1 to 1.6, 2 to 2.6 and 3 to 3.5, ticking at 1.5 and 2.5 s.
+        var shortened = Run(BleedFixture(resistance: 0.9, minDuration: 0.6), Options with { Duration = 3.5 }, Context.Add("enemy_target", "1"));
+        Assert.Equal(new[] { 1.5, 2.5 }, shortened.FirstFightEvents.Where(e => e.Kind == DummyEventKind.PlayerStatusTick).Select(e => e.Time));
+        Assert.Equal(1.7, shortened.Incoming!.PlayerStatusUptime!["bleeding"].Seconds, 9);
+        var immune = Run(BleedFixture(resistance: 1), Options with { Duration = 3.5 }, Context.Add("enemy_target", "1"));
+        Assert.DoesNotContain(immune.FirstFightEvents, e => e.Kind == DummyEventKind.PlayerStatusTick);
+        Assert.Equal(30, immune.Incoming!.DamageTaken);
+        // The pack has statuses for the fight, so it still reports them, as none.
+        Assert.Equal(0, immune.Incoming.StatusDamageTaken);
+        Assert.Empty(immune.Incoming.PlayerStatusUptime!);
+    }
+
+    [Fact]
+    public void ARuleGatedOnAStatusOnThePlayerGainsOnlyWhileItIsOn()
+    {
+        // Chemical Agent's shape (ADR 0018): a buff gained each whole second only while a bleed is on the player. Profile 1's hits keep
+        // it on from 1 s, so the buff runs; profile 2 puts nothing on, so it never does, and neither does a fight without enemy fire.
+        var (original, build) = BleedFixture();
+        var rule = new SimTriggerDefinition { Talent = "test", Key = "buff", Kind = "buff", On = "second", Duration = 0.5, WhilePlayerStatus = "bleeding" };
+        var rules = original.Pack with { Simulation = original.Pack.Simulation with { Triggers = [rule] } };
+        var fixture = (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled), build.WithTalentSelection("primary_weapon", "talent", "test"));
+        double Uptime(DummyFightResult result) => result.TimedTriggerUptime.GetValueOrDefault("buff")?.Seconds ?? 0;
+        var bleeding = Run(fixture, Options with { Duration = 3.5, DriveSimpleBuffs = true }, Context.Add("enemy_target", "1"));
+        Assert.True(Uptime(bleeding) > 0);
+        Assert.Equal(0, Uptime(Run(fixture, Options with { Duration = 3.5, DriveSimpleBuffs = true }, Context.Add("enemy_target", "2"))));
+        Assert.Equal(0, Uptime(Run(fixture, Options with { Duration = 3.5, DriveSimpleBuffs = true, IncludeIncoming = false }, Context.Add("enemy_target", "1"))));
+        // "any" opens on any status on the player.
+        var any = (Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules with { Simulation = rules.Simulation with { Triggers = [rule with { WhilePlayerStatus = "any" }] } }).Compiled), fixture.Item2);
+        Assert.Equal(Uptime(bleeding), Uptime(Run(any, Options with { Duration = 3.5, DriveSimpleBuffs = true }, Context.Add("enemy_target", "1"))));
+    }
+
+    [Fact]
+    public void PlayerStatusTicksDoNotDriftWithShortPeriods()
+    {
+        // Ten ticks of a 0.1 s period from 0 land on n x 0.1 exactly, the last strictly before the 1 s end.
+        var state = new PlayerStatusState();
+        state.Apply("bleeding", 0, 1, 1, 0.1, tickOnApply: true);
+        var times = new List<double>();
+        while (state.NextTick is { } next) { times.Add(next); state.Take(next); }
+        Assert.Equal(Enumerable.Range(0, 10).Select(n => n * 0.1), times);
+        state.Close(1);
+        Assert.Equal(1, state.Seconds["bleeding"], 9);
+    }
+
+    [Fact]
+    public void AStatusTickCanDownThePlayer()
+    {
+        // The hit at 1 s breaks the 10 armor; the tick of 6 at 1.5 s takes the last 5 health.
+        var result = Run(BleedFixture(tick: "6", changes: [("character_health", "5")]), Options with { Duration = 3.5 }, Context.Add("enemy_target", "1"));
+        Assert.Equal(1, result.Incoming!.DownedFraction);
+        Assert.Equal(1.5, result.Incoming.TimeToDown!.Mean);
+        Assert.Equal(DummyEventKind.Downed, result.FirstFightEvents[^1].Kind);
+        Assert.Equal(5, result.Incoming.StatusDamageTaken);
+        Assert.Equal(0.5, result.Incoming.PlayerStatusUptime!["bleeding"].Seconds, 9);
+    }
+
     [Fact]
     public void EachTargetInPlaySetsEnemyCadenceAndDamage()
     {
@@ -480,7 +612,9 @@ public sealed partial class IncomingFightTests
         Assert.Equal(new double[] { 20, 20, 20, 20, 10, 20, 20, 20, 20 }, hits.Select(e => e.Damage));
         Assert.Equal(170, result.Incoming!.DamageTaken);
         Assert.Equal(hits.Select(e => e.Time), result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.EnemyShot).Select(e => e.Time));
-        Assert.StartsWith("d2p-incoming-random-v73/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-incoming-random-v75/", result.Contract, StringComparison.Ordinal);
+        // An enemy's hit is its damage only; what it puts on the player isn't counted (R111), and the result says so.
+        Assert.Contains(result.Limitations, note => note.EndsWith("An enemy's hit deals its damage only: a status it puts on you, such as a nail gun's bleed, isn't counted", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -537,7 +671,7 @@ public sealed partial class IncomingFightTests
         Assert.Equal(Enumerable.Range(1, 10).Select(step => step / 3d), Times(result, DummyEventKind.EnemyHit), (a, b) => Math.Abs(a - b) < 1e-9);
         Assert.Equal(100, result.Incoming!.DamageTaken);
         Assert.Contains(result.Limitations, note => note.StartsWith("3 enemies fire at once, staggered across an interval. Treat this as an upper bound", StringComparison.Ordinal));
-        Assert.StartsWith("d2p-incoming-random-v73/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-incoming-random-v75/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1096,7 +1230,7 @@ public sealed partial class IncomingFightTests
         Assert.Equal(1, result.ClearedFraction);
         Assert.Equal(1, result.TimeToClear!.Mean);
         Assert.Contains(result.Limitations, note => note.Contains("There are 2 in all: the next joins in a dead enemy's place until none are left, then fire falls with each kill, and after the last nobody fires or is shot", StringComparison.Ordinal));
-        Assert.StartsWith("d2p-incoming-random-v73/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-incoming-random-v75/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1475,7 +1609,7 @@ public sealed partial class IncomingFightTests
         Assert.Equal(result.FirstFightEvents, unset.FirstFightEvents);
         Assert.DoesNotContain(unset.Limitations, note => note.Contains("hit chance", StringComparison.Ordinal));
         Assert.Contains(result.Limitations, note => note.StartsWith("Assumed cover cycle: 2.5 s peeking from cover, then 2 s behind it (40% of this fight), starting with a peek", StringComparison.Ordinal));
-        Assert.StartsWith("d2p-simple-buffs-v61/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-simple-buffs-v62/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1535,7 +1669,7 @@ public sealed partial class IncomingFightTests
             .Where(attempt => attempt.At % 4 < 2 && attempt.Roll < 0.5 * share).Select(attempt => attempt.At).ToArray();
         Assert.Equal(expected, result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.EnemyHit).Select(e => e.Time));
         Assert.Contains(result.Limitations, note => note.Contains(string.Create(System.Globalization.CultureInfo.InvariantCulture, $"while peeking enemies land {share:0.##%} of their normal hit chance"), StringComparison.Ordinal));
-        Assert.StartsWith("d2p-incoming-random-v73/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-incoming-random-v75/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1599,7 +1733,7 @@ public sealed partial class IncomingFightTests
         Assert.Equal((1d, 30d), (result.Incoming!.ArmorKitsUsed, result.Incoming.ArmorKitRepaired));
         Assert.Equal(30, result.Incoming.ArmorRepaired);
         Assert.Contains(result.Limitations, note => note.StartsWith("Assumed armor kits: 1 carried, each used if armor is below 50% at the weapon's next decision", StringComparison.Ordinal));
-        Assert.StartsWith("d2p-incoming-random-v73/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-incoming-random-v75/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1731,7 +1865,7 @@ public sealed partial class IncomingFightTests
         Assert.All(shots.Where(e => e.Time < used), e => Assert.Equal(10, e.Damage));
         Assert.Contains(shots, e => e.Time >= used);
         Assert.All(shots.Where(e => e.Time >= used), e => Assert.Equal(20, e.Damage));
-        Assert.StartsWith("d2p-incoming-random-v73/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-incoming-random-v75/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -2262,7 +2396,7 @@ public sealed partial class IncomingFightTests
         Assert.Equal(0, result.Incoming!.ArmorRepaired);
         Assert.Equal(outgoing.ShotsFired, result.ShotsFired);
         // Absolute cycle boundaries changed outgoing phase readings too.
-        Assert.Equal("d2p-simple-buffs-v61/d2p-splitmix64-v1", outgoing.Contract);
+        Assert.Equal("d2p-simple-buffs-v62/d2p-splitmix64-v1", outgoing.Contract);
     }
 
     [Fact]
@@ -2316,7 +2450,7 @@ public sealed partial class IncomingFightTests
         Assert.Equal(expected, result.Incoming!.ArmorRepaired);
         Assert.Equal(expected, result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.ArmorRepaired).Sum(e => e.Damage));
         Assert.DoesNotContain(result.FirstFightEvents, e => e.Kind == DummyEventKind.ArmorRepaired && e.Time <= 1);
-        Assert.Equal("d2p-incoming-random-v73/d2p-splitmix64-v1", result.Contract);
+        Assert.Equal("d2p-incoming-random-v75/d2p-splitmix64-v1", result.Contract);
     }
 
     [Theory]

@@ -299,6 +299,7 @@ public static class PackWriter
             Duration = Optional(trigger.Duration),
             Max = Optional(trigger.Max),
             Refresh = Optional(trigger.Refresh),
+            FromFirstGain = Optional(trigger.FromFirstGain),
             Every = Optional(trigger.Every),
             EveryGroup = Optional(trigger.EveryGroup),
             Chance = trigger.Chance == 1 ? null : trigger.Chance,
@@ -321,10 +322,13 @@ public static class PackWriter
             ApplyOnHit = Optional(trigger.ApplyOnHit),
             GainWhileHolstered = Optional(trigger.GainWhileHolstered),
             WhileStatus = Optional(trigger.WhileStatus),
+            PrimeHolstered = Optional(trigger.PrimeHolstered),
+            WhilePlayerStatus = Optional(trigger.WhilePlayerStatus),
             Pool = Optional(trigger.Pool),
             PoolMax = Optional(trigger.PoolMax),
             CancelOn = Optional(trigger.CancelOn),
             CancelFor = Optional(trigger.CancelFor),
+            RefreshOn = Optional(trigger.RefreshOn),
             Bank = Optional(trigger.Bank),
             ClearGrant = Optional(trigger.ClearGrant),
             ClearAmount = Optional(trigger.ClearAmount),
@@ -408,6 +412,18 @@ public static class PackWriter
         {
             Input = entry.Input,
             Bands = [.. entry.Bands.Select(band => new DistanceBandWire { UpTo = band.UpTo, Value = band.Value })]
+        })),
+        IncomingDefaults = NullIfEmpty(simulation.IncomingDefaults.Select(entry => new IncomingDefaultWire { Input = entry.Input, Value = entry.Value })),
+        EnemyStatuses = NullIfEmpty(simulation.EnemyStatuses.Select(entry => new EnemyStatusWire
+        {
+            Target = entry.Target,
+            Status = entry.Status,
+            Duration = entry.Duration,
+            Tick = Optional(entry.Tick),
+            Period = Optional(entry.Period),
+            TickOnApply = Optional(entry.TickOnApply),
+            Resistances = Optional(entry.Resistances),
+            MinDuration = Optional(entry.MinDuration)
         })),
         ArmorKit = simulation.ArmorKit is { } kit ? new ArmorKitWire
         {

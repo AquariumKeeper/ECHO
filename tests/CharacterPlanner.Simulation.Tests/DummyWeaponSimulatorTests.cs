@@ -529,6 +529,75 @@ public sealed partial class DummyWeaponSimulatorTests
         Assert.Equal(16.0 / 7, result.TimedTriggerUptime["heads"].MeanStacks!.Value, 8);
     }
 
+    // Unwavering's shape (ADR 0019): kills refresh a buff that is on, and gain nothing while it's off. Here the buff comes on at each
+    // reload start, and shots refresh it.
+    [Fact]
+    public void ARefreshEventRestartsABuffThatIsOnAndGainsNothingWhileOff()
+    {
+        var (original, build) = BuffBuild(on: "reload");
+        SimTriggerDefinition Rule(string on, string refreshOn) => original.Pack.Simulation.Triggers[0] with { On = on, Duration = 2.5, RefreshOn = refreshOn };
+        DummyFightResult Fight(SimTriggerDefinition rule)
+        {
+            var rules = original.Pack with { Simulation = new() { Triggers = [rule] } };
+            var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+            return Run(pack, build, Context, new() { Duration = 20, Mode = SimulationMode.Random, Iterations = 1, DriveSimpleBuffs = true, CaptureFirstFightEvents = true });
+        }
+        var plain = Fight(Rule("reload", ""));
+        var refreshed = Fight(Rule("reload", "shot"));
+        Assert.True(plain.TimedTriggerUptime["buff"].Seconds > 0);
+        Assert.True(refreshed.TimedTriggerUptime["buff"].Seconds > plain.TimedTriggerUptime["buff"].Seconds);
+        // A refresh alone never turns the buff on: shots happen, but no pickup ever comes in this fight.
+        var never = Fight(Rule("pickup", "shot"));
+        Assert.NotEmpty(never.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot));
+        Assert.Equal(0, never.TimedTriggerUptime.GetValueOrDefault("buff")?.Seconds ?? 0);
+    }
+
+    // A rule gated on a selector the fight's context doesn't hold takes no part, and its key stays off for the fight instead of taking the
+    // user's setting (Calculated outside cover, Cover Shooter's stacks).
+    [Theory]
+    [InlineData("buff")]
+    [InlineData("stacks")]
+    public void ARuleGatedOffHoldsItsKeyOffForTheFight(string kind)
+    {
+        var (original, _) = BuffBuild();
+        var stacks = kind == "stacks";
+        var rules = original.Pack with
+        {
+            Selectors = [.. stacks ? [] : original.Pack.Selectors, new() { ID = "cover", Name = "Cover", Values = ["true"] }],
+            NumericContextInputs = stacks ? [new() { ID = "buff", Name = "Buff stacks", Min = 0, Max = 100, Step = 1 }] : [],
+            Stats = stacks ? [.. original.Pack.Stats.Select(s => s.ID == "buff_damage" ? s with { Formula = "context_value('buff') * 10" } : s)] : original.Pack.Stats,
+            Talents = stacks ? [new() { ID = "test_buff", Name = "Buff" }] : original.Pack.Talents,
+            Simulation = new()
+            {
+                Triggers = [new()
+                {
+                    Talent = "test_buff", Key = "buff", On = "shot", Kind = kind, Duration = 10, Max = stacks ? 100 : 0, Refresh = stacks,
+                    RequiresContext = ImmutableDictionary<string, string>.Empty.Add("cover", "true")
+                }]
+            }
+        };
+        var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+        var build = BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test_buff");
+        var options = new DummyFightOptions { Duration = 5, Mode = SimulationMode.Random, Iterations = 1, DriveSimpleBuffs = true, CaptureFirstFightEvents = true };
+        var assumed = Context.Add("buff", stacks ? "50" : "true");
+        static double[] Shots(DummyFightResult result) => [.. result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot).Select(e => e.Damage)];
+        // Out of cover the user's own setting no longer applies: the fight runs as with no talent at all.
+        var bare = Run(pack, build.WithTalentSelection("primary_weapon", "talent", ""), Context, options);
+        var open = Run(pack, build, assumed, options);
+        Assert.Equal(Shots(bare), Shots(open));
+        Assert.False(open.TimedTriggerUptime.ContainsKey("buff"));
+        // In cover the rule drives the key from the fight's shots, and the user's setting is replaced as before.
+        var covered = Run(pack, build, assumed.Add("cover", "true"), options);
+        Assert.True(covered.TimedTriggerUptime["buff"].Seconds > 0);
+        Assert.True(Shots(covered).Sum() > Shots(bare).Sum());
+        // A static comparison still reads the user's setting.
+        Assert.True(BuildResolver.Resolve(pack, build, assumed).Calculation.Stats["buff_damage"] > 0);
+        // A second rule on the same key that the fight keeps drives it as usual.
+        var shared = rules with { Simulation = rules.Simulation with { Triggers = [.. rules.Simulation.Triggers, rules.Simulation.Triggers[0] with { RequiresContext = null, On = "reload" }] } };
+        var sharedPack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(shared).Compiled);
+        Assert.True(Run(sharedPack, build, assumed, options with { Duration = 20 }).TimedTriggerUptime["buff"].Seconds > 0);
+    }
+
     private static (CompiledPackExpressions Pack, BuildSnapshot Build) BuffBuild(string stat = "buff_damage", string on = "hit")
     {
         var (original, _) = TwoWeapons();

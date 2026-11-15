@@ -12,6 +12,10 @@ public static partial class PackValidator
         public void Simulation()
         {
             DistanceDefaults();
+            IncomingDefaults();
+            EnemyStatuses();
+            SharedStackTimers();
+            PlayerStatusGates();
             ArmorKit();
             var talents = pack.Talents.Select(talent => talent.ID).ToHashSet(StringComparer.Ordinal);
             // A rule belongs to a talent, or to a specialization node (R56). Node ids are unique only within their tree, so a rule
@@ -54,8 +58,8 @@ public static partial class PackValidator
                 { Error("bad-sim-trigger", path + ".chance", "chance needs a buff or ready rule with an event and a share above 0 up to 1"); }
                 if (rule.RequiresContext is not null)
                 {
-                    if (rule.Kind is not ("buff" or "ready") || rule.On.Length == 0)
-                    { Error("bad-sim-trigger", path + ".requires", "requires needs a buff or ready rule with an event"); }
+                    if (rule.Kind is not ("buff" or "ready" or "stacks") || rule.On.Length == 0)
+                    { Error("bad-sim-trigger", path + ".requires", "requires needs a buff, stacks or ready rule with an event"); }
                     Requires(rule.RequiresContext, path + ".requires");
                     // The fight decides once, at its start, so a key some rule changes during it can't gate a rule.
                     foreach (var key in rule.RequiresContext.Keys.Where(key => triggers.Any(other => other.Key == key)).Order(StringComparer.Ordinal))
@@ -360,6 +364,103 @@ public static partial class PackValidator
             }
         }
 
+        // The inputs that may take a default in fights with enemy fire: the target, by the owner's decision (2026-11-14). Others would need
+        // the Desktop's form checks and grouped cards to follow it too.
+        private const string IncomingDefaultInput = "enemy_target";
+
+        // An input's default in fights with enemy fire: the target, once, that no trigger drives and no distance default sets, at one of its
+        // listed profiles.
+        private void IncomingDefaults()
+        {
+            var entries = pack.Simulation.IncomingDefaults;
+            if (entries.IsDefaultOrEmpty) { return; }
+            var inputs = new Dictionary<string, NumericContextInputDefinition>(StringComparer.Ordinal);
+            foreach (var input in pack.NumericContextInputs) { inputs.TryAdd(input.ID, input); }
+            var driven = pack.Simulation.Triggers.Select(rule => rule.Key).ToHashSet(StringComparer.Ordinal);
+            var byDistance = pack.Simulation.DistanceDefaults.Select(entry => entry.Input).ToHashSet(StringComparer.Ordinal);
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+            for (var i = 0; i < entries.Length; i++)
+            {
+                var entry = entries[i];
+                var path = $"simulation.incomingDefaults[{i}]";
+                if (!inputs.TryGetValue(entry.Input, out var input)) { Error("bad-sim-incoming-default", path + ".input", $"Unknown numeric input {Q(entry.Input)}"); continue; }
+                if (entry.Input != IncomingDefaultInput) { Error("bad-sim-incoming-default", path + ".input", $"Only {Q(IncomingDefaultInput)} takes a default in fights with enemy fire"); }
+                if (driven.Contains(entry.Input)) { Error("bad-sim-incoming-default", path + ".input", $"Input {Q(entry.Input)} is a trigger's key, which fights drive"); }
+                if (byDistance.Contains(entry.Input)) { Error("bad-sim-incoming-default", path + ".input", $"Input {Q(entry.Input)} already has a default by distance"); }
+                if (!seen.Add(entry.Input)) { Error("bad-sim-incoming-default", path + ".input", $"Input {Q(entry.Input)} has two defaults for enemy fire"); }
+                if (!input.Accepts(entry.Value) || entry.Value < 1 || !input.Options.IsDefaultOrEmpty && !input.Options.Any(option => option.Value == entry.Value))
+                { Error("bad-sim-incoming-default", path + ".value", $"The value must be one of {Q(entry.Input)}'s profiles: within its range, on its step and listed"); }
+            }
+        }
+
+        // A shared timer or a stack refresh reads every live stack on its key as its own, so no other stacks rule may write that key.
+        private void SharedStackTimers()
+        {
+            var triggers = pack.Simulation.Triggers;
+            var stackRules = triggers.Where(rule => rule.Kind == "stacks").GroupBy(rule => rule.Key, StringComparer.Ordinal)
+                .ToDictionary(group => group.Key, group => group.Select(rule => rule.Talent).Distinct(StringComparer.Ordinal).Count(), StringComparer.Ordinal);
+            for (var i = 0; i < triggers.Length; i++)
+            {
+                var rule = triggers[i];
+                if (rule.Kind == "stacks" && (rule.FromFirstGain || rule.RefreshOn.Length > 0) && stackRules.GetValueOrDefault(rule.Key) > 1)
+                { Error("bad-sim-trigger", $"simulation.triggers[{i}]", $"Key {Q(rule.Key)} has another talent's stacks rule, which fromFirstGain and refreshOn would read as their own"); }
+            }
+        }
+
+        // A rule gated on a status on the player that no enemyStatuses row puts on can never open: worth a warning, not a refusal.
+        private void PlayerStatusGates()
+        {
+            var applied = pack.Simulation.EnemyStatuses.Select(entry => entry.Status).ToHashSet(StringComparer.Ordinal);
+            var triggers = pack.Simulation.Triggers;
+            for (var i = 0; i < triggers.Length; i++)
+            {
+                var gate = triggers[i].WhilePlayerStatus;
+                if (gate.Length > 0 && (gate == "any" ? applied.Count == 0 : !applied.Contains(gate)))
+                { Warning("sim-player-status-unapplied", $"simulation.triggers[{i}].whilePlayerStatus", $"No enemyStatuses row puts {(gate == "any" ? "any status" : Q(gate))} on the player, so the rule never gains"); }
+            }
+        }
+
+        // The longest a status from one enemy hit lasts on the player.
+        private const double MaximumEnemyStatusDuration = 60;
+
+        // Statuses enemies' hits put on the player (ADR 0018): one row per listed target profile and status, a duration, and optionally a
+        // tick stat with its period, resistance stats and a floor on the shortened duration.
+        private void EnemyStatuses()
+        {
+            var entries = pack.Simulation.EnemyStatuses;
+            if (entries.IsDefaultOrEmpty) { return; }
+            var target = pack.NumericContextInputs.FirstOrDefault(input => input.ID == IncomingDefaultInput);
+            var stats = pack.Stats.Select(stat => stat.ID).ToHashSet(StringComparer.Ordinal);
+            var seen = new HashSet<(int, string)>();
+            for (var i = 0; i < entries.Length; i++)
+            {
+                var entry = entries[i];
+                var path = $"simulation.enemyStatuses[{i}]";
+                if (target is null || !target.Accepts(entry.Target) || entry.Target < 1 || !target.Options.IsDefaultOrEmpty && !target.Options.Any(option => option.Value == entry.Target))
+                { Error("bad-sim-enemy-status", path + ".target", $"The target must be one of {Q(IncomingDefaultInput)}'s profiles: within its range, on its step and listed"); }
+                if (!Statuses.Contains(entry.Status)) { Error("bad-sim-enemy-status", path + ".status", $"Unknown status {Q(entry.Status)}"); }
+                else if (!seen.Add((entry.Target, entry.Status))) { Error("bad-sim-enemy-status", path, $"Target {entry.Target} puts {Q(entry.Status)} on the player twice"); }
+                if (!double.IsFinite(entry.Duration) || entry.Duration is <= 0 or > MaximumEnemyStatusDuration)
+                { Error("bad-sim-enemy-status", path + ".duration", $"The duration must be above 0 up to {MaximumEnemyStatusDuration:G} seconds"); }
+                if (entry.Tick.Length > 0)
+                {
+                    if (!DamagingStatuses.Contains(entry.Status)) { Error("bad-sim-enemy-status", path + ".tick", $"Status {Q(entry.Status)} deals no damage over time"); }
+                    if (!stats.Contains(entry.Tick)) { Error("bad-sim-enemy-status", path + ".tick", $"Unknown stat {Q(entry.Tick)}"); }
+                    if (!double.IsFinite(entry.Period) || entry.Period < MinimumTickPeriod || entry.Period > MaximumTickPeriod)
+                    { Error("bad-sim-enemy-status", path + ".period", $"A tick needs a period from {MinimumTickPeriod:G} up to {MaximumTickPeriod:G} seconds"); }
+                }
+                else if (entry.Period != 0 || entry.TickOnApply) { Error("bad-sim-enemy-status", path + ".tick", "period and tickOnApply need a tick"); }
+                var resistances = new HashSet<string>(StringComparer.Ordinal);
+                foreach (var resistance in entry.Resistances)
+                {
+                    if (!stats.Contains(resistance)) { Error("bad-sim-enemy-status", path + ".resistances", $"Unknown stat {Q(resistance)}"); }
+                    else if (!resistances.Add(resistance)) { Error("bad-sim-enemy-status", path + ".resistances", $"Stat {Q(resistance)} is listed twice"); }
+                }
+                if (!double.IsFinite(entry.MinDuration) || entry.MinDuration < 0 || entry.MinDuration > entry.Duration || entry.MinDuration > 0 && entry.Resistances.IsDefaultOrEmpty)
+                { Error("bad-sim-enemy-status", path + ".minDuration", "minDuration needs resistances to shorten the duration, and is from 0 up to the duration"); }
+            }
+        }
+
         private static readonly HashSet<string> DamagingStatuses = ["burning", "bleeding"];
         private const double MinimumTickPeriod = 0.01;
         // Plague of the Outcasts runs 50; the cap keeps a fight's tick queue bounded.
@@ -427,6 +528,25 @@ public static partial class PackValidator
             if (r.Within < 0) { return "within can't be negative"; }
             if (r.Within > 0 && r.Kind is not ("buff" or "stacks" or "distance" or "count" or "status")) { return "Only buff, stacks, distance, count and status rules take within"; }
             if (r.Kind == "status" && r.Within > 0 && r.On.Length == 0) { return "A status rule's within needs an event"; }
+            // Ready once the talent's weapon has been put away long enough, spent by drawing it (ADR 0019).
+            // It never fires, so it takes nothing that acts on firing, and nothing but its weapon's time away moves it.
+            if (r.PrimeHolstered != 0 && (r.Kind != "ready" || r.On.Length > 0 || r.Also.Length > 0 || r.Every != 0 || r.ResetOn.Length > 0 || r.AlsoResetOn.Length > 0 ||
+                r.ConsumeOn.Length > 0 || r.CancelOn.Length > 0 || r.Grant.Length > 0 || r.Refill || r.Count != 0 || r.ActiveAfter != 0 || r.Chance < 1 ||
+                r.WhileKey.Length > 0 || r.WhileArmorBelow > 0 || r.WhileStatAtLeast is not null || !r.WeaponTags.IsDefaultOrEmpty || r.ForceHeadshot ||
+                !double.IsFinite(r.PrimeHolstered) || r.PrimeHolstered is <= 0 or > SimTriggerDefinition.MaximumPrimeHolstered))
+            { return $"primeHolstered needs a ready rule without an event, every, reset, consume, cancel, grant, refill, count, gate, chance, activeAfter or weapon tags, and seconds above 0 up to {SimTriggerDefinition.MaximumPrimeHolstered:G}"; }
+            // One timer for every stack, from the gain that takes the count from 0 (Cover Shooter, R112).
+            if (r.FromFirstGain && (r.Kind != "stacks" || r.Duration <= 0 || r.Refresh || r.Decay > 0 || r.Pool.Length > 0 || r.GainWhileHolstered > 0))
+            { return "fromFirstGain needs a stacks rule with a duration, no refresh, decay, pool or gainWhileHolstered"; }
+            // A refresh passes none of a gain's gates, so a gated rule can't take one. On stacks it restarts live stacks' timers (Cover
+            // Shooter's kills in cover), so it needs a duration of its own and no pool.
+            if (r.RefreshOn.Length > 0 && (r.Kind is not ("buff" or "stacks") ||
+                r.Kind == "stacks" && (r.Duration <= 0 || r.Pool.Length > 0 || r.GainWhileHolstered > 0 || r.Decay > 0 || r.ResetOn == "target_death" || r.ConsumeOn == "target_death") ||
+                r.On.Length == 0 || !Events.Contains(r.RefreshOn) ||
+                r.RefreshOn == r.On || r.Also.Any(gain => gain.On == r.RefreshOn) || r.RefreshOn == r.ResetOn || r.RefreshOn == r.AlsoResetOn ||
+                r.RefreshOn == r.ConsumeOn || r.RefreshOn == r.CancelOn || r.Duration <= 0 && r.DurationStat.Length == 0 || r.CooldownFromEnd ||
+                r.WhileStatus.Length > 0 || r.WhilePlayerStatus.Length > 0 || r.WhileKey.Length > 0 || r.WhileArmorBelow > 0 || r.WhileStatAtLeast is not null || r.Chance < 1 || r.Count > 0))
+            { return "refreshOn needs a timed buff, or stacks with a duration and no pool, gainWhileHolstered, decay or stacks on each enemy, with an event, no cooldownFromEnd and no gate, chance or count, and a simulator event none of its other fields name"; }
             if (r.AlsoResetOn.Length > 0 && (r.Kind is not ("buff" or "stacks") || r.ResetOn.Length == 0 || r.AlsoResetOn == r.ResetOn || !Events.Contains(r.AlsoResetOn)))
             { return "alsoResetOn needs a buff or stacks rule with a resetOn, and another simulator event"; }
             if (r.Count != 0 && r.Kind is not ("buff" or "stacks" or "status") || r.Refill && r.Kind is not ("buff" or "stacks"))
@@ -476,6 +596,10 @@ public static partial class PackValidator
             }
             if (r.WhileStatus.Length > 0 && (!(Statuses.Contains(r.WhileStatus) || r.WhileStatus == "any") || r.Kind is not ("buff" or "stacks")))
             { return "whileStatus needs a known status on a buff or stacks rule"; }
+            // A status on the player (ADR 0018) gates a gain as a status on the target does; one rule reads one of the two.
+            if (r.WhilePlayerStatus.Length > 0 && (!(Statuses.Contains(r.WhilePlayerStatus) || r.WhilePlayerStatus == "any") || r.Kind is not ("buff" or "stacks") ||
+                r.On.Length == 0 || r.WhileStatus.Length > 0 || r.GainWhileHolstered > 0))
+            { return "whilePlayerStatus needs a known status or any, on a buff or stacks rule with an event, no whileStatus and no gainWhileHolstered"; }
             if (r.ApplyOnHit && (r.Kind != "status" || r.On is not ("hit" or "hit_pellet" or "crit" or "crit_pellet" or "headshot" or "body_hit" or "unarmored_hit")))
             { return "applyOnHit needs a status rule on hit, hit_pellet, crit, crit_pellet, headshot, body_hit or unarmored_hit"; }
             if (r.Kind == "status")
@@ -496,13 +620,15 @@ public static partial class PackValidator
                 return r.Percent || r.Phases.Length < 2 || number ? "A magazine rule needs two or more phases on a condition key, or percent on a numeric input" : null;
             }
             // A holstered-gain stacks rule (Quick Draw) may gain on time alone, with no event; one held per enemy, by blasts' marks alone
-            // (Unnerve, ADR 0013).
-            if (r.On.Length == 0 && !(r.Kind == "stacks" && (r.GainWhileHolstered > 0 || (r.ResetOn == "target_death" || r.ConsumeOn == "target_death") &&
+            // (Unnerve, ADR 0013); a primed ready rule by its weapon's time away (ADR 0019).
+            if (r.On.Length == 0 && !(r.Kind == "ready" && r.PrimeHolstered > 0) && !(r.Kind == "stacks" && (r.GainWhileHolstered > 0 || (r.ResetOn == "target_death" || r.ConsumeOn == "target_death") &&
                 pack.Simulation.Blasts.Any(blast => blast.Talent == r.Talent && blast.Mark == r.Key))) || !Events.Contains(r.On) || !Events.Contains(r.ResetOn) || !Events.Contains(r.ConsumeOn))
             { return "Trigger events must be simulator events"; }
             // A durationStat stands in for the duration (Clutch's post-kill window); its own field check follows.
             var timed = r.Duration > 0 || r.DurationStat.Length > 0;
-            if (r.Kind is "ready" or "lockout" && (!timed || r.Duration < 0 || number)) { return "A ready or lockout rule needs a positive duration and a condition key"; }
+            // A primed rule's readiness comes from its weapon's time away, so it takes no duration.
+            if (r.PrimeHolstered > 0 && (timed || number)) { return "A primed ready rule takes no duration and needs a condition key"; }
+            if (r.Kind is "ready" or "lockout" && r.PrimeHolstered == 0 && (!timed || r.Duration < 0 || number)) { return "A ready or lockout rule needs a positive duration and a condition key"; }
             if (r.Kind == "buff" && (r.Duration < 0 || !timed && r.ConsumeOn.Length == 0 || number || r.Max != 0)) { return "A buff needs a positive duration, or a consumeOn event, and a condition key"; }
             // Only spending ends such a buff, so one moment starts its cooldown, and it belongs to the player, not to one enemy.
             if (r.CooldownFromEnd && (r.Kind != "buff" || r.Every <= 0 || r.ConsumeOn.Length == 0 || r.ConsumeOn == "target_death" || r.Duration != 0 || r.DurationStat.Length > 0 ||

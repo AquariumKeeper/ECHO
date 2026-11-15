@@ -1,4 +1,4 @@
-Character Planner 0.2.0-beta.7 — tester release
+Character Planner 0.2.0-beta.8 — tester release
 
 To start, double-click CharacterPlanner.Desktop.exe. It opens the build editor; its
 Simulate tab runs combat simulations against targets, with optional enemy fire,
@@ -26,46 +26,51 @@ original slot images by Shade-Tech contributors (MIT); the app draws its own sym
 for talents, skills, specializations and items. release-manifest.json lists every
 file in this archive with its SHA-256.
 
-New since 0.2.0-beta.6:
+New since 0.2.0-beta.7:
+- Fights with enemy fire have their own default target: an ordinary enemy (profile
+  3: 1,200 health, no armor), the one the game files declare most often (which
+  isn't a spawn rate). Elsewhere the default stays profile 6, and a Mixed targets
+  sequence sets its own profiles. On the Assumptions tab, the Enemy Target Profile
+  list starts with "Default", which follows that rule; picking profile 6 keeps it
+  in every fight.
+- Statuses an enemy's hit puts on you: the Simulate tab's enemy-fire readings add the
+  status damage you took (0 when none went on) and, for each status that went on, how
+  long it was on you.
+
+Changes since 0.2.0-beta.7 that move fight results:
+- Fights with enemy fire whose target is at Default now fight profile 3, so you go
+  down later than against profile 6. A build saved in beta.7 with profile 6 picked
+  saved it as the default, so it shows Default now: pick profile 6 again to keep it.
+- In fights with talent triggers:
+  - Cover Shooter (Big Alejandro) with a cover cycle: each bullet fired adds 1%
+    weapon damage, up to 100%. All stacks end together 15 s after the first, and a
+    kill in cover with Big Alejandro restarts that timer; a completed reload or a
+    swap clears them.
+    Without a cover cycle the stacks stay at 0, whatever "Cover Shooter Stacks" is
+    set to, unless "In cover" is set on.
+  - Calculated (and Perfect) with "Calculated Cut" set: in a fight that isn't in
+    cover, the cut no longer applies.
+  - Doctor Home on both weapons of a swap rotation: each weapon's marks now drop its
+    armor kit on a kill, as with Doctor Home on one weapon.
+- Fights with enemy fire against profile 5 (the shield carrier's nail gun): each hit
+  that lands on you (not on a raised shield) bleeds you for 2 s, about 23,000 every
+  half second at the pack's skill curve, through bonus armor, armor then health.
+  Hazard protection and bleed resistance shorten it, to no less than 0.5 s.
+  It speeds the down only where you outlast several nails. No other profile puts a
+  status on you. The bleed's slow and blocked regeneration aren't modelled.
+
+New in 0.2.0-beta.7, for testers coming from beta.6:
 - Packs load faster, so each command-line call takes about a fifth less time.
-
-Changes since 0.2.0-beta.6 that move fight results, each only for builds with the
-skill or talent:
-- In fights with several enemies at once and an enemy spacing set:
-  - Skill blasts reach every enemy within the skill's radius of the one you're
-    shooting: both Sticky Bombs, the Explosive and Cluster Seeker Mines, the
-    Firestarter's ignition and the Artillery Turret's shells. The Sticky Bombs deal
-    full damage within half their radius and the Seekers within 1 m, then fall in a
-    straight line to 10% (Sticky Bombs) or 50% (Seekers) at the radius's edge. The
-    straight line is an assumption: the game gives the ends, not the curve. The
-    blast's burn or bleed goes on each enemy it reaches. The Airburst Seeker's blast
-    is a cone, so it still hits one enemy.
-  - Creeping Death (and Perfect) and Indirect Transmission also spread or pass on a
-    skill's own burn or bleed, such as a Burn Sticky Bomb's, carrying the skill's own
-    damage, for one application of it.
+Changes in 0.2.0-beta.7 that moved fight results:
+- In fights with several enemies at once and an enemy spacing set: skill blasts
+  (both Sticky Bombs, the Explosive and Cluster Seeker Mines, the Firestarter and the
+  Artillery Turret) reach every enemy within their radius, with a straight-line
+  falloff (an assumption), and Creeping Death and Indirect Transmission spread or
+  pass on a skill's own burn or bleed. The Airburst Seeker's cone still hits one.
 - In fights with talent triggers: the Shock Trap, Riot Foam, Banshee Pulse and
-  Blinder Firefly put their shock, ensnare, disorient or blind on the enemy you're
-  shooting when used; the Shock Trap's and Riot Foam's reach every enemy within their
-  radius too. A shocked enemy stops firing, and talents that react to statuses, such
-  as Wicked, now see these. A Shock Trap shocks once per use here, where the game lays
-  several mines.
+  Blinder Firefly put their status on the enemy you're shooting, so talents such as
+  Wicked see it, and a shocked enemy stops firing. A Shock Trap shocks once per use.
 - At a set fight distance over 20 m, Dragon's Glare no longer burns.
-
-New in 0.2.0-beta.6, for testers coming from beta.5:
-- Enemy spacing (m) on the Simulate tab, under Time on each enemy: with Enemies at
-  once, the metres between neighbouring enemies standing on a line. Effects that
-  reach other enemies use it; without it they reach nobody, and the result says so.
-- A "Use ... when" row for each skill slot on the Simulate tab (the command-line
-  version's "skillUse" option): a skill is used only while a talent rule is on, after
-  a time into the fight, or while at least a number of enemies are alive.
-Changes in 0.2.0-beta.6 that moved fight results:
-- In fights with several enemies at once and an enemy spacing set: Regicide's blast,
-  Creeping Death's spread, Plague of the Outcasts' and Indirect Transmission's
-  pass-ons, Unnerve's marks and Bewildered's split of each hit reach other enemies.
-- In fights with several enemies at once and Time on each enemy set: The Trap burns
-  the enemies you've tagged on a headshot kill.
-- In every fight with talent triggers: Unnerve's marks come from the fight, not the
-  "Unnerve Target Marks" setting.
 
 Builds saved with an earlier beta open unchanged.
 

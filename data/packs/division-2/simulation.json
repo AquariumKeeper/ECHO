@@ -1580,6 +1580,21 @@
       "duration": 10,
       "refresh": true,
       "resetOn": "target_death"
+    },
+    {
+      "talent": "weapon_talent_cover_shooter",
+      "key": "cover_shooter_stacks",
+      "on": "shot",
+      "kind": "stacks",
+      "max": 100,
+      "duration": 15,
+      "requires": {
+        "in_cover": "true"
+      },
+      "resetOn": "reload_end",
+      "alsoResetOn": "swap",
+      "fromFirstGain": true,
+      "refreshOn": "kill"
     }
   ],
   "skills": [
@@ -1912,6 +1927,27 @@
       "statusDuration": 10,
       "every": 30,
       "cut": 10
+    }
+  ],
+  "incomingDefaults": [
+    {
+      "input": "enemy_target",
+      "value": 3
+    }
+  ],
+  "enemyStatuses": [
+    {
+      "target": 5,
+      "status": "bleeding",
+      "duration": 2,
+      "tick": "npc_bleed_tick_damage",
+      "period": 0.5,
+      "tickOnApply": true,
+      "resistances": [
+        "hazard_protection",
+        "bleed_resistance"
+      ],
+      "minDuration": 0.5
     }
   ]
 }

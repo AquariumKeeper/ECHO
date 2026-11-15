@@ -240,7 +240,8 @@ lists kills that land after the end. with `clearKills`, `timeToClear` (the same 
 reached that many kills, in seconds from the first target's arrival, or null if none
 did) and `clearedFraction` (null without `clearKills`); the mean damage `timeline` in
 one-second bins; `incoming` for enemy
-fire; `uptime` maps (target statuses, timed triggers, cycle and magazine phases)
+fire (with the pack's `enemyStatuses`, also `statusDamageTaken`, the part of `damageTaken` that statuses on you dealt, and
+`playerStatusUptime`, each status's seconds and share of the fight; without them neither field is written); `uptime` maps (target statuses, timed triggers, cycle and magazine phases)
 in ordinal key order; `events` (time, camel-case kind, amount or null, slot) only
 when captured; `traceTruncated`; and the model `limitations`. With `skillUse`, `skillUses` follows, each named slot's `uses` and
 `heldSeconds` (means per fight); a fight without it has no such field. Optional summaries

@@ -96,6 +96,27 @@ public sealed class AssumptionsTabTests : IDisposable
     }
 
     [Fact]
+    public async Task AnInputWithAnEnemyFireDefaultOffersDefaultAndStoresTheOrdinaryOne()
+    {
+        // The owner's separate target for fights with enemy fire (2026-11-14): Default leaves it unset, so the fight takes the pack's
+        // value there, and choosing the ordinary default is a real choice, stored.
+        await Resolved();
+        var input = TestPack.Division.Pack.NumericContextInputs.Single(entry => entry.ID == "enemy_target");
+        var target = new NumericAssumptionViewModel(editor, input, underFire: 2);
+        var ordinary = input.Options.Single(option => option.Value == input.Default).Label;
+        var underFire = input.Options.Single(option => option.Value == 2).Label;
+        Assert.Equal($"Default: {ordinary}; with enemy fire, {underFire}", target.Choices[0].Name);
+        target.Refresh(Assumptions);
+        Assert.Equal(target.Choices[0], target.Selected);
+        target.Selected = target.Choices.Single(choice => choice.Name == ordinary);
+        dispatcher.RunPending();
+        Assert.Equal(input.Default.ToString(CultureInfo.InvariantCulture), Assumptions["enemy_target"]);
+        target.Selected = target.Choices[0];
+        dispatcher.RunPending();
+        Assert.False(Assumptions.ContainsKey("enemy_target"));
+    }
+
+    [Fact]
     public async Task GroupedInputsAreOneOffOnCardInOneUndoStep()
     {
         await Resolved();

@@ -621,9 +621,13 @@ only to an id that exists in the same collection.
     passes the rule's gates fires it with that chance, drawn from the fight's own seeded chance stream,
     so no other roll moves. A failed draw neither counts nor fires, and the rule's `every` doesn't start.
 - `requires` is new on trigger rules on 2026-11-08 (P13: Calculated), optional, on a `buff` or `ready`
-  rule with an event: selector values, as a modifier's `requires`. The rule takes part only in a fight
-  whose context holds them. A cover cycle sets `in_cover` for the whole fight (ADR 0009), and otherwise
-  the user's setting stands. A key some rule drives can't be required, since the fight decides once, at
+  rule with an event, and from 2026-11-14 on a `stacks` rule with an event too (Cover Shooter's shape):
+  selector values, as a modifier's `requires`. The rule takes part only in a fight whose context holds
+  them. A cover cycle sets `in_cover` for the whole fight (ADR 0009), and otherwise the user's setting
+  stands. From 2026-11-14, a rule left out this way holds its key off for the fight, unless another
+  rule of the build drives it: a stacks key reads 0, and a `buff` or `ready` key is unset. The talent
+  then can't act there, so the user's own setting for that key, which still serves static
+  comparisons, no longer applies in the fight. A key some rule drives can't be required, since the fight decides once, at
   its start; use `whileKey` for those. A selected talent's required selectors count as read, so the
   Assumptions tab shows them.
 - More R41 fields are new on 2026-11-02, optional, for Clutch:
@@ -698,6 +702,57 @@ only to an id that exists in the same collection.
     the user set wins. Both cases are noted in the result, and coverage's input basis names
     the inputs that came from the distance.
   - Without a distance, or outside fights, the input keeps its ordinary default.
+- `primeHolstered` (seconds) is new on 2026-11-14 (ADR 0019: Perturb, Faster Than Reloading), optional, on a `ready` rule
+  with no event, `also`, `every`, reset, consume or duration, up to 600: the key is ready once the weapon carrying the rule's
+  talent has been put away that long without a break, and drawing it spends it. A swap's `swap`, `swapped` and
+  `swap_after_kill` rules read it as it stood before the draw (with `whileKey`), and then the draw spends it. The weapon that
+  starts a fight away starts its time at 0. Without a weapon rotation nothing is ever away, so it never primes.
+- `fromFirstGain` (true) is new on 2026-11-14 (Cover Shooter's source timer, R112), optional, on a `stacks` rule with a
+  `duration` and no `refresh`, `decay` or pool. One timer, started by the gain that takes the count from 0, ends every stack
+  together; later gains take the live stacks' end rather than their own. `refreshOn` also goes on such stacks rules now (with
+  a `duration` of their own, no pool and no `gainWhileHolstered`): its event runs every live stack's full duration again from
+  then, the count kept, and gains nothing with none (a kill in cover restarting Cover Shooter's timer).
+- `whilePlayerStatus` is new on 2026-11-14 (ADR 0018: talents reading a status on the player, such as Chemical Agent),
+  optional, on a `buff` or `stacks` rule with an event, no `whileStatus` and no `gainWhileHolstered`: a known status, or `any`. The rule gains only
+  while that status (any status, with `any`) is on the player from an enemy's hit (`enemyStatuses`). A fight without
+  statuses on the player, or without enemy fire, never opens it. `refreshOn` can't go with it. A hit's statuses go on before
+  its own `damaged` and `armor_break` events, so rules on those see them. The validator warns when no `enemyStatuses` row
+  puts the status on.
+- `refreshOn` (an event) is new on 2026-11-14 (ADR 0019: Unwavering's kills), optional, on a `buff` rule with an event and a
+  duration (or `durationStat`), and not with `cooldownFromEnd`, a gate (`whileStatus`, `whileKey`, `whileArmorBelow`,
+  `whileStatAtLeast`), a `chance` or a `count`, since a refresh passes none of them. While the rule's own buff is on, the event
+  restarts its full duration from then; another rule holding the same key on doesn't count. While it's off, the event gains
+  nothing. It names a simulator event that none of the rule's other event fields name, and is credited and filtered like
+  `cancelOn`: by the rule's talent and weapon tags.
+- `enemyStatuses` is new on 2026-11-14, optional, at the top of `simulation.json` (ADR 0018: statuses an enemy's hit puts on
+  the player). It is a list of `{ "target", "status", "duration", "tick", "period", "tickOnApply", "resistances", "minDuration" }`.
+  - `target` is one of `enemy_target`'s profiles (within its range, on its step, 1 or more and listed), and `status` a fight
+    status. Each target takes a status at most once.
+  - `duration` is seconds, above 0 up to 60.
+  - `tick` (a stat) and `period` (0.01 to 60 s), optional and together, only on `burning` or `bleeding`. With `tickOnApply` the
+    first tick lands as the status starts, otherwise one period later.
+  - `resistances` (stats), optional and distinct: their sum, capped at 1, shortens the duration by that share, not below
+    `minDuration` (needs `resistances`, from 0 up to `duration`). At 1 the status doesn't go on.
+  - In a fight with enemy fire, each hit that lands on the player (not on a raised shield) from an enemy of that profile, the
+    chosen target's or in a sequence the firing enemy's own, puts the status on for its duration, to the later end if it's on;
+    the amount and cadence stay. Ticks land strictly before the end, after every other event at their time, and deal the stat
+    through bonus armor, armor then health as a hit does, with its repairs and `damaged` and `armor_break` events, but don't
+    extend an armor kit's use. The stats are read from the build as the fight starts. A control status goes on with no effect
+    on the player yet. The result reports the status damage and each status's time on.
+- `incomingDefaults` is new on 2026-11-14, optional, at the top of `simulation.json` (the owner's
+  separate target for fights with enemy fire). It is a list of `{ "input", "value" }`.
+  - `input` is `enemy_target`, the only input it takes for now, at most once. No trigger may use it
+    as its key, and it may have no `distanceDefaults` entry. Other inputs would need the Desktop's
+    form checks and grouped cards to follow the default too.
+  - `value` is one of its profiles: within its range, on its step, 1 or more, and listed among its
+    options.
+  - In a fight with enemy fire, an input the user hasn't set takes `value`. A value the user set
+    wins. Both cases are noted in the result, and coverage's input basis names the inputs the pack
+    set. Outside such fights, the input keeps its ordinary default.
+  - The enemy that fires is the enemy shot, so a default for `enemy_target` sets both. With a target
+    sequence, each target's profile comes from the sequence, so that default isn't used.
+  - The Desktop offers such an input's dropdown a leading "Default" choice, which leaves it unset. Any
+    listed value, the ordinary default included, is then stored as a choice.
 - The event `crit_pellet` is new on 2026-11-02 (R43). It fires once for each critical pellet
   that lands, right after the shot's single `crit`, with the same weapon, talent and
   weapon-tag reach; a status may apply on it (`applyOnHit`). Rules gated on armor read it

@@ -2950,3 +2950,31 @@ Whole-row preconditions and source evidence are captured in this assembly. This 
 Seed manifest SHA-256: `96aa5101a08699838d030c5033e8af513f8c4a129fb7a4370031d1494c908a11`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
 
 Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R110: control skills' statuses
+
+Base manifest `4aaeaa76099fa053266561642026cc81a676889c98379a7004f47dff3dda54b4`; overlay plan `ad2e81172bf79f99378f13b4fa2d5d601db1faa06b7dcc6216192429241a1085`; evidence packet `e6d18d7ee3b616b4ec87e4aaf314c862d15b630a966df7917c76c69c80813904`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `8704ca9d72fdf280980e7a470f389b7f33a12073f5f9cfb641dc6255b0a6fdb2`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R112-R113: Cover Shooter in fights, and a target for fights with enemy fire
+
+Base manifest `55a08bec76063163ee0fbd96b146d217e229fd163ed0503a6dad6d8149f122ac`; overlay plan `bde632f2aa2b76cfc4fb55782babc91449e6a5e9049b21e8d1b6c62ea12a83a7`; evidence packet `994bdfaa1109c7a3e45fecd1279e42100a390412693950eb386342a313d4a7f4`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `bd45f16ce0b33da0425556113e8f509e5e4da92016ba8ac714fd13c724dd2be9`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.

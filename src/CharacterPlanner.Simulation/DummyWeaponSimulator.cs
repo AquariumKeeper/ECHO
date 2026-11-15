@@ -169,6 +169,31 @@ public static class DummyWeaponSimulator
         if (coverSelector) { context = context.SetItem(DummyFightOptions.CoverInput, "true"); }
         if (options.IncludeIncoming && pack.Pack.NumericContextInputs.Any(input => input.ID == "makeshift_qualifying_damage"))
         { context = context.SetItem("makeshift_qualifying_damage", "0"); }
+        // An input the user left unset takes the pack's default for fights with enemy fire (owner, 2026-11-14), such as a gentler target
+        // than the general default; one they set keeps their value. Both are noted. A target sequence sets each target's profile itself.
+        var incomingNotes = new List<string>();
+        var incomingInputs = new List<string>();
+        if (options.IncludeIncoming && !pack.Pack.Simulation.IncomingDefaults.IsDefaultOrEmpty)
+        {
+            foreach (var entry in pack.Pack.Simulation.IncomingDefaults)
+            {
+                if (pack.Pack.NumericContextInputs.FirstOrDefault(input => input.ID == entry.Input) is not { } input || !input.Accepts(entry.Value))
+                { throw new SimulationException("incoming-default-invalid", $"The default for {entry.Input} in fights with enemy fire has no legal input"); }
+                var shown = input.Shown(entry.Value);
+                if (entry.Input == DummyFightOptions.TargetProfileInput && !sequence.IsEmpty)
+                { incomingNotes.Add($"{input.Name}'s default in fights with enemy fire ({shown}) is not used: the target sequence sets each target's profile"); continue; }
+                if (context.TryGetValue(entry.Input, out var set))
+                {
+                    var chosen = double.TryParse(set, NumberStyles.Float, CultureInfo.InvariantCulture, out var number) ? number : double.NaN;
+                    incomingNotes.Add(chosen == entry.Value ? $"{input.Name} is set to {shown}, the same as its default in fights with enemy fire" :
+                        $"{input.Name} is set to {(double.IsNaN(chosen) ? set : input.Shown(chosen))}; its default in fights with enemy fire ({shown}) is not used");
+                    continue;
+                }
+                context = context.SetItem(entry.Input, entry.Value.ToString("0.##########", CultureInfo.InvariantCulture));
+                incomingInputs.Add(input.Name);
+                incomingNotes.Add($"{input.Name} takes its default for fights with enemy fire: {shown}");
+            }
+        }
         // An assumption the user left unset takes its default for the fight distance (P12: enemy hit rate by distance); one
         // they set keeps their value. Both are noted in the result. The validator keeps driven keys out of these. They describe
         // enemy fire, so a fight without it neither takes nor reports them.
@@ -240,6 +265,9 @@ public static class DummyWeaponSimulator
         var trapRules = ImmutableArray<SimTrapDefinition>.Empty;
         var passOnRules = ImmutableArray<SimPassOnDefinition>.Empty;
         var drivenKeys = ImmutableArray<string>.Empty;
+        // Keys of rules a fight's context gates off, each held off for the fight: a count at 0, a flag unset. They're constant, so they
+        // aren't driven keys, and a skill held on one is refused as one on any key no rule drives.
+        var gatedOff = ImmutableArray<(string Key, bool Counted)>.Empty;
         var pickupsUsed = false;
         var secondsUsed = false;
         var reloadEndUsed = false;
@@ -283,16 +311,28 @@ public static class DummyWeaponSimulator
             statusRules = [.. groups[nameof(StatusTriggerState)].Where(rule => !countRules.Any(count => count.Key == rule.Key))];
             uncountedKeys = options.EnemiesAtOnce is null ? [.. groups[nameof(EnemyCountState)].Select(rule => rule.Key)
                 .Where(key => !statusRules.Any(rule => rule.Key == key)).Distinct().Order(StringComparer.Ordinal)] : [];
-            // A rule that requires selector values the fight's context doesn't hold (Calculated outside cover) takes no part.
+            // A rule that requires selector values the fight's context doesn't hold (Calculated outside cover) takes no part, and its key
+            // stays off for the fight rather than taking the user's setting: the fight has decided the talent can't act.
             var fightContext = context;
-            buffRules = [.. groups[nameof(TimedBuffState)].Where(rule => rule.RequiresContext is not { } gate ||
-                gate.All(pair => fightContext.GetValueOrDefault(pair.Key, "") == pair.Value))];
+            bool Meets(SimTriggerDefinition rule) => rule.RequiresContext is not { } gate || gate.All(pair => fightContext.GetValueOrDefault(pair.Key, "") == pair.Value);
+            var meets = groups[nameof(TimedBuffState)].ToLookup(Meets);
+            buffRules = [.. meets[true]];
+            // A key another rule of the build drives, of any kind, stays with that rule. A gated rule's bank is held at 0 with its key, and a
+            // key gated off as both a count and a flag reads 0.
+            var keptKeys = buffRules.Concat(statusRules).Concat(phaseRules).Concat(combatRules).Concat(countRules)
+                .SelectMany(rule => new[] { rule.Key, rule.Bank }).Where(key => key.Length > 0).ToHashSet(StringComparer.Ordinal);
+            gatedOff = [.. meets[false].SelectMany(rule => new[] { (rule.Key, Counted: rule.Kind == "stacks") }
+                    .Concat(rule.Bank.Length > 0 ? [(rule.Bank, true)] : []))
+                .Where(off => !keptKeys.Contains(off.Key))
+                .GroupBy(off => off.Key, StringComparer.Ordinal).Select(keys => (keys.Key, keys.Any(off => off.Counted)))
+                .OrderBy(off => off.Key, StringComparer.Ordinal)];
             // With no kits, a rule that gains on one steps aside and its talent reads the user's assumption, as counts do one
             // enemy at a time. A talent on gear is no reason to refuse the fight, and the result names it.
             if (options.ArmorKits is null)
             {
                 static bool OnKit(SimTriggerDefinition rule) => rule.On == "armor_kit" || rule.Also.Any(gain => gain.On == "armor_kit");
-                kitlessTalents = [.. pack.Pack.Simulation.Triggers.Where(rule => selected.Contains(rule.Talent) && OnKit(rule)).Select(rule => rule.Talent)
+                // A rule the fight's context leaves out holds its key off instead, so it isn't named here.
+                kitlessTalents = [.. pack.Pack.Simulation.Triggers.Where(rule => selected.Contains(rule.Talent) && OnKit(rule) && Meets(rule)).Select(rule => rule.Talent)
                     .Concat(pack.Pack.Simulation.TalentDamage.Where(rule => selected.Contains(rule.Talent) && rule.On == "armor_kit").Select(rule => rule.Talent))
                     .Distinct(StringComparer.Ordinal).Select(id => RuleOwnerName(pack.Pack, id)).Order(StringComparer.Ordinal)];
                 buffRules = [.. buffRules.Where(rule => rule.On != "armor_kit" || !rule.Also.IsEmpty)];
@@ -304,7 +344,7 @@ public static class DummyWeaponSimulator
             {
                 static bool OnSkill(string name) => name is "skill_hit" or "skill_kill";
                 skilllessTalents = [.. buffRules.Concat(statusRules).Concat(countRules)
-                    .Where(rule => OnSkill(rule.On) || rule.Also.Any(gain => OnSkill(gain.On)) || OnSkill(rule.ResetOn) || OnSkill(rule.AlsoResetOn) || OnSkill(rule.ConsumeOn) || OnSkill(rule.CancelOn))
+                    .Where(rule => OnSkill(rule.On) || rule.Also.Any(gain => OnSkill(gain.On)) || rule.OtherEvents.Any(OnSkill))
                     .Select(rule => rule.Talent)
                     .Concat(pack.Pack.Simulation.TalentDamage.Where(rule => selected.Contains(rule.Talent) && OnSkill(rule.On)).Select(rule => rule.Talent))
                     .Distinct(StringComparer.Ordinal).Select(id => RuleOwnerName(pack.Pack, id)).Order(StringComparer.Ordinal)];
@@ -350,7 +390,7 @@ public static class DummyWeaponSimulator
             bool Clears(string name) => name.Length == 0 || buffEvents.Contains(name) || neverFires.Contains(name);
             if (buffRules.Any(rule => rule.On.Length > 0 && !buffEvents.Contains(rule.On) ||
                 rule.Also.Any(gain => !buffEvents.Contains(gain.On)) ||
-                !Clears(rule.ResetOn) || !Clears(rule.AlsoResetOn) || !Clears(rule.ConsumeOn) || !Clears(rule.CancelOn)))
+                rule.OtherEvents.Any(name => !Clears(name))))
             { throw new SimulationException("trigger-event-unsupported", "A selected rule requires an unimplemented event"); }
             context = new StatusTriggerState(pack, statusRules).Context(context, 0);
             // A selected talent's blast on other enemies (ADR 0013).
@@ -380,8 +420,9 @@ public static class DummyWeaponSimulator
             var setupBuffs = new TimedBuffState(buffRules);
             setupBuffs.ValidatePack(pack);
             context = setupBuffs.Context(context, 0);
+            foreach (var (key, counted) in gatedOff) { context = counted ? context.SetItem(key, "0") : context.Remove(key); }
             bool Uses(string name) => buffRules.Concat(statusRules).Concat(countRules).Any(rule => rule.On == name || rule.Also.Any(gain => gain.On == name) ||
-                rule.ResetOn == name || rule.AlsoResetOn == name || rule.ConsumeOn == name || rule.CancelOn == name);
+                rule.OtherEvents.Contains(name));
             pickupsUsed = Uses("pickup");
             secondsUsed = Uses("second");
             reloadEndUsed = Uses("reload_end");
@@ -416,7 +457,9 @@ public static class DummyWeaponSimulator
                     Talent = For(rule.Talent, slot),
                     Key = For(rule.Key, slot),
                     Pool = For(rule.Pool, slot),
-                    Bank = For(rule.Bank, slot)
+                    Bank = For(rule.Bank, slot),
+                    // A copy's gate on its own talent's key (a primed draw, ADR 0019) reads its own copy's key.
+                    WhileKey = names.Contains(rule.WhileKey) ? For(rule.WhileKey, slot) : rule.WhileKey
                 }))];
                 // Each weapon's copy reacts as that weapon's talent.
                 foreach (var (slot, owned) in weaponTalents) { owned.UnionWith(copied.Select(talent => For(talent, slot))); }
@@ -431,6 +474,41 @@ public static class DummyWeaponSimulator
         var stats = resolved.Calculation.Stats;
         var initialWeapon = ShotProfile.Read(resolved, targeted, firstDistance);
         var incoming = options.IncludeIncoming ? EnemyFireSchedule.Create(resolved) : null;
+        // The profile of a fight's chosen target, which fires when no sequence sets each target's own.
+        var chosenProfile = resolved.Assumptions.Numeric.TryGetValue(TargetProfileKey, out var chosenTarget) ? (int)chosenTarget : -1;
+        // Statuses enemies' hits put on the player (ADR 0018), by target profile, read from the build as the fight starts against that
+        // profile: the duration shortened by the row's resistances (not below its floor), and the tick amount. One the resistances reach
+        // 1 for doesn't go on, though the fight still reports statuses on the player, as none.
+        var enemyStatusRows = new Dictionary<int, List<(string Status, double Duration, double Tick, double Period, bool TickOnApply)>>();
+        var reportsPlayerStatuses = incoming is not null && !pack.Pack.Simulation.EnemyStatuses.IsDefaultOrEmpty;
+        if (reportsPlayerStatuses)
+        {
+            var profileStats = new Dictionary<int, ImmutableDictionary<string, double>>();
+            ImmutableDictionary<string, double> StatsAgainst(int profile)
+            {
+                if (profile == chosenProfile) { return stats; }
+                if (!profileStats.TryGetValue(profile, out var read))
+                {
+                    var against = BuildResolver.Resolve(pack, build, context.SetItem(TargetProfileKey, profile.ToString(CultureInfo.InvariantCulture)));
+                    if (against.Diagnostics.Any(diagnostic => diagnostic.Severity == "error"))
+                    { throw new SimulationException("resolve-failed", $"The build doesn't resolve against target profile {profile}"); }
+                    profileStats[profile] = read = against.Calculation.Stats;
+                }
+                return read;
+            }
+            foreach (var row in pack.Pack.Simulation.EnemyStatuses)
+            {
+                var rowStats = StatsAgainst(row.Target);
+                double StatusStat(string id) => rowStats.TryGetValue(id, out var value) && double.IsFinite(value) ? value :
+                    throw new SimulationException("enemy-status-invalid", $"A status on the player reads {id}, which has no finite value");
+                var resisted = Math.Clamp(row.Resistances.IsDefaultOrEmpty ? 0 : row.Resistances.Sum(StatusStat), 0, 1);
+                if (resisted >= 1) { continue; }
+                var tick = row.Tick.Length == 0 ? 0 : StatusStat(row.Tick);
+                if (tick < 0) { throw new SimulationException("enemy-status-invalid", $"A status on the player ticks for a negative {row.Tick}"); }
+                if (!enemyStatusRows.TryGetValue(row.Target, out var rows)) { enemyStatusRows[row.Target] = rows = []; }
+                rows.Add((row.Status, Math.Max(row.MinDuration, row.Duration * (1 - resisted)), tick, row.Period, row.TickOnApply));
+            }
+        }
         // A hit chance that follows each target's distance moves the DPS with it, not the cadence; the validator keeps triggers off it.
         var hitRateFollows = bandInputs.Contains(EnemyFireSchedule.HitRateInput);
         // Checked here, so whether a band is refused never depends on which targets a fight reaches.
@@ -554,6 +632,9 @@ public static class DummyWeaponSimulator
         { foreach (var talent in owned) { magazines[talent] = profiles[slot].Magazine; } }
         // Gated status rules (Ardent's burn) read the driven keys at their event, and a bullet's events read them at its firing.
         var gated = statusRules.Any(rule => rule.WhileKey.Length > 0);
+        // A primed rule (ADR 0019) is primed by its weapon's time away; a gear talent is never away, so it would never prime.
+        if (buffRules.Any(rule => rule.PrimeHolstered > 0 && gearTalents.Contains(rule.Talent)))
+        { throw new SimulationException("trigger-unsupported", "A primed rule needs a weapon talent: gear is never put away"); }
         var holdingTalents = profiles.Keys.ToDictionary(slot => slot, slot => template is null ? null :
             (IReadOnlySet<string>)new HashSet<string>(gearTalents.Concat(weaponTalents.GetValueOrDefault(slot) ?? Enumerable.Empty<string>()), StringComparer.Ordinal), StringComparer.Ordinal);
         var armor = targeted ? WeaponTiming.Require(stats, "enemy_target_armor") : 0;
@@ -705,6 +786,8 @@ public static class DummyWeaponSimulator
         double shots = 0, reloads = 0, swaps = 0;
         double enemyAttempts = 0, enemyHits = 0, armorBreaks = 0, downed = 0, blockedShots = 0, kitsUsed = 0, kitsCancelled = 0, kitRepaired = 0;
         var incomingDamage = new double[fights];
+        var statusDamageTaken = new double[fights];
+        var playerStatusSeconds = new Dictionary<string, double>(StringComparer.Ordinal);
         var armorRepairs = new double[fights];
         var healthRepairs = new double[fights];
         var shieldRepairs = new double[fights];
@@ -754,6 +837,9 @@ public static class DummyWeaponSimulator
             var buffWeapon = initialWeapon;
             var enemyProfile = perTargetFire ? sequenceFire[sequence[0]] : incoming;
             var player = incoming?.CreateState();
+            var playerStatuses = reportsPlayerStatuses ? new PlayerStatusState() : null;
+            // Rules gated on a status on the player read it here; without statuses on the player they never gain.
+            if (buffs is not null && playerStatuses is not null) { buffs.PlayerStatusOn = playerStatuses.IsOn; }
             var shield = shieldProfile?.CreateState();
             // Set by a break while the shield bars a weapon; the build's weapon returns at the next decision point.
             var shieldReturn = false;
@@ -800,6 +886,8 @@ public static class DummyWeaponSimulator
             var hand = active;
             // Holstered-gain rules (Quick Draw) start gaining when the fight starts without one of their weapons in hand.
             buffs?.Hold(0, weaponTags[hand]);
+            // Primed rules (ADR 0019) start their time for the weapon that starts away.
+            buffs?.Prime(0, holdingTalents[hand]);
             var lastWeaponKills = new Dictionary<string, double>(StringComparer.Ordinal);
             // Swap and reload starts of scheduled rotation actions, fired in time order with the fight's other events.
             // Swap starts, reload starts and, when a rule reads it, reload completions, in time order.
@@ -1841,9 +1929,58 @@ public static class DummyWeaponSimulator
                     return (profile.Reload, profile.SwapSpeed, profile.SwitchMultiplier);
                 };
             }
+            // Damage on the player from an enemy's hit or a status's tick (ADR 0018): through bonus armor, armor then health, with the same
+            // repairs and talent events. Only a hit extends an armor kit's use. Returns the damage taken and whether the player went down.
+            (double Taken, bool Downed) TakeDamage(double amount, double at, DummyEventKind kind)
+            {
+                var hit = player!.Apply(amount, at, recoveryProfile!.BreakArmor);
+                if (!hit.Downed && hit.DamageTaken > 0 && recoveryProfile.MakeshiftShare > 0)
+                { queuedRepairs.Enqueue(hit.DamageTaken * recoveryProfile.MakeshiftShare, recoveryProfile.MakeshiftDuration, at); }
+                incomingDamage[fight] += hit.DamageTaken;
+                if (!double.IsFinite(incomingDamage[fight])) { throw new SimulationException("damage-overflow", "Incoming damage overflowed"); }
+                Record(kind, hit.DamageTaken, at, "");
+                if (kind == DummyEventKind.EnemyHit && kits?.Hit(at) is { } kitEnds) { time = kitEnds; }
+                var enemyRefill = false;
+                if (buffs is not null && hit.DamageTaken > 0)
+                {
+                    FireStatuses("damaged", at, buffWeapon.StatusDurationFactor);
+                    enemyRefill |= FireBuffs("damaged", at, statuses!.Active(at));
+                }
+                if (hit.ArmorBroken)
+                {
+                    armorBreaks++;
+                    Record(DummyEventKind.ArmorBreak, at: at, slot: "");
+                    RecordRepair(hit.ArmorRepaired, 0, at);
+                    if (buffs is not null)
+                    {
+                        FireStatuses("armor_break", at, buffWeapon.StatusDurationFactor);
+                        enemyRefill |= FireBuffs("armor_break", at, statuses!.Active(at));
+                    }
+                }
+                RefreshWeapon(at);
+                // A reload already under way fills the magazine when it completes; until then no rounds are
+                // usable, so phase readings keep seeing an empty magazine. A pending reload start still sees it.
+                if (enemyRefill) { Refill(at); RefreshWeapon(at); }
+                if (hit.Downed)
+                {
+                    Record(DummyEventKind.Downed, at: at, slot: "");
+                    // Arrival traces may have been scheduled before the player went down.
+                    for (var index = events.Count - 1; fight == 0 && index >= 0; index--)
+                    { if (events[index].Time > at) { events.RemoveAt(index); } }
+                }
+                return (hit.DamageTaken, hit.Downed);
+            }
+            // The profile of the enemy firing now: the chosen target's, or in a sequence (which always fights as a group) the firing enemy's.
+            int FiringProfile() => sequence.IsEmpty ? chosenProfile : sequence[group!.Firing % sequence.Length];
+            // A landed hit puts its enemy's statuses on the player (ADR 0018), by the profile firing it.
+            void PutStatusesOn(double at, int profile)
+            {
+                if (playerStatuses is null || !enemyStatusRows.TryGetValue(profile, out var rows)) { return; }
+                foreach (var (status, duration, tick, period, tickOnApply) in rows) { playerStatuses.Apply(status, at, duration, tick, period, tickOnApply); }
+            }
             while (time < options.Duration || skills?.Next is not null || nextEnemy < options.Duration || Ticking()?.Dots!.NextTick < options.Duration ||
                 pickups.Count > 0 && pickups.Peek() < options.Duration || actionEvents.Count > 0 && actionEvents.Peek().At < options.Duration || nextSecond < options.Duration ||
-                HeldDue() < options.Duration || blastKills.Count > 0)
+                HeldDue() < options.Duration || blastKills.Count > 0 || playerStatuses?.NextTick < options.Duration)
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 if (blastKills.Count > 0)
@@ -1861,6 +1998,22 @@ public static class DummyWeaponSimulator
                 var tickBeforeEnemy = nextSkill?.Kind.IsBatch() == true && nextSkillTime == nextEnemy;
                 // A held cooldown grant lands only when nothing else is due by then, so every event at its time comes first.
                 var heldDue = HeldDue();
+                // A status's tick on the player (ADR 0018) lands only when nothing else is due by then: every other event at its time,
+                // the weapon's shot included, comes first.
+                var nextPlayerTick = playerStatuses?.NextTick ?? double.PositiveInfinity;
+                if (nextPlayerTick < options.Duration && nextPlayerTick < time && nextPlayerTick < nextEnemy && nextPlayerTick < nextSkillTime &&
+                    nextPlayerTick < nextStatusTick && nextPlayerTick < nextPickup && nextPlayerTick < nextAction && nextPlayerTick < nextSecond && nextPlayerTick < heldDue)
+                {
+                    Spend();
+                    var at = nextPlayerTick;
+                    if (!Regenerate(at)) { RefreshWeapon(at); }
+                    FlushRegeneration();
+                    var (_, amount) = playerStatuses!.Take(at);
+                    var (taken, tickDowned) = TakeDamage(amount, at, DummyEventKind.PlayerStatusTick);
+                    statusDamageTaken[fight] += taken;
+                    if (tickDowned) { break; }
+                    continue;
+                }
                 if (heldDue < options.Duration && heldDue < time && heldDue < nextEnemy && heldDue < nextSkillTime && heldDue < nextStatusTick &&
                     heldDue < nextPickup && heldDue < nextAction && heldDue < nextSecond)
                 {
@@ -1939,42 +2092,9 @@ public static class DummyWeaponSimulator
                             AdvanceEnemy(at);
                             continue;
                         }
-                        var hit = player!.Apply(shooter.DamagePerHit, at, recoveryProfile!.BreakArmor);
-                        if (!hit.Downed && hit.DamageTaken > 0 && recoveryProfile.MakeshiftShare > 0)
-                        { queuedRepairs.Enqueue(hit.DamageTaken * recoveryProfile.MakeshiftShare, recoveryProfile.MakeshiftDuration, at); }
-                        incomingDamage[fight] += hit.DamageTaken;
-                        if (!double.IsFinite(incomingDamage[fight])) { throw new SimulationException("damage-overflow", "Incoming damage overflowed"); }
-                        Record(DummyEventKind.EnemyHit, hit.DamageTaken, at, "");
-                        if (kits?.Hit(at) is { } kitEnds) { time = kitEnds; }
-                        var enemyRefill = false;
-                        if (buffs is not null && hit.DamageTaken > 0)
-                        {
-                            FireStatuses("damaged", at, buffWeapon.StatusDurationFactor);
-                            enemyRefill |= FireBuffs("damaged", at, statuses!.Active(at));
-                        }
-                        if (hit.ArmorBroken)
-                        {
-                            armorBreaks++;
-                            Record(DummyEventKind.ArmorBreak, at: at, slot: "");
-                            RecordRepair(hit.ArmorRepaired, 0, at);
-                            if (buffs is not null)
-                            {
-                                FireStatuses("armor_break", at, buffWeapon.StatusDurationFactor);
-                                enemyRefill |= FireBuffs("armor_break", at, statuses!.Active(at));
-                            }
-                        }
-                        RefreshWeapon(at);
-                        // A reload already under way fills the magazine when it completes; until then no rounds are
-                        // usable, so phase readings keep seeing an empty magazine. A pending reload start still sees it.
-                        if (enemyRefill) { Refill(at); RefreshWeapon(at); }
-                        if (hit.Downed)
-                        {
-                            Record(DummyEventKind.Downed, at: at, slot: "");
-                            // Arrival traces may have been scheduled before the player went down.
-                            for (var index = events.Count - 1; fight == 0 && index >= 0; index--)
-                            { if (events[index].Time > at) { events.RemoveAt(index); } }
-                            break;
-                        }
+                        // The hit's statuses go on with it, ahead of its damaged and armor_break events, so rules on those see them.
+                        PutStatusesOn(at, FiringProfile());
+                        if (TakeDamage(shooter.DamagePerHit, at, DummyEventKind.EnemyHit).Downed) { break; }
                     }
                     AdvanceEnemy(at);
                     continue;
@@ -2006,6 +2126,8 @@ public static class DummyWeaponSimulator
                         EmitSwap("swap", from, fromTalents);
                         EmitSwap("swapped", hand);
                         if (lastWeaponKills.TryGetValue(from, out var lastKill) && at - lastKill <= SwapAfterKillWindow) { EmitSwap("swap_after_kill", from, fromTalents); }
+                        // The draw spends the drawn weapon's primed rules, after its swapped rules read them; the weapon put away starts its time.
+                        buffs.Prime(at, holdingTalents[hand]);
                     }
                     else
                     {
@@ -2464,6 +2586,11 @@ public static class DummyWeaponSimulator
             Regenerate(options.Duration);
             FlushRegeneration();
             FlushShieldRepair();
+            if (playerStatuses is not null)
+            {
+                playerStatuses.Close(player?.DownAt ?? options.Duration);
+                foreach (var (name, seconds) in playerStatuses.Seconds) { playerStatusSeconds[name] = playerStatusSeconds.GetValueOrDefault(name) + seconds; }
+            }
             if (statuses is not null)
             {
                 foreach (var (name, seconds) in statuses.UptimeSeconds(player?.DownAt ?? options.Duration))
@@ -2531,9 +2658,11 @@ public static class DummyWeaponSimulator
             if (options.IncludeIncoming && pack.Pack.NumericContextInputs.Any(input => input.ID == "makeshift_qualifying_damage")) { keys.Add("makeshift_qualifying_damage"); }
             return keys.ToImmutable();
         }
-        return new DummyFightResult(options.IncludeIncoming ? "d2p-incoming-random-v73/" + SimulationRandom.Contract : options.DriveSimpleBuffs ? "d2p-simple-buffs-v61/" + SimulationRandom.Contract : options.IncludeSkills ? "d2p-static-skills-v6/" + SimulationRandom.Contract : template is not null ? "d2p-weapon-rotation-v1/" + SimulationRandom.Contract : targeted ? "d2p-static-target-v1/" + SimulationRandom.Contract : Contract, options.Mode, fights, options.Duration, options.Seed, Summarize(dps), shots / fights,
+        return new DummyFightResult(options.IncludeIncoming ? "d2p-incoming-random-v75/" + SimulationRandom.Contract : options.DriveSimpleBuffs ? "d2p-simple-buffs-v62/" + SimulationRandom.Contract : options.IncludeSkills ? "d2p-static-skills-v6/" + SimulationRandom.Contract : template is not null ? "d2p-weapon-rotation-v1/" + SimulationRandom.Contract : targeted ? "d2p-static-target-v1/" + SimulationRandom.Contract : Contract, options.Mode, fights, options.Duration, options.Seed, Summarize(dps), shots / fights,
             reloads / fights, [.. timeline], [.. events.OrderBy(entry => entry.Time)], truncated, diagnostics,
-            [options.IncludeIncoming ? "Incoming fire: random targets" + (template is not null ? " with driven weapon swaps (recovery follows the weapon in hand)" : "") + "; other queued repairs, shield swaps without a weapon rotation and triggered cadence or capacity changes are unsupported" : targeted ? "Static targets: no incoming damage or repairs" : "Unlimited dummy: no target pools, kills, incoming damage or repairs",
+            [options.IncludeIncoming ? "Incoming fire: random targets" + (template is not null ? " with driven weapon swaps (recovery follows the weapon in hand)" : "") + "; other queued repairs, shield swaps without a weapon rotation and triggered cadence or capacity changes are unsupported. " + (pack.Pack.Simulation.EnemyStatuses.IsDefaultOrEmpty ?
+                "An enemy's hit deals its damage only: a status it puts on you, such as a nail gun's bleed, isn't counted" :
+                "A landed hit puts the pack's statuses for its enemy's profile on you (ADR 0018), not one on a raised shield: a tick goes through bonus armor, armor then health as a hit does, without extending an armor kit's use, and the row's resistances shorten the duration, as the source most likely does. A control status on you has no effect yet") : targeted ? "Static targets: no incoming damage or repairs" : "Unlimited dummy: no target pools, kills, incoming damage or repairs",
              options.IncludeShield ? "One frontal shield stays raised with static health, active regeneration and break cooldown; holstering, flanking and manual deployment are excluded" +
                  (shieldWeapon is not null ? $". The shield allows only the {pack.Pack.Slots.FirstOrDefault(slot => slot.ID == shieldWeapon)?.Name ?? shieldWeapon}: a raised shield swaps to it at the next shot or after the current reload (the barred weapon may hold the shield until then), and after a break the build's weapon returns the same way" : "") : "Shield absorption is excluded",
              options.IncludeSkills ? "Skills read the build as each deploys, and a use keeps its amounts and cooldown unless its rate is live, with up to 100 ms continuous-damage batches" + (perTargetFire ? ", not split at enemy attempts, which follow the " + (options.EnemiesAtOnce is null ? "target in play" : "enemies in play") : " split at incoming attempts") + "; a use's impacts land together unless its rule spaces them, and one due with no enemy there is lost. In driven fights a skill's burn or bleed reads as on its enemy until the use's window ends, or for one with its own rate until that runs out, with no share in target status uptime. A talent's status starts no ticks while a skill's rate is that status's damage, and ticks as usual after, and the skill's deals nothing while a talent's runs. A use reads a waiting bonus only if it was up as the use deployed; other skill statuses are not modeled" : options.IncludeShield ? "Damaging skills are excluded; the selected shield is simulated" : "Skills are excluded",
@@ -2547,6 +2676,7 @@ public static class DummyWeaponSimulator
              options.IncludeIncoming ? "Clutch, Doctor Home and Preservation repair through their pack rules (R43), only when talent triggers are driven; overlapping timed repairs run as independent, uncapped instances" :
                  "Talent repairs from pack rules need incoming fire",
              "Shot-bonus, returned-round and dynamic magazine-capacity mechanics are rejected",
+             .. incomingNotes,
              .. distanceNotes,
              .. (distances.IsEmpty ? Array.Empty<string>() : [string.Create(CultureInfo.InvariantCulture,
                  $"Targets cycle through {distances.Length} distances ({string.Join(", ", distances.Distinct().Select(meters => meters.ToString("0.##", CultureInfo.InvariantCulture)))} m), each setting its falloff, its distance rules and any enemy fire that follows distance")]),
@@ -2609,6 +2739,7 @@ public static class DummyWeaponSimulator
             Coverage = WithSimulatedRecovery(EffectCoverage.Describe(pack.Pack, build, context), RecoveryKeys()) with
             {
                 InputBasis = (options.DriveSimpleBuffs ? "Initial setup inputs; earned trigger values are reported in uptime statistics, not this snapshot." : "Fixed simulation assumptions; not measured proc uptime.") +
+                (incomingInputs.Count == 0 ? "" : " Set by the pack for fights with enemy fire, not chosen: " + string.Join(", ", incomingInputs) + ".") +
                 (distanceInputs.Count == 0 ? "" : " Set from " + (distances.IsEmpty ? "the fight distance" : "each target's distance") + ", not chosen: " + string.Join(", ", distanceInputs) + ".") +
                 (coverSelector ? " Set by the cover cycle, not chosen: " + (pack.Pack.Selectors.First(selector => selector.ID == DummyFightOptions.CoverInput).Name) + "." : "")
             },
@@ -2644,7 +2775,10 @@ public static class DummyWeaponSimulator
                 ShieldBreaks = shieldBreaks / fights,
                 ShieldDeployments = shieldDeployments / fights,
                 ShieldRepaired = Mean(shieldRepairs),
-                ShieldSwitches = shieldSwitches / fights
+                ShieldSwitches = shieldSwitches / fights,
+                StatusDamageTaken = reportsPlayerStatuses ? Mean(statusDamageTaken) : null,
+                PlayerStatusUptime = !reportsPlayerStatuses ? null : playerStatusSeconds.ToImmutableSortedDictionary(pair => pair.Key,
+                    pair => new StatusUptime(pair.Value / fights, pair.Value / fights / options.Duration), StringComparer.Ordinal)
             }
         };
     }

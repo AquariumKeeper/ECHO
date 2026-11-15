@@ -43,6 +43,7 @@ public sealed record SimulationEventRow(DummyEvent Event, string Slot)
         DummyEventKind.PreservationStarted => "Preservation Started",
         DummyEventKind.BurnTick => "Burn Tick",
         DummyEventKind.BleedTick => "Bleed Tick",
+        DummyEventKind.PlayerStatusTick => "Status Tick On You",
         DummyEventKind.BonusArmorGranted => "Bonus Armor Granted",
         DummyEventKind.Pickup => "Pickup Collected",
         _ => Event.Kind.ToString()

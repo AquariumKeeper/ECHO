@@ -122,7 +122,9 @@ public abstract class AssumptionViewModel : DraftValueViewModel
             if (input.Group.Length == 0)
             {
                 var followsDistance = !pack.Simulation.DistanceDefaults.IsDefaultOrEmpty && pack.Simulation.DistanceDefaults.Any(entry => entry.Input == input.ID);
-                yield return (input.Section, new NumericAssumptionViewModel(editor, input, followsDistance));
+                double? underFire = pack.Simulation.IncomingDefaults.IsDefaultOrEmpty ? null :
+                    pack.Simulation.IncomingDefaults.Where(entry => entry.Input == input.ID).Select(entry => (double?)entry.Value).FirstOrDefault();
+                yield return (input.Section, new NumericAssumptionViewModel(editor, input, followsDistance, underFire));
             }
             else if (groups.Add(input.Group))
             { yield return (input.Section, new GroupedAssumptionViewModel(editor, input.Group, [.. pack.NumericContextInputs.Where(member => member.Group == input.Group)])); }
@@ -186,16 +188,26 @@ public sealed class NumericAssumptionViewModel : AssumptionViewModel
     // Unset, a simulated fight takes this input from its distance (R44). A value equal to the default is then a real choice, so
     // it's stored, and clearing the box goes back to following the distance.
     private readonly bool followsDistance;
+    // Unset, a fight with enemy fire takes the pack's default for it (owner, 2026-11-14); the dropdown's Default keeps it unset, and
+    // any listed value, the ordinary default included, is stored as a choice.
+    private readonly double? underFire;
+    private bool KeepsDefault => followsDistance || underFire is not null;
     private Choice selected = Choice.None;
 
-    internal NumericAssumptionViewModel(EditorViewModel editor, NumericContextInputDefinition definition, bool followsDistance = false) : base(editor, definition.ID, definition.Name, definition.Description)
+    internal NumericAssumptionViewModel(EditorViewModel editor, NumericContextInputDefinition definition, bool followsDistance = false, double? underFire = null) : base(editor, definition.ID, definition.Name, definition.Description)
     {
         this.definition = definition;
         this.followsDistance = followsDistance;
-        SetChoices(definition.Options.IsDefaultOrEmpty ? [] : [.. definition.Options.Select(option => new Choice(Text(option.Value), option.Label))]);
+        this.underFire = underFire;
+        ImmutableArray<Choice> options = definition.Options.IsDefaultOrEmpty ? [] : [.. definition.Options.Select(option => new Choice(Text(option.Value), option.Label))];
+        if (underFire is { } fire && !options.IsEmpty)
+        { options = options.Insert(0, new Choice("", $"Default: {definition.Shown(definition.Default)}; with enemy fire, {definition.Shown(fire)}")); }
+        SetChoices(options);
         Range = $"{Shown(definition.Min)} – {Shown(definition.Max)}, default {Shown(definition.Default)}";
-        Hint = $"Range {Shown(definition.Min)}–{Shown(definition.Max)} · step {Shown(definition.Step)}" + (followsDistance ? " · empty follows the distance" : "");
+        Hint = $"Range {Shown(definition.Min)}–{Shown(definition.Max)} · step {Shown(definition.Step)}" + (followsDistance ? " · empty follows the distance" : "") +
+            (underFire is { } value && options.IsEmpty ? $" · empty is {Shown(value)} with enemy fire" : "");
     }
+
 
     /// <summary>The legal range and the default, for a typed number.</summary>
     public string Range { get; }
@@ -210,9 +222,10 @@ public sealed class NumericAssumptionViewModel : AssumptionViewModel
         set
         {
             if (value is null || !SetProperty(ref selected, value) || value.IsUnknown || Editor.Refreshing) { return; }
+            if (value.Id.Length == 0) { Editor.Apply(Cleared()); return; }
             if (!double.TryParse(value.Id, NumberStyles.Float, CultureInfo.InvariantCulture, out var number)) { return; }
             // Choosing the default stores nothing, so the build follows the pack if its default changes.
-            Editor.Apply(number == definition.Default && !followsDistance ? Cleared() : new ContextOperation(Id, Value: number));
+            Editor.Apply(number == definition.Default && !KeepsDefault ? Cleared() : new ContextOperation(Id, Value: number));
         }
     }
 
@@ -221,16 +234,17 @@ public sealed class NumericAssumptionViewModel : AssumptionViewModel
     protected override BuildOperation? Parse(string text, out string problem)
     {
         problem = $"{Name} must be a number from {Range}";
-        if (followsDistance && text.Trim().Length == 0) { return Cleared(); }
+        if (KeepsDefault && text.Trim().Length == 0) { return Cleared(); }
         if (Formatting.Parse(StatFormats.Decimal, text) is not { } number || !definition.Accepts(number)) { return null; }
-        return number == definition.Default && !followsDistance ? Cleared() : new ContextOperation(Id, Value: number);
+        return number == definition.Default && !KeepsDefault ? Cleared() : new ContextOperation(Id, Value: number);
     }
 
     protected override void Show(string? value)
     {
         var number = Stored(definition, value);
-        if (HasChoices) { Selected = Listed(Choices.FirstOrDefault(choice => choice.Id == Text(number)) ?? Choice.Unknown(Text(number))); }
-        else { ShowValue(followsDistance && value is null ? "" : Formatting.Input(StatFormats.Decimal, number)); }
+        if (HasChoices && underFire is not null && value is null) { Selected = Choices[0]; }
+        else if (HasChoices) { Selected = Listed(Choices.FirstOrDefault(choice => choice.Id == Text(number)) ?? Choice.Unknown(Text(number))); }
+        else { ShowValue(KeepsDefault && value is null ? "" : Formatting.Input(StatFormats.Decimal, number)); }
     }
 
     /// <summary>An input's value: assumptions travel as invariant text, and an absent one is the pack's default.</summary>

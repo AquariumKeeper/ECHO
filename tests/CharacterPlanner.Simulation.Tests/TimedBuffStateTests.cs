@@ -1350,6 +1350,111 @@ public sealed class TimedBuffStateTests
     }
 
     [Fact]
+    public void APrimedRuleIsReadyAfterItsWeaponIsAwayAndSpentByTheDraw()
+    {
+        // Put away at 1 s with a 5 s prime: ready from 6 s, still ready at 9 s, spent by the draw at 9 s. Without a Prime call, or with
+        // every talent in hand, it never primes.
+        var rule = new SimTriggerDefinition { Talent = "rifle_talent", Key = "primed", Kind = "ready", PrimeHolstered = 5 };
+        var state = new TimedBuffState([rule]);
+        state.Prime(0, new HashSet<string> { "rifle_talent" });
+        Assert.False(state.Context(Empty, 0.5).ContainsKey("primed"));
+        state.Prime(1, new HashSet<string>());
+        Assert.False(state.Context(Empty, 5.9).ContainsKey("primed"));
+        Assert.True(state.Context(Empty, 6).ContainsKey("primed"));
+        // Another swap that leaves it away keeps its time.
+        state.Prime(7, new HashSet<string> { "other" });
+        Assert.True(state.Context(Empty, 8.9).ContainsKey("primed"));
+        state.Prime(9, new HashSet<string> { "rifle_talent" });
+        Assert.False(state.Context(Empty, 9).ContainsKey("primed"));
+        Assert.Equal(3, state.Measure(20)["primed"].Seconds, 9);
+        var unrotated = new TimedBuffState([rule]);
+        unrotated.Prime(0, null);
+        Assert.False(unrotated.Context(Empty, 100).ContainsKey("primed"));
+    }
+
+    [Fact]
+    public void StacksFromTheirFirstGainShareOneTimerThatAKillRestarts()
+    {
+        // Cover Shooter (R112): stacks at 0, 5 and 10 s all end at 15 s, the timer from the first; a gain after that starts a new one.
+        var rule = new SimTriggerDefinition { Talent = "test", Key = "stacks", On = "shot", Kind = "stacks", Max = 100, Duration = 15, FromFirstGain = true };
+        var state = new TimedBuffState([rule]);
+        state.Fire("shot", 0);
+        state.Fire("shot", 5);
+        state.Fire("shot", 10);
+        Assert.Equal("3", state.Context(Empty, 14.9)["stacks"]);
+        Assert.Equal("0", state.Context(Empty, 15)["stacks"]);
+        state.Fire("shot", 16);
+        Assert.Equal("1", state.Context(Empty, 30.9)["stacks"]);
+        Assert.Equal("0", state.Context(Empty, 31)["stacks"]);
+        // A kill restarts the full 15 s with the count kept, and gains nothing without stacks.
+        var refreshed = new TimedBuffState([rule with { RefreshOn = "kill" }]);
+        refreshed.Fire("kill", 0);
+        Assert.Equal("0", refreshed.Context(Empty, 0.5)["stacks"]);
+        refreshed.Fire("shot", 1);
+        refreshed.Fire("shot", 2);
+        refreshed.Fire("kill", 10);
+        refreshed.Fire("shot", 12);
+        Assert.Equal("3", refreshed.Context(Empty, 24.9)["stacks"]);
+        Assert.Equal("0", refreshed.Context(Empty, 25)["stacks"]);
+        // At the cap, a gain replaces the oldest stack and keeps the shared end.
+        var capped = new TimedBuffState([rule with { Max = 2 }]);
+        capped.Fire("shot", 0);
+        capped.Fire("shot", 1);
+        capped.Fire("shot", 2);
+        Assert.Equal("2", capped.Context(Empty, 14.9)["stacks"]);
+        Assert.Equal("0", capped.Context(Empty, 15)["stacks"]);
+        // A refresh's longer stacks count in the stack-seconds: 3 stacks from 12 s to 25 s, after 2 from 2 s and 1 from 1 s.
+        Assert.Equal(1 * 1 + 2 * 10 + 3 * 13, refreshed.Measure(30)["stacks"].StackSeconds!.Value, 9);
+        // Without fromFirstGain each stack keeps its own 15 s.
+        var each = new TimedBuffState([rule with { FromFirstGain = false }]);
+        each.Fire("shot", 0);
+        each.Fire("shot", 5);
+        Assert.Equal("1", each.Context(Empty, 15)["stacks"]);
+    }
+
+    [Fact]
+    public void APlayerStatusGateOpensOnlyWhileTheStatusIsOn()
+    {
+        // ADR 0018: a bleed on the player from 1 s to 2 s. A gain before, during and after: only the one during it lands, and a fight
+        // without statuses on the player leaves the rule closed.
+        var rule = new SimTriggerDefinition { Talent = "test", Key = "buff", On = "second", Kind = "buff", Duration = 0.4, WhilePlayerStatus = "bleeding" };
+        var bleed = new PlayerStatusState();
+        bleed.Apply("bleeding", 1, 1, 0, 0, tickOnApply: false);
+        var state = new TimedBuffState([rule]) { PlayerStatusOn = bleed.IsOn };
+        state.Fire("second", 0.5);
+        Assert.False(state.Context(Empty, 0.6).ContainsKey("buff"));
+        state.Fire("second", 1.5);
+        Assert.True(state.Context(Empty, 1.6).ContainsKey("buff"));
+        state.Fire("second", 2);
+        Assert.False(state.Context(Empty, 2.1).ContainsKey("buff"));
+        Assert.True(bleed.IsOn("any", 1));
+        Assert.False(bleed.IsOn("burning", 1.5));
+        var closed = new TimedBuffState([rule]);
+        closed.Fire("second", 1.5);
+        Assert.False(closed.Context(Empty, 1.6).ContainsKey("buff"));
+        // Holstered gains pass no event gate, so a stacks rule can't take both.
+        Assert.Throws<SimulationException>(() => new TimedBuffState([new() { Talent = "test", Key = "s", On = "hit", Kind = "stacks", Max = 5, GainWhileHolstered = 1, WeaponTags = ["pistol"], WhilePlayerStatus = "any" }]));
+    }
+
+    [Fact]
+    public void ARefreshRestartsTheBuffOnlyWhileItIsOn()
+    {
+        // Unwavering (ADR 0019): a swap gains 5 s; a kill while it's on restarts the 5 s; a kill while it's off gains nothing.
+        var state = new TimedBuffState([new() { Talent = "test", Key = "buff", On = "swapped", Kind = "buff", Duration = 5, RefreshOn = "kill" }]);
+        state.Fire("kill", 0);
+        Assert.False(state.Context(Empty, 0.5).ContainsKey("buff"));
+        state.Fire("swapped", 1);
+        state.Fire("kill", 4);
+        Assert.True(state.Context(Empty, 8.9).ContainsKey("buff"));
+        Assert.False(state.Context(Empty, 9).ContainsKey("buff"));
+        state.Fire("kill", 12);
+        Assert.False(state.Context(Empty, 12.5).ContainsKey("buff"));
+        Assert.Equal(new TimedTriggerDuration(8, null), state.Measure(20)["buff"]);
+        // A refresh needs a duration to restart.
+        Assert.Throws<SimulationException>(() => new TimedBuffState([new() { Talent = "test", Key = "buff", On = "swapped", Kind = "buff", Duration = 0, ConsumeOn = "shot", RefreshOn = "kill" }]));
+    }
+
+    [Fact]
     public void SwappingWhileActiveCancelsTheBuffAndLocksItOut()
     {
         // Gunslinger: a swap gains the 5 s buff; a swap while it is active ends it and blocks it for 5 s.

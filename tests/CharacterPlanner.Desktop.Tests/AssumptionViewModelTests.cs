@@ -108,13 +108,16 @@ public sealed class AssumptionViewModelTests : IDisposable
     [Fact]
     public void NumericAssumptionsAreChosenOrTyped()
     {
-        // Labelled options: choosing the default stores nothing.
+        // Labelled options. The target has an enemy-fire default (R113), so Default leads and stores nothing, and the ordinary
+        // default (6) is a real choice, stored.
         var target = Assert.IsType<NumericAssumptionViewModel>(Assumption("enemy_target"));
         Assert.True(target.HasChoices);
-        Assert.Equal("6", target.Selected.Id);
+        Assert.Equal("", target.Selected.Id);
         target.Selected = Pick(target.Choices, "1");
         Assert.Equal(1, double.Parse(Assumptions["enemy_target"], CultureInfo.InvariantCulture));
         target.Selected = Pick(target.Choices, "6");
+        Assert.Equal(6, double.Parse(Assumptions["enemy_target"], CultureInfo.InvariantCulture));
+        target.Selected = Pick(target.Choices, "");
         Assert.False(Assumptions.ContainsKey("enemy_target"));
 
         // A typed number, within its range.

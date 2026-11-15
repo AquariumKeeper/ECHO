@@ -7,6 +7,8 @@ namespace CharacterPlanner.Core.Tests;
 public sealed class PackValidatorTests
 {
     private static readonly GamePack Pack = Tiny;
+    // Tiny with a numeric input no rule drives, for defaults in fights with enemy fire.
+    private static readonly GamePack Rated = Tiny with { NumericContextInputs = [.. Tiny.NumericContextInputs, new() { ID = "enemy_target", Name = "Enemy target", Min = 0, Max = 2, Step = 1, Default = 2, Options = [new(0, "No target"), new(1, "Normal"), new(2, "Elite")] }, new() { ID = "rate", Name = "Rate", Min = 0, Max = 100, Step = 1, Default = 50 }] };
 
     private static GamePack Item(string id, Func<ItemDefinition, ItemDefinition> edit) => Pack with { Items = [.. Pack.Items.Select(item => item.ID == id ? edit(item) : item)] };
     private static GamePack Talent(string id, Func<TalentDefinition, TalentDefinition> edit) => Pack with { Talents = [.. Pack.Talents.Select(talent => talent.ID == id ? edit(talent) : talent)] };
@@ -245,7 +247,51 @@ public sealed class PackValidatorTests
         ["armor kit refund on a kill"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { On = "kill", Grant = "armor_kit_refund", GrantAmount = 1 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
         ["armor kit refund over time"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "armor_kit_refund", GrantAmount = 1, GrantDuration = 5 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
         ["skill cooldown over time"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Grant = "skill_cooldown", GrantAmount = 0.1, GrantDuration = 5 }] } }, "bad-sim-trigger", "simulation.triggers[0].grant"),
-        ["requires on stacks"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add("overwatch_active", "true") }] } }, "bad-sim-trigger", "simulation.triggers[0].requires"),
+        ["refreshOn on untimed stacks"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { RefreshOn = "kill", Duration = 0 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["primeHolstered on a buff"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { PrimeHolstered = 5 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["primeHolstered with an event"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", Duration = 0, PrimeHolstered = 5 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["primeHolstered with a grant"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", On = "", Duration = 0, PrimeHolstered = 5, Grant = "skill_cooldown", GrantAmount = 0.5 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["primeHolstered with a refill"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", On = "", Duration = 0, PrimeHolstered = 5, Refill = true }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["primeHolstered too long"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", On = "", Duration = 0, PrimeHolstered = 601 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["fromFirstGain on a buff"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { FromFirstGain = true }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["fromFirstGain untimed"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { FromFirstGain = true, Duration = 0 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["refreshOn on decaying stacks"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { RefreshOn = "kill", Refresh = true, Decay = 1 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["refreshOn on stacks on each enemy"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { RefreshOn = "kill", ResetOn = "target_death" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["fromFirstGain on a shared key"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { FromFirstGain = true }, Pack.Simulation.Triggers[1] with { Talent = Pack.Simulation.Triggers[0].Talent }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["fromFirstGain with refresh"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { FromFirstGain = true, Refresh = true }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["refreshOn its own on"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RefreshOn = "kill" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["refreshOn an unknown event"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RefreshOn = "sneeze" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["refreshOn on an untimed buff"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Duration = 0, ConsumeOn = "shot", RefreshOn = "hit" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["refreshOn with cooldownFromEnd"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RefreshOn = "hit", CooldownFromEnd = true, Every = 5 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["refreshOn an also event"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RefreshOn = "hit", Also = [new() { On = "hit" }] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["refreshOn its resetOn"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RefreshOn = "reload", ResetOn = "reload" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["refreshOn on a gated rule"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RefreshOn = "hit", WhileStatus = "burning" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["refreshOn its cancelOn"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RefreshOn = "swap", CancelOn = "swap" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["whilePlayerStatus unknown status"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { WhilePlayerStatus = "sneezing" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["whilePlayerStatus with whileStatus"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { WhilePlayerStatus = "bleeding", WhileStatus = "burning" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["whilePlayerStatus on a ready rule"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", WhilePlayerStatus = "bleeding" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["refreshOn with whilePlayerStatus"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RefreshOn = "hit", WhilePlayerStatus = "bleeding" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["enemy status unlisted target"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 3, Status = "bleeding", Duration = 2 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].target"),
+        ["enemy status no target"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 0, Status = "bleeding", Duration = 2 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].target"),
+        ["enemy status unknown status"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 1, Status = "sneezing", Duration = 2 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].status"),
+        ["enemy status twice"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 1, Status = "bleeding", Duration = 2 }, new() { Target = 1, Status = "bleeding", Duration = 3 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[1]"),
+        ["enemy status no duration"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 1, Status = "bleeding", Duration = 0 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].duration"),
+        ["enemy status control tick"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 1, Status = "shocked", Duration = 2, Tick = "armor", Period = 0.5 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].tick"),
+        ["enemy status unknown tick"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 1, Status = "bleeding", Duration = 2, Tick = "missing", Period = 0.5 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].tick"),
+        ["enemy status tick without period"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 1, Status = "bleeding", Duration = 2, Tick = "armor" }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].period"),
+        ["enemy status period without tick"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 1, Status = "bleeding", Duration = 2, Period = 0.5 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].tick"),
+        ["enemy status unknown resistance"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 1, Status = "bleeding", Duration = 2, Resistances = ["missing"] }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].resistances"),
+        ["enemy status floor without resistance"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 1, Status = "bleeding", Duration = 2, MinDuration = 0.5 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].minDuration"),
+        ["enemy status floor above duration"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 1, Status = "bleeding", Duration = 2, Resistances = ["armor"], MinDuration = 3 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].minDuration"),
+        ["incoming default on a driven key"] = (() => Pack with { Simulation = Pack.Simulation with { IncomingDefaults = [new() { Input = "stacks", Value = 1 }] } }, "bad-sim-incoming-default", "simulation.incomingDefaults[0].input"),
+        ["incoming default unknown input"] = (() => Pack with { Simulation = Pack.Simulation with { IncomingDefaults = [new() { Input = "missing", Value = 1 }] } }, "bad-sim-incoming-default", "simulation.incomingDefaults[0].input"),
+        ["incoming default twice"] = (() => Rated with { Simulation = Rated.Simulation with { IncomingDefaults = [new() { Input = Rated.NumericContextInputs[1].ID, Value = 1 }, new() { Input = Rated.NumericContextInputs[1].ID, Value = 1 }] } }, "bad-sim-incoming-default", "simulation.incomingDefaults[1].input"),
+        ["incoming default off its range"] = (() => Rated with { Simulation = Rated.Simulation with { IncomingDefaults = [new() { Input = Rated.NumericContextInputs[1].ID, Value = Rated.NumericContextInputs[1].Max + 1 }] } }, "bad-sim-incoming-default", "simulation.incomingDefaults[0].value"),
+        ["incoming default not the target"] = (() => Rated with { Simulation = Rated.Simulation with { IncomingDefaults = [new() { Input = "rate", Value = 1 }] } }, "bad-sim-incoming-default", "simulation.incomingDefaults[0].input"),
+        ["incoming default no target"] = (() => Rated with { Simulation = Rated.Simulation with { IncomingDefaults = [new() { Input = "enemy_target", Value = 0 }] } }, "bad-sim-incoming-default", "simulation.incomingDefaults[0].value"),
+        ["incoming default not a listed profile"] = (() => Rated with { Simulation = Rated.Simulation with { IncomingDefaults = [new() { Input = "enemy_target", Value = 3 }] } }, "bad-sim-incoming-default", "simulation.incomingDefaults[0].value"),
+        ["incoming default by distance too"] = (() => Rated with { Simulation = Rated.Simulation with { IncomingDefaults = [new() { Input = Rated.NumericContextInputs[1].ID, Value = 1 }], DistanceDefaults = [new() { Input = Rated.NumericContextInputs[1].ID, Bands = [new() { Value = 1 }] }] } }, "bad-sim-incoming-default", "simulation.incomingDefaults[0].input"),
+        ["requires on stacks with no event"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { On = "", GainWhileHolstered = 1, RequiresContext = ImmutableDictionary<string, string>.Empty.Add("overwatch_active", "true") }] } }, "bad-sim-trigger", "simulation.triggers[0].requires"),
         ["requires unknown selector"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add("nowhere", "true") }] } }, "unknown-selector", "simulation.triggers[0].requires.nowhere"),
         ["requires a driven key"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add(Pack.Simulation.Triggers[0].Key, "true") }] } }, "bad-sim-trigger", "simulation.triggers[0].requires." + Pack.Simulation.Triggers[0].Key),
         ["chance zero"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Chance = 0 }] } }, "bad-sim-trigger", "simulation.triggers[0].chance"),
@@ -772,6 +818,68 @@ public sealed class PackValidatorTests
         Assert.Equal(["weapon_type_rifle"], result.Compiled!.Pack.Simulation.Triggers[0].WeaponTags);
         Assert.True(result.Compiled.Pack.Simulation.Triggers[0].ForceHeadshot);
         Assert.DoesNotContain("weaponTags", System.Text.Encoding.UTF8.GetString(PackWriter.Write(Pack)[PackFiles.Simulation].Span), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AcceptsAPrimedReadyRule()
+    {
+        var rules = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", On = "", Duration = 0, PrimeHolstered = 10 }] } };
+        Assert.DoesNotContain(PackValidator.Validate(rules).Diagnostics, diagnostic => diagnostic.Severity == "error");
+    }
+
+    [Fact]
+    public void AcceptsCoverShootersSingleTimerAndKillRefresh()
+    {
+        // R112: stacks per shot, one 15 s timer from the first, restarted by a kill.
+        var rules = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { Duration = 15, FromFirstGain = true, RefreshOn = "kill" }] } };
+        Assert.DoesNotContain(PackValidator.Validate(rules).Diagnostics, diagnostic => diagnostic.Severity == "error");
+    }
+
+    [Fact]
+    public void AcceptsARefreshOnATimedBuff()
+    {
+        var rules = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { On = "swapped", RefreshOn = "kill" }] } };
+        Assert.DoesNotContain(PackValidator.Validate(rules).Diagnostics, diagnostic => diagnostic.Severity == "error");
+    }
+
+    [Fact]
+    public void AcceptsARuleGatedOnAStatusOnThePlayerAndWarnsWhenNothingPutsItOn()
+    {
+        var rules = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { WhilePlayerStatus = "any" }] } };
+        var diagnostics = PackValidator.Validate(rules).Diagnostics;
+        Assert.DoesNotContain(diagnostics, diagnostic => diagnostic.Severity == "error");
+        Assert.Contains(diagnostics, diagnostic => diagnostic.Code == "sim-player-status-unapplied" && diagnostic.Path == "simulation.triggers[0].whilePlayerStatus");
+    }
+
+    [Fact]
+    public void AcceptsStatusesEnemiesPutOnThePlayer()
+    {
+        // ADR 0018: a damaging status with its tick and resistances, and a control status with a duration only.
+        var rules = Rated with
+        {
+            Simulation = Rated.Simulation with
+            {
+                EnemyStatuses = [new() { Target = 1, Status = "bleeding", Duration = 2, Tick = "armor", Period = 0.5, TickOnApply = true, Resistances = ["armor", "skill_tier"], MinDuration = 0.5 },
+                    new() { Target = 2, Status = "shocked", Duration = 3 }]
+            }
+        };
+        Assert.DoesNotContain(PackValidator.Validate(rules).Diagnostics, diagnostic => diagnostic.Severity == "error");
+    }
+
+    [Fact]
+    public void AcceptsAnIncomingDefault()
+    {
+        var rules = Rated with { Simulation = Rated.Simulation with { IncomingDefaults = [new() { Input = "enemy_target", Value = 1 }] } };
+        Assert.DoesNotContain(PackValidator.Validate(rules).Diagnostics, diagnostic => diagnostic.Severity == "error");
+    }
+
+    // Cover Shooter's shape: a stacks rule with an event may be gated on a selector too (P13).
+    [Fact]
+    public void AcceptsRequiresOnAStacksRuleWithAnEvent()
+    {
+        var rules = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add("overwatch_active", "true") }] } };
+        var result = PackValidator.Validate(rules);
+        Assert.DoesNotContain(result.Diagnostics, diagnostic => diagnostic.Severity == "error");
     }
 
     [Theory]

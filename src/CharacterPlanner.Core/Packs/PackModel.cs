@@ -90,6 +90,10 @@ public sealed record NumericContextInputDefinition
     /// <summary>Finite, within bounds and on a step; the resolver falls back to the default otherwise.</summary>
     public bool Accepts(double value) => double.IsFinite(value) && value >= Min && value <= Max && IsAligned(value, Min, Step);
 
+    /// <summary>A value's option label, or the value itself as invariant text when it has none.</summary>
+    public string Shown(double value) => Options.IsDefaultOrEmpty || Options.FirstOrDefault(option => option.Value == value) is not { } option
+        ? value.ToString("0.##########", System.Globalization.CultureInfo.InvariantCulture) : option.Label;
+
     internal static bool IsAligned(double value, double min, double step) => Math.Abs((value - min) / step - Math.Round((value - min) / step)) <= StepTolerance.NumericInput;
 
     /// <summary>An accepted value moved exactly onto its step, so a 0/1 toggle stores exactly 0 or 1.</summary>
@@ -413,6 +417,11 @@ public sealed record SimTriggerDefinition
     public double Duration { get; init; }
     public long Max { get; init; }
     public bool Refresh { get; init; }
+    /// <summary>
+    /// On a stacks rule with a duration: one timer, started by the gain that takes the count from 0, ends every stack together; later
+    /// gains don't move it (Cover Shooter, R112). <see cref="RefreshOn"/> may restart it.
+    /// </summary>
+    public bool FromFirstGain { get; init; }
     public double Every { get; init; }
     /// <summary>
     /// On a buff, stacks or ready rule with an <see cref="Every"/>: rules naming the same group share their cooldown, so one fires only if
@@ -457,12 +466,33 @@ public sealed record SimTriggerDefinition
     /// tick of a free-running clock with this period, up to its cap (Quick Draw: 0.3 s while no pistol is in hand).
     /// </summary>
     public double GainWhileHolstered { get; init; }
+    /// <summary>
+    /// On a ready rule without an event (ADR 0019: Perturb, Faster Than Reloading): the key is ready once the rule's talent's weapon
+    /// has been put away this many seconds without a break, and drawing the weapon spends it. Rules on the draw (swapped) read it as
+    /// it stood before, with whileKey.
+    /// </summary>
+    public double PrimeHolstered { get; init; }
+    /// <summary>The longest a weapon must be put away to prime a rule.</summary>
+    public const double MaximumPrimeHolstered = 600;
     public string WhileStatus { get; init; } = "";
+    /// <summary>
+    /// On a buff or stacks rule: it gains only while this status (or with "any", some status) is on the player, from an enemy's hit
+    /// (ADR 0018). A fight without statuses on the player never opens it.
+    /// </summary>
+    public string WhilePlayerStatus { get; init; } = "";
     public string Pool { get; init; } = "";
     public long PoolMax { get; init; }
     /// <summary>A buff ends when this event fires while it is active, and can't be gained again for <see cref="CancelFor"/> seconds.</summary>
     public string CancelOn { get; init; } = "";
     public double CancelFor { get; init; }
+    /// <summary>
+    /// A buff that is on restarts its duration when this event fires, and the event gains nothing while it's off (ADR 0019:
+    /// Unwavering's kills).
+    /// </summary>
+    public string RefreshOn { get; init; } = "";
+
+    /// <summary>The events that clear, spend, cancel or refresh the rule, set or not; its gains are <see cref="On"/> and <see cref="Also"/>.</summary>
+    public IEnumerable<string> OtherEvents => [ResetOn, AlsoResetOn, ConsumeOn, CancelOn, RefreshOn];
     /// <summary>A pooled stacks rule's lasting key: when the pool reaches its cap, the rule's live stacks move here, replacing the previous value.</summary>
     public string Bank { get; init; } = "";
     /// <summary>
@@ -767,6 +797,35 @@ public sealed record SimDistanceDefault
     public ImmutableArray<SimDistanceBand> Bands { get; init; } = [];
 }
 
+/// <summary>
+/// An input's default in fights with enemy fire (owner, 2026-11-14): an input the user hasn't set takes <see cref="Value"/> there, and keeps
+/// its ordinary default elsewhere. The enemy that fires is the enemy shot, so a target default sets both. Only the target takes one for now.
+/// </summary>
+public sealed record SimIncomingDefault
+{
+    public string Input { get; init; } = "";
+    public double Value { get; init; }
+}
+
+/// <summary>
+/// A status an enemy's hit puts on the player (ADR 0018): in a fight with enemy fire, each hit that lands from an enemy of profile
+/// <see cref="Target"/> puts <see cref="Status"/> on the player for <see cref="Duration"/> seconds, to the later end if it's on. With
+/// <see cref="Tick"/>, the resolved stat is dealt every <see cref="Period"/> through bonus armor, armor then health, as a hit is. The
+/// <see cref="Resistances"/> stats, summed and capped at 1, shorten the duration by that share, not below <see cref="MinDuration"/>;
+/// at 1 the status doesn't go on. A control status goes on with no effect on the player yet.
+/// </summary>
+public sealed record SimEnemyStatusDefinition
+{
+    public int Target { get; init; }
+    public string Status { get; init; } = "";
+    public double Duration { get; init; }
+    public string Tick { get; init; } = "";
+    public double Period { get; init; }
+    public bool TickOnApply { get; init; }
+    public ImmutableArray<string> Resistances { get; init; } = [];
+    public double MinDuration { get; init; }
+}
+
 /// <summary>One band: up to and including <see cref="UpTo"/> metres, or beyond every earlier band when it has none.</summary>
 public sealed record SimDistanceBand
 {
@@ -804,6 +863,9 @@ public sealed record SimulationRules
     /// <summary>Talents' debuffs passing on at a death (ADR 0013).</summary>
     public ImmutableArray<SimPassOnDefinition> PassOns { get; init; } = [];
     public ImmutableArray<SimDistanceDefault> DistanceDefaults { get; init; } = [];
+    public ImmutableArray<SimIncomingDefault> IncomingDefaults { get; init; } = [];
+    /// <summary>Statuses enemies' hits put on the player (ADR 0018).</summary>
+    public ImmutableArray<SimEnemyStatusDefinition> EnemyStatuses { get; init; } = [];
     public SimArmorKit? ArmorKit { get; init; }
 }
 

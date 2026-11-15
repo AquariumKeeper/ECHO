@@ -2218,6 +2218,13 @@
       "format": "integer",
       "formula": "4 * equipped_weapon_damage / equipped_weapon_pellets",
       "min": 0
+    },
+    {
+      "id": "npc_bleed_tick_damage",
+      "name": "Enemy Bleed Tick Damage",
+      "description": "Damage of one tick of an enemy's bleed on you, every 0.5 s: 35 x the status tick skill curve (Bleed_Damage_Final, read on the enemy). Difficulty, role and enemy weapon damage don't scale it. That the enemy's skill curve equals the player's, at the same level and mode scaling, is an inference; the enemy's own level and group terms aren't established. The tick's own damage-resistance factor (BleedDamageResistanceModBonus) isn't modeled; no gear in the pack sets it (R114, R115).",
+      "format": "integer",
+      "formula": "35 * status_tick_skill_curve"
     }
   ],
   "curves": {
@@ -11261,7 +11268,7 @@
     {
       "id": "cover_shooter_stacks",
       "name": "Cover Shooter Stacks",
-      "description": "Assumed currently retained Cover Shooter stacks (0\u2013100), each adding 1% Weapon Damage. In-cover shot generation, kill refresh, the 15-second duration, and reset/cancel conditions are not inferred.",
+      "description": "Assumed currently retained Cover Shooter stacks (0\u2013100), each adding 1% Weapon Damage. In a fight in cover (a cover cycle, or In cover set), fights count the stacks from bullets fired, under one 15 s timer from the first stack that a kill in cover restarts; in a fight out of cover they hold 0. This value serves static comparisons (R112, R115).",
       "min": 0,
       "max": 100,
       "default": 0
@@ -11467,7 +11474,7 @@
     {
       "id": "enemy_target",
       "name": "Enemy Target Profile",
-      "description": "Enemy for target estimates. Profiles group game-file NPC declarations by role, health base and armor base, labelled with the factions that use them most. Named entries are a sample of named bosses, one per main faction, with the mission whose scripts reference them; whether they spawn there with these values, and with which role override, is not established.",
+      "description": "Enemy for target estimates. Profiles group game-file NPC declarations by role, health base and armor base, labelled with the factions that use them most. Named entries are a sample of named bosses, one per main faction, with the mission whose scripts reference them; whether they spawn there with these values, and with which role override, is not established. Fights with enemy fire start from profile 3 (normal, 1,200 health, no armor) unless you pick one: it groups the most source declarations of any ordinary enemy (238), carrying the M4. Declaration counts aren't spawn rates; which enemies a mission spawns isn't in the data (R113).",
       "min": 0,
       "max": 20,
       "default": 6,
@@ -53413,7 +53420,7 @@
       ],
       "coverage": {
         "status": "complete",
-        "evidence": "R35_PRIORITY2_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); Reactant reload speed traced in the graph (CHEMICAL_AGENT_HANDOFF.md)"
+        "evidence": "R35_PRIORITY2_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); Reactant reload speed traced in the graph (CHEMICAL_AGENT_HANDOFF.md); R115_SOURCE_REVIEW.md (R115): its graph reads both parts each second, 1 stack for each affected enemy within 25 m and 2 while the player is under a status. Fights gain 1 a second while the enemy being shot has any status; other affected enemies, and the player's own statuses, aren't counted yet: the player part would be a second rule on the same stacks, which fights don't take"
       }
     },
     {
@@ -56953,7 +56960,7 @@
       ],
       "coverage": {
         "status": "complete",
-        "evidence": "R35_PRIORITY2_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); every source parameter appears in the pack, condition as an assumption input"
+        "evidence": "R35_PRIORITY2_REVIEW.md (talent parameters); R112_SOURCE_REVIEW.md (R112, R115): fights add a stack per bullet fired in cover, hit or miss, up to 100. One 15 s timer, started by the first stack, ends them all, and a kill in cover with this weapon restarts it with the count kept, as in the source. A completed reload or a swap clears them; the swap clear is inferred from the script's start, not shown. Leaving combat also clears them in the source; fights are all in combat"
       }
     },
     {

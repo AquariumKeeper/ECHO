@@ -255,7 +255,8 @@ public sealed class DialogViewTests : IDisposable
             Assert.True(panel.IsVisible);
             panel.IsExpanded = true;
             Dispatcher.UIThread.RunJobs();
-            Assert.Equal(16, Find<ItemsControl>(window, control => control.Name == "IncomingReadings").ItemCount);
+            // The pack's statuses on the player (R115) add the status damage reading, and a time reading for each status that went on.
+            Assert.Equal(17 + editor.Simulate.Result!.Incoming!.PlayerStatusUptime!.Count, Find<ItemsControl>(window, control => control.Name == "IncomingReadings").ItemCount);
             foreach (var reading in editor.Simulate.IncomingReport.Readings)
             {
                 Assert.Contains(reading.Label, Texts(window));

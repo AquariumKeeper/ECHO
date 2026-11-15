@@ -30,16 +30,16 @@ public sealed class ProducerDeliveryTests
     [Fact]
     public void AdoptedDeliveryMatchesItsPinnedManifestAndEveryOutput()
     {
-        Assert.Equal("55a08bec76063163ee0fbd96b146d217e229fd163ed0503a6dad6d8149f122ac", Hash(Path.Combine(Pack, "manifest.json")));
-        Assert.Equal("1c9c27f36b278f7a77ec0400b04389e9459ac7f802cf0e64a67841fbcbe9d585", Hash(Path.Combine(Delivery, "assembly.json")));
+        Assert.Equal("bc0afd6f8fae05a8ea1648b001ce56dfc77e6f086a694c844d05ea2655021ef1", Hash(Path.Combine(Pack, "manifest.json")));
+        Assert.Equal("71a0339bc5f94881c43db2813b09adbc46e2fd1e9a52dac13f4fe1800c9026df", Hash(Path.Combine(Delivery, "assembly.json")));
         using var assembly = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Delivery, "assembly.json")));
         Assert.True(assembly.RootElement.GetProperty("complete_pack_assembled").GetBoolean());
         Assert.False(assembly.RootElement.GetProperty("complete_native_source_derivation").GetBoolean());
         var outputs = assembly.RootElement.GetProperty("outputs").EnumerateObject().ToArray();
-        Assert.Equal(68, outputs.Length);
+        Assert.Equal(42, outputs.Length);
         var evidence = outputs.Where(output => output.Name.StartsWith(Evidence, StringComparison.Ordinal)).ToArray();
-        Assert.Equal(43, evidence.Length);
-        Assert.Equal("e6d18d7ee3b616b4ec87e4aaf314c862d15b630a966df7917c76c69c80813904",
+        Assert.Equal(17, evidence.Length);
+        Assert.Equal("59351c677ac36c87da2fadc7b20fc42f44ff19129ac17aac147d2ae10e2f9283",
             evidence.Single(output => output.Name == Evidence + "packet.json").Value.GetProperty("sha256").GetString());
         var adopted = outputs.Except(evidence).ToArray();
         foreach (var output in adopted)
@@ -64,16 +64,16 @@ public sealed class ProducerDeliveryTests
         using var report = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Delivery, "reports", "talent-overlay.json")));
         var root = report.RootElement;
         Assert.True(root.GetProperty("ok").GetBoolean());
-        Assert.Equal("55a08bec76063163ee0fbd96b146d217e229fd163ed0503a6dad6d8149f122ac", root.GetProperty("pack_manifest_sha256").GetString());
-        // This sits on the r109 candidate.
-        Assert.Equal("4aaeaa76099fa053266561642026cc81a676889c98379a7004f47dff3dda54b4", root.GetProperty("base_manifest_sha256").GetString());
+        Assert.Equal("bc0afd6f8fae05a8ea1648b001ce56dfc77e6f086a694c844d05ea2655021ef1", root.GetProperty("pack_manifest_sha256").GetString());
+        // This sits on the r112-r113 candidate.
+        Assert.Equal("01f3d967eb6c742681282392ce280291cdea63c411b8e31d5e53f9f3186ffc3f", root.GetProperty("base_manifest_sha256").GetString());
         Assert.Equal(Hash(Path.Combine(Delivery, "overlay-plan.json")), root.GetProperty("overlay_plan_sha256").GetString());
-        // R110: controlStatus on four skill rules (areas on two), and those skills' output descriptions; no talent or stat moves.
-        Assert.Equal(8, root.GetProperty("changes").GetArrayLength());
+        // R115: the bleed's tick stat and row, Chemical Agent's and Cover Shooter's text, and Cover Shooter's rule and input text.
+        Assert.Equal(6, root.GetProperty("changes").GetArrayLength());
         Assert.True(root.GetProperty("assets_sha256_unchanged").GetBoolean());
         Assert.True(root.GetProperty("presentation_and_share_bytes_unchanged").GetBoolean());
-        Assert.True(root.GetProperty("stats_unchanged").GetBoolean());
-        Assert.True(root.GetProperty("talent_modifiers_unchanged").GetBoolean());
+        Assert.False(root.GetProperty("stats_unchanged").GetBoolean());
+        Assert.False(root.GetProperty("talent_modifiers_unchanged").GetBoolean());
         Assert.False(root.GetProperty("runtime_verified").GetBoolean());
     }
 

@@ -29,7 +29,7 @@ public sealed partial class DummyWeaponSimulatorTests
         Assert.All(shots, shot => Assert.Equal(damage, shot, 9));
         var result = Run(pack, Build(pack), Context, new() { Duration = 5, Mode = SimulationMode.Random, Iterations = 1, DriveSimpleBuffs = true, Distance = distance });
         Assert.Contains(result.Limitations, note => note.StartsWith("Weapon damage falls off at the fight distance", StringComparison.Ordinal));
-        Assert.StartsWith("d2p-simple-buffs-v61/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-simple-buffs-v62/", result.Contract, StringComparison.Ordinal);
     }
 
     [Theory]

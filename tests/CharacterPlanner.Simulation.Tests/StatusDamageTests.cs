@@ -468,7 +468,7 @@ public sealed class StatusDamageTests
         Assert.Equal(140, result.StatusDps!.Mean);
         Assert.Equal(10, result.WeaponDps.Mean);
         Assert.Equal(150, result.TotalDps!.Mean);
-        Assert.StartsWith("d2p-simple-buffs-v61/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-simple-buffs-v62/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -521,7 +521,7 @@ public sealed class StatusDamageTests
         var magazines = new[] { shots.Where(at => at < reloaded[0]).ToArray(), shots.Where(at => at >= reloaded[0] && (reloaded.Length < 2 || at < reloaded[1])).ToArray() };
         var expected = magazines.SelectMany(magazine => magazine.Skip(5)).Select(at => at + 0.5).Where(at => at < 30).ToArray();
         Assert.Equal(expected, burns.Where(at => at <= expected[^1]).ToArray());
-        Assert.StartsWith("d2p-simple-buffs-v61/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-simple-buffs-v62/", result.Contract, StringComparison.Ordinal);
     }
 
     // Toxic Delivery's shape (R38): a status going on starts a debuff that spreads a total (200 here) over 0.5 s ticks for 2 s; while
@@ -989,7 +989,7 @@ public sealed class StatusDamageTests
         var atTwo = result.FirstFightEvents.Where(e => e.Time == 2).Select(e => e.Kind).ToArray();
         Assert.True(Array.IndexOf(atTwo, DummyEventKind.EnemyShot) < Array.IndexOf(atTwo, DummyEventKind.BurnTick));
         Assert.True(Array.IndexOf(atTwo, DummyEventKind.BurnTick) < Array.IndexOf(atTwo, DummyEventKind.Shot));
-        Assert.StartsWith("d2p-incoming-random-v73/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-incoming-random-v75/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]

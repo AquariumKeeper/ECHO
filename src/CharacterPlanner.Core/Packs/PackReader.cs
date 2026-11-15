@@ -327,13 +327,13 @@ public static class PackReader
             Triggers = [.. List(simulation.Triggers).Select(trigger => new SimTriggerDefinition
             {
                 Talent = trigger.Talent, Key = trigger.Key, On = trigger.On ?? "", Kind = trigger.Kind, Duration = trigger.Duration ?? 0, Max = trigger.Max ?? 0,
-                Refresh = trigger.Refresh ?? false, Every = trigger.Every ?? 0, EveryGroup = trigger.EveryGroup ?? "", Chance = trigger.Chance ?? 1, RequiresContext = trigger.Requires?.ToImmutableDictionary(StringComparer.Ordinal), CooldownFromEnd = trigger.CooldownFromEnd ?? false, ResetOn = trigger.ResetOn ?? "", AlsoResetOn = trigger.AlsoResetOn ?? "", ConsumeOn = trigger.ConsumeOn ?? "",
+                Refresh = trigger.Refresh ?? false, FromFirstGain = trigger.FromFirstGain ?? false, Every = trigger.Every ?? 0, EveryGroup = trigger.EveryGroup ?? "", Chance = trigger.Chance ?? 1, RequiresContext = trigger.Requires?.ToImmutableDictionary(StringComparer.Ordinal), CooldownFromEnd = trigger.CooldownFromEnd ?? false, ResetOn = trigger.ResetOn ?? "", AlsoResetOn = trigger.AlsoResetOn ?? "", ConsumeOn = trigger.ConsumeOn ?? "",
                 Phases = [.. List(trigger.Phases).Select(phase => new SimPhase { Until = phase.Until, Value = phase.Value })],
                 Percent = trigger.Percent ?? false, Within = trigger.Within ?? 0, Count = trigger.Count ?? 0, Refill = trigger.Refill ?? false, Gain = trigger.Gain ?? 0,
                 Also = [.. List(trigger.Also).Select(gain => new SimGain { On = gain.On, Gain = gain.Gain ?? 0, Count = gain.Count ?? 0 })],
-                Decay = trigger.Decay ?? 0, AtLeast = trigger.AtLeast ?? 0, Purge = trigger.Purge ?? false, Status = trigger.Status ?? "", ApplyOnHit = trigger.ApplyOnHit ?? false, GainWhileHolstered = trigger.GainWhileHolstered ?? 0,
-                WhileStatus = trigger.WhileStatus ?? "", Pool = trigger.Pool ?? "", PoolMax = trigger.PoolMax ?? 0,
-                CancelOn = trigger.CancelOn ?? "", CancelFor = trigger.CancelFor ?? 0, Bank = trigger.Bank ?? "",
+                Decay = trigger.Decay ?? 0, AtLeast = trigger.AtLeast ?? 0, Purge = trigger.Purge ?? false, Status = trigger.Status ?? "", ApplyOnHit = trigger.ApplyOnHit ?? false, GainWhileHolstered = trigger.GainWhileHolstered ?? 0, PrimeHolstered = trigger.PrimeHolstered ?? 0,
+                WhileStatus = trigger.WhileStatus ?? "", WhilePlayerStatus = trigger.WhilePlayerStatus ?? "", Pool = trigger.Pool ?? "", PoolMax = trigger.PoolMax ?? 0,
+                CancelOn = trigger.CancelOn ?? "", CancelFor = trigger.CancelFor ?? 0, RefreshOn = trigger.RefreshOn ?? "", Bank = trigger.Bank ?? "",
                 ClearGrant = trigger.ClearGrant ?? "", ClearAmount = trigger.ClearAmount ?? 0, ClearDuration = trigger.ClearDuration ?? 0,
                 WeaponTags = Strings(trigger.WeaponTags), ForceHeadshot = trigger.ForceHeadshot ?? false,
                 Grant = trigger.Grant ?? "", GrantAmount = trigger.GrantAmount ?? 0, GrantDuration = trigger.GrantDuration ?? 0, GrantInstances = trigger.GrantInstances ?? "", GrantHoldDelay = trigger.GrantHoldDelay ?? 0, GrantAmountStat = trigger.GrantAmountStat ?? "", ActiveAfter = trigger.ActiveAfter ?? 0, CountWindow = trigger.CountWindow ?? 0,
@@ -367,6 +367,12 @@ public static class PackReader
             DistanceDefaults = [.. List(simulation.DistanceDefaults).Select(entry => new SimDistanceDefault
             {
                 Input = entry.Input, Bands = [.. entry.Bands.Select(band => new SimDistanceBand { UpTo = band.UpTo, Value = band.Value })]
+            })],
+            IncomingDefaults = [.. List(simulation.IncomingDefaults).Select(entry => new SimIncomingDefault { Input = entry.Input, Value = entry.Value })],
+            EnemyStatuses = [.. List(simulation.EnemyStatuses).Select(entry => new SimEnemyStatusDefinition
+            {
+                Target = entry.Target, Status = entry.Status, Duration = entry.Duration, Tick = entry.Tick ?? "", Period = entry.Period ?? 0,
+                TickOnApply = entry.TickOnApply ?? false, Resistances = [.. List(entry.Resistances)], MinDuration = entry.MinDuration ?? 0
             })],
             ArmorKit = simulation.ArmorKit is { } kit ? new SimArmorKit
             {

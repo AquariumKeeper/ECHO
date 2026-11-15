@@ -69,7 +69,7 @@ public sealed partial class DummyWeaponSimulatorTests
         Assert.Equal(new[] { 0, 1, 2, 4.5, 5.5, 6.5 }, Times(result, DummyEventKind.Shot));
         Assert.Equal(new[] { 2.5, 7 }, Times(result, DummyEventKind.SwapStarted));
         Assert.Equal(new double[] { 8 }, Times(result, DummyEventKind.ReloadStarted));
-        Assert.StartsWith("d2p-simple-buffs-v61/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-simple-buffs-v62/", result.Contract, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -212,7 +212,62 @@ public sealed partial class DummyWeaponSimulatorTests
         var (pack, build) = RotatingBuff(owner: owner);
         var result = Run(pack, build, Context, DrivenRotation());
         Assert.Equal(expected, result.FirstFightEvents.Where(entry => entry.Kind == DummyEventKind.Shot).Select(entry => entry.Damage));
-        Assert.StartsWith("d2p-simple-buffs-v61/", result.Contract, StringComparison.Ordinal);
+        Assert.StartsWith("d2p-simple-buffs-v62/", result.Contract, StringComparison.Ordinal);
+    }
+
+    // ADR 0019, Perturb's shape: the rifle's talent is primed once the rifle has been away its seconds, and drawing it while primed
+    // gains the buff, which reads the prime before the draw spends it. The rifle goes away at 1 and 7 s and is drawn at 3 and 11 s,
+    // 2 and 4 s later: with 3 s only the draw at 11 s is primed, with 1 s both are.
+    [Theory]
+    [InlineData(3, 4)]
+    [InlineData(1, 12)]
+    public void AWeaponPutAwayLongEnoughPrimesItsDraw(double prime, double uptime)
+    {
+        var (pack, build) = RotatingBuff("swapped", change: rules => rules with
+        {
+            Selectors = [.. rules.Selectors, new() { ID = "primed", Name = "Primed", Values = ["true"] }],
+            Simulation = new()
+            {
+                Triggers = [new() { Talent = "test_buff", Key = "primed", Kind = "ready", PrimeHolstered = prime },
+                    rules.Simulation.Triggers[0] with { WhileKey = "primed" }]
+            }
+        });
+        var result = Run(pack, build, Context, DrivenRotation(15));
+        Assert.Equal(new[] { 1.0, 3, 7, 11 }, Times(result, DummyEventKind.SwapStarted));
+        Assert.Equal(uptime, result.TimedTriggerUptime["buff"].Seconds);
+        // The prime is ready from its seconds after each put-away until the draw: 3 s, from 10 s to 11 s; 1 s, 2 to 3 s and 8 to 11 s.
+        Assert.Equal(prime == 3 ? 1 : 4, result.TimedTriggerUptime["primed"].Seconds, 9);
+    }
+
+    [Fact]
+    public void APrimedTalentOnBothWeaponsPrimesEachCopyByItsOwnWeapon()
+    {
+        // The talent on both weapons: each copy is primed by its own weapon's time away and its draw reads its own copy's prime. The
+        // sidearm is away from 0 s, so with 1 s its draw at 1 s is primed; so is the rifle's at 3 s (away from 1 s).
+        var (pack, build) = RotatingBuff("swapped", change: rules => rules with
+        {
+            Selectors = [.. rules.Selectors, new() { ID = "primed", Name = "Primed", Values = ["true"] }],
+            Items = [.. rules.Items.Select(item => item.Slot is "primary_weapon" or "secondary_weapon" ? item with { TalentSlots = [new() { ID = "talent", Choices = ["test_buff"] }] } : item)],
+            Simulation = new()
+            {
+                Triggers = [new() { Talent = "test_buff", Key = "primed", Kind = "ready", PrimeHolstered = 1 },
+                    rules.Simulation.Triggers[0] with { WhileKey = "primed" }]
+            }
+        });
+        var result = Run(pack, build.WithTalentSelection("secondary_weapon", "talent", "test_buff"), Context, DrivenRotation(15));
+        Assert.Equal(new[] { 1.0, 3, 7, 11 }, Times(result, DummyEventKind.SwapStarted));
+        Assert.True(result.TimedTriggerUptime.Where(pair => pair.Key.StartsWith("buff", StringComparison.Ordinal)).Sum(pair => pair.Value.Seconds) > 0);
+    }
+
+    [Fact]
+    public void APrimedGearTalentIsRefused()
+    {
+        var (pack, build) = RotatingBuff("swapped", gear: true, change: rules => rules with
+        {
+            Selectors = [.. rules.Selectors, new() { ID = "primed", Name = "Primed", Values = ["true"] }],
+            Simulation = new() { Triggers = [new() { Talent = "test_buff", Key = "primed", Kind = "ready", PrimeHolstered = 1 }] }
+        });
+        Assert.Equal("trigger-unsupported", Assert.Throws<SimulationException>(() => Run(pack, build, Context, DrivenRotation(15))).Code);
     }
 
     [Fact]

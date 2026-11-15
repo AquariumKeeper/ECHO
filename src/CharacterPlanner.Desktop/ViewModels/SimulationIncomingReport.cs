@@ -30,7 +30,11 @@ public sealed record SimulationIncomingReport(ImmutableArray<SimulationReading> 
             new("Shield breaks / fight", incoming.ShieldBreaks.ToString("N1")),
             new("Shield deployments / fight", incoming.ShieldDeployments.ToString("N1")),
             new("Shield repaired / fight", incoming.ShieldRepaired.ToString("N1")),
-            new("Forced shield swaps / fight", incoming.ShieldSwitches.ToString("N1"))];
+            new("Forced shield swaps / fight", incoming.ShieldSwitches.ToString("N1")),
+            // Statuses enemies' hits put on you (ADR 0018), only when the pack has them for the fight.
+            .. (incoming.StatusDamageTaken is { } statusDamage ? [new SimulationReading("Status damage on you / fight", statusDamage.ToString("N1"))] : Array.Empty<SimulationReading>()),
+            .. (incoming.PlayerStatusUptime ?? ImmutableSortedDictionary<string, StatusUptime>.Empty).Select(pair =>
+                new SimulationReading($"Time {pair.Key} / fight (s)", pair.Value.Seconds.ToString("N2")))];
         var timings = ImmutableArray.CreateBuilder<SimulationSummaryRow>(2);
         var missing = new List<string>(2);
         if (incoming.TimeToFirstArmorBreak is { } armor) { timings.Add(new("Time to first armor break (s)", armor)); }

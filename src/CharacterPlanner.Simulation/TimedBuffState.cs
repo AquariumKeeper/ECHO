@@ -65,6 +65,8 @@ public sealed class TimedBuffState
     private readonly double[] lastCounted;
     // When each holstered-gain rule last accrued while its weapons were away; NaN while one is in hand.
     private readonly double[] holsteredSince;
+    // The primed rules (ADR 0019), which Prime alone moves: a deadline of +Infinity while the weapon is in hand, its readiness time while away.
+    private readonly int[] primed;
     private readonly long[][] alsoCounted;
     private readonly Dictionary<string, List<double>> stacks = new(StringComparer.Ordinal);
     private readonly Dictionary<string, List<int>> pools = new(StringComparer.Ordinal);
@@ -111,6 +113,7 @@ public sealed class TimedBuffState
         counted = new long[this.rules.Length];
         lastCounted = Enumerable.Repeat(double.NegativeInfinity, this.rules.Length).ToArray();
         holsteredSince = Enumerable.Repeat(double.NaN, this.rules.Length).ToArray();
+        primed = [.. Enumerable.Range(0, this.rules.Length).Where(index => this.rules[index].PrimeHolstered > 0)];
         alsoCounted = this.rules.Select(rule => new long[rule.Also.Length]).ToArray();
         for (var index = 0; index < this.rules.Length; index++)
         {
@@ -129,6 +132,7 @@ public sealed class TimedBuffState
                 Max = isStack ? 0 : rule.Max,
                 Gain = isStack ? 0 : rule.Gain,
                 Refresh = isStack ? false : rule.Refresh,
+                FromFirstGain = isStack ? false : rule.FromFirstGain,
                 ResetOn = "",
                 AlsoResetOn = "",
                 ConsumeOn = "",
@@ -142,7 +146,9 @@ public sealed class TimedBuffState
                 Pool = isStack ? "" : rule.Pool,
                 PoolMax = isStack ? 0 : rule.PoolMax,
                 WhileStatus = "",
+                WhilePlayerStatus = rule.Kind is "buff" or "stacks" && rule.On.Length > 0 ? "" : rule.WhilePlayerStatus,
                 CancelOn = isBuff ? "" : rule.CancelOn,
+                RefreshOn = isBuff || isStack ? "" : rule.RefreshOn,
                 CancelFor = isBuff ? 0 : rule.CancelFor,
                 Bank = isStack && rule.Pool.Length > 0 ? "" : rule.Bank,
                 ClearGrant = isStack ? "" : rule.ClearGrant,
@@ -153,6 +159,10 @@ public sealed class TimedBuffState
                 // A forced headshot is spent by the forcing shot's own event, so only ready rules on hit or shot take it.
                 ForceHeadshot = rule.Kind == "ready" && rule.On is "hit" or "shot" || isStack && rule.ConsumeOn is "hit" or "shot" ? false : rule.ForceHeadshot,
                 GainWhileHolstered = isStack && !rule.WeaponTags.IsDefaultOrEmpty ? 0 : rule.GainWhileHolstered,
+                // A primed rule's readiness comes from Prime alone: nothing else may move its deadline or act when it fires.
+                PrimeHolstered = rule.Kind == "ready" && rule.On.Length == 0 && rule.Also.IsDefaultOrEmpty && rule.Every == 0 && rule.Duration == 0 &&
+                    rule.DurationStat.Length == 0 && rule.ResetOn.Length == 0 && rule.AlsoResetOn.Length == 0 && rule.ConsumeOn.Length == 0 && rule.CancelOn.Length == 0 &&
+                    rule.Grant.Length == 0 && !rule.Refill && rule.Count == 0 && rule.WhileKey.Length == 0 && rule.WhileArmorBelow == 0 && rule.WhileStatAtLeast is null ? 0 : rule.PrimeHolstered,
                 // Only buff and ready rules grant on firing; stacks grant on clearing (clearGrant).
                 Grant = rule.Kind is "buff" or "ready" ? "" : rule.Grant,
                 GrantAmount = rule.Kind is "buff" or "ready" ? 0 : rule.GrantAmount,
@@ -171,18 +181,25 @@ public sealed class TimedBuffState
                 MaxMagazine = isStack ? 0 : rule.MaxMagazine,
                 Chance = rule.Kind is "buff" or "ready" && rule.On.Length > 0 ? 1 : rule.Chance,
                 // The fight has already dropped a rule whose requirements its context doesn't meet.
-                RequiresContext = rule.Kind is "buff" or "ready" && rule.On.Length > 0 ? null : rule.RequiresContext
+                RequiresContext = rule.Kind is "buff" or "ready" or "stacks" && rule.On.Length > 0 ? null : rule.RequiresContext
             };
             if (rule.Kind is not ("buff" or "stacks" or "ready" or "lockout") || rule.Key.Length == 0 || rule.Talent.Length == 0 ||
-                rule.On.Length == 0 && rule.GainWhileHolstered == 0 && !(isStack && (rule.ResetOn == "target_death" || rule.ConsumeOn == "target_death")) ||
+                rule.On.Length == 0 && rule.GainWhileHolstered == 0 && rule.PrimeHolstered == 0 && !(isStack && (rule.ResetOn == "target_death" || rule.ConsumeOn == "target_death")) ||
+                !double.IsFinite(rule.PrimeHolstered) || rule.PrimeHolstered < 0 || rule.PrimeHolstered > SimTriggerDefinition.MaximumPrimeHolstered ||
                 !double.IsFinite(rule.GainWhileHolstered) || rule.GainWhileHolstered < 0 ||
                 !double.IsFinite(rule.Duration) || rule.Duration < 0 || !rule.Phases.IsEmpty || rest != new SimTriggerDefinition() ||
                 !double.IsFinite(rule.Every) || rule.Every < 0 || rule.Count < 0 || rule.EveryGroup.Length > 0 && (rule.Every <= 0 || rule.Kind == "lockout") ||
                 rule.WhileStatus.Length > 0 && rule.WhileStatus != "any" && !StatusTriggerState.Names.Contains(rule.WhileStatus) ||
+                rule.WhilePlayerStatus.Length > 0 && (rule.WhilePlayerStatus != "any" && !StatusTriggerState.Names.Contains(rule.WhilePlayerStatus) || rule.WhileStatus.Length > 0 ||
+                    rule.GainWhileHolstered > 0) ||
                 rule.Also.Any(gain => gain.On.Length == 0 || gain.Gain is < 1 or > 10000 || gain.Count < 0) ||
                 !double.IsFinite(rule.Decay) || rule.Decay < 0 || rule.Decay > 0 && (!isStack || !rule.Refresh || rule.Duration == 0) ||
                 (rule.Pool.Length == 0 ? rule.PoolMax != 0 : rule.PoolMax <= 0) ||
                 !double.IsFinite(rule.CancelFor) || rule.CancelFor < 0 || rule.CancelFor > 0 && rule.CancelOn.Length == 0 ||
+                // A refresh restarts a duration, so it needs one here: a durationStat read without the build's durations leaves none.
+                rule.RefreshOn.Length > 0 && rule.Duration <= 0 ||
+                rule.FromFirstGain && (rule.Duration <= 0 || rule.Refresh || rule.Decay > 0 || rule.Pool.Length > 0 || rule.GainWhileHolstered > 0) ||
+                isStack && rule.RefreshOn.Length > 0 && (rule.Pool.Length > 0 || rule.GainWhileHolstered > 0 || rule.Decay > 0 || rule.ResetOn == "target_death" || rule.ConsumeOn == "target_death") ||
                 rule.ClearGrant.Length > 0 && !(rule.ClearGrant is "temporary_armor" or "shield_repair" && double.IsFinite(rule.ClearAmount) && rule.ClearAmount is > 0 and <= 1 &&
                     double.IsFinite(rule.ClearDuration) && (rule.ClearGrant == "temporary_armor" ? rule.ClearDuration is > 0 and <= 600 : rule.ClearDuration == 0)) ||
                 rule.ClearGrant.Length == 0 && (rule.ClearAmount != 0 || rule.ClearDuration != 0) ||
@@ -206,6 +223,7 @@ public sealed class TimedBuffState
                 rule.WhileStatAtLeast is { } statGate && (rule.On.Length == 0 || statGate.Stat.Length == 0 || !double.IsFinite(statGate.Value) || rule.WhileKey.Length > 0 || rule.WhileArmorBelow > 0))
             { throw new SimulationException("trigger-unsupported", "Only buffs, ready/lockout booleans and bounded stacks are supported"); }
             caps[index] = rule.Max;
+            if (rule.PrimeHolstered > 0) { deadlines[index] = double.PositiveInfinity; }
             if (rule.MaxMagazine > 0 && magazines is not null)
             {
                 if (!magazines.TryGetValue(rule.Talent, out var magazine) || !(magazine > 0))
@@ -213,7 +231,7 @@ public sealed class TimedBuffState
                 var share = Math.Floor(magazine * rule.MaxMagazine);
                 caps[index] = share >= rule.Max ? rule.Max : Math.Max(1, (long)share);
             }
-            events.UnionWith(rule.Also.Select(gain => gain.On).Append(rule.On).Append(rule.ResetOn).Append(rule.AlsoResetOn).Append(rule.ConsumeOn).Append(rule.CancelOn).Where(name => name.Length > 0));
+            events.UnionWith(rule.Also.Select(gain => gain.On).Append(rule.On).Concat(rule.OtherEvents).Where(name => name.Length > 0));
             if (rule.WhileStatAtLeast is not null) { statEvents.UnionWith(rule.Also.Select(gain => gain.On).Append(rule.On)); }
             if (isStack)
             {
@@ -255,6 +273,27 @@ public sealed class TimedBuffState
             if (rule.GainWhileHolstered == 0) { continue; }
             var holstered = !rule.WeaponTags.Any(weaponTags.Contains);
             holsteredSince[index] = !holstered ? double.NaN : double.IsNaN(holsteredSince[index]) ? time : holsteredSince[index];
+        }
+        Advance(time);
+    }
+
+    /// <summary>
+    /// The talents of the weapon in hand, after a swap's events (or as the fight starts, before any): a primed rule (ADR 0019) whose
+    /// talent is in hand is spent and waits; one just put away starts its time, ready once it has been away its seconds. Null means
+    /// every talent is in hand, as in a fight without a rotation, where nothing primes.
+    /// </summary>
+    public void Prime(double time, IReadOnlySet<string>? heldTalents)
+    {
+        CheckTime(time);
+        foreach (var index in primed)
+        {
+            var rule = rules[index];
+            var deadline = heldTalents is null || heldTalents.Contains(rule.Talent) ? double.PositiveInfinity :
+                double.IsPositiveInfinity(deadlines[index]) ? time + rule.PrimeHolstered : deadlines[index];
+            if (deadline == deadlines[index]) { continue; }
+            activeSeconds[rule.Key] = activeSeconds.GetValueOrDefault(rule.Key) + BooleanInterval(rule.Key, booleanOwners[rule.Key], time);
+            measuredAt[rule.Key] = time;
+            deadlines[index] = deadline;
         }
         Advance(time);
     }
@@ -330,6 +369,8 @@ public sealed class TimedBuffState
             return values;
         }
         if (rule.Refresh) { values = [.. values.Select(_ => until)]; }
+        // One timer from the first gain: live stacks share it, so new ones take theirs (Cover Shooter, R112).
+        if (rule.FromFirstGain && values.Count > 0) { until = values[0]; }
         var remove = Math.Max(0, values.Count + gained - (int)cap);
         if (remove > 0) { values.RemoveRange(0, remove); }
         values.AddRange(Enumerable.Repeat(until, gained));
@@ -401,6 +442,12 @@ public sealed class TimedBuffState
     internal static readonly ImmutableHashSet<string> WeaponEvents = ImmutableHashSet.Create(StringComparer.Ordinal, "shot", "hit", "hit_pellet", "crit", "crit_pellet", "headshot",
         "body_hit", "unarmored_hit", "kill", "crit_kill", "headshot_kill", "reload", "reload_end", "swap", "swapped", "swap_after_kill", "status_applied");
 
+    /// <summary>
+    /// Whether a status (or with "any", some status) is on the player at a time (ADR 0018), for rules gated on one; null when the fight
+    /// puts none on, which leaves those rules closed. The simulator sets it as the fight starts.
+    /// </summary>
+    public Func<string, double, bool>? PlayerStatusOn { get; set; }
+
     /// <param name="armorShare">The player's armor as a share of max armor at the event, for whileArmorBelow; without it
     /// armor is taken as full.</param>
     /// <param name="stats">The build's stats as they stood before the event, for whileStatAtLeast; without them its rules stay
@@ -464,6 +511,21 @@ public sealed class TimedBuffState
                 nextLocked[index] = locked;
                 continue;
             }
+            // A refresh takes the event: the rule's own buff, if on, runs its full duration again from now, and one that is off gains
+            // nothing (Unwavering's kills, ADR 0019). Another rule holding the same key on doesn't count as this one being on. On stacks,
+            // every live stack runs its full duration again from now, the count kept, and none gains nothing (Cover Shooter's kills, R112).
+            if (rule.RefreshOn == eventName)
+            {
+                if (rule.Kind == "stacks")
+                {
+                    List<double> live = [.. stackUpdates.GetValueOrDefault(rule.Key, stacks[rule.Key]).Where(expiry => expiry > time)];
+                    var restarted = time + rule.Duration;
+                    if (!(restarted > time)) { throw new SimulationException("trigger-time-invalid", "A stack refresh cannot advance time"); }
+                    if (live.Count > 0) { stackUpdates[rule.Key] = [.. live.Select(expiry => Math.Max(expiry, restarted))]; }
+                }
+                else if (time < nextDeadlines[index]) { nextDeadlines[index] = Math.Max(nextDeadlines[index], time + rule.Duration); }
+                continue;
+            }
             // A ready rule cannot retrigger or request side effects during its cooldown, nor a bonus waiting to be spent.
             if ((rule.Kind == "ready" || rule.CooldownFromEnd) && time < nextDeadlines[index]) { continue; }
             var gain = rule.On == eventName ? Math.Max(1, rule.Gain) : 0;
@@ -484,6 +546,7 @@ public sealed class TimedBuffState
             if (gain == 0 || time - last < rule.Every || time < nextLocked[index]) { continue; }
             if (rule.WhileStatus.Length > 0 && (activeStatuses is null ||
                 !(rule.WhileStatus == "any" ? activeStatuses.Count > 0 : activeStatuses.Contains(rule.WhileStatus)))) { continue; }
+            if (rule.WhilePlayerStatus.Length > 0 && PlayerStatusOn?.Invoke(rule.WhilePlayerStatus, time) != true) { continue; }
             // Either gate opens a rule that has both (Clutch: low armor, or the post-kill flag); a closed rule neither counts nor fires.
             if ((rule.WhileKey.Length > 0 || rule.WhileArmorBelow > 0) &&
                 !(rule.WhileKey.Length > 0 && gates!.Open(rule.WhileKey, rule.WhileFull) || rule.WhileArmorBelow > 0 && (armorShare ?? 1) < rule.WhileArmorBelow))

@@ -47,6 +47,20 @@ public sealed class SimulationIncomingReportTests
         Assert.Contains("means across all fights", report.Note, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void StatusesOnThePlayerAddTheirReadingsOnlyWhenReported()
+    {
+        // ADR 0018: the pack's statuses on the player add the status damage and each status's time, after the others.
+        var report = SimulationIncomingReport.From(new(10, 5, 100, 0.5, 0.25, null, null)
+        {
+            StatusDamageTaken = 12,
+            PlayerStatusUptime = System.Collections.Immutable.ImmutableSortedDictionary<string, StatusUptime>.Empty.Add("bleeding", new(2.5, 0.25))
+        });
+        Assert.Equal(new[] { ("Status damage on you / fight", 12d.ToString("N1")), ("Time bleeding / fight (s)", 2.5.ToString("N2")) },
+            report.Readings.Skip(16).Select(row => (row.Label, row.Value)));
+        Assert.Equal(16, SimulationIncomingReport.From(new(10, 5, 100, 0.5, 0.25, null, null)).Readings.Length);
+    }
+
     [Theory]
     [InlineData(false, false)]
     [InlineData(true, false)]
