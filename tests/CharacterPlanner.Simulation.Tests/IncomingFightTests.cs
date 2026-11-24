@@ -226,6 +226,26 @@ public sealed partial class IncomingFightTests
         Assert.True((result.Incoming!.TimeToDown?.Mean ?? double.PositiveInfinity) > baseline.Incoming!.TimeToDown!.Mean);
     }
 
+    [Fact]
+    public void BonusArmorFollowsTheFightsState()
+    {
+        // ADR 0020. Hits of 10 each second against 10 armor and 100 health go down at 11 s. A buff from the first hit that gives 15 bonus
+        // armor for the rest of the fight takes one more hit and a half: down at 13 s. Before, the state's new bonus armor was refused.
+        var pools = new[] { ("character_armor", "10"), ("character_health", "100") };
+        var options = Options with { Duration = 20, DriveSimpleBuffs = true };
+        var baseline = Run(Fixture(changes: pools), options);
+        var held = Run(Fixture(Buff("damaged") with { Duration = 30 }, "estimated_bonus_armor", 15, pools), options);
+        Assert.Equal(11, baseline.Incoming!.TimeToDown!.Mean);
+        Assert.Equal(13, held.Incoming!.TimeToDown!.Mean);
+        var gained = Assert.Single(held.FirstFightEvents, e => e.Kind == DummyEventKind.BonusArmorGranted);
+        Assert.Equal((1.0, 15.0), (gained.Time, gained.Damage));
+        // A buff that ends before the next hit takes its bonus armor with it: each hit gains 15 again, and none of it is spent.
+        var lapsing = Run(Fixture(Buff("damaged") with { Duration = 0.25 }, "estimated_bonus_armor", 15, [.. pools, ("equipped_weapon_rpm", "120")]), options);
+        Assert.Equal(11, lapsing.Incoming!.TimeToDown!.Mean);
+        Assert.Equal(Enumerable.Range(1, 10).Select(second => (double)second),
+            lapsing.FirstFightEvents.Where(e => e.Kind == DummyEventKind.BonusArmorGranted).Select(e => e.Time));
+    }
+
     // R41's armor-repair grants on each enemy hit, with 100 armor and enemy hits of 10 at 1 s and 2 s. The rule is a buff short
     // enough to fire again at the next hit.
     private static DummyFightResult RepairOnHit(string grant, double amount, double duration = 0, string instances = "", double fight = 2.5)
@@ -2027,6 +2047,65 @@ public sealed partial class IncomingFightTests
         Assert.Equal(1, Run((pack, BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun")), Kits(7)).Incoming!.ArmorKitsUsed);
     }
 
+    // ADR 0021: the talent's ability is the kit, on a cooldown stat, granting 50% of max armor as bonus armor for 5 s and repairing 20%
+    // on kit_ability, as Hackstep does; the instant kit repairs 25% on a 5 s cooldown.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) AbilityKitFixture(string cooldown = "10", bool instant = true, bool refund = false)
+    {
+        var rule = new SimTriggerDefinition { Talent = "test", Key = "buff", On = "kit_ability", Kind = "buff", Duration = 5, Grant = "temporary_armor", GrantAmount = 0.5, GrantDuration = 5 };
+        var (original, _) = Fixture(rule, changes: [("character_armor", "30"), ("character_health", "1000")]);
+        var repair = new SimTriggerDefinition { Talent = "test", Key = "repaired", On = "kit_ability", Kind = "buff", Duration = 0.1, Grant = "armor_repair", GrantAmount = 0.2 };
+        // Efficient's shape: the kit just spent comes back on armor_kit.
+        var refunded = new SimTriggerDefinition { Talent = "test", Key = "refunded", On = "armor_kit", Kind = "buff", Duration = 0.1, Grant = "armor_kit_refund", GrantAmount = 1 };
+        var rules = original.Pack with
+        {
+            Stats = [.. original.Pack.Stats, new() { ID = "cd", Formula = cooldown }],
+            Selectors = [.. original.Pack.Selectors, new() { ID = "repaired", Name = "Repaired", Values = ["true"] }, new() { ID = "refunded", Name = "Refunded", Values = ["true"] }],
+            Simulation = original.Pack.Simulation with
+            {
+                Triggers = [.. original.Pack.Simulation.Triggers, repair, .. (refund ? new[] { refunded } : [])],
+                ArmorKit = new()
+                {
+                    Repair = 1,
+                    UseSeconds = 2.5,
+                    ExtendSeconds = 0.3,
+                    MaxUseSeconds = 4.9,
+                    ReplacedByTalents = ["test"],
+                    Abilities = [new() { Talent = "test", Cooldown = "cd" }],
+                    Instant = instant ? new() { Repair = 0.25, Cooldown = 5 } : null
+                }
+            }
+        };
+        var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+        return (pack, BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test"));
+    }
+
+    [Fact]
+    public void AKitAbilityIsUsedAtOnceOnItsCooldownAndAnInstantKitWhileItCools()
+    {
+        // A hit each second takes 10 of 30 armor. The hit at 2 s leaves a third: the ability goes at the 2 s shot, repairing 6 (to 16, above
+        // the threshold) with 15 bonus armor, and the weapon doesn't stop. Hits at 3 and 4 s take the 15 and 5 more, leaving 11 at 4 s: the
+        // ability cools until 12 s, so an instant kit repairs 7.5 at the 4 s shot. Its next would wait to 9 s, but none is left.
+        var result = Run(AbilityKitFixture(), Kits(8, kits: 1));
+        Assert.Equal(new[] { 2d }, Times(result, DummyEventKind.KitAbilityUsed));
+        var granted = Assert.Single(result.FirstFightEvents, e => e.Kind == DummyEventKind.BonusArmorGranted);
+        Assert.Equal((2d, 15d), (granted.Time, granted.Damage));
+        var used = Assert.Single(result.FirstFightEvents, e => e.Kind == DummyEventKind.ArmorKitUsed);
+        Assert.Equal((4d, 7.5), (used.Time, used.Damage));
+        Assert.Empty(Times(result, DummyEventKind.ArmorKitStarted));
+        Assert.Equal(new[] { 0d, 1, 2, 3, 4, 5, 6, 7 }, Times(result, DummyEventKind.Shot).Select(at => Math.Round(at, 9)));
+        Assert.Equal((1d, 1d, 7.5), (result.Incoming!.ArmorKitAbilityUses, result.Incoming.ArmorKitsUsed, result.Incoming.ArmorKitRepaired));
+        Assert.Contains(result.Limitations, note => note.StartsWith("Test is the build's armor kit: used at once, with no use time, if armor is below 50% at the weapon's next decision, whenever its 10 s cooldown is ready. While it cools, an instant kit from the 1 carried", StringComparison.Ordinal));
+        // Without an instant kit the carried ones go unused.
+        var bare = Run(AbilityKitFixture(instant: false), Kits(8, kits: 1));
+        Assert.Equal(0, bare.Incoming!.ArmorKitsUsed);
+        Assert.Contains(bare.Limitations, note => note.EndsWith("whenever its 10 s cooldown is ready. Carried kits aren't used", StringComparison.Ordinal));
+        // A refund on armor_kit (Efficient) gives the instant kit back: with one carried, the next is used when its cooldown ends at 9 s.
+        var kept = Run(AbilityKitFixture(refund: true), Kits(10, kits: 1));
+        Assert.Equal(new[] { 4d, 9 }, Times(kept, DummyEventKind.ArmorKitUsed));
+        // A cooldown that doesn't resolve above 0 is refused.
+        Assert.Equal("armor-kits-unsupported", Assert.Throws<SimulationException>(() => Run(AbilityKitFixture(cooldown: "0"), Kits(8))).Code);
+    }
+
     [Fact]
     public void ADistanceDefaultWithoutALegalBandAtATargetsDistanceIsASimulationError()
     {
@@ -2191,6 +2270,81 @@ public sealed partial class IncomingFightTests
         var result = Run((pack, build), Options with { DriveSimpleBuffs = true }, delay: 0.5);
         Assert.Equal(20, result.Incoming!.DamageTaken);
         Assert.Equal(2, result.Incoming.TimeToDown!.Mean);
+    }
+
+    // A bonus armor reading (ADR 0021): "share" is the player's bonus armor as a percentage of max armor, on a 10-point grid, and each
+    // point adds 0.1 to shot damage. 10 armor, 5 of it bonus, so the fight starts at 50%.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) BonusReadingFixture()
+    {
+        var (original, _) = Fixture(changes: [("character_armor", "10"), ("estimated_bonus_armor", "5"), ("character_health", "100")]);
+        var rules = original.Pack with
+        {
+            NumericContextInputs = [.. original.Pack.NumericContextInputs, new() { ID = "share", Name = "Share", Min = 0, Max = 100, Step = 10, Default = 20 }],
+            Stats = [.. original.Pack.Stats.Select(s => s.ID == "buff_damage" ? s with { Formula = "context_value('share') / 10" } : s)],
+            Simulation = new() { Triggers = [new() { Talent = "test", Key = "share", Kind = "bonus_armor" }] }
+        };
+        var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+        return (pack, BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test"));
+    }
+
+    // ADR 0021: a headshot cycle on weapons tagged "mmr". Every shot is a headshot that doesn't kill. The waiting bonus adds 10 to a shot;
+    // the armor step repairs 10% of max armor.
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) CycleFixture(int allowance = 0, params (string Id, string Formula)[] extra)
+    {
+        var (original, _) = Fixture(changes: [("character_armor", "10"), ("character_health", "1000"), ("practical_headshot_fraction", "1")]);
+        var rules = original.Pack with
+        {
+            Items = [.. original.Pack.Items.Select(item => item with { Tags = ["mmr"] })],
+            Selectors = [.. original.Pack.Selectors, new() { ID = "waiting", Name = "Waiting", Values = ["true"] }],
+            Stats = [.. original.Pack.Stats, new() { ID = "cycle_repair", Formula = "0.1" }, new() { ID = "cycle_cap", Formula = "0.5" }, new() { ID = "cycle_allowance", Formula = allowance.ToString(System.Globalization.CultureInfo.InvariantCulture) },
+                .. extra.Select(stat => new StatDefinition { ID = stat.Id, Formula = stat.Formula })],
+            Talents = [.. original.Pack.Talents.Select(talent => talent with { Modifiers = [new() { Stat = "buff_damage", Op = ModifierOps.Flat, Value = new(10), RequiresContext = ImmutableDictionary<string, string>.Empty.Add("waiting", "true") }] })],
+            Simulation = new() { HeadshotCycles = [new() { Talent = "test", WeaponTag = "mmr", Key = "waiting", Repair = "cycle_repair", BonusArmorCap = "cycle_cap", Allowance = "cycle_allowance", KillFrom = 3 }] }
+        };
+        var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+        return (pack, BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test"));
+    }
+
+    [Fact]
+    public void AHeadshotCycleBonusesRepairsAndRefills()
+    {
+        // Shots each second: the first sets up the bonus, the second takes it (+10) and repairs 1 (the 1 s hit took all 10 armor first),
+        // the third refills, the fourth is a miss (a headshot that doesn't kill, from 3) and starts the cycle again. With the refills the
+        // 10-round magazine never reloads.
+        var result = Run(CycleFixture(), Options with { Duration = 12, DriveSimpleBuffs = true });
+        var shots = result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot).Select(e => e.Damage).ToArray();
+        Assert.Equal(new double[] { 10, 20, 10, 10, 10, 20, 10, 10, 10, 20, 10, 10 }, shots);
+        Assert.Empty(result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.ReloadStarted));
+        Assert.Contains(result.FirstFightEvents, e => e.Kind == DummyEventKind.ArmorRepaired && e.Time == 1 && e.Damage == 1);
+        Assert.Contains(result.Limitations, note => note.StartsWith("Test counts consecutive headshots with weapons tagged mmr", StringComparison.Ordinal));
+        // With a miss forgiven a cycle, the fourth shot's miss is forgiven, so the fifth is a headshot past 3 that doesn't kill: a miss.
+        var lucky = Run(CycleFixture(allowance: 1), Options with { Duration = 12, DriveSimpleBuffs = true });
+        Assert.Equal(new double[] { 10, 20, 10, 10, 10, 10, 20, 10, 10, 10, 10, 20 }, lucky.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot).Select(e => e.Damage));
+    }
+
+    [Fact]
+    public void AHeadshotCyclesRepairStatsAreThoseReadingIt()
+    {
+        // Under enemy fire the cycle's repair stat, and stats reading it directly or through another, are modelled; a stat whose name only
+        // begins with its id is not, and refuses the fight as before.
+        var options = Options with { Duration = 4, DriveSimpleBuffs = true };
+        Assert.NotNull(Run(CycleFixture(0, ("cycle_repair_twice", "cycle_repair * 2"), ("cycle_repair_more", "cycle_repair_twice + 1")), options).Incoming);
+        Assert.Equal("incoming-repair-unsupported", Assert.Throws<SimulationException>(() => Run(CycleFixture(0, ("cycle_repair_extra", "1")), options)).Code);
+    }
+
+    [Fact]
+    public void ABonusArmorReadingFollowsThePlayersBonusArmor()
+    {
+        // The first shot reads 50% (+5); the first enemy hit (10, at 1 s) takes the 5 bonus armor, so later shots read 0 (+0).
+        var result = Run(BonusReadingFixture(), Options with { DriveSimpleBuffs = true });
+        var shots = result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot).Select(e => e.Damage).ToArray();
+        Assert.Equal(15, shots[0]);
+        Assert.Equal(10, shots[^1]);
+        // Without enemy fire there are no pools to read, so the key keeps the user's setting: its default of 20 (+2).
+        var unfired = Run(BonusReadingFixture(), Options with { DriveSimpleBuffs = true, IncludeIncoming = false });
+        Assert.All(unfired.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot), e => Assert.Equal(12, e.Damage));
+        Assert.Contains("This fight has no enemy fire, so these read your setting for the player's bonus armor: Test", unfired.Limitations);
+        Assert.DoesNotContain(result.Limitations, note => note.Contains("player's bonus armor", StringComparison.Ordinal));
     }
 
     [Fact]

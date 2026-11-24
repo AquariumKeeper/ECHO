@@ -80,8 +80,8 @@ public sealed class SkillReferenceTests
     public void G184Reviewed0Properties() =>
         Check(TierSweep, Full,
         [
-            new("skill_restorer_hive", 11, None), new("skill_stinger_hive", 10, None), new("skill_reviver_hive", 180, None), new("skill_booster_hive", 11.3, None),
-            new("skill_artificer_hive", 11.3, None),
+            new("skill_restorer_hive", 11.25, None), new("skill_stinger_hive", 10, None), new("skill_reviver_hive", 180, None), new("skill_booster_hive", 11.25, None),
+            new("skill_artificer_hive", 11.25, None),
         ], "refill_baseline_seconds", Scaled);
 
     /// <summary>G185: the Reviver Hive's revive charges add the tier's charges.</summary>

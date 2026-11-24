@@ -17,6 +17,20 @@ a second stage.
    says so, as `distanceDefaults` inputs keep their ordinary default.
 6. **Order:** the engine first, then one request for the readings and rows. Results move once, at adoption.
 
+### After R116 (owner, 2026-11-15)
+
+ShadeTech's `r116.candidate.1` drives the five talents, but leaves Versatile's bands out, has Unwavering lock out only a bonus that's
+on, and keeps Back and Forth's swap-from rule copied, so the talent on both weapons is refused. The owner's calls:
+7. **Engine first, then one candidate:** the candidate isn't adopted. The missing engine pieces come first, then R117 asks for
+   `r116.candidate.2`, adopted once, keeping point 6.
+8. **Versatile's bands:** a selector `default`, which an unset selector reads. Each band modifier also goes in under "any", the
+   default, so the bonus holds wherever no distance is known.
+9. **Unwavering:** build both source behaviors: the lockout starts on any swap away, bonus or not, and the bonus comes when the
+   lockout ends with the weapon in hand.
+10. **A swap's own speed** (owner, 2026-11-15, after R118): the bonus a swap ends is gone as the swap starts, so neither its
+    holster nor its draw is quick. The source leaves open when the bonus goes. A swap's time is read after its events, as its
+    reload on arrival is read as it begins.
+
 ## Context
 
 Five talents react to swapping weapons, but each reads a fixed assumption today:
@@ -103,11 +117,19 @@ rotation, nothing changes: the assumptions stand.
 2. **The engine,** with no result change until rows use it:
    - `refreshOn`, done (#248);
    - `primeHolstered`, done (2026-11-14);
-   - `refill: "both"`;
-   - the shared key across copies of a talent;
-   - Versatile's gate on differing weapon types, cooldown per type, and distance bands.
-3. **The request:** the rows for all five talents, the swap-from modifiers, and a reading of each script.
-4. **Adoption:** a deliberate result change for builds with these talents in fights with a rotation.
+   - `refill: "both"`, done (2026-11-14);
+   - the shared key across copies of a talent, done (`shareCopies`, 2026-11-15);
+   - without a rotation, a rule gaining on a swap or primed by time away steps aside for the user's setting, done (2026-11-15). Before,
+     a gain on a swap refused the fight (C9), which would have refused every fight without a rotation once the rows arrive;
+   - Versatile's gate on differing weapon types, cooldown per type, and distance bands, done (2026-11-15: `weaponTypes`,
+     `differentTypes`, `everyPerType`, and `assumeWithoutDistance` on a phased distance rule for the bands). Stage 2 is complete.
+3. **The request:** the rows for all five talents, the swap-from modifiers, and a reading of each script. Sent as R116
+   (ShadeTech, 2026-11-15), with suggested rows, questions on each script, and R115's two data slips.
+   R116 answered 2026-11-15 (`r116.candidate.1`); not adopted (points 7 to 9). The selector `default` is done (2026-11-15), and Unwavering's full lockout
+   (`lockoutAlways`, `gainAtLockoutEnd`, 2026-11-15). R117 (ShadeTech) asks for `r116.candidate.2`: Versatile's bands
+   on a defaulted selector, Unwavering's two fields, and Back and Forth's swap-from rule shared.
+4. **Adoption:** a deliberate result change for builds with these talents in fights with a rotation. Done 2026-11-15:
+   `r116.candidate.2` adopted, after the arrival-reload fix ShadeTech's figures showed was needed (#270). ADR 0019 is complete.
 
 ## Alternatives considered
 

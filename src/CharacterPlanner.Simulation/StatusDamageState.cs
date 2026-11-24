@@ -15,7 +15,7 @@ namespace CharacterPlanner.Simulation;
 /// </summary>
 public sealed class StatusDamageState
 {
-    internal static readonly ImmutableHashSet<string> Damaging = ImmutableHashSet.Create(StringComparer.Ordinal, "burning", "bleeding");
+    internal static readonly ImmutableHashSet<string> Damaging = GamePack.DamagingStatuses;
     private readonly ImmutableArray<SimStatusDamageDefinition> rules;
     // The schedule's next tick; NaN while the status is not on the target. It may lie at or past the deadline.
     private readonly double[] next;
@@ -45,7 +45,7 @@ public sealed class StatusDamageState
         { throw new SimulationException("talent-damage-invalid", "Talent damage needs an event, a total, a period that divides its duration and at least one stack"); }
         if (this.rules.Any(rule => !Damaging.Contains(rule.Status) || !double.IsFinite(rule.Period) || rule.Period <= 0) ||
             this.rules.Select(rule => rule.Status).Distinct(StringComparer.Ordinal).Count() != this.rules.Length)
-        { throw new SimulationException("status-damage-invalid", "Status damage needs one rule per burning or bleeding status and a positive period"); }
+        { throw new SimulationException("status-damage-invalid", "Status damage needs one rule per damaging status (burning, bleeding or poisoned) and a positive period"); }
         next = Enumerable.Repeat(double.NaN, this.rules.Length).ToArray();
         until = new double[this.rules.Length];
         amount = new double[this.rules.Length];

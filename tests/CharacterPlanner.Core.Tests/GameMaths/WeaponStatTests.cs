@@ -383,14 +383,14 @@ public sealed class WeaponStatTests
         CloseTo(shotgun.Of("equipped_weapon_long_range"), 40, 1e-12);
         CloseTo(shotgun.Of("equipped_weapon_max_range"), 75, 1e-12);
         CloseTo(shotgun.Of("equipped_weapon_tactical_reload_time"), 0, 1e-12);
-        foreach (var (slot, item) in new[] { ("primary_weapon", "primary_weapon_police_ump_45"), ("sidearm", "sidearm_police_686_magnum") })
+        // R168 gave the Police UMP-45 its channels, and the Police 686 Magnum all but a reload with rounds left, which its source lacks.
+        foreach (var (slot, item, expected) in new[] { ("primary_weapon", "primary_weapon_police_ump_45", new[] { 30, 100, 1.37 }), ("sidearm", "sidearm_police_686_magnum", [36, 100, 0]) })
         {
             var stats = Stats(Build().WithEquipment(slot, item), Weapon(slot));
-            foreach (var id in new[] { "equipped_weapon_long_range", "equipped_weapon_max_range", "equipped_weapon_tactical_reload_time" })
-            {
-                Assert.True(Math.Abs(stats.Of(id)) <= 1e-12, $"{item}: {id} = {stats.Of(id)}");
-            }
-            Assert.True(stats.Of("equipped_weapon_reload_time") > 0, $"{item} lost its community reload estimate");
+            CloseTo(stats.Of("equipped_weapon_long_range"), expected[0], 1e-12);
+            CloseTo(stats.Of("equipped_weapon_max_range"), expected[1], 1e-12);
+            CloseTo(stats.Of("equipped_weapon_tactical_reload_time"), expected[2], 1e-12);
+            Assert.True(stats.Of("equipped_weapon_reload_time") > 0, $"{item} lost its reload estimate");
         }
     }
 

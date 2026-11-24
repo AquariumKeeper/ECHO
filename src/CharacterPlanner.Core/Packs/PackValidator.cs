@@ -210,11 +210,19 @@ public static partial class PackValidator
                 var path = "selectors." + selector.ID;
                 if (selector.ID == GamePack.WeaponSlotSelector)
                 { Error("reserved-selector", path, "weapon_slot is built in: the active weapon is chosen by the slots marked weapon"); }
+                if (selector.ID == GamePack.FightContextSelector)
+                { Error("reserved-selector", path, "fight_context is built in: fights with talent triggers set it to fight, and it reads static elsewhere"); }
                 if (numericInputs.Contains(selector.ID))
                 { Error("context-id-conflict", path, $"{Q(selector.ID)} is both a selector and a numeric input"); }
                 if (selector.Values.Length == 0) { Error("selector-values", path + ".values", "A selector needs at least one value"); }
                 if (selector.Values.Any(string.IsNullOrWhiteSpace) || selector.Values.Distinct(StringComparer.Ordinal).Count() != selector.Values.Length)
                 { Error("selector-values", path + ".values", "Selector values must be non-blank and distinct"); }
+                // A default must be a value. A rule that turns a key off by removing it would expose the default instead, so only a
+                // phased distance rule, which always sets a value, may drive a selector that has one.
+                if (selector.Default.Length > 0 && !selector.Values.Contains(selector.Default))
+                { Error("selector-default", path + ".default", "A selector's default must be one of its values"); }
+                if (selector.Default.Length > 0 && pack.Simulation.Triggers.Any(rule => rule.Key == selector.ID && !(rule.Kind == "distance" && !rule.Phases.IsDefaultOrEmpty)))
+                { Error("selector-default", path + ".default", "A selector with a default can only be driven by a distance rule with phases"); }
             }
         }
 
@@ -569,6 +577,8 @@ public static partial class PackValidator
             _ => null
         };
 
+        private HashSet<string>? ruleTalents;
+
         // Expressions, stat ids and curves are checked by PackExpressionCompiler.
         private void Modifiers(ImmutableArray<StatModifier> modifiers, string owner, ModifierRole role, string talent = "")
         {
@@ -590,6 +600,16 @@ public static partial class PackValidator
                 if (modifier.WhileHolstered && (role != ModifierRole.Talent || !weaponTalents.Contains(talent)))
                 { Error("invalid-while-holstered", path + ".whileHolstered", "whileHolstered applies only to talents that can be chosen on items in weapon slots"); }
                 Requires(modifier.RequiresContext, path + ".requires");
+                // A static value set aside in fights with no rule there to play it drops out of those fights silently. Only a talent's
+                // own rules can play it.
+                if (modifier.RequiresContext?.GetValueOrDefault(GamePack.FightContextSelector) == GamePack.FightContextStatic &&
+                    !(role == ModifierRole.Talent && (ruleTalents ??= pack.Simulation.RuleTalents.ToHashSet(StringComparer.Ordinal)).Contains(talent)))
+                {
+                    Warning("static-gate-unruled", path + ".requires." + GamePack.FightContextSelector,
+                        role == ModifierRole.Talent
+                            ? $"{Q(talent)} has no fight rule, so fights with talent triggers run without this modifier and nothing in its place"
+                            : "Only a talent's fight rule can play a static value, so fights with talent triggers run without this modifier and nothing in its place");
+                }
             }
         }
 
@@ -601,6 +621,11 @@ public static partial class PackValidator
             {
                 if (key == GamePack.WeaponSlotSelector)
                 { Error("weapon-slot-gate", $"{path}.{key}", "The active weapon is built in; use the item's weapon block instead of a weapon_slot gate"); }
+                else if (key == GamePack.FightContextSelector)
+                {
+                    if (value is not (GamePack.FightContextStatic or GamePack.FightContextFight))
+                    { Error("unknown-selector-value", $"{path}.{key}", $"fight_context is static or fight, not {Q(value)}"); }
+                }
                 else if (!selectors.TryGetValue(key, out var selector)) { Error("unknown-selector", $"{path}.{key}", $"Unknown selector {Q(key)}"); }
                 else if (!selector.Values.Contains(value)) { Error("unknown-selector-value", $"{path}.{key}", $"Selector {Q(key)} has no value {Q(value)}"); }
             }

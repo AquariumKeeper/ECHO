@@ -14,7 +14,7 @@ public sealed class SkillFights
     private readonly CancellationToken cancellationToken;
     // Fights whose cooldowns follow the state deploy at different times, so what's kept for reuse is bounded.
     private const int MadeLimit = 4096;
-    private readonly Dictionary<(int Slot, double Time, double Window, double Rate, double Impact, double StatusRate, double StatusWindow, double Impacts, double ImpactInterval, string ControlStatus), SkillUseEvent[]> made = [];
+    private readonly Dictionary<(int Slot, double Time, double Window, double Rate, double Impact, double StatusRate, double StatusWindow, double Impacts, double ImpactInterval, string ControlStatus, double Delay, double Repair, double RepairDelay, double RepairEvery), SkillUseEvent[]> made = [];
     private int hitGroups;
 
     internal SkillFights(ImmutableArray<SkillDamageSchedule.Plan> plans, double duration, ImmutableArray<double> boundaries, CancellationToken cancellationToken) =>
@@ -35,7 +35,7 @@ public sealed class SkillFights
     // A use's impact and batches, in order. A batch's pieces carry the time the whole batch ends.
     internal SkillUseEvent[] Use(int index, double time, SkillDamageSchedule.Plan plan)
     {
-        var key = (index, time, plan.Window, plan.Rate, plan.Impact, plan.StatusRate, plan.StatusWindow, plan.Impacts, plan.ImpactInterval, plan.ControlStatus);
+        var key = (index, time, plan.Window, plan.Rate, plan.Impact, plan.StatusRate, plan.StatusWindow, plan.Impacts, plan.ImpactInterval, plan.ControlStatus, plan.Delay, plan.ImpactRepair, plan.RepairDelay, plan.RepairEvery);
         if (made.TryGetValue(key, out var events)) { return events; }
         if (made.Count == MadeLimit) { made.Clear(); }
         var builder = new List<SkillUseEvent>();
@@ -49,6 +49,20 @@ public sealed class SkillFights
         // A rate, a status and spaced impacts run side by side, so a stream walking the use needs them merged.
         builder.Sort(SkillUseEvent.Compare);
         return made[key] = [.. builder];
+    }
+
+    // The events a running use adds when a charge lengthens it (ADR 0031), cut and numbered as a use's own are.
+    internal SkillUseEvent[] Lengthened(int index, double time, SkillUse use, double from, double to, double statusFrom, double statusTo)
+    {
+        var builder = new List<SkillUseEvent>();
+        foreach (var whole in SkillDamageSchedule.Lengthened(use, from, to, statusFrom, statusTo, cancellationToken))
+        {
+            if (builder.Count >= SkillEventStream.EventLimit) { throw new SimulationException("skill-work-limit", "Too many skill damage events"); }
+            var entry = whole with { HitGroup = ++hitGroups };
+            SkillDamageSchedule.Cut(entry, boundaries, piece => builder.Add(new(piece, entry.Time, time, index, builder.Count)), cancellationToken);
+        }
+        builder.Sort(SkillUseEvent.Compare);
+        return [.. builder];
     }
 }
 
@@ -68,6 +82,8 @@ internal sealed class SkillUseEvent(SkillDamageEvent entry, double batch, double
     public static int Compare(SkillUseEvent first, SkillUseEvent second)
     {
         var order = first.Event.Time.CompareTo(second.Event.Time);
+        // A repair landing at a moment comes before anything else then, so a repair skill's check sees it (ADR 0030).
+        if (order == 0) { order = (second.Event.Kind == SkillDamageKind.Repair).CompareTo(first.Event.Kind == SkillDamageKind.Repair); }
         if (order == 0) { order = first.IsImpact.CompareTo(second.IsImpact); }
         if (order == 0) { order = first.Batch.CompareTo(second.Batch); }
         if (order == 0) { order = first.Use.CompareTo(second.Use); }
@@ -88,8 +104,10 @@ public sealed class SkillEventStream
     private sealed class Running(SkillUseEvent[] events, SkillDamageSchedule.Plan plan, SkillUse use)
     {
         public SkillDamageSchedule.Plan Plan => plan;
-        public double Until => plan.StatusRate > 0 ? use.StatusEnd : use.WindowEnd;
-        public double WindowEnd => use.ApplyingEnd;
+        // A use a charge lengthens (ADR 0031) has its ends moved on every part of it still running.
+        public SkillUse Use { get; set; } = use;
+        public double Until => plan.StatusRate > 0 ? Use.StatusEnd : Use.WindowEnd;
+        public double WindowEnd => Use.ApplyingEnd;
         public SkillUseEvent Head => events[At];
         public int At { get; set; }
         public bool Done => At >= events.Length;
@@ -115,6 +133,15 @@ public sealed class SkillEventStream
     private readonly int[] slotUses;
     private readonly double[] heldSince;
     private readonly double[] heldSeconds;
+    // ADR 0030: when a slot's last use ended early, its repairs spent; NaN while it runs to its window.
+    // ADR 0031: or when its cooldown starts, its window lengthened by charges; whether its count was spent; and where its window now ends.
+    private readonly double[] endedEarly;
+    private readonly bool[] spent;
+    private readonly double[] lengthenedTo;
+    // ADR 0037: a ready slot put off while the player is down: it's ready, its cooldown over, until it deploys.
+    private readonly bool[] postponed;
+    // Repairs and cloud ticks scheduled as the fight goes, numbered for their order.
+    private int scheduled;
 
     internal SkillEventStream(SkillFights fights)
     {
@@ -128,10 +155,143 @@ public sealed class SkillEventStream
         slotUses = new int[nextUse.Length];
         heldSince = Enumerable.Repeat(double.NaN, nextUse.Length).ToArray();
         heldSeconds = new double[nextUse.Length];
+        endedEarly = Enumerable.Repeat(double.NaN, nextUse.Length).ToArray();
+        spent = new bool[nextUse.Length];
+        postponed = new bool[nextUse.Length];
+        lengthenedTo = Enumerable.Repeat(double.NaN, nextUse.Length).ToArray();
+    }
+
+    /// <summary>
+    /// Adds events a use makes as the fight goes (ADR 0030: a repair skill's repair landing later, or its cloud's ticks), none before
+    /// <paramref name="at"/>.
+    /// </summary>
+    internal void Schedule(int index, SkillDamageSchedule.Plan plan, double useTime, double at, IReadOnlyList<SkillDamageEvent> entries)
+    {
+        if (entries.Count == 0) { return; }
+        events += entries.Count;
+        if (events > EventLimit) { throw new SimulationException("skill-work-limit", "Too many skill damage events"); }
+        var made = new SkillUseEvent[entries.Count];
+        for (var i = 0; i < made.Length; i++)
+        {
+            var entry = entries[i];
+            if (!double.IsFinite(entry.Time) || entry.Time < at) { throw new SimulationException("skill-event-invalid", "A scheduled skill event can't come before now"); }
+            made[i] = new(entry with { HitGroup = 0 }, entry.Time, useTime, index, ++scheduled);
+        }
+        Array.Sort(made, SkillUseEvent.Compare);
+        running.Add(new(made, plan, plan.UseAt(useTime, fights.Duration)));
+        settled = false;
+    }
+
+    /// <summary>
+    /// Ends a slot's use made at <paramref name="useTime"/> at <paramref name="end"/>, its repairs spent (ADR 0030): its cooldown starts
+    /// then, keeping any cut it has had, sooner than its window's end, or later when the last repair lands after it. A later use changes
+    /// nothing.
+    /// </summary>
+    internal void EndEarly(int index, double useTime, double end)
+    {
+        if (lastUse[index] != useTime || lastPlan[index] is null) { return; }
+        spent[index] = true;
+        // A stocked skill's cooldowns run from its uses, so only its running use ends.
+        if (stocks[index] > 1) { return; }
+        MoveCooldownStart(index, end);
+    }
+
+    // A slot's cooldown after its last use starts at this time instead, its next use moving with it.
+    private void MoveCooldownStart(int index, double end)
+    {
+        if (lastPlan[index] is not { } plan || end == CooldownStart(index, plan)) { return; }
+        var remaining = nextUse[index] - CooldownStart(index, plan);
+        endedEarly[index] = end;
+        if (double.IsFinite(nextUse[index])) { nextUse[index] = end + remaining; }
+        deployment = null;
+        settled = false;
     }
 
     /// <summary>The plan index of a skill slot, or -1 when the build has no damaging skill there.</summary>
     internal int IndexOf(string slot) => fights.IndexOf(slot);
+
+    /// <summary>A decoy's use ended by its health spent (ADR 0034): its cooldown, from its end, starts then.</summary>
+    internal void EndNow(int index, double at)
+    {
+        if (lastPlan[index] is null) { return; }
+        EndEarly(index, lastUse[index], at);
+    }
+
+    /// <summary>Puts off the deployment that came up as the next event to <paramref name="at"/> (ADR 0037: a downed player uses no skills).</summary>
+    internal void Postpone(double at)
+    {
+        Settle();
+        if (deployment is null) { throw new InvalidOperationException("No skill deployment is due"); }
+        if (!(at > deployment.Time)) { throw new SimulationException("time-not-advancing", "A skill deployment can only be put off to later"); }
+        nextUse[deploying] = at;
+        postponed[deploying] = true;
+        deployment = null;
+        settled = false;
+    }
+
+    /// <summary>The plan a slot's last use deployed with, in the fight's state then; null before its first.</summary>
+    internal SkillDamageSchedule.Plan? LastPlan(int index) => lastPlan[index];
+
+    /// <summary>The fight's plans, by index.</summary>
+    internal ImmutableArray<SkillDamageSchedule.Plan> Plans => fights.Plans;
+
+    /// <summary>The plan index of the slot the last deployment made a use for; -1 before any, or when the last one was held.</summary>
+    internal int LastDeployed { get; private set; } = -1;
+
+    /// <summary>When a slot was last used; NaN before its first use.</summary>
+    internal double LastUse(int index) => lastUse[index];
+
+    /// <summary>Whether a slot's skill is out at <paramref name="at"/>: from its last use until its cooldown starts (ADR 0031 stage 2c).</summary>
+    internal bool Out(int index, double at) => lastPlan[index] is { } plan && lastUse[index] <= at && at < CooldownStart(index, plan);
+
+    /// <summary>
+    /// Where a slot's last use's window ends, if it runs at <paramref name="at"/> (ADR 0031): from its effects' start to its window's end,
+    /// lengthened by any charges, and not one whose count was spent. NaN for none.
+    /// </summary>
+    internal double RunningUntil(int index, double at)
+    {
+        if (lastPlan[index] is not { } plan || spent[index]) { return double.NaN; }
+        var use = plan.UseAt(lastUse[index], fights.Duration);
+        var end = double.IsNaN(lengthenedTo[index]) ? use.WindowEnd : lengthenedTo[index];
+        return use.Time <= at && at < end ? end : double.NaN;
+    }
+
+    /// <summary>
+    /// Lengthens a slot's running use by <paramref name="seconds"/> at <paramref name="at"/> (ADR 0031: an Artificer's refresh): its window
+    /// and its status run that much longer, up to the fight's end, and a cooldown that runs from its end starts that much later. A use
+    /// not running then, or one with charges, is untouched.
+    /// </summary>
+    internal void Lengthen(int index, double at, double seconds)
+    {
+        if (!(seconds > 0) || stocks[index] > 1 || double.IsNaN(RunningUntil(index, at)) || lastPlan[index] is not { } plan) { return; }
+        var use = plan.UseAt(lastUse[index], fights.Duration);
+        var end = double.IsNaN(lengthenedTo[index]) ? use.WindowEnd : lengthenedTo[index];
+        var statusEnd = use.StatusEnd + (end - use.WindowEnd);
+        var to = Math.Min(fights.Duration, end + seconds);
+        var statusTo = Math.Min(fights.Duration, statusEnd + seconds);
+        if (!double.IsFinite(end + seconds)) { throw new SimulationException("time-not-advancing", "A lengthened skill use cannot end"); }
+        lengthenedTo[index] = to;
+        var lengthened = use with { WindowEnd = to, StatusEnd = statusTo };
+        // What's left of the use's events applies its status and area to its new ends.
+        foreach (var part in running.Where(part => part.Plan == plan && part.Use.Slot == use.Slot && part.Use.Time == use.Time)) { part.Use = lengthened; }
+        var made = fights.Lengthened(index, lastUse[index], use, end, to, statusEnd, statusTo);
+        events += made.Length;
+        if (events > EventLimit) { throw new SimulationException("skill-work-limit", "Too many skill damage events"); }
+        if (made.Length > 0) { running.Add(new(made, plan, lengthened)); }
+        // A cooldown from the use's end starts as much later as the window now ends, past the fight's end or not; one from the use
+        // doesn't move.
+        if (plan.CooldownFromEnd) { MoveCooldownStart(index, CooldownStart(index, plan) + seconds); }
+        deployment = null;
+        settled = false;
+    }
+
+    /// <summary>Each plan used only once the player's armor is below a share of its maximum (ADR 0030), by index, with that share.</summary>
+    internal Dictionary<int, double> ArmorWaits()
+    {
+        var waits = new Dictionary<int, double>();
+        for (var index = 0; index < fights.Plans.Length; index++) { if (fights.Plans[index].UseArmorBelow > 0) { waits[index] = fights.Plans[index].UseArmorBelow; } }
+        return waits;
+    }
 
     /// <summary>A slot's first use waits until <paramref name="at"/> (ADR 0014's <c>afterSeconds</c>); later ones follow its cooldown.</summary>
     internal void DelayFirst(int index, double at)
@@ -188,9 +348,9 @@ public sealed class SkillEventStream
             // A cooldown that starts at this very moment isn't cut: a use whose own impact resets it (Skilled on a skill kill)
             // would otherwise deploy again at once, without end.
             // A held skill is ready, waiting only for its condition (ADR 0014), so there's nothing to cut.
-            if (lastPlan[index] is not { } plan || lastUse[index] >= at || !double.IsNaN(heldSince[index])) { continue; }
+            if (lastPlan[index] is not { } plan || lastUse[index] >= at || !double.IsNaN(heldSince[index]) || postponed[index]) { continue; }
             var amount = share * plan.Cooldown + seconds;
-            var earliest = Math.Max(at, lastUse[index] + (plan.Cycle - plan.Cooldown));
+            var earliest = Math.Max(at, CooldownStart(index, plan));
             if (stocks[index] > 1)
             {
                 if (double.IsFinite(recharges[index]) && recharges[index] > at) { recharges[index] = Math.Max(earliest, recharges[index] - amount); }
@@ -209,7 +369,8 @@ public sealed class SkillEventStream
     }
 
     // When a slot's cooldown after its last use starts: at the use, or at its end for one that runs from the end.
-    private double CooldownStart(int index, SkillDamageSchedule.Plan plan) => lastUse[index] + (plan.Cycle - plan.Cooldown);
+    // A use that ended early, its repairs spent (ADR 0030), starts it then.
+    private double CooldownStart(int index, SkillDamageSchedule.Plan plan) => !double.IsNaN(endedEarly[index]) ? endedEarly[index] : lastUse[index] + (plan.Cycle - plan.Cooldown);
 
     /// <summary>
     /// Whether any skill's cooldown is running at this time: one that started before now and hasn't ended, or a stocked skill's
@@ -219,7 +380,7 @@ public sealed class SkillEventStream
     {
         for (var index = 0; index < nextUse.Length; index++)
         {
-            if (lastPlan[index] is not { } plan || !double.IsNaN(heldSince[index])) { continue; }
+            if (lastPlan[index] is not { } plan || !double.IsNaN(heldSince[index]) || postponed[index]) { continue; }
             if (stocks[index] > 1 ? lastUse[index] < at && double.IsFinite(recharges[index]) && recharges[index] > at
                 : CooldownStart(index, plan) < at && nextUse[index] > at) { return true; }
         }
@@ -273,6 +434,8 @@ public sealed class SkillEventStream
         Settle();
         if (deployment is null) { throw new InvalidOperationException("No skill deployment is due"); }
         // A ready slot whose condition doesn't hold as the fight reaches it waits, out of the schedule, until a decision releases it.
+        LastDeployed = -1;
+        postponed[deploying] = false;
         if (MayDeploy is not null && !MayDeploy(deploying, deployment.Time))
         {
             heldSince[deploying] = deployment.Time;
@@ -282,6 +445,7 @@ public sealed class SkillEventStream
             return;
         }
         Make(deploying, Read!(deployment.Slot, deployment.Time));
+        LastDeployed = deploying;
         deployment = null;
         settled = false;
     }
@@ -316,8 +480,9 @@ public sealed class SkillEventStream
             { if (nextUse[index] < fights.Duration && (plan < 0 || nextUse[index] < nextUse[plan])) { plan = index; } }
             if (plan < 0 || soonest?.Head.Event.Time < nextUse[plan]) { break; }
             if (Read is null) { Make(plan, fights.Plans[plan]); continue; }
-            // A tick ending at a deployment's time still comes first, as it sorts ahead of any impact there.
-            if (soonest?.Head.Event is { } tick && tick.Kind.IsBatch() && tick.Time == nextUse[plan]) { break; }
+            // A tick ending at a deployment's time still comes first, as it sorts ahead of any impact there. So does a repair landing
+            // then (ADR 0030), so a skill waiting for armor sees it.
+            if (soonest?.Head.Event is { } tick && (tick.Kind.IsBatch() || tick.Kind == SkillDamageKind.Repair) && tick.Time == nextUse[plan]) { break; }
             deploying = plan;
             deployment = new(nextUse[plan], 0, fights.Plans[plan].Slot, SkillDamageKind.Deployment, nextUse[plan]);
             break;
@@ -347,6 +512,9 @@ public sealed class SkillEventStream
         if (++uses > UseLimit) { throw new SimulationException("skill-work-limit", "Too many skill deployments"); }
         var time = nextUse[index];
         (lastUse[index], lastPlan[index]) = (time, plan);
+        endedEarly[index] = double.NaN;
+        spent[index] = false;
+        lengthenedTo[index] = double.NaN;
         slotUses[index]++;
         if (double.IsNaN(stocks[index]))
         {

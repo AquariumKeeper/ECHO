@@ -34,7 +34,9 @@ public sealed class StatusTriggerStateTests
         Assert.Equal(10, seconds["bleeding"]);
         Assert.Equal(10, seconds["any"]);
         Assert.Equal(0, seconds["shocked"]);
-        Assert.Equal(7, seconds.Count);
+        // Each status (poison too, ADR 0024) and any.
+        // Seven statuses before ADR 0035, and disrupted, plus "any".
+        Assert.Equal(9, seconds.Count);
     }
 
     [Fact]

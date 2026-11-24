@@ -26,12 +26,13 @@ internal static class SkillModDelta
     /// the frozen value can't be scaled to it; CommittedCycleDpsAtTierZero has ShadeTech's figure.</summary>
     public static bool Moved(string skill, string output) => skill == "skill_artillery_turret" && output == "assumed_cycle_dps";
 
-    // R66 to R69 added these outputs after the freeze; the frozen ones are still compared in their places.
+    // R66 to R69 and R166 (the Reviver Hive) added these outputs after the freeze; the frozen ones are still compared in their places.
     private static readonly ImmutableHashSet<(string Skill, string Output)> Added = [("skill_sniper_turret", "reload_seconds"),
         ("skill_artillery_turret", "assumed_shell_interval_seconds"), ("skill_artillery_turret", "use_end_cooldown_seconds"),
-        ("skill_cluster_seeker_mine", "assumed_mine_interval_seconds"), ("skill_incinerator_turret", "burn_duration_seconds")];
+        ("skill_cluster_seeker_mine", "assumed_mine_interval_seconds"), ("skill_incinerator_turret", "burn_duration_seconds"),
+        ("skill_reviver_hive", "cooldown_seconds"), ("skill_reviver_hive", "revive_armor_share"), ("skill_reviver_hive", "revive_seconds")];
 
-    /// <summary>Whether an output came after the freeze (R66 to R69).</summary>
+    /// <summary>Whether an output came after the freeze (R66 to R69, R166).</summary>
     public static bool IsAdded(string skill, string output) => Added.Contains((skill, output));
 
     /// <summary>A formula with the tier read as it was frozen: R64's tier formula is in every ordinary output, and nothing else in it may differ.</summary>

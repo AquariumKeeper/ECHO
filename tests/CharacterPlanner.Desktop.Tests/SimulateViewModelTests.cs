@@ -1,8 +1,11 @@
+using System.Collections.Immutable;
 using System.Globalization;
 using CharacterPlanner.Desktop.ViewModels;
 using CharacterPlanner.Application.Commands;
 using CharacterPlanner.Application.Sessions;
 using CharacterPlanner.Core.Builds;
+using CharacterPlanner.Core.Packs;
+using CharacterPlanner.Core.Engine;
 using CharacterPlanner.Simulation;
 
 namespace CharacterPlanner.Desktop.Tests;
@@ -257,6 +260,102 @@ public sealed class SimulateViewModelTests
             .WithTalentSelection("primary_weapon", "talent", "weapon_talent_ignited").WithActiveSkillSelection("skill_slot_1", "skill_explosive_seeker_mine");
         var state = PlannerState.Of(build) with { Assumptions = PlannerState.Of(build).Assumptions.Add("weapon_slot", "primary_weapon").Add("enemy_target", "1") };
         return new SimulateViewModel(new PlannerSession(Division, state, new OperationApplier(Division)), dispatcher);
+    }
+
+    [Fact]
+    public void ASkillUseRowOnASkillThatStepsAsideIsDropped()
+    {
+        // ADR 0022: the engine drops a use condition on a slot whose skill steps aside, so the form doesn't refuse it.
+        var rules = Division.Pack with
+        {
+            Simulation = Division.Pack.Simulation with { SkillsAside = [new() { Skill = "skill_striker_drone", Why = "it waits on a rate" }] }
+        };
+        var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+        var build = BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", "skill_striker_drone");
+        var state = PlannerState.Of(build) with { Assumptions = PlannerState.Of(build).Assumptions.Add("weapon_slot", "primary_weapon").Add("enemy_target", "1") };
+        using var simulate = new SimulateViewModel(new PlannerSession(pack, state, new OperationApplier(pack)), new QueueDispatcher());
+        simulate.IncludeSkills = true;
+        simulate.Incoming = true;
+        var row = simulate.SkillUses.Single(use => use.Slot == "skill_slot_1");
+        row.When = SkillUseViewModel.AfterTime;
+        row.Value = "1";
+        Assert.Null(simulate.Problem);
+    }
+
+    [Fact]
+    public void ASkillUseRowOnAGatedSkillIsDroppedWhileItsSettingIsOff()
+    {
+        // ADR 0027: a skill whose gate the settings don't hold steps aside, so the form drops its row as the engine does.
+        var rules = Division.Pack with
+        {
+            Selectors = [.. Division.Pack.Selectors, new() { ID = "target_has_weakpoint", Name = "Target has a weakpoint", Values = ["true"], Section = "Enemy target" }],
+            Simulation = Division.Pack.Simulation with
+            {
+                Skills = [.. Division.Pack.Simulation.Skills.Select(rule => rule.Skill != "skill_explosive_sticky_bomb" ? rule :
+                    rule with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add("target_has_weakpoint", "true") })]
+            }
+        };
+        var build = BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", "skill_explosive_sticky_bomb");
+        var state = PlannerState.Of(build) with { Assumptions = PlannerState.Of(build).Assumptions.Add("weapon_slot", "primary_weapon").Add("enemy_target", "1") };
+        string? Problem(GamePack fighting, PlannerState at)
+        {
+            var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(fighting).Compiled);
+            using var simulate = new SimulateViewModel(new PlannerSession(pack, at, new OperationApplier(pack)), new QueueDispatcher());
+            simulate.IncludeSkills = true;
+            simulate.Incoming = true;
+            var row = simulate.SkillUses.Single(use => use.Slot == "skill_slot_1");
+            // Waiting for enemies needs several at once, which this fight doesn't have, so the row is refused wherever the skill fights.
+            row.When = SkillUseViewModel.WhileEnemies;
+            row.Value = "3";
+            return simulate.Problem;
+        }
+        Assert.Null(Problem(rules, state));
+        Assert.NotNull(Problem(rules, state with { Assumptions = state.Assumptions.Add("target_has_weakpoint", "true") }));
+        Assert.NotNull(Problem(Division.Pack, state));
+        // A selector's default holds when it's unset, as in the engine.
+        Assert.NotNull(Problem(rules with { Selectors = [.. rules.Selectors.Select(selector => selector.ID != "target_has_weakpoint" ? selector : selector with { Default = "true" })] }, state));
+    }
+
+    [Fact]
+    public void ASkillUseRowOnASelfReviveIsDroppedWithoutEnemyFire()
+    {
+        // ADR 0037, on the committed rows: with no enemy fire nothing downs the player, so a skill reviving its user steps aside, and the
+        // engine drops its row.
+        var build = BuildSnapshot.Create(Division.Pack).WithEquipment("primary_weapon", "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", "skill_reviver_hive");
+        var state = PlannerState.Of(build) with { Assumptions = PlannerState.Of(build).Assumptions.Add("weapon_slot", "primary_weapon").Add("enemy_target", "1") };
+        string? Problem(bool incoming)
+        {
+            using var simulate = new SimulateViewModel(new PlannerSession(Division, state, new OperationApplier(Division)), new QueueDispatcher());
+            simulate.IncludeSkills = true;
+            simulate.Incoming = incoming;
+            simulate.DriveBuffs = incoming;
+            var row = simulate.SkillUses.Single(use => use.Slot == "skill_slot_1");
+            row.When = SkillUseViewModel.AfterTime;
+            row.Value = "601";
+            return simulate.Problem;
+        }
+        Assert.Null(Problem(incoming: false));
+        Assert.NotNull(Problem(incoming: true));
+    }
+
+    [Fact]
+    public void AMarksKeyIsOfferedWithTalentTriggersOn()
+    {
+        // ADR 0036, on the committed rows: the Achilles Pulse's mark sets a key in a driven fight, so another skill may wait for it.
+        IEnumerable<string> Keys(string skill, bool drive)
+        {
+            var build = BuildSnapshot.Create(Division.Pack).WithEquipment("primary_weapon", "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", "skill_explosive_sticky_bomb")
+                .WithActiveSkillSelection("skill_slot_2", skill);
+            var state = PlannerState.Of(build) with { Assumptions = PlannerState.Of(build).Assumptions.Add("weapon_slot", "primary_weapon").Add("enemy_target", "1") };
+            using var simulate = new SimulateViewModel(new PlannerSession(Division, state, new OperationApplier(Division)), new QueueDispatcher());
+            simulate.IncludeSkills = true;
+            simulate.Incoming = true;
+            simulate.DriveBuffs = drive;
+            return [.. simulate.SkillUses.Single(use => use.Slot == "skill_slot_1").Keys.Select(choice => $"{choice.Id}: {choice.Name}")];
+        }
+        Assert.Equal(["target_pulsed: Achilles Pulse: target_pulsed"], Keys("skill_achilles_pulse", drive: true));
+        Assert.Empty(Keys("skill_achilles_pulse", drive: false));
+        Assert.DoesNotContain(Keys("skill_jammer_pulse", drive: true), key => key.StartsWith("target_pulsed", StringComparison.Ordinal));
     }
 
     [Fact]

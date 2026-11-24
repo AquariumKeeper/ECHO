@@ -218,8 +218,20 @@ New in v2. In v1, the context keys used in gates were never declared; there are
 - A selector with one value works as an on/off toggle: on means it has that value,
   off means it has no value.
 - A selector with several values is a choice.
+- `default` is new on 2026-11-15 (ADR 0019: Versatile's bands), optional: one of the selector's values, which the selector reads
+  while the user hasn't set it, in calculations and fights alike. Without one, an unset selector has no value and matches no
+  `requires`. Only a `distance` rule with phases may drive a selector that has a default: a rule that turns its key off removes
+  the value, which would expose the default. The Desktop's "Default" choice names it.
 - `weapon_slot` is **not** declared here. The active weapon is built into the
   engine; see [items](#items).
+- `fight_context` is new on 2026-11-18 (ADR 0023), built in and **not** declared here (a pack selector with that id is refused,
+  `reserved-selector`). It reads `fight` in fights with talent triggers and `static` everywhere else, unset included; nobody else
+  can set it. A modifier's `requires` may name it, with `static` or `fight`; a fight rule's may not (`bad-sim-trigger`), since a
+  fight rule always runs in a fight. A modifier that requires `static` holds only outside those fights, so a talent's static
+  expected value can step aside where a fight rule plays the mechanic. Such a gate warns (`static-gate-unruled`) unless it's on a
+  talent with a fight rule: elsewhere driven fights run without the modifier and nothing in its place. A fight without talent
+  triggers reads `static`, so a static value no rule plays still refuses there. A driven fight's coverage leaves out the
+  modifiers it set aside.
 
 ### numericInputs
 
@@ -449,11 +461,18 @@ only to an id that exists in the same collection.
 
 - `triggers` are v1's `simTriggers`. Every field is kept. `kind` is restricted to
   `buff`, `stacks`, `status`, `magazine`, `distance`, `pellets`, `ready`,
-  `lockout`, `cycle`, `target` and `count`. Event names are restricted to the simulator's
+  `lockout`, `cycle`, `target`, `count` and `bonus_armor`. Event names are restricted to the simulator's
   event list.
+- `kind: "bonus_armor"` is new on 2026-11-17 (ADR 0021: Hackstep Protocol's damage bonus), on a numeric input with a min of 0, and
+  no other field than `talent` and `key`. In a fight under enemy fire the key reads the player's bonus armor, from any source, as a
+  percentage of max armor, floored to the input's step, at each refresh of the fight's state; past the input's max it reads the max.
+  Without enemy fire there are no pools to read, so the key keeps the user's setting.
 - `alsoResetOn` is new on 2026-11-04 (R55), optional, for `buff` and `stacks` rules with a `resetOn`: a second event that
   resets the rule the same way. `within` also works on `status` rules with an event: the status lands only on an enemy that close,
-  and a fight with no distance takes the range as met, and says so.
+  and a fight with no distance takes the range as met, and says so. From 2026-11-19 driven fights also run `within` on `buff` and
+  `stacks` rules with an event (Close & Personal's kill within 7 m), up to 50 m: each event gains the rule, by `on` or an `also`,
+  only when the enemy it's about is that close by the fight's distance, and it still resets, consumes or cancels as usual. With no distance the range is taken as
+  met, and the result says so.
 - The event `armor_kit` is new on 2026-11-04 (ADR 0010, stage 3, R45). It fires when a kit's repair lands, so not on a use
   cancelled by going down. Gear and the weapon in hand gain on it, and what it clears clears on every talent, holstered
   weapons too. With no `armorKits` it never fires: a rule gaining only on it steps aside, so its talent
@@ -477,14 +496,157 @@ only to an id that exists in the same collection.
   the output with the radius in metres of full damage, and `areaEdge` (above 0 up to 1) is the share an enemy at the area's
   radius takes. Between the two the share falls in a straight line, an assumption, since the source gives the ends, not the curve.
   The two go together, and the status goes on whole. A full radius at or past the area's own leaves the whole area at full damage.
+  From 2026-11-19 (ADR 0024) a rule with a status window (`statusRate`, `statusWindow`) may name an `area` without an impact: a
+  cloud. With an impact the area stays the impact's, its status going on once per impact. In fights with talent triggers its burn, bleed or poison goes on every other living enemy within the radius of the enemy
+  being shot while the use applies it, each tenth of a second at most, for one application from then, carrying the skill's
+  `statusRate`. An enemy in reach keeps it to the window's end plus `statusWindow`, as the enemy being shot does. Its ticks there
+  count in status DPS, it fires no events, and each enemy it newly lands on can set off a spread that takes skill statuses. The
+  cloud follows the enemy being shot, and nobody walks out of it, since fights don't move enemies; the result says so. A rate
+  alone still takes no area.
 - `controlStatus` is new on 2026-11-13 (ADR 0017), optional, on a `simulation.skills` rule whose `status` is shocked,
-  disoriented, ensnared or blinded, with a `window`. In fights with talent triggers, the status goes on the enemy being shot
+  disoriented, ensnared, blinded or (from 2026-11-22, ADR 0035) disrupted, with a `window`. In fights with talent triggers, the status goes on the enemy being shot
   as the skill is used, for the `window` output's duration as it stands (it already reads status-duration bonuses), as the
   player's status: it fires `status_applied` there if newly on, reads as on for keys, `whileStatus` and counts, counts in
   target status uptime, and a shocked enemy's fire is stopped as a talent's shock stops it. A second use while it's on
   refreshes it. A use with no living enemy being shot puts it on nobody. With an `area` (which a control rule may name without
   an impact) it also goes on every living enemy within the radius, with no events. A trap's goes on once per use, and no
   immunity is modeled. Without the field a control skill's rule is a cooldown only, as before.
+- `requires` is new on 2026-11-20 (ADR 0027), optional, on a `simulation.skills` rule without a `shield`: an object mapping a
+  selector id to a value, as a modifier's `requires`. A fight reads it once, from its settings. When they don't hold every
+  listed value, the skill steps aside as a `skillsAside` skill does: it's never used, a use condition on its slot is dropped,
+  and the result notes it with the settings it needs; a fight's other setup (areas, control statuses) leaves it out too.
+  `fight_context`, a key a trigger rule or a headshot cycle drives, and `in_cover`, which a cover cycle holds, can't gate a skill
+  (`bad-sim-skill`): the gate is read once. Without the field a rule always fights, as before.
+- `killChance`, `killProfiles` and `killDelay` are new on 2026-11-21 (ADR 0029), optional and together, on a `simulation.skills`
+  rule with one `impact` a use (no `impacts`, `stock` or `targets`), so it rolls once per enemy per use. `killChance` names the output with a chance (0 to 1); `killProfiles` lists `enemy_target` profile values,
+  each once; `killDelay` is 0 up to 10 s. After each landed impact's hit, a roll on its own seeded stream goes once to each living
+  enemy the impact reached (the enemy being shot, then those in its area, nearest first) whose profile is listed and whose health
+  is below full. One that passes dies `killDelay` later, unless it's dead or gone by then: its remaining armor and health count
+  as the skill's damage, and the kill counts, but with no kill repair, no `kill` or `skill_kill` event, no talent gaining from
+  its `target_death` (marks and stacks ending with their target still clear), and no pass-on. The trace
+  has an `OutrightKill` event.
+- `armorOnly`, `impactDelay`, `farImpactDelay`, `farFrom` and `cooldownAfter` are new on 2026-11-21 (ADR 0029), optional, on a
+  `simulation.skills` rule. `armorOnly` (with an `impact`) stops each impact, on the enemy being shot, in an area or on other
+  targets, at the enemy's armor: an enemy without armor takes nothing. `impactDelay` is the seconds (0 up to 10) from a use to
+  all its effects; `farImpactDelay` and `farFrom` (above 0 up to 100 m) go together beside it, for a fight whose one enemy
+  distance is beyond `farFrom` (with per-target distances, or none, the near delay holds, and the result says so). A delayed
+  effect due after the fight's end lands nothing. `cooldownAfter` (0 up to 10 s, not with `cooldownFromEnd`) starts the cooldown
+  that long after the use. The delays and `cooldownAfter` don't go on a shield, a stocked skill, or a cooldown from the use's end (which would
+  start before the delayed effects land). Fights against a dummy count an armor-only hit whole, as they count all skill damage.
+- `decoyHealth` is new on 2026-11-22 (ADR 0034), optional, on a `simulation.skills` rule with a `window` and a `cooldown` from its end
+  (`cooldownFromEnd`), and no damage, status, repair, charges, shield, stock, delay, area, targets, kill or armor wait: the output with the skill's health. While its use runs and its health
+  lasts, landing enemy hits land on it instead of the player, each spending the stat `decoy_damage_share` (read in the fight's state,
+  the whole hit without it) of its raw damage; spent, the use ends and a cooldown from its end starts. Drawn hits count apart.
+- `revive` is new on 2026-11-23 (ADR 0037), optional, on one `simulation.skills` rule with a `window` and a `cooldown` from its end
+  (`cooldownFromEnd`), and no damage, status, repair, charges, shield, stock, delay, area, targets, kill, armor wait, decoy or zones, nor
+  a `skill_out` buff of its own. The player going down under enemy fire while its use runs is revived once, which spends the use.
+  `armor` names the output with the share of maximum armor restored (above 1 counts as 1), and `seconds` the output with the seconds
+  from going down to the revive (above 0); both are read as the use deploys. `poolShare` (above 0 up to 1) is the downed pool's share of
+  maximum health, `damageTaken` (above 0 up to 1) the share of damage a hit or status tick deals it, and `bleedSeconds` (above 0 up to
+  600) how long it lasts untouched, at a steady rate. The pool spent first ends the fight. `immuneSeconds` (0 to 60) follow the revive
+  with nothing hurting the player, and the use's cooldown starts `endAfter` (0 to 60) seconds after it. While down the player fires
+  nothing and uses no skill (one due waits for the revive), a reload starts over at the revive, a swap not begun waits, and an armor kit
+  under way stops unspent; buffs, statuses and other skills run on. Without enemy fire the skill steps aside. Fight results' `incoming`
+  gains `revives` (mean per fight) only where a skill revives, and what each restored is in its armor and health repaired; `downedFraction` and `timeToDown` count fights a down, or dying while
+  down, ended. A hive's charges (`chargeSkills`) don't reach it.
+- `zones` is new on 2026-11-23 (ADR 0036), optional, on one `simulation.skills` rule with a `window` and a `cooldown`, and no damage,
+  status, repair, charges, shield, stock, delay, area, targets, kill, armor wait or decoy, nor a `skill_out` buff of its own. A use marks the enemy being shot (nobody
+  between enemies) for its window, replacing the last mark; the mark ends with that enemy. `count` and `health` name the outputs with
+  the zones a use marks and each one's health; `factor` (optional) the output multiplying the zone multiplier; all three are read as
+  the use deploys. `share` and `multiplier` name stats read at each shot: the share (above 1 counts as 1; a negative share or multiplier
+  is refused) of the weapon's body hits on the
+  marked enemy landing on a zone, and the multiplier such a hit takes. A zone hit deals the body hit's damage plus the weapon's body
+  damage × (`multiplier` × `factor` − 1, at least 0), so it adds to critical damage inside the shot's
+  multiplier, as a headshot's bonus does (a headshot-only amplifier outside it has no part unless the stat includes it). It spends the zones' health,
+  one pool of `count` × `health`, by what it deals the enemy (after its armor and health factors, without what a redirect moves);
+  the hit that spends the last is still whole. It stays a body hit for events, talents and counts. Its draw comes only for a body hit
+  that may land on a zone, so other fights' rolls don't move. An Average fight takes the mean. `key` (optional) is a selector with
+  only the value "true", not `in_cover`, that no trigger or headshot cycle holds and no trigger's or skill's `requires` reads: in fights driving keys it reads "true" while the enemy being shot is
+  marked, whatever health its zones have left, and otherwise as the user set it. Fight output gains `zoneHits`, the zone hits a
+  fight, only where a skill marks zones. A hive's charges (`chargeSkills`) don't reach a use marking zones.
+- `areaFromPlayer` is new on 2026-11-22 (ADR 0035), optional, on a `controlStatus` rule with an `area` and no impact, rate or
+  status damage: the area is measured from the player. An enemy is reached when its own distance from the player (the fight's
+  distance, or its own under target distances) is within the area; the enemy being shot is reached only so, and events
+  (`status_applied`) stay its own. Without any distance the enemy being shot is taken to be beside the player and the others stand
+  along the line from it, as for other areas. Other enemies are reached only where areas reach them (several enemies at once and a
+  spacing, ADR 0013); one out of reach isn't brought in early. A use landing with no living enemy being shot (a kill's gap, a move)
+  still reaches the living enemies within the area by their own distance, with no events; without a distance, nobody.
+- `disrupted` is a fight status from 2026-11-22 (ADR 0035), for talents' rules as for control skills', and counts for "any". The
+  stat `enemy_disrupt_stops_fire` (optional, 0 or 1, anything else refused) is read per firing enemy's profile: at 1, a disrupted
+  enemy's fire is stopped as a shocked one's is, through the same credit, so an enemy both shocked and disrupted is blocked once
+  (one attacker's share where a profile aggregates several). A pack without it stops none. Fight output's status uptime gains a
+  `disrupted` entry. Disrupt put on the player (`enemyStatuses`) counts as a status there and does nothing else: its blocking of
+  the player's skills isn't played.
+- The stat `enemy_hit_removed_share` is read by fights from 2026-11-22 (ADR 0034), optional: a share, 0 to 1, of the enemy's landing
+  hits removed before they reach the player (the Trophy System's reflections), read in the fight's state, so a key gating a modifier
+  on it removes hits only while it holds. Removed hits count apart from blocked shots (`RemovedHits`). It's held to 0 to 1 (a
+  non-finite value is refused), and a fight that drives no keys reads it as 0; a pack without the stat removes none.
+- `refillOnSwap` is new on 2026-11-22 (ADR 0033), optional, on a `skill_out` buff alone: while the buff is on, each weapon swap
+  refills the weapon put away to a full magazine (never fewer rounds than it holds), with no reload event, after the swap's
+  events (the Precision Smart Cover). Its key may be held by no other rule. Fights without a weapon rotation never swap.
+- The trigger event `skill_out` is new on 2026-11-22 (ADR 0032). An active skill whose `simulation.skills` rule has a `window` (not a
+  charging, control or shield rule) may own one `buff` rule gaining on `skill_out` alone, with no `duration` or `durationStat`: the
+  fight fires it as the skill deploys and holds its key until the use's window ends, or later when a charge lengthens the use
+  (ADR 0031). Its key gates the pack's modifiers as any talent's does, so a skill out can lower enemy hits through
+  `enemy_damage_taken_factor`, or give bonus armor through the state (ADR 0020: a rise is granted, damage spends it, a fall takes
+  what's left). A rule held by such a buff needs only its `window` and `cooldown`; it can't be a repair rule (whose use can end
+  before its window) or have an `impactDelay` or `farImpactDelay`. The buff takes no gate, count, chance, spacing, consume, reset,
+  cancel or refresh. A new use replaces the last one's hold. No other rule gains on or names `skill_out`.
+  Without talent triggers the skill steps aside, with a note.
+- `holsteredEvery` and `holsteredLag` are new on 2026-11-21 (ADR 0031 stage 2c), optional numbers on a rule with `chargeSkills`:
+  the hive's pulses while holstered (whenever it isn't out, from its use until its cooldown starts), every `holsteredEvery` seconds
+  (0.05 up to 10) from the fight's start, in fights driving talent triggers. The rule needs `cooldownFromEnd` and no `stock`, so
+  it has a holstered time to tell; each pulse reads the hive as the fight's state then gives it. Each pulse sends a charge, spending none, to every running use that may take one; it
+  lands `holsteredLag` seconds later (0 up to 10; the distance read as seconds) as a deployed charge does, and that use takes the
+  next only `holsteredLag` after the landing. The wait is the target's, shared with the deployed hive's charges.
+- `chargeSkills` and `refresh` are new on 2026-11-21 (ADR 0031 stage 2b), optional, on a charging rule (`chargeFor`) for a hive
+  charging the build's other skills (the Artificer). With `chargeSkills` true, each check sends a charge to each other slot's use
+  whose window runs (not a control skill's status window, a shield or another hive), landing `repairLag` later; the same use takes
+  the next only `chargeFor` seconds after that landing. A charge landing on a use still running fires `skill_charge` for the hive's
+  own buff rule (its key restarting its duration, as any buff's does, and not held to `chargeFor`), and adds `refresh` (an output's
+  seconds) to the use: its window and its status run longer, up to the fight's end, and a cooldown from its end starts later. A chem
+  launcher's use takes the buff but no refresh. With no other skill in the fight whose uses it could reach, the hive steps aside,
+  with a note. `chargeSkills` needs `chargeFor`; `refresh` needs `chargeSkills`.
+- `chargeFor` is new on 2026-11-21 (ADR 0031), optional, on a `simulation.skills` rule for a buff hive. It names the output with the
+  seconds each charge's buff lasts. The rule's charges are timed as a repair rule's (`repairEvery`, `repairLag`, `repairCount`,
+  `window`, `cooldown`, `endDelay`), with no armor test and no `useArmorBelow` needed: each check, with the last charge's buff over,
+  launches a charge, landing `repairLag` later as the event `skill_charge`, and the next waits until `chargeFor` after that landing.
+  A rule takes `repair` or `chargeFor`, not both, and a charging one no `repairBelow` or `repairCloud`. Only the skill's own trigger
+  rules hear `skill_charge`: an active skill whose rule has `chargeFor` may own a trigger rule, a `buff` gaining on `skill_charge`
+  alone, and no other rule names it, as a gain or an end, reset or consume. Its key then gates the pack's modifiers (on the skill,
+  say) as any talent's does. The buff rule's `duration` must equal `chargeFor`, or the fight is refused (a `durationStat` is the
+  pack's to match). A charging rule takes no `useArmorBelow`, and no charge goes out to a downed player. Without talent triggers the
+  skill steps aside, with a note; without skills its rule takes no part, so its key reads the user's setting.
+- `repair`, `repairEvery`, `repairLag`, `repairBelow`, `repairCount` and `repairCloud` are new on 2026-11-21 (ADR 0030), optional,
+  on a `simulation.skills` rule for a skill that repairs the player and deals nothing (no impact, rate, status, area, targets, kill
+  or shield). Such a rule needs `useArmorBelow`, a `window` and a `cooldown`. `repair` names the output with the armor a repair
+  restores, capped, or with `repairCloud` the armor a second. From the use, every `repairEvery` seconds (above 0, up to 10: the
+  source's own ticks) through the window, the skill checks the player's armor: below `repairBelow` of the maximum (0, the default,
+  for below full), with its last repair landed and its cloud over, and the player not downed, it repairs, landing `repairLag`
+  seconds later (0 up to 10). With `repairCloud`, naming the output with a cloud's seconds, each repair is a cloud restoring half the
+  armor a second every 0.5 s from 0.5 s after it lands, whatever the armor. `repairCount` names the output with the repairs a use
+  holds (a whole number of at least 1, not with `stock`); each repair spends one, and with all spent the use ends, `endDelay` after
+  the last has landed (or its cloud ended), even past the window, so a cooldown from the end starts then. Without a count a use runs
+  its window. A cloud's output under 0.5 s is refused, as it would restore nothing. A repair rule takes no `impactDelay`,
+  `farImpactDelay` or `cooldownAfter`. Each repair is a `SkillRepair` event with the skill's slot.
+- `repairDelay` and `useArmorBelow` are new on 2026-11-21 (ADR 0030), optional, on a `simulation.skills` rule. `repairDelay`, on a
+  rule with an `impactRepair`, is the seconds (above 0, up to 10) from each impact to its repair: the repair lands then, whatever
+  became of the enemy, and one due at or after the fight's end lands nothing. `useArmorBelow`, not on a shield, is a share of the
+  player's maximum armor (above 0, up to 1; 1 for below full): a ready skill waits until the player's armor is below it, and is
+  used when a hit takes it there, the armor read as regeneration leaves it. A build without armor never is. The result notes the
+  wait, and a skill it kept from ever being used. Without enemy fire the armor never falls, so the skill steps aside, with a note
+  giving the share, and a use condition on its slot is dropped.
+- `impactRepair` and `endDelay` are new on 2026-11-20 (ADR 0028), optional, on a `simulation.skills` rule. `impactRepair`, on a
+  rule with an `impact` (and an `impactInterval` with `impacts`, since impacts landing together would repair once), names the output with the armor each landed impact repairs on the player in a fight with enemy fire,
+  capped at the maximum, whether or not it's needed, and never on a downed player; without enemy fire it has nothing to
+  restore, and the result says so. `endDelay`, on a rule with `cooldownFromEnd`, is the seconds (above 0, up to 60) from a use's
+  last impact to its end, so the cooldown starts that much later.
+- `targets` is new on 2026-11-20 (ADR 0027), optional, on a `simulation.skills` rule with an `impact` and no `impacts`, `area`,
+  `status` or `rate`. It names the output with the most distinct enemies a use strikes, a whole number of at least 1. As the
+  use lands, the impact goes on the enemy being shot, then on the nearest other living enemies along the line, up to that count,
+  each its full impact on its own pools, with no hit or status event; a kill there is a kill elsewhere. Other enemies are reached
+  only with several enemies at once and an enemy spacing (ADR 0013); otherwise it strikes the enemy being shot alone, and the
+  result's note on effects that find nobody names it. Without the field an impact lands on the enemy being shot.
 - `impactInterval` is new on 2026-11-06, on a `simulation.skills` rule with `impacts`. It names the output with the seconds between a use's impacts, which must be above zero. Each then lands on its own, with `impact` alone, on the enemy there at that moment, as its own `skill_hit`, and one due with no enemy there is lost. Those due after the fight ends don't land. A use with a cooldown from its end isn't over until its last impact. Without it a use's impacts land together, as their total, as it deploys.
 - `statusRate`, `statusWindow` and `statusArmorBonus` are new on 2026-11-06, on a `simulation.skills` rule with a burn or bleed. `statusRate` names the output with the status's own damage per second, and is the only way a rule says it has that damage: since R68's rows, a `rate`'s name no longer does. `statusWindow` names the output with how long the status lasts after its last application; the two go together. `statusArmorBonus` is `rateArmorBonus` for the status's damage. With neither `rate` nor `window` the status goes on once, as the use deploys, and the rule needs only a `cooldown`. With a `window` it applies through that window, so it runs from the first application to the end of the window plus `statusWindow`, and `rateRead` stays on `rate` only. With spaced impacts each one puts it on, so it applies until the last impact if that's later, including to an enemy that arrived between them. There's one per enemy: it keeps the amount it first went on with, two uses don't add, and while a talent's runs it deals nothing and waits for that to end, which counts as a new application. After a use stops applying, it runs on only on an enemy it landed on. Its ticks are no `skill_hit`, as a talent's aren't.
 - `stock` and `stockInterval` are new on 2026-11-06, on a `simulation.skills` rule with a `cooldown` that doesn't run from a use's end. `stock` names the output counting the charges a full skill holds, a whole number, and `stockInterval` is the least seconds between uses. The skill starts full, and one charge comes back each cooldown while any are missing. A skill keeps the stock it first deployed with for the whole fight.
@@ -676,6 +838,12 @@ only to an id that exists in the same collection.
   it holds stacks, the next landed hit from a tagged weapon is a headshot, and the
   consuming event spends them (R38: Quick Draw, `gainWhileHolstered: 0.3`, `max: 100`,
   `consumeOn: shot`, `weaponTags: ["weapon_type_pistol"]`, `forceHeadshot: true`).
+  `forceCritical` and `forceWholeShot` are new on 2026-11-18 (ADR 0023), optional booleans beside `forceHeadshot`, which they
+  need. With `forceCritical` the forced hit is also critical (critical headshot damage, and `crit` events). With
+  `forceWholeShot` every landed pellet of the forced shot is forced, not only the first. When several armed rules force one
+  shot, it takes the critical and the whole shot if any of them has it. The random draws are unchanged, so a fight without them
+  keeps its sequence (Determined: `kind: stacks`, `on: headshot_kill`, `max: 1`, `consumeOn: hit`, `forceHeadshot: true`,
+  `forceWholeShot: true`; Perfect adds `forceCritical: true`).
 - `status` rules with an event take `every` (seconds, default 0) from 2026-11-01:
   after the rule arms or applies, its event is ignored for that long. A status rule
   on `second` applies its status to the current target at that second, since no
@@ -687,6 +855,11 @@ only to an id that exists in the same collection.
   weapon (so `weaponTags` read it). `reload` stays the reload's start. ShadeTech's
   event review maps On Empty, Frenzy and Overflowing to the source's reload-finished
   condition.
+- The event `reload_empty` is new on 2026-11-20 (R138, ADR 0025): a reload starting
+  from an empty magazine, for the reloading weapon. It fires right after that reload's
+  `reload`, so what `reload` spends is spent before `reload_empty` gains. A reload
+  started with rounds left (behind cover, for one) is `reload` only. Overflowing counts
+  only reloads from empty, and the next reload of any kind ends it.
 - The event `pickup` is new in v2 (2026-10-30): a kill's dropped item (Kill
   Confirmed's trophy) being collected. When and whether it's collected is a
   simulation assumption (`pickupDelay`, `pickupChance`), not pack data.
@@ -707,6 +880,47 @@ only to an id that exists in the same collection.
   talent has been put away that long without a break, and drawing it spends it. A swap's `swap`, `swapped` and
   `swap_after_kill` rules read it as it stood before the draw (with `whileKey`), and then the draw spends it. The weapon that
   starts a fight away starts its time at 0. Without a weapon rotation nothing is ever away, so it never primes.
+- **Stacks rules sharing a key** (from 2026-11-15, ADR 0018: Chemical Agent's enemy and player parts): in a fight, several `stacks`
+  rules of one talent may write one key when they shape the stacks alike: the same `max`, `duration`, `durationStat`, `refresh` and
+  `decay`. None may reset, consume, purge or force a headshot, or have a pool, bank, clear grant, `refreshOn`, `gainWhileHolstered`,
+  `fromFirstGain` or `maxMagazine`, so two gaining in one event come out as one gain of their sum, in either order. Each gains its
+  own way (its event, gain and gates) into one count. The validator holds one talent's rules on a key to that; a talent and its
+  Perfect version may differ, since a build carries one. Rules that don't fit, or two talents' rules on one key, still refuse the
+  fight.
+- `lockoutAlways` and `gainAtLockoutEnd` (true) are new on 2026-11-15 (ADR 0019: Unwavering), optional, on a timed `buff` with
+  `cancelOn` and `cancelFor`, and no consume, reset, count, `every` or `cooldownFromEnd`. `gainAtLockoutEnd` also takes no gate
+  (`whileKey`, `whileStatus`, `whilePlayerStatus`, `whileArmorBelow`, `whileStatAtLeast`), `chance`, grant, refill or `activeAfter`,
+  since the gain at the lockout's end passes none of them.
+  - `lockoutAlways`: the `cancelOn` event starts the lockout whether the buff is on or not, ending it if it is. During a running
+    lockout it starts it again from then.
+  - `gainAtLockoutEnd`: when the lockout ends with the weapon carrying the rule's talent in hand, the buff gains for its duration. A
+    draw during the lockout gains nothing then; putting the weapon away before the end loses the gain, and drawing it back during the
+    lockout brings it back.
+- `weaponTypes`, `differentTypes`, `everyPerType` and `assumeWithoutDistance` are new on 2026-11-15 (ADR 0019: Versatile), optional.
+  - `weaponTypes` is a list of distinct item tags, each carried by some weapon, that name weapon types. A weapon's type is the
+    first of them it carries. It goes with `differentTypes` or `everyPerType`.
+  - `differentTypes` (true), on a `buff` or `stacks` rule with an event and `weaponTypes`: the rule gains only when the event's
+    weapon (the one drawn, for `swapped`) and the other rotated weapon both have a type, and the types differ. An event with no
+    weapon behind it, or a fight without a rotation, never meets it.
+  - `everyPerType` (true), on such a rule with an `every` and no `everyGroup` or `cooldownFromEnd`: the cooldown runs apart for
+    each type of the event's weapon, and a weapon without a type gains nothing.
+  - `assumeWithoutDistance` (true), on a `distance` rule with phases (bands): a fight without a distance doesn't refuse the rule.
+    It steps aside, its key reads the user's setting or the selector's `default`, and the result names the talent; it's still checked as with a distance. With
+    a distance it reads as before.
+  - Without a rotation, a `differentTypes` rule has no second weapon to compare, so it steps aside like a swap rule.
+- `shareCopies` (true) is new on 2026-11-15 (ADR 0019: Unwavering, Back and Forth), optional, on a `buff` or `stacks` rule with an
+  event and no `gainWhileHolstered`. With the rule's talent on both rotated weapons, the rule isn't copied per weapon: it drives one key from whichever weapon
+  is in hand. A swap's `swap` reaches the weapon leaving and its `swapped` the weapon drawn, so a cancel on the first (with
+  `cancelFor`) holds for the second, and a gain on the draw replaces the other weapon's. Its key, pool, bank, `whileKey` and
+  `requires` can't be or read a copied rule's, and it takes no `maxMagazine` (each weapon's own). A talent with `whileHolstered` modifiers on both
+  weapons needs every one of its rules shared: its holstered copy then reads the one key (from 2026-11-15; with a copied rule it's
+  refused, since the holstered copy would read the copy in hand's key). Its in-hand and holstered effects must gate on different
+  keys, or one gain would count twice. Any talent's holstered effect reading a key copied per weapon is refused. The result notes
+  the talent.
+  With the talent on one weapon it changes nothing.
+- `refill` takes `"both"` as well as `true` from 2026-11-14 (ADR 0019: Faster Than Reloading). With `true` a firing refills the
+  magazine in hand; with `"both"` the holstered weapon of a rotation is refilled too, so it isn't reloaded when next drawn. A reload
+  already under way still runs to its end, as with `true`. Without a rotation the two are the same. Any other value is refused.
 - `fromFirstGain` (true) is new on 2026-11-14 (Cover Shooter's source timer, R112), optional, on a `stacks` rule with a
   `duration` and no `refresh`, `decay` or pool. One timer, started by the gain that takes the count from 0, ends every stack
   together; later gains take the live stacks' end rather than their own. `refreshOn` also goes on such stacks rules now (with
@@ -718,6 +932,9 @@ only to an id that exists in the same collection.
   statuses on the player, or without enemy fire, never opens it. `refreshOn` can't go with it. A hit's statuses go on before
   its own `damaged` and `armor_break` events, so rules on those see them. The validator warns when no `enemyStatuses` row
   puts the status on.
+- `anyStatusExcept` (a list of statuses) is new on 2026-11-17 (R122: Chemical Agent's check leaves out ensnared), optional,
+  on a rule whose `whileStatus` or `whilePlayerStatus` is `any`: distinct known statuses that don't count, leaving at least
+  one, so `any` means any other status. An enemy or player with only those statuses doesn't open the rule.
 - `refreshOn` (an event) is new on 2026-11-14 (ADR 0019: Unwavering's kills), optional, on a `buff` rule with an event and a
   duration (or `durationStat`), and not with `cooldownFromEnd`, a gate (`whileStatus`, `whileKey`, `whileArmorBelow`,
   `whileStatAtLeast`), a `chance` or a `count`, since a refresh passes none of them. While the rule's own buff is on, the event
@@ -762,7 +979,45 @@ only to an id that exists in the same collection.
   once per that long), `maxUseSeconds`, and the optional lists `replacedBySpecializations` and
   `replacedByTalents`. Times are up to 60 s, and the lists name real rows. A fight with
   `armorKits` is refused without this field, and for a build with a listed specialization or
-  talent (selected in a slot, or a set talent at its top bonus).
+  talent (selected in a slot, or a set talent at its top bonus), unless the talent has an ability.
+- `poisoned` is a fight status from 2026-11-19 (ADR 0024), a damage status beside `burning` and `bleeding`. It may have a
+  `statusDamage` row (its tick, period and resistances), a skill rule may carry it with `statusRate` and `statusWindow`, and its
+  ticks are `PoisonTick` events in the trace, counted in status DPS. Wherever a rule names a status, or `any`, it counts as one:
+  `whileStatus`, `status_applied`, `anyStatusExcept`, spreads and pass-ons. A skill's own status copies (ADR 0015) stay burns and
+  bleeds.
+- `simulation.nextHitBonuses` is new on 2026-11-18 (ADR 0023: Headhunter), optional: a list of `{ "talent", "share", "cap",
+  "window" }`, each a known talent, once, `share` above 0 up to 10, `cap` a known stat and `window` above 0 up to 600 seconds
+  (`bad-sim-next-hit-bonus`, `unknown-stat`). In fights with talent triggers, a headshot kill with any weapon arms it: `share` of
+  the killing pellet's damage as dealt (the player's own bonuses, before the dead enemy's armor and the health it had left), up to
+  the `cap` stat of the weapon in hand, read for each weapon as the fight starts. The next pellet to land on a living enemy, with
+  any weapon and body shots included, adds it and spends it, and it meets that enemy's armor like the rest of the hit. A new
+  headshot kill replaces it, sized without the bonus its pellet carried; it lapses after `window` seconds. A swap brings a waiting
+  amount down to the drawn weapon's cap. The bonus isn't critical damage, so critical-damage repairs don't see it. One build can
+  have one. The result notes it in fights with targets.
+- `simulation.skillsAside` is new on 2026-11-17 (ADR 0022), optional: a list of `{ "skill", "why" }`, each a known skill, once,
+  with no `simulation.skills` rule, and `why` one line of up to 200 characters. In a fight with skills a listed skill steps aside:
+  it's never used, with no cooldown, a skill use condition on its slot is dropped, and the result's notes give each skill's name
+  and `why`. A selected skill with no rule that isn't listed still refuses the fight (`skill-rule-required`).
+- `simulation.headshotCycles` is new on 2026-11-17 (ADR 0021: Hotshot's Headache), optional: a list of `{ "talent", "weaponTag",
+  "key", "repair", "bonusArmorCap", "allowance", "killFrom" }`, one per talent. `weaponTag` is a tag some weapon carries; `key` a
+  selector with only `true` that no trigger drives; `repair`, `bonusArmorCap` and `allowance` stats, read as the fight starts;
+  `killFrom` from 1 to 100. In driven fights with the talent, each shot with a weapon carrying the tag counts: a headshot adds 1,
+  and from `killFrom` on only a headshot that kills does; any other shot with it is a miss, which sends the count back to 0 unless
+  the `allowance` (misses per cycle) forgives it. A weapon swap starts the cycle again. On the new count: at 1, `key` is on until
+  the next headshot with any weapon has landed; at 2, `repair` of max armor is repaired, or at full armor added as lasting bonus
+  armor (no expiry; spent after timed grants and before the state's) while bonus armor is below `bonusArmorCap` of max armor; at 3,
+  the magazine is refilled; past 3, all three. The `repair` stat and stats whose formulas read it count as modelled under enemy
+  fire. Without enemy fire the armor step does nothing.
+- `armorKit.abilities` and `armorKit.instant` are new on 2026-11-17 (ADR 0021: Hackstep Protocol), optional.
+  - `abilities` is a list of `{ "talent", "cooldown" }`: a talent in `replacedByTalents`, once, whose ability is the
+    build's kit, and a stat giving its cooldown in seconds, read as the fight starts (above 0, up to 600). In a fight with
+    `armorKits` and the talent active, the ability is used, as a kit is, when armor is below the kit threshold at the
+    weapon's next decision: at once, with no use time and no wait for cover, whenever its cooldown is ready, which it is at
+    the start, with no count. It fires the new event `kit_ability`, not `armor_kit`; rules on it make the ability's repair and
+    bonus armor. Its repair stats count as modelled.
+  - `instant` is `{ "repair", "cooldown" }`: the instant kit, a share of max armor above 0 up to 1 at once, and its own
+    cooldown from 0 to 600 s. It's used only in fights with an ability: while the ability cools and armor is below the
+    threshold, a kit from those carried, which fires `armor_kit`. Without `instant` the carried kits go unused there.
 - The event `hit_pellet` is new on 2026-11-03. It fires once for each pellet that lands on a
   living target, right after the shot's single `hit`, with the same reach as `crit_pellet`;
   a status may apply on it. A talent counting pellets, such as Afterburn on a shotgun, reads
@@ -802,7 +1057,8 @@ only to an id that exists in the same collection.
   - `armorBonus` (new on 2026-11-04, R20, optional) is a stat added to the ticks' armor factor, read at
     each tick with the weapon in hand, so armor takes the bonus and health doesn't. Unset, ticks
     take no bonus. `simulation.skills` has `rateRead`, on a rule with a `rate`: `live` re-reads the rate at each batch, as a running
-    skill that follows the player's state does, and unset holds what the use deployed with (ADR 0012). It also has the same as `rateArmorBonus`, on a rule with a `rate`; an
+    skill that follows the player's state does, and unset holds what the use deployed with (ADR 0012). From 2026-11-21 (ADR 0031)
+    it may also go on a repair rule (`repair`): `live` reads each repair's amount, or a cloud's, at the check that makes it. It also has the same as `rateArmorBonus`, on a rule with a `rate`; an
     impact takes none. A negative or non-finite value refuses the fight.
   - `tickOnApply` (default false) adds a tick at the moment of each new
     application; otherwise the first tick lands one period after it.

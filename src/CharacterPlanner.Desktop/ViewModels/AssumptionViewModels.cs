@@ -139,8 +139,11 @@ public sealed class SelectorAssumptionViewModel : AssumptionViewModel
 
     internal SelectorAssumptionViewModel(EditorViewModel editor, SelectorDefinition definition) : base(editor, definition.ID, definition.Name, definition.Description)
     {
-        SetChoices([Default, .. definition.Values.Select(value => new Choice(value, value == "true" ? "On" : Humanize(value)))]);
-        selected = Default;
+        // A pack default shows on the Default choice, named as its value is, so an unset selector says what it reads.
+        static string Label(string value) => value == "true" ? "On" : Humanize(value);
+        var unset = definition.Default.Length == 0 ? Default : new Choice("", $"Default ({Label(definition.Default)})");
+        SetChoices([unset, .. definition.Values.Select(value => new Choice(value, Label(value)))]);
+        selected = unset;
     }
 
     public static readonly Choice Default = new("", "Default");
@@ -160,7 +163,7 @@ public sealed class SelectorAssumptionViewModel : AssumptionViewModel
     protected override bool Committable => false;
 
     protected override void Show(string? value) =>
-        Selected = value is null ? Default : Listed(Choices.FirstOrDefault(choice => choice.Id == value) ?? Choice.Unknown(value));
+        Selected = value is null ? Choices[0] : Listed(Choices.FirstOrDefault(choice => choice.Id == value) ?? Choice.Unknown(value));
 }
 
 /// <summary>A numeric input: chosen from its labelled options when it has them, typed within its range otherwise.</summary>

@@ -63,6 +63,31 @@ public sealed class SkillDamageScheduleTests
     }
 
     [Fact]
+    public void ADeploymentPutOffIsReadyNotCoolingDown()
+    {
+        // ADR 0037: a use due at 10 s put off to 13: no cooldown runs meanwhile, and a cut at 11 doesn't bring it forward.
+        var schedule = Schedule(cooldown: 10);
+        var stream = schedule.Fights(25, [], TestContext.Current.CancellationToken).NewFight();
+        stream.Read = (slot, _) => schedule.For(slot);
+        stream.Deploy();
+        while (stream.Next is { Kind: not SkillDamageKind.Deployment }) { stream.Take(); }
+        Assert.True(stream.CooldownRunning(9));
+        Assert.Equal(10, stream.Next!.Time);
+        stream.Postpone(13);
+        Assert.False(stream.CooldownRunning(11));
+        stream.Shorten(11, 1, 0);
+        Assert.Equal(13, stream.Next!.Time);
+        // Deployed, its cooldown runs again.
+        stream.Deploy();
+        Assert.True(stream.CooldownRunning(14));
+        Assert.Throws<SimulationException>(() =>
+        {
+            while (stream.Next is { Kind: not SkillDamageKind.Deployment }) { stream.Take(); }
+            stream.Postpone(23);
+        });
+    }
+
+    [Fact]
     public void ACooldownCutTakesSecondsOrAShareOfItAndNeverEndsBeforeNow()
     {
         // A 10 s cooldown: uses at 0, 10 and 20.
@@ -595,5 +620,49 @@ public sealed class SkillDamageScheduleTests
             else { taken.Add(stream.Take()); }
         }
         AssertSameEvents(Drain(schedule.Fights(13, attempts, token).NewFight()), taken);
+    }
+
+    [Fact]
+    public void ALengthenedUseAppliesItsStatusToItsNewEndsAndMovesItsCooldown()
+    {
+        // ADR 0031: a burning turret's 10 s window and 3 s status, lengthened 3 s at 5 s; its cooldown of 20 s runs from its end, cut
+        // at an enemy attempt at 11.05 s.
+        var pack = new GamePack
+        {
+            ActiveSkillSlots = [new() { ID = "slot" }],
+            Simulation = new()
+            {
+                Skills = [new() { Skill = "skill", Window = "window", Cooldown = "cooldown", Rate = "rate", Status = "burning", StatusRate = "status", StatusWindow = "linger", CooldownFromEnd = true }]
+            }
+        };
+        SkillPreviewOutput Output(string id, double value) => new(id, id, "", "decimal", "", "", ImmutableDictionary<string, double>.Empty, value, "");
+        var schedule = SkillDamageSchedule.Create(pack, ImmutableDictionary<string, SkillPreview>.Empty.Add("slot",
+            new("skill", [Output("window", 10), Output("cooldown", 20), Output("rate", 10), Output("status", 1), Output("linger", 3)])));
+        var stream = schedule.Fights(60, [11.05], TestContext.Current.CancellationToken).NewFight();
+        var lengthened = false;
+        var taken = new List<(SkillDamageEvent Entry, double WindowEnd, double Until)>();
+        while (stream.Next is { } next)
+        {
+            if (!lengthened && next.Time >= 5)
+            {
+                Assert.Equal(10, stream.RunningUntil(0, 5), 9);
+                stream.Lengthen(0, 5, 3);
+                Assert.Equal(13, stream.RunningUntil(0, 5), 9);
+                lengthened = true;
+            }
+            var entry = stream.Take();
+            taken.Add((entry, stream.TakenWindowEnd, stream.TakenUntil));
+        }
+        // The window's batches run 0 to 13 and the status's 0 to 16, each once, then the next use at 33 s (from 13 s, not 10 s).
+        double Covered(SkillDamageKind kind, double before) => taken.Where(item => item.Entry.Kind == kind && item.Entry.Time <= before).Sum(item => item.Entry.Time - item.Entry.Start);
+        Assert.Equal(13, Covered(SkillDamageKind.ContinuousWindow, 30), 9);
+        Assert.Equal(16, Covered(SkillDamageKind.StatusDot, 30), 9);
+        Assert.Equal(33, taken.Where(item => item.Entry.Time > 20).Min(item => item.Entry.Start), 9);
+        // Everything after the charge, the use's own events included, applies to the new ends.
+        Assert.All(taken.Where(item => item.Entry.Time > 5 && item.Entry.Time <= 16), item =>
+        {
+            Assert.Equal(13, item.WindowEnd, 9);
+            Assert.Equal(16, item.Until, 9);
+        });
     }
 }

@@ -11,7 +11,7 @@ public static class PrototypeEffectSelection
 {
     public static SelectedPrototypeEffects Select(GamePack pack, BuildSnapshot build, ResolvedLoadout loadout, ResolvedAssumptions assumptions)
     {
-        var context = assumptions.Explicit;
+        var context = assumptions.Effective;
         var batches = ImmutableArray.CreateBuilder<ModifierBatch>();
         var diagnostics = ImmutableArray.CreateBuilder<BuildDiagnostic>();
         var items = PackIndex.Of(pack).Items;

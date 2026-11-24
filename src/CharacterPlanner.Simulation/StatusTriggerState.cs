@@ -39,7 +39,7 @@ public sealed class StatusTriggerState
 {
     internal const string Kind = "status";
     internal static readonly ImmutableHashSet<string> Names = ImmutableHashSet.Create(StringComparer.Ordinal,
-        "burning", "bleeding", "shocked", "ensnared", "blinded", "disoriented");
+        [.. GamePack.FightStatuses]);
     // No shot carries a status applied on a whole second (Dragon's Glare), so it lands on the current target at the event.
     internal static readonly ImmutableHashSet<string> DirectEvents = ImmutableHashSet.Create(StringComparer.Ordinal, "second");
     // Hit events a rule with applyOnHit applies its status on: the triggering hit carries it (Trauma).

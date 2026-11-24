@@ -55,20 +55,23 @@ tab, and its combat simulator plays them through timed fights. Known limits:
 
 - **Each result lists its own limits.** Read them: they say what that fight assumed.
 - **Weapon falloff:** fights at a set distance use each weapon's source floor, falling in
-  a straight line from optimal to long range. Six weapons have no source floor, and the
+  a straight line from optimal to long range. One weapon, the Cooler, has no source floor, and the
   line's shape needs in-game readings. Fights with no distance have no falloff.
 - **Stat screen estimates:** Build Time to Kill and similar figures outside a fight ignore
   headshots, falloff, cover and enemy resistances.
 - **Enemies:** cadence and hit rates are estimates. Enemies stay at their distance, and
   which enemy you shoot follows a fixed pattern. Talents that choose a target, or
   that write to enemies you aren't shooting, keep their assumptions. Skills, swaps and
-  kits have no priority list: a skill is used as soon as it's ready.
-- **Skills:** each use reads your build as it deploys and keeps that. Only reviewed skill
+  kits have no priority list: a skill is used as soon as it's ready, under its "Use when"
+  row's condition, a repair skill once your armor is below full.
+- **Skills:** each use reads your build as it deploys and keeps that, but for the Assault
+  Turret, Oxidizer and Fixer, read as they go. Only reviewed skill
   mods are offered, but most mods and many formulas come from the game files and haven't
   been read in game, and some
-  look odd, such as hives counting Skill Health twice. Overcharge isn't in fights, and a
-  shield stays fixed during one. Some Expertise aggregation, Hive charge recovery,
-  Reviver armor stacking and support-buff aggregation are unresolved.
+  look odd, such as hives counting Skill Health twice. In fights Overcharge comes only from the talents
+  that give it (Energize, Future Perfect), and a
+  shield stays fixed during one. Some Expertise aggregation, Hive charge recovery
+  and support-buff aggregation are unresolved.
 - **Talents:** some set and talent interactions aren't modeled; an unmodeled effect keeps
   its description.
 

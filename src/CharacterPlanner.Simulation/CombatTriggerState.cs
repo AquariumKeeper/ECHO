@@ -6,18 +6,23 @@ using CharacterPlanner.Core.Packs;
 
 namespace CharacterPlanner.Simulation;
 
-/// <summary>Pure readings of distance, prior-shot pellet hits and the current target's remaining pools.</summary>
+/// <summary>Pure readings of distance, prior-shot pellet hits, the current target's remaining pools and the player's bonus armor.</summary>
 public sealed class CombatTriggerState
 {
-    internal static readonly ImmutableHashSet<string> Kinds = ImmutableHashSet.Create(StringComparer.Ordinal, "distance", "pellets", "target");
+    internal static readonly ImmutableHashSet<string> Kinds = ImmutableHashSet.Create(StringComparer.Ordinal, "distance", "pellets", "target", "bonus_armor");
     private readonly CompiledPackExpressions pack;
     private readonly ImmutableArray<SimTriggerDefinition> rules;
     // Numeric readings resolve their input once; Context runs on every refresh.
     private readonly Dictionary<string, NumericContextInputDefinition> inputs = new(StringComparer.Ordinal);
-    public bool NeedsDistance => rules.Any(rule => rule.Kind == "distance");
+    // Whether the fight has a distance; without one, a distance rule that may assume (assumeWithoutDistance, ADR 0019) steps aside.
+    private readonly bool distanceKnown;
+    public bool NeedsDistance => rules.Any(rule => rule.Kind == "distance" && (distanceKnown || !rule.AssumeWithoutDistance));
 
-    public CombatTriggerState(CompiledPackExpressions pack, IEnumerable<SimTriggerDefinition> rules)
+    /// <param name="distanceKnown">Whether the fight has a distance. Without one, a distance rule with assumeWithoutDistance is still
+    /// checked but reads nothing, so its key keeps the user's setting.</param>
+    public CombatTriggerState(CompiledPackExpressions pack, IEnumerable<SimTriggerDefinition> rules, bool distanceKnown = true)
     {
+        this.distanceKnown = distanceKnown;
         ArgumentNullException.ThrowIfNull(pack);
         ArgumentNullException.ThrowIfNull(rules);
         this.pack = pack;
@@ -25,12 +30,12 @@ public sealed class CombatTriggerState
         var keys = new HashSet<string>(StringComparer.Ordinal);
         foreach (var rule in this.rules)
         {
-            var rest = rule with { Talent = "", Key = "", Kind = "", Also = [], Phases = [], Within = 0, AtLeast = 0 };
+            var rest = rule with { Talent = "", Key = "", Kind = "", Also = [], Phases = [], Within = 0, AtLeast = 0, AssumeWithoutDistance = false };
             if (!Kinds.Contains(rule.Kind) || rule.Key.Length == 0 || rule.Talent.Length == 0 ||
                 !rule.Also.IsEmpty || rest != new SimTriggerDefinition() || !double.IsFinite(rule.Within) || rule.Within < 0 || rule.AtLeast < 0 ||
                 rule.Kind != "distance" && (rule.Within != 0 || !rule.Phases.IsEmpty) ||
                 rule.Kind != "pellets" && rule.AtLeast != 0 || rule.Within > 0 && !rule.Phases.IsEmpty)
-            { throw new SimulationException("trigger-unsupported", "Only pure distance, prior-pellet and target readings are supported"); }
+            { throw new SimulationException("trigger-unsupported", "Only pure distance, prior-pellet, target and bonus armor readings are supported"); }
             TriggerInputs.RequireIncreasingPhases(rule.Phases, "Distance phases require increasing positive finite boundaries and values");
             if (!keys.Add(rule.Key)) { throw new SimulationException("trigger-key-conflict", "Combat reading keys require one owner"); }
             var selector = pack.Pack.Selectors.FirstOrDefault(input => input.ID == rule.Key);
@@ -55,15 +60,21 @@ public sealed class CombatTriggerState
         }
     }
 
-    public ImmutableDictionary<string, string> Context(ImmutableDictionary<string, string> assumptions, double distance, int priorPelletHits, double targetRemainingPercent)
+    /// <param name="bonusArmorPercent">The player's bonus armor as a percentage of max armor (ADR 0021: Hackstep's damage bonus), or null
+    /// in a fight without the player's pools, where a bonus armor reading steps aside and its key keeps the user's setting.</param>
+    public ImmutableDictionary<string, string> Context(ImmutableDictionary<string, string> assumptions, double distance, int priorPelletHits, double targetRemainingPercent,
+        double? bonusArmorPercent = null)
     {
         ArgumentNullException.ThrowIfNull(assumptions);
         if (!double.IsFinite(distance) || distance < 0 || priorPelletHits is < 0 or > 1000 ||
-            !double.IsFinite(targetRemainingPercent) || targetRemainingPercent is < 0 or > 100)
-        { throw new ArgumentOutOfRangeException(nameof(distance), "Combat readings must be finite and within their domain"); }
+            !double.IsFinite(targetRemainingPercent) || targetRemainingPercent is < 0 or > 100 ||
+            bonusArmorPercent is { } bonusReading && (!double.IsFinite(bonusReading) || bonusReading < 0))
+        { throw new ArgumentOutOfRangeException(bonusArmorPercent is < 0 or double.NaN or double.PositiveInfinity ? nameof(bonusArmorPercent) : nameof(distance), "Combat readings must be finite and within their domain"); }
         var result = assumptions.ToBuilder();
         foreach (var rule in rules)
         {
+            if (!distanceKnown && rule.AssumeWithoutDistance) { continue; }
+            if (rule.Kind == "bonus_armor" && bonusArmorPercent is null) { continue; }
             if (rule.Within > 0 || rule.AtLeast > 0)
             {
                 if (rule.Kind == "distance" ? distance <= rule.Within : priorPelletHits >= rule.AtLeast) { result[rule.Key] = "true"; }
@@ -81,9 +92,9 @@ public sealed class CombatTriggerState
             {
                 "distance" => Math.Round(distance, MidpointRounding.AwayFromZero),
                 "pellets" => priorPelletHits,
-                // Tolerate representation error so an exact tier is never floored one step low,
-                // then snap to the grid so 300 steps of 0.1 reads 30, not 30.000000000000004.
-                _ => Math.Round(Math.Floor(targetRemainingPercent / step + TriggerInputs.Tolerance) * step, 9)
+                // Bonus armor can pass 100% of max armor; a reading past its input's max reads the highest value on the input's grid.
+                "bonus_armor" => Math.Min(FloorToGrid(input.Max, step), FloorToGrid(bonusArmorPercent!.Value, step)),
+                _ => FloorToGrid(targetRemainingPercent, step)
             };
             if (value > input.Max || !TriggerInputs.OnGrid(value, 0, input.Step))
             { throw new SimulationException("trigger-reading-out-of-range", "A combat reading cannot be represented by its declared input"); }
@@ -91,6 +102,10 @@ public sealed class CombatTriggerState
         }
         return result.ToImmutable();
     }
+
+    // Tolerate representation error so an exact tier is never floored one step low, then snap to the grid so 300 steps of 0.1 reads 30,
+    // not 30.000000000000004.
+    private static double FloorToGrid(double value, double step) => Math.Round(Math.Floor(value / step + TriggerInputs.Tolerance) * step, 9);
 
     public ResolvedBuild Resolve(BuildSnapshot build, ImmutableDictionary<string, string> assumptions, double distance, int priorPelletHits, double targetRemainingPercent)
     {

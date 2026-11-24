@@ -762,12 +762,25 @@ public sealed class TimedBuffStateTests
         var pack = Assert.IsType<CompiledPackExpressions>(PackValidator.Load(files).Compiled);
         var rule = pack.Pack.Simulation.Triggers.Single(rule => rule.Talent == "weapon_talent_overflowing");
         var state = new TimedBuffState([rule]);
+        // Since R139 it counts reloads from empty (reload_empty, after the reload's own reload event) and any reload spends it.
         for (var reload = 1; reload <= 6; reload++)
         {
             state.Fire("reload", reload);
+            state.Fire("reload_empty", reload);
             Assert.Equal(reload % 3 == 0, state.Context(Empty, reload).ContainsKey(rule.Key));
             Assert.Null(state.NextExpiry);
         }
+        // A partial reload (reload alone) spends it and doesn't count.
+        state.Fire("reload", 7);
+        Assert.False(state.Context(Empty, 7).ContainsKey(rule.Key));
+        state.Fire("reload", 8);
+        state.Fire("reload_empty", 8);
+        state.Fire("reload", 9);
+        state.Fire("reload_empty", 9);
+        Assert.False(state.Context(Empty, 9).ContainsKey(rule.Key));
+        state.Fire("reload", 10);
+        state.Fire("reload_empty", 10);
+        Assert.True(state.Context(Empty, 10).ContainsKey(rule.Key));
     }
 
     [Fact]
@@ -995,7 +1008,57 @@ public sealed class TimedBuffStateTests
         state.Fire("hit", 0);
         Assert.Equal("2", state.Context(Empty, 0)["stacks"]);
         Assert.Throws<SimulationException>(() => new TimedBuffState([Stack() with { Decay = 1 }]));
+        // Two stacks rules may share a key only as one talent's, shaped alike, with nothing that clears or purges.
+        Assert.Throws<SimulationException>(() => new TimedBuffState([Stack(), Stack() with { Max = Stack().Max + 1 }]));
         Assert.Throws<SimulationException>(() => new TimedBuffState([Stack(), Stack() with { Talent = "other" }]));
+        Assert.Throws<SimulationException>(() => new TimedBuffState([Stack() with { Purge = true }, Stack() with { Purge = true }]));
+        Assert.Throws<SimulationException>(() => new TimedBuffState([Stack() with { ResetOn = "reload" }, Stack() with { ResetOn = "reload" }]));
+    }
+
+    [Fact]
+    public void TwoStacksRulesOnOneKeyAddTheirGainsInOneCount()
+    {
+        // Chemical Agent's two parts: +1 a second while the target has a status, +2 while one is on the player. Both on: 3 a second, up to
+        // the shared cap.
+        var enemy = new SimTriggerDefinition { Talent = "t", Key = "catalysis", On = "second", Kind = "stacks", Duration = 5, Max = 12, Refresh = true, Decay = 1, WhileStatus = "any" };
+        var player = enemy with { Gain = 2, WhileStatus = "", WhilePlayerStatus = "any" };
+        var onPlayer = false;
+        var state = new TimedBuffState([enemy, player]) { PlayerStatusOn = (_, _) => onPlayer };
+        var burning = new HashSet<string> { "burning" };
+        state.Fire("second", 1, burning);
+        Assert.Equal("1", state.Context(Empty, 1)["catalysis"]);
+        onPlayer = true;
+        state.Fire("second", 2, burning);
+        Assert.Equal("4", state.Context(Empty, 2)["catalysis"]);
+        state.Fire("second", 3, new HashSet<string>());
+        Assert.Equal("6", state.Context(Empty, 3)["catalysis"]);
+        for (var second = 4; second <= 6; second++) { state.Fire("second", second, burning); }
+        Assert.Equal("12", state.Context(Empty, 6)["catalysis"]);
+    }
+
+    [Fact]
+    public void AnyStatusLeavesOutItsExceptions()
+    {
+        // Chemical Agent's check leaves out ensnared (R122): an ensnared target or player alone gains nothing, and any other status does.
+        var enemy = new SimTriggerDefinition { Talent = "t", Key = "catalysis", On = "second", Kind = "stacks", Duration = 5, Max = 12, Refresh = true, WhileStatus = "any", AnyStatusExcept = ["ensnared"] };
+        var player = enemy with { Gain = 2, WhileStatus = "", WhilePlayerStatus = "any" };
+        var onPlayer = new HashSet<string>();
+        var state = new TimedBuffState([enemy, player]) { PlayerStatusOn = (status, _) => status == "any" ? onPlayer.Count > 0 : onPlayer.Contains(status) };
+        state.Fire("second", 1, new HashSet<string> { "ensnared" });
+        Assert.Equal("0", state.Context(Empty, 1).GetValueOrDefault("catalysis", "0"));
+        state.Fire("second", 2, new HashSet<string> { "ensnared", "burning" });
+        Assert.Equal("1", state.Context(Empty, 2)["catalysis"]);
+        onPlayer.Add("ensnared");
+        state.Fire("second", 3, new HashSet<string>());
+        Assert.Equal("1", state.Context(Empty, 3)["catalysis"]);
+        onPlayer.Add("bleeding");
+        state.Fire("second", 4, new HashSet<string>());
+        Assert.Equal("3", state.Context(Empty, 4)["catalysis"]);
+        // Exceptions need "any", and distinct known statuses.
+        Assert.Throws<SimulationException>(() => new TimedBuffState([enemy with { WhileStatus = "burning" }]));
+        Assert.Throws<SimulationException>(() => new TimedBuffState([enemy with { AnyStatusExcept = ["sneezing"] }]));
+        Assert.Throws<SimulationException>(() => new TimedBuffState([enemy with { AnyStatusExcept = ["ensnared", "ensnared"] }]));
+        Assert.Throws<SimulationException>(() => new TimedBuffState([enemy with { AnyStatusExcept = [.. StatusTriggerState.Names] }]));
     }
 
     [Fact]
@@ -1065,17 +1128,85 @@ public sealed class TimedBuffStateTests
     }
 
     [Fact]
+    public void AForcedShotTakesEveryArmedRulesShapeAndTheHitSpendsThem()
+    {
+        // ADR 0023: a plain forced headshot (Resolved) and Perfect Determined's shape (a stack on a headshot kill, spent by the hit,
+        // critical and the whole shot). Both armed, the shot takes both shapes, and its hit spends both.
+        var plain = new SimTriggerDefinition { Talent = "resolved", Key = "ready", On = "hit", Kind = "ready", Duration = 2, ForceHeadshot = true };
+        var determined = new SimTriggerDefinition
+        {
+            Talent = "determined",
+            Key = "armed",
+            On = "headshot_kill",
+            Kind = "stacks",
+            Max = 1,
+            ConsumeOn = "hit",
+            ForceHeadshot = true,
+            ForceCritical = true,
+            ForceWholeShot = true
+        };
+        var state = new TimedBuffState([plain, determined]);
+        var pistol = new HashSet<string> { "pistol" };
+        Assert.Equal(new ForcedShot(false, false), state.Forcing(0, null, pistol));
+        state.Fire("headshot_kill", 0, weaponTags: pistol);
+        Assert.Equal(new ForcedShot(true, true), state.Forcing(0, null, pistol));
+        // A talent that doesn't react here doesn't shape it.
+        Assert.Equal(new ForcedShot(false, false), state.Forcing(0, new HashSet<string> { "resolved" }, pistol));
+        state.Fire("hit", 0.5, weaponTags: pistol);
+        Assert.Null(state.Forcing(1, null, pistol));
+        // Determined has no timeout: armed again, it waits for the next hit however long that takes.
+        state.Fire("headshot_kill", 1, weaponTags: pistol);
+        Assert.Equal(new ForcedShot(true, true), state.Forcing(1000, new HashSet<string> { "determined" }, pistol));
+    }
+
+    [Fact]
+    public void AForcedHeadshotKillEndsDisarmedAndTheArmingShotsHitDoesNotSpendIt()
+    {
+        // R135, from Determined's source: the arming shot's own hit, which comes before its headshot_kill, finds nothing to spend; a
+        // forced shot that is itself a headshot kill is spent by its hit and its kill doesn't arm it again. The next shot is plain.
+        var determined = new SimTriggerDefinition
+        {
+            Talent = "determined",
+            Key = "armed",
+            On = "headshot_kill",
+            Kind = "stacks",
+            Max = 1,
+            ConsumeOn = "hit",
+            ForceHeadshot = true,
+            ForceWholeShot = true
+        };
+        var state = new TimedBuffState([determined]);
+        var none = new HashSet<string>();
+        state.Fire("hit", 0);
+        state.Fire("headshot_kill", 0);
+        Assert.NotNull(state.Forcing(0.5, null, none));
+        state.Fire("hit", 0.5);
+        state.Fire("headshot_kill", 0.5);
+        Assert.Null(state.Forcing(1, null, none));
+        // A later natural headshot kill arms it again.
+        state.Fire("hit", 1);
+        state.Fire("headshot_kill", 1);
+        Assert.NotNull(state.Forcing(1.5, null, none));
+        // A forced shot that doesn't kill is spent, and the next shot's headshot kill arms it again.
+        state.Fire("hit", 1.5);
+        Assert.Null(state.Forcing(2, null, none));
+        state.Fire("hit", 2);
+        state.Fire("headshot_kill", 2);
+        Assert.NotNull(state.Forcing(2.5, null, none));
+    }
+
+    [Fact]
     public void AForcedHeadshotRuleIsReadyForEligibleTaggedWeaponsUntilItsEventSpendsIt()
     {
         var rule = new SimTriggerDefinition { Talent = "resolved", Key = "ready", On = "hit", Kind = "ready", Duration = 2, ForceHeadshot = true, WeaponTags = ["pistol"] };
         var state = new TimedBuffState([rule]);
         var pistol = new HashSet<string> { "pistol" };
-        Assert.True(state.ForcesHeadshot(0, null, pistol));
-        Assert.False(state.ForcesHeadshot(0, null, new HashSet<string> { "rifle" }));
-        Assert.False(state.ForcesHeadshot(0, new HashSet<string> { "other" }, pistol));
+        Assert.NotNull(state.Forcing(0, null, pistol));
+        Assert.Null(state.Forcing(0, null, new HashSet<string> { "rifle" }));
+        Assert.Null(state.Forcing(0, new HashSet<string> { "other" }, pistol));
         state.Fire("hit", 0, weaponTags: pistol);
-        Assert.False(state.ForcesHeadshot(1.5, null, pistol));
-        Assert.True(state.ForcesHeadshot(2, null, pistol));
+        Assert.Null(state.Forcing(1.5, null, pistol));
+        Assert.NotNull(state.Forcing(2, null, pistol));
     }
 
     [Theory]
@@ -1263,14 +1394,14 @@ public sealed class TimedBuffStateTests
         Assert.Equal("10", state.Context(Empty, 3.05)["quick_draw_stacks"]);
         state.Fire("hit", 9, weaponTags: pistol);
         Assert.Equal("10", state.Context(Empty, 9)["quick_draw_stacks"]);
-        Assert.True(state.ForcesHeadshot(9, null, pistol));
-        Assert.False(state.ForcesHeadshot(9, null, rifle));
+        Assert.NotNull(state.Forcing(9, null, pistol));
+        Assert.Null(state.Forcing(9, null, rifle));
         // A rifle shot doesn't spend them; the first pistol shot does.
         state.Fire("shot", 9.5, weaponTags: rifle);
         Assert.Equal("10", state.Context(Empty, 9.5)["quick_draw_stacks"]);
         state.Fire("shot", 10, weaponTags: pistol);
         Assert.Equal("0", state.Context(Empty, 10)["quick_draw_stacks"]);
-        Assert.False(state.ForcesHeadshot(10, null, pistol));
+        Assert.Null(state.Forcing(10, null, pistol));
     }
 
     [Fact]
@@ -1344,9 +1475,201 @@ public sealed class TimedBuffStateTests
     public void UnsupportedSideEffectsAndKindsAreNotSilentlyDropped()
     {
         Assert.Throws<SimulationException>(() => new TimedBuffState([Rule() with { Kind = "status" }]));
-        Assert.Throws<SimulationException>(() => new TimedBuffState([Rule() with { Within = 7 }]));
+        // A range is a buff's or stacks rule's on an event (Close & Personal), and never negative.
+        Assert.Throws<SimulationException>(() => new TimedBuffState([Rule() with { Within = -1 }]));
+        Assert.Throws<SimulationException>(() => new TimedBuffState([Rule() with { Within = 51 }]));
+        Assert.Throws<SimulationException>(() => new TimedBuffState([Rule() with { Kind = "ready", Within = 7 }]));
         Assert.Throws<SimulationException>(() => new TimedBuffState([Rule() with { Pool = "shared" }]));
         Assert.Throws<SimulationException>(() => new TimedBuffState([Rule(-1)]));
+    }
+
+    [Fact]
+    public void ARuleWithARangeGainsOnlyFromAnEnemyThatClose()
+    {
+        // Close & Personal: a kill within 7 m. Farther gains nothing; with no distance the range is taken as met.
+        var state = new TimedBuffState([Rule(10) with { On = "kill", Within = 7 }]);
+        state.Fire("kill", 1, distance: 10);
+        Assert.False(state.Context(Empty, 1.5).ContainsKey("buff"));
+        state.Fire("kill", 2, distance: 7);
+        Assert.Equal("true", state.Context(Empty, 2.5)["buff"]);
+        var anywhere = new TimedBuffState([Rule(10) with { On = "kill", Within = 7 }]);
+        anywhere.Fire("kill", 1);
+        Assert.Equal("true", anywhere.Context(Empty, 1.5)["buff"]);
+    }
+
+    private static readonly HashSet<string> Smg = ["weapon_type_smg"], Rifle = ["weapon_type_rifle"], Untyped = ["other_tag"];
+
+    [Fact]
+    public void ARuleOnDifferentTypesGainsOnlyWhenBothWeaponsAreTypedAndUnalike()
+    {
+        var rule = new SimTriggerDefinition
+        {
+            Talent = "t",
+            Key = "versatile",
+            On = "swapped",
+            Kind = "buff",
+            Duration = 0.5,
+            WeaponTypes = ["weapon_type_smg", "weapon_type_rifle"],
+            DifferentTypes = true
+        };
+        var state = new TimedBuffState([rule]);
+        bool Gains(double time, IReadOnlySet<string>? drawn, IReadOnlySet<string>? other)
+        {
+            state.Fire("swapped", time, weaponTags: drawn, otherWeaponTags: other);
+            return state.Context(Empty, time).ContainsKey("versatile");
+        }
+        Assert.True(Gains(1, Smg, Rifle));
+        Assert.False(Gains(2, Smg, Smg));
+        Assert.False(Gains(3, Smg, Untyped));
+        Assert.False(Gains(4, Untyped, Rifle));
+        Assert.False(Gains(5, Smg, null));
+        Assert.False(Gains(5.5, null, Rifle));
+        Assert.True(Gains(6, Rifle, Smg));
+    }
+
+    [Fact]
+    public void ATypeGateAndACooldownPerTypeHoldForAnAlsoGainAndAWeaponlessEvent()
+    {
+        // Stacks gaining on a kill and, through also, on a draw: the draw's gain is gated on differing types like the kill's. A kill with
+        // no weapon behind it (a skill's) has no type, so it gains nothing under a cooldown per type.
+        var rule = new SimTriggerDefinition
+        {
+            Talent = "t",
+            Key = "versatile",
+            On = "kill",
+            Kind = "stacks",
+            Max = 5,
+            Also = [new() { On = "swapped", Gain = 1 }],
+            Every = 1,
+            WeaponTypes = ["weapon_type_smg", "weapon_type_rifle"],
+            DifferentTypes = true,
+            EveryPerType = true
+        };
+        var state = new TimedBuffState([rule]);
+        string Count(double time) => state.Context(Empty, time).GetValueOrDefault("versatile", "0");
+        state.Fire("swapped", 1, weaponTags: Smg, otherWeaponTags: Smg);
+        Assert.Equal("0", Count(1));
+        state.Fire("swapped", 2, weaponTags: Smg, otherWeaponTags: Rifle);
+        Assert.Equal("1", Count(2));
+        state.Fire("kill", 3);
+        Assert.Equal("1", Count(3));
+        state.Fire("kill", 4, weaponTags: Rifle, otherWeaponTags: Smg);
+        Assert.Equal("2", Count(4));
+    }
+
+    [Fact]
+    public void ACooldownPerTypeRunsForEachTypeOfTheEventsWeapon()
+    {
+        // Every 5 s per type: the SMG at 1 s, the rifle at 2 s (another type), not the SMG at 3 s, the SMG again at 6 s. An untyped
+        // weapon gains nothing.
+        var rule = new SimTriggerDefinition
+        {
+            Talent = "t",
+            Key = "versatile",
+            On = "swapped",
+            Kind = "buff",
+            Duration = 0.5,
+            Every = 5,
+            WeaponTypes = ["weapon_type_smg", "weapon_type_rifle"],
+            EveryPerType = true
+        };
+        var state = new TimedBuffState([rule]);
+        bool Gains(double time, IReadOnlySet<string>? drawn)
+        {
+            state.Fire("swapped", time, weaponTags: drawn);
+            return state.Context(Empty, time).ContainsKey("versatile");
+        }
+        Assert.Equal([true, true, false, false, true], new[] { Gains(1, Smg), Gains(2, Rifle), Gains(3, Smg), Gains(4, Untyped), Gains(6, Smg) });
+    }
+
+    private static SimTriggerDefinition Unwavering(bool full) => new()
+    {
+        Talent = "t",
+        Key = "unwavering",
+        On = "swapped",
+        Kind = "buff",
+        Duration = 5,
+        CancelOn = "swap",
+        CancelFor = 5,
+        LockoutAlways = full,
+        GainAtLockoutEnd = full
+    };
+
+    [Fact]
+    public void ALockoutStartsWithNoBonusUpAndTheBonusComesAtItsEndWithTheWeaponInHand()
+    {
+        // ADR 0019, Unwavering: a swap away at 1 s locks it out to 6 s with no bonus up, a draw at 2 s gains nothing, and with the weapon
+        // in hand the bonus comes at 6 s for 5 s.
+        var state = new TimedBuffState([Unwavering(full: true)]);
+        state.Prime(0, new HashSet<string> { "t" });
+        state.Fire("swap", 1);
+        state.Fire("swapped", 2);
+        // The scheduled start is the next change, so a fight's walk stops there.
+        Assert.Equal(6, state.NextExpiry);
+        Assert.False(state.Context(Empty, 5.9).ContainsKey("unwavering"));
+        Assert.True(state.Context(Empty, 6).ContainsKey("unwavering"));
+        Assert.True(state.Context(Empty, 10.9).ContainsKey("unwavering"));
+        Assert.False(state.Context(Empty, 11).ContainsKey("unwavering"));
+        Assert.Equal(5, state.Measure(20)["unwavering"].Seconds, 9);
+    }
+
+    [Fact]
+    public void AScheduledBonusNeedsItsWeaponInHandAtTheLockoutsEnd()
+    {
+        // Put away at 2 s, the scheduled bonus goes; drawn back at 4 s, still locked, it's scheduled again for 6 s. Put away for good, none.
+        var state = new TimedBuffState([Unwavering(full: true)]);
+        state.Prime(0, new HashSet<string> { "t" });
+        state.Fire("swap", 1);
+        state.Prime(2, new HashSet<string> { "other" });
+        Assert.False(state.Context(Empty, 6).ContainsKey("unwavering"));
+        state.Prime(4, new HashSet<string> { "t" });
+        Assert.True(state.Context(Empty, 6).ContainsKey("unwavering"));
+        var away = new TimedBuffState([Unwavering(full: true)]);
+        away.Prime(0, new HashSet<string> { "t" });
+        away.Fire("swap", 1);
+        away.Prime(1, new HashSet<string> { "other" });
+        Assert.Equal(0, away.Measure(20)["unwavering"].Seconds);
+    }
+
+    [Fact]
+    public void WithAWindowStillToStartAnotherOwnersEarlierEndIsTheNextChange()
+    {
+        // Two talents on one key (Unwavering and Perfect Unwavering): one on until 4 s, the other scheduled for 6.5 s. The key goes off
+        // at 4 s, so that's the next change, before the window opens.
+        var other = Unwavering(full: false) with { Talent = "u", On = "kill", Duration = 3, CancelOn = "", CancelFor = 0 };
+        var state = new TimedBuffState([Unwavering(full: true), other]);
+        state.Prime(0, new HashSet<string> { "t", "u" });
+        state.Fire("kill", 1);
+        state.Fire("swap", 1.5);
+        Assert.Equal(4, state.NextExpiry);
+        Assert.False(state.Context(Empty, 5).ContainsKey("unwavering"));
+        Assert.True(state.Context(Empty, 6.5).ContainsKey("unwavering"));
+    }
+
+    [Fact]
+    public void WithoutTheFieldsALockoutNeedsTheBonusUp()
+    {
+        // As before: a swap away with no bonus up locks nothing, so the draw at 2 s gains.
+        var state = new TimedBuffState([Unwavering(full: false)]);
+        state.Prime(0, new HashSet<string> { "t" });
+        state.Fire("swap", 1);
+        state.Fire("swapped", 2);
+        Assert.True(state.Context(Empty, 2).ContainsKey("unwavering"));
+    }
+
+    [Fact]
+    public void ARefillOfBothIsReportedForTheFireThatAskedForIt()
+    {
+        var both = new SimTriggerDefinition { Talent = "t", Key = "both", On = "kill", Kind = "buff", Duration = 5, Refill = true, RefillBoth = true };
+        var hand = new SimTriggerDefinition { Talent = "t", Key = "hand", On = "reload", Kind = "buff", Duration = 5, Refill = true };
+        var state = new TimedBuffState([both, hand]);
+        Assert.True(state.Fire("kill", 1));
+        Assert.True(state.RefillsBoth);
+        Assert.True(state.Fire("reload", 2));
+        Assert.False(state.RefillsBoth);
+        Assert.True(state.Fire("kill", 3));
+        Assert.False(state.Fire("shot", 4));
+        Assert.False(state.RefillsBoth);
     }
 
     [Fact]

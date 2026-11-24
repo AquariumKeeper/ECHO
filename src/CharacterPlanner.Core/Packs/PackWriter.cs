@@ -122,7 +122,8 @@ public static class PackWriter
                 Name = selector.Name,
                 Values = [.. selector.Values],
                 Section = Optional(selector.Section),
-                Description = Optional(selector.Description)
+                Description = Optional(selector.Description),
+                Default = Optional(selector.Default)
             })),
             NumericInputs = NullIfEmpty(pack.NumericContextInputs.Select(input => new NumericInputWire
             {
@@ -300,6 +301,7 @@ public static class PackWriter
             Max = Optional(trigger.Max),
             Refresh = Optional(trigger.Refresh),
             FromFirstGain = Optional(trigger.FromFirstGain),
+            RefillOnSwap = Optional(trigger.RefillOnSwap),
             Every = Optional(trigger.Every),
             EveryGroup = Optional(trigger.EveryGroup),
             Chance = trigger.Chance == 1 ? null : trigger.Chance,
@@ -312,7 +314,7 @@ public static class PackWriter
             Percent = Optional(trigger.Percent),
             Within = Optional(trigger.Within),
             Count = Optional(trigger.Count),
-            Refill = Optional(trigger.Refill),
+            Refill = trigger.Refill ? new RefillWire(true, trigger.RefillBoth) : null,
             Gain = Optional(trigger.Gain),
             Also = NullIfEmpty(trigger.Also.Select(gain => new GainWire { On = gain.On, Gain = Optional(gain.Gain), Count = Optional(gain.Count) })),
             Decay = Optional(trigger.Decay),
@@ -323,7 +325,15 @@ public static class PackWriter
             GainWhileHolstered = Optional(trigger.GainWhileHolstered),
             WhileStatus = Optional(trigger.WhileStatus),
             PrimeHolstered = Optional(trigger.PrimeHolstered),
+            ShareCopies = Optional(trigger.ShareCopies),
+            WeaponTypes = Optional(trigger.WeaponTypes),
+            DifferentTypes = Optional(trigger.DifferentTypes),
+            EveryPerType = Optional(trigger.EveryPerType),
+            AssumeWithoutDistance = Optional(trigger.AssumeWithoutDistance),
+            LockoutAlways = Optional(trigger.LockoutAlways),
+            GainAtLockoutEnd = Optional(trigger.GainAtLockoutEnd),
             WhilePlayerStatus = Optional(trigger.WhilePlayerStatus),
+            AnyStatusExcept = Optional(trigger.AnyStatusExcept),
             Pool = Optional(trigger.Pool),
             PoolMax = Optional(trigger.PoolMax),
             CancelOn = Optional(trigger.CancelOn),
@@ -335,6 +345,8 @@ public static class PackWriter
             ClearDuration = Optional(trigger.ClearDuration),
             WeaponTags = Optional(trigger.WeaponTags),
             ForceHeadshot = Optional(trigger.ForceHeadshot),
+            ForceCritical = Optional(trigger.ForceCritical),
+            ForceWholeShot = Optional(trigger.ForceWholeShot),
             Grant = Optional(trigger.Grant),
             GrantAmount = Optional(trigger.GrantAmount),
             GrantDuration = Optional(trigger.GrantDuration),
@@ -364,6 +376,7 @@ public static class PackWriter
             AreaFull = Optional(skill.AreaFull),
             AreaEdge = Optional(skill.AreaEdge),
             ControlStatus = Optional(skill.ControlStatus),
+            AreaFromPlayer = Optional(skill.AreaFromPlayer),
             Shield = Optional(skill.Shield),
             Regeneration = Optional(skill.Regeneration),
             Weapons = Optional(skill.Weapons),
@@ -375,7 +388,48 @@ public static class PackWriter
             StockInterval = Optional(skill.StockInterval),
             StatusRate = Optional(skill.StatusRate),
             StatusWindow = Optional(skill.StatusWindow),
-            StatusArmorBonus = Optional(skill.StatusArmorBonus)
+            StatusArmorBonus = Optional(skill.StatusArmorBonus),
+            Requires = skill.RequiresContext is null ? null : Sorted(skill.RequiresContext, value => value) ?? new Dictionary<string, string>(StringComparer.Ordinal),
+            Targets = Optional(skill.Targets),
+            ImpactRepair = Optional(skill.ImpactRepair),
+            EndDelay = Optional(skill.EndDelay),
+            RepairDelay = Optional(skill.RepairDelay),
+            UseArmorBelow = Optional(skill.UseArmorBelow),
+            Repair = Optional(skill.Repair),
+            RepairEvery = Optional(skill.RepairEvery),
+            RepairLag = Optional(skill.RepairLag),
+            RepairBelow = Optional(skill.RepairBelow),
+            RepairCount = Optional(skill.RepairCount),
+            RepairCloud = Optional(skill.RepairCloud),
+            ChargeFor = Optional(skill.ChargeFor),
+            ChargeSkills = Optional(skill.ChargeSkills),
+            Refresh = Optional(skill.Refresh),
+            DecoyHealth = Optional(skill.DecoyHealth),
+            Zones = skill.Zones is { } zones
+                ? new SkillZonesWire { Count = Optional(zones.Count), Health = Optional(zones.Health), Factor = Optional(zones.Factor), Share = Optional(zones.Share), Multiplier = Optional(zones.Multiplier), Key = Optional(zones.Key) }
+                : null,
+            Revive = skill.Revive is { } revive
+                ? new SkillReviveWire
+                {
+                    Armor = Optional(revive.Armor),
+                    Seconds = Optional(revive.Seconds),
+                    PoolShare = Optional(revive.PoolShare),
+                    DamageTaken = Optional(revive.DamageTaken),
+                    BleedSeconds = Optional(revive.BleedSeconds),
+                    ImmuneSeconds = Optional(revive.ImmuneSeconds),
+                    EndAfter = Optional(revive.EndAfter)
+                }
+                : null,
+            HolsteredEvery = Optional(skill.HolsteredEvery),
+            HolsteredLag = Optional(skill.HolsteredLag),
+            ArmorOnly = Optional(skill.ArmorOnly),
+            ImpactDelay = Optional(skill.ImpactDelay),
+            FarImpactDelay = Optional(skill.FarImpactDelay),
+            FarFrom = Optional(skill.FarFrom),
+            CooldownAfter = Optional(skill.CooldownAfter),
+            KillChance = Optional(skill.KillChance),
+            KillProfiles = skill.KillProfiles.IsDefaultOrEmpty ? null : [.. skill.KillProfiles],
+            KillDelay = Optional(skill.KillDelay)
         })),
         StatusDamage = NullIfEmpty(simulation.StatusDamage.Select(damage => new StatusDamageWire
         {
@@ -397,6 +451,24 @@ public static class PackWriter
         PassOns = NullIfEmpty(simulation.PassOns.Select(passOn => new PassOnWire { Talent = passOn.Talent, Within = Optional(passOn.Within), WithinStat = Optional(passOn.WithinStat), Status = Optional(passOn.Status), Share = Optional(passOn.Share), ShareStat = Optional(passOn.ShareStat), To = Optional(passOn.To), SkillStatuses = Optional(passOn.SkillStatuses) })),
         Spreads = NullIfEmpty(simulation.Spreads.Select(spread => new SpreadWire { Talent = spread.Talent, Within = spread.Within, Every = Optional(spread.Every), SkillStatuses = Optional(spread.SkillStatuses) })),
         Redirects = NullIfEmpty(simulation.Redirects.Select(redirect => new RedirectWire { Talent = redirect.Talent, Share = redirect.Share, Within = redirect.Within })),
+        SkillsAside = NullIfEmpty(simulation.SkillsAside.Select(aside => new SkillAsideWire { Skill = aside.Skill, Why = aside.Why })),
+        NextHitBonuses = NullIfEmpty(simulation.NextHitBonuses.Select(bonus => new NextHitBonusWire
+        {
+            Talent = bonus.Talent,
+            Share = bonus.Share,
+            Cap = bonus.Cap,
+            Window = bonus.Window
+        })),
+        HeadshotCycles = NullIfEmpty(simulation.HeadshotCycles.Select(cycle => new HeadshotCycleWire
+        {
+            Talent = cycle.Talent,
+            WeaponTag = cycle.WeaponTag,
+            Key = cycle.Key,
+            Repair = cycle.Repair,
+            BonusArmorCap = cycle.BonusArmorCap,
+            Allowance = cycle.Allowance,
+            KillFrom = cycle.KillFrom
+        })),
         Traps = NullIfEmpty(simulation.Traps.Select(trap => new TrapWire
         {
             Talent = trap.Talent,
@@ -432,7 +504,9 @@ public static class PackWriter
             ExtendSeconds = kit.ExtendSeconds,
             MaxUseSeconds = kit.MaxUseSeconds,
             ReplacedBySpecializations = Optional(kit.ReplacedBySpecializations),
-            ReplacedByTalents = Optional(kit.ReplacedByTalents)
+            ReplacedByTalents = Optional(kit.ReplacedByTalents),
+            Abilities = kit.Abilities.IsDefaultOrEmpty ? null : [.. kit.Abilities.Select(ability => new KitAbilityWire { Talent = ability.Talent, Cooldown = ability.Cooldown })],
+            Instant = kit.Instant is { } instant ? new InstantKitWire { Repair = instant.Repair, Cooldown = instant.Cooldown } : null
         } : null
     };
 

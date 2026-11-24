@@ -11,6 +11,14 @@ public sealed class SimulationDistributionsTests
         new("test", mode, iterations, 10, 1, new(100, 20, 50, 60, 90, 140, 150), 0, 0, [], [], false, [], []);
 
     [Fact]
+    public void RevivesShowOnlyWhereASkillRevives()
+    {
+        var fight = Fight() with { Incoming = new(0, 0, 0, 0, 0.5, null, null) };
+        Assert.DoesNotContain("Revived", SimulationPresentation.Summary(fight), StringComparison.Ordinal);
+        Assert.Contains($"Downed: {0.5:P1} · Revived/fight: {1.5:N1}", SimulationPresentation.Summary(fight with { Incoming = fight.Incoming! with { Revives = 1.5 } }), StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void MissingResultHasNoDistributionOrSampleNote()
     {
         var report = SimulationDistributions.From(null);
@@ -48,6 +56,9 @@ public sealed class SimulationDistributionsTests
         Assert.Contains("Component percentiles are not additive", report.Note, StringComparison.Ordinal);
         Assert.DoesNotContain("not additive", SimulationDistributions.From(Fight()).Note, StringComparison.Ordinal);
         Assert.Contains("Burn and bleed DPS: 140", SimulationPresentation.Summary(fight), StringComparison.Ordinal);
+        // Hits on a skill's marked zones (ADR 0036) show only where a skill marks them.
+        Assert.DoesNotContain("marked zones", SimulationPresentation.Summary(fight), StringComparison.Ordinal);
+        Assert.Contains($"Hits on marked zones/fight: {12.5:N1}", SimulationPresentation.Summary(fight with { ZoneHits = 12.5 }), StringComparison.Ordinal);
     }
 
     [Fact]

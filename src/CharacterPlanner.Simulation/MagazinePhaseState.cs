@@ -8,7 +8,7 @@ namespace CharacterPlanner.Simulation;
 public sealed class MagazinePhaseState
 {
     private readonly PhaseTriggerState reader;
-    private readonly double capacity;
+    private double capacity;
     private ImmutableDictionary<string, string> current;
     private readonly Dictionary<string, Dictionary<string, double>> seconds = new(StringComparer.Ordinal);
     private double clock;
@@ -27,10 +27,12 @@ public sealed class MagazinePhaseState
         }
     }
 
-    public void Observe(double remaining, double time)
+    /// <param name="capacity">The magazine a fill loads, which the readings use from then (ADR 0025); unchanged without one.</param>
+    public void Observe(double remaining, double time, double? capacity = null)
     {
         CheckTime(time);
-        var next = reader.Context(ImmutableDictionary<string, string>.Empty, time, remaining, capacity);
+        if (capacity is { } filled) { this.capacity = filled; }
+        var next = reader.Context(ImmutableDictionary<string, string>.Empty, time, remaining, this.capacity);
         foreach (var (key, value) in current) { seconds[key][value] += time - clock; }
         current = next;
         clock = time;

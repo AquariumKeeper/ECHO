@@ -98,7 +98,8 @@ public static class PackReader
             Curves = Curves(rules.Curves),
             Selectors = [.. List(rules.Selectors).Select(selector => new SelectorDefinition
             {
-                ID = selector.Id, Name = selector.Name, Description = selector.Description ?? "", Section = selector.Section ?? "", Values = [.. selector.Values]
+                ID = selector.Id, Name = selector.Name, Description = selector.Description ?? "", Section = selector.Section ?? "", Values = [.. selector.Values],
+                Default = selector.Default ?? ""
             })],
             NumericContextInputs = [.. List(rules.NumericInputs).Select(input => new NumericContextInputDefinition
             {
@@ -327,15 +328,18 @@ public static class PackReader
             Triggers = [.. List(simulation.Triggers).Select(trigger => new SimTriggerDefinition
             {
                 Talent = trigger.Talent, Key = trigger.Key, On = trigger.On ?? "", Kind = trigger.Kind, Duration = trigger.Duration ?? 0, Max = trigger.Max ?? 0,
-                Refresh = trigger.Refresh ?? false, FromFirstGain = trigger.FromFirstGain ?? false, Every = trigger.Every ?? 0, EveryGroup = trigger.EveryGroup ?? "", Chance = trigger.Chance ?? 1, RequiresContext = trigger.Requires?.ToImmutableDictionary(StringComparer.Ordinal), CooldownFromEnd = trigger.CooldownFromEnd ?? false, ResetOn = trigger.ResetOn ?? "", AlsoResetOn = trigger.AlsoResetOn ?? "", ConsumeOn = trigger.ConsumeOn ?? "",
+                Refresh = trigger.Refresh ?? false, FromFirstGain = trigger.FromFirstGain ?? false, RefillOnSwap = trigger.RefillOnSwap ?? false, Every = trigger.Every ?? 0, EveryGroup = trigger.EveryGroup ?? "", Chance = trigger.Chance ?? 1, RequiresContext = trigger.Requires?.ToImmutableDictionary(StringComparer.Ordinal), CooldownFromEnd = trigger.CooldownFromEnd ?? false, ResetOn = trigger.ResetOn ?? "", AlsoResetOn = trigger.AlsoResetOn ?? "", ConsumeOn = trigger.ConsumeOn ?? "",
                 Phases = [.. List(trigger.Phases).Select(phase => new SimPhase { Until = phase.Until, Value = phase.Value })],
-                Percent = trigger.Percent ?? false, Within = trigger.Within ?? 0, Count = trigger.Count ?? 0, Refill = trigger.Refill ?? false, Gain = trigger.Gain ?? 0,
+                Percent = trigger.Percent ?? false, Within = trigger.Within ?? 0, Count = trigger.Count ?? 0, Refill = trigger.Refill?.Refill ?? false, RefillBoth = trigger.Refill?.Both ?? false, Gain = trigger.Gain ?? 0,
                 Also = [.. List(trigger.Also).Select(gain => new SimGain { On = gain.On, Gain = gain.Gain ?? 0, Count = gain.Count ?? 0 })],
-                Decay = trigger.Decay ?? 0, AtLeast = trigger.AtLeast ?? 0, Purge = trigger.Purge ?? false, Status = trigger.Status ?? "", ApplyOnHit = trigger.ApplyOnHit ?? false, GainWhileHolstered = trigger.GainWhileHolstered ?? 0, PrimeHolstered = trigger.PrimeHolstered ?? 0,
-                WhileStatus = trigger.WhileStatus ?? "", WhilePlayerStatus = trigger.WhilePlayerStatus ?? "", Pool = trigger.Pool ?? "", PoolMax = trigger.PoolMax ?? 0,
+                Decay = trigger.Decay ?? 0, AtLeast = trigger.AtLeast ?? 0, Purge = trigger.Purge ?? false, Status = trigger.Status ?? "", ApplyOnHit = trigger.ApplyOnHit ?? false, GainWhileHolstered = trigger.GainWhileHolstered ?? 0, PrimeHolstered = trigger.PrimeHolstered ?? 0, ShareCopies = trigger.ShareCopies ?? false, WeaponTypes = Strings(trigger.WeaponTypes), DifferentTypes = trigger.DifferentTypes ?? false,
+                EveryPerType = trigger.EveryPerType ?? false, AssumeWithoutDistance = trigger.AssumeWithoutDistance ?? false,
+                LockoutAlways = trigger.LockoutAlways ?? false, GainAtLockoutEnd = trigger.GainAtLockoutEnd ?? false,
+                WhileStatus = trigger.WhileStatus ?? "", WhilePlayerStatus = trigger.WhilePlayerStatus ?? "", AnyStatusExcept = Strings(trigger.AnyStatusExcept), Pool = trigger.Pool ?? "", PoolMax = trigger.PoolMax ?? 0,
                 CancelOn = trigger.CancelOn ?? "", CancelFor = trigger.CancelFor ?? 0, RefreshOn = trigger.RefreshOn ?? "", Bank = trigger.Bank ?? "",
                 ClearGrant = trigger.ClearGrant ?? "", ClearAmount = trigger.ClearAmount ?? 0, ClearDuration = trigger.ClearDuration ?? 0,
                 WeaponTags = Strings(trigger.WeaponTags), ForceHeadshot = trigger.ForceHeadshot ?? false,
+                ForceCritical = trigger.ForceCritical ?? false, ForceWholeShot = trigger.ForceWholeShot ?? false,
                 Grant = trigger.Grant ?? "", GrantAmount = trigger.GrantAmount ?? 0, GrantDuration = trigger.GrantDuration ?? 0, GrantInstances = trigger.GrantInstances ?? "", GrantHoldDelay = trigger.GrantHoldDelay ?? 0, GrantAmountStat = trigger.GrantAmountStat ?? "", ActiveAfter = trigger.ActiveAfter ?? 0, CountWindow = trigger.CountWindow ?? 0,
                 MaxMagazine = trigger.MaxMagazine ?? 0, WhileKey = trigger.WhileKey ?? "", WhileFull = trigger.WhileFull ?? false,
                 WhileArmorBelow = trigger.WhileArmorBelow ?? 0, DurationStat = trigger.DurationStat ?? "",
@@ -344,8 +348,17 @@ public static class PackReader
             Skills = [.. List(simulation.Skills).Select(skill => new SimSkillDefinition
             {
                 Skill = skill.Skill, Rate = skill.Rate ?? "", Window = skill.Window ?? "", Cooldown = skill.Cooldown ?? "", Impact = skill.Impact ?? "",
-                CooldownFromEnd = skill.CooldownFromEnd ?? false, Impacts = skill.Impacts ?? "", ImpactInterval = skill.ImpactInterval ?? "", Area = skill.Area ?? "", AreaFull = skill.AreaFull ?? "", AreaEdge = skill.AreaEdge ?? 0, ControlStatus = skill.ControlStatus ?? false, Shield = skill.Shield ?? "", Regeneration = skill.Regeneration ?? "",
-                Weapons = Strings(skill.Weapons), ExcludeTags = Strings(skill.ExcludeTags), Status = skill.Status ?? "", RateArmorBonus = skill.RateArmorBonus ?? "", RateRead = skill.RateRead ?? "", Stock = skill.Stock ?? "", StockInterval = skill.StockInterval ?? 0, StatusRate = skill.StatusRate ?? "", StatusWindow = skill.StatusWindow ?? "", StatusArmorBonus = skill.StatusArmorBonus ?? ""
+                CooldownFromEnd = skill.CooldownFromEnd ?? false, Impacts = skill.Impacts ?? "", ImpactInterval = skill.ImpactInterval ?? "", Area = skill.Area ?? "", AreaFull = skill.AreaFull ?? "", AreaEdge = skill.AreaEdge ?? 0, ControlStatus = skill.ControlStatus ?? false, AreaFromPlayer = skill.AreaFromPlayer ?? false, Shield = skill.Shield ?? "", Regeneration = skill.Regeneration ?? "",
+                Weapons = Strings(skill.Weapons), ExcludeTags = Strings(skill.ExcludeTags), Status = skill.Status ?? "", RateArmorBonus = skill.RateArmorBonus ?? "", RateRead = skill.RateRead ?? "", Stock = skill.Stock ?? "", StockInterval = skill.StockInterval ?? 0, StatusRate = skill.StatusRate ?? "", StatusWindow = skill.StatusWindow ?? "", StatusArmorBonus = skill.StatusArmorBonus ?? "",
+                RequiresContext = skill.Requires?.ToImmutableDictionary(StringComparer.Ordinal), Targets = skill.Targets ?? "",
+                ImpactRepair = skill.ImpactRepair ?? "", EndDelay = skill.EndDelay ?? 0, RepairDelay = skill.RepairDelay ?? 0, UseArmorBelow = skill.UseArmorBelow ?? 0,
+                Repair = skill.Repair ?? "", RepairEvery = skill.RepairEvery ?? 0, RepairLag = skill.RepairLag ?? 0, RepairBelow = skill.RepairBelow ?? 0,
+                RepairCount = skill.RepairCount ?? "", RepairCloud = skill.RepairCloud ?? "", ChargeFor = skill.ChargeFor ?? "", ChargeSkills = skill.ChargeSkills ?? false, Refresh = skill.Refresh ?? "", DecoyHealth = skill.DecoyHealth ?? "",
+                Zones = skill.Zones is { } zones ? new SimSkillZones { Count = zones.Count ?? "", Health = zones.Health ?? "", Factor = zones.Factor ?? "", Share = zones.Share ?? "", Multiplier = zones.Multiplier ?? "", Key = zones.Key ?? "" } : null,
+                Revive = skill.Revive is { } revive ? new SimSkillRevive { Armor = revive.Armor ?? "", Seconds = revive.Seconds ?? "", PoolShare = revive.PoolShare ?? 0, DamageTaken = revive.DamageTaken ?? 0, BleedSeconds = revive.BleedSeconds ?? 0, ImmuneSeconds = revive.ImmuneSeconds ?? 0, EndAfter = revive.EndAfter ?? 0 } : null,
+                HolsteredEvery = skill.HolsteredEvery ?? 0, HolsteredLag = skill.HolsteredLag ?? 0,
+                ArmorOnly = skill.ArmorOnly ?? false, ImpactDelay = skill.ImpactDelay ?? 0, FarImpactDelay = skill.FarImpactDelay ?? 0, FarFrom = skill.FarFrom ?? 0,
+                CooldownAfter = skill.CooldownAfter ?? 0, KillChance = skill.KillChance ?? "", KillProfiles = skill.KillProfiles is { Count: > 0 } profiles ? [.. profiles] : [], KillDelay = skill.KillDelay ?? 0
             })],
             StatusDamage = [.. List(simulation.StatusDamage).Select(damage => new SimStatusDamageDefinition
             {
@@ -362,6 +375,16 @@ public static class PackReader
             {
                 Talent = trap.Talent, TagAfter = trap.TagAfter, MaxTags = trap.MaxTags, Status = trap.Status, StatusDuration = trap.StatusDuration,
                 Every = trap.Every ?? 0, Cut = trap.Cut ?? 0
+            })],
+            SkillsAside = [.. List(simulation.SkillsAside).Select(aside => new SimSkillAside { Skill = aside.Skill, Why = aside.Why })],
+            HeadshotCycles = [.. List(simulation.HeadshotCycles).Select(cycle => new SimHeadshotCycle
+            {
+                Talent = cycle.Talent, WeaponTag = cycle.WeaponTag, Key = cycle.Key, Repair = cycle.Repair, BonusArmorCap = cycle.BonusArmorCap,
+                Allowance = cycle.Allowance, KillFrom = cycle.KillFrom
+            })],
+            NextHitBonuses = [.. List(simulation.NextHitBonuses).Select(bonus => new SimNextHitBonus
+            {
+                Talent = bonus.Talent, Share = bonus.Share, Cap = bonus.Cap, Window = bonus.Window
             })],
             Blasts = [.. List(simulation.Blasts).Select(blast => new SimBlastDefinition { Talent = blast.Talent, On = blast.On, Amount = blast.Amount ?? "", Mark = blast.Mark ?? "", Within = blast.Within, Status = blast.Status ?? "", StatusDuration = blast.StatusDuration ?? 0 })],
             DistanceDefaults = [.. List(simulation.DistanceDefaults).Select(entry => new SimDistanceDefault
@@ -381,7 +404,9 @@ public static class PackReader
                 ExtendSeconds = kit.ExtendSeconds,
                 MaxUseSeconds = kit.MaxUseSeconds,
                 ReplacedBySpecializations = Strings(kit.ReplacedBySpecializations),
-                ReplacedByTalents = Strings(kit.ReplacedByTalents)
+                ReplacedByTalents = Strings(kit.ReplacedByTalents),
+                Abilities = [.. (kit.Abilities ?? []).Select(ability => new SimKitAbility { Talent = ability.Talent, Cooldown = ability.Cooldown })],
+                Instant = kit.Instant is { } instant ? new SimInstantKit { Repair = instant.Repair, Cooldown = instant.Cooldown } : null
             } : null
         };
 

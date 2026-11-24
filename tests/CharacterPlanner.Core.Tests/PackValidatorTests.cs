@@ -51,6 +51,7 @@ public sealed class PackValidatorTests
         ["curve unsorted"] = (() => Pack with { Curves = Pack.Curves.SetItem("tiers", [new(6, 0), new(0, 1)]) }, "curve-unsorted", "curves.tiers[1]"),
         ["curve empty"] = (() => Pack with { Curves = Pack.Curves.SetItem("tiers", []) }, "curve-empty", "curves.tiers"),
         ["reserved selector"] = (() => Pack with { Selectors = [.. Pack.Selectors, new() { ID = "weapon_slot", Name = "Weapon", Values = ["primary_weapon"] }] }, "reserved-selector", "selectors.weapon_slot"),
+        ["reserved fight context"] = (() => Pack with { Selectors = [.. Pack.Selectors, new() { ID = "fight_context", Name = "Fight", Values = ["static", "fight"] }] }, "reserved-selector", "selectors.fight_context"),
         ["selector without values"] = (() => Pack with { Selectors = [Pack.Selectors[0] with { Values = [] }, Pack.Selectors[1]] }, "selector-values", "selectors.headshot_mode.values"),
         ["selector and input share an id"] = (() => Pack with { Selectors = [.. Pack.Selectors, new() { ID = "stacks", Name = "Stacks", Values = ["1"] }] }, "context-id-conflict", "selectors.stacks"),
         ["build output id"] = (() => Pack with { BuildOutputs = [Pack.BuildOutputs[0] with { ID = "Bad" }] }, "invalid-build-output", "buildOutputs.Bad"),
@@ -252,6 +253,25 @@ public sealed class PackValidatorTests
         ["primeHolstered with an event"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", Duration = 0, PrimeHolstered = 5 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["primeHolstered with a grant"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", On = "", Duration = 0, PrimeHolstered = 5, Grant = "skill_cooldown", GrantAmount = 0.5 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["primeHolstered with a refill"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", On = "", Duration = 0, PrimeHolstered = 5, Refill = true }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["shareCopies on a ready rule"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", ShareCopies = true }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["weaponTypes alone"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { WeaponTypes = ["rifle"] }] } }, "bad-sim-trigger", "simulation.triggers[0].weaponTypes"),
+        ["differentTypes without weaponTypes"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { DifferentTypes = true }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["everyPerType without every"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { EveryPerType = true, WeaponTypes = ["rifle"] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["assumeWithoutDistance without bands"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "distance", On = "", Duration = 0, Within = 10, AssumeWithoutDistance = true }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["assumeWithoutDistance on a buff"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { AssumeWithoutDistance = true }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["a selector default outside its values"] = (() => Pack with { Selectors = [.. Pack.Selectors.Select(selector => selector with { Default = "nowhere" })] }, "selector-default", $"selectors.{Pack.Selectors[0].ID}.default"),
+        ["lockoutAlways without a lockout"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { LockoutAlways = true }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["gainAtLockoutEnd with a consume"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { CancelOn = "swap", CancelFor = 5, GainAtLockoutEnd = true, ConsumeOn = "reload" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["gainAtLockoutEnd with a chance"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { CancelOn = "swap", CancelFor = 5, GainAtLockoutEnd = true, Chance = 0.5 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["one talent's stacks on a key shaped two ways"] = (() => Pack with
+        {
+            Simulation = Pack.Simulation with
+            {
+                Triggers = [new() { Talent = Pack.Simulation.Triggers[0].Talent, Key = "stacks", Kind = "stacks", On = "hit", Max = 5, Duration = 5 },
+                    new() { Talent = Pack.Simulation.Triggers[0].Talent, Key = "stacks", Kind = "stacks", On = "kill", Max = 4, Duration = 5 }]
+            }
+        }, "bad-sim-trigger", "simulation.triggers[1]"),
+        ["refillBoth without refill"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RefillBoth = true }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["primeHolstered too long"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", On = "", Duration = 0, PrimeHolstered = 601 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["fromFirstGain on a buff"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { FromFirstGain = true }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["fromFirstGain untimed"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[1] with { FromFirstGain = true, Duration = 0 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
@@ -270,6 +290,12 @@ public sealed class PackValidatorTests
         ["whilePlayerStatus unknown status"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { WhilePlayerStatus = "sneezing" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["whilePlayerStatus with whileStatus"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { WhilePlayerStatus = "bleeding", WhileStatus = "burning" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["whilePlayerStatus on a ready rule"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", WhilePlayerStatus = "bleeding" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["bonus_armor with another field"] = (() => Rated with { Simulation = Rated.Simulation with { Triggers = [new() { Talent = "test", Key = "rate", Kind = "bonus_armor", Duration = 5 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["bonus_armor on a selector"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "bonus_armor", On = "", Duration = 0 }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["anyStatusExcept without any"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { WhileStatus = "burning", AnyStatusExcept = ["ensnared"] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["anyStatusExcept unknown status"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { WhileStatus = "any", AnyStatusExcept = ["sneezing"] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["anyStatusExcept every status"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { WhileStatus = "any", AnyStatusExcept = ["burning", "bleeding", "poisoned", "shocked", "ensnared", "blinded", "disoriented", "disrupted"] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
+        ["anyStatusExcept repeated"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { WhilePlayerStatus = "any", AnyStatusExcept = ["ensnared", "ensnared"] }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["refreshOn with whilePlayerStatus"] = (() => Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { RefreshOn = "hit", WhilePlayerStatus = "bleeding" }] } }, "bad-sim-trigger", "simulation.triggers[0]"),
         ["enemy status unlisted target"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 3, Status = "bleeding", Duration = 2 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].target"),
         ["enemy status no target"] = (() => Rated with { Simulation = Rated.Simulation with { EnemyStatuses = [new() { Target = 0, Status = "bleeding", Duration = 2 }] } }, "bad-sim-enemy-status", "simulation.enemyStatuses[0].target"),
@@ -435,6 +461,15 @@ public sealed class PackValidatorTests
     public static TheoryData<string> CaseNames => [.. Cases.Keys];
 
     [Fact]
+    public void ADisruptedControlStatusIsAccepted()
+    {
+        // ADR 0035: disrupted is a fight status, and a control skill may put it on.
+        var pack = Pack with { Simulation = Pack.Simulation with { Skills = [Pack.Simulation.Skills[0] with { Status = "disrupted", ControlStatus = true }] } };
+        Assert.DoesNotContain(PackValidator.Validate(pack).Diagnostics, diagnostic => diagnostic.Path == "simulation.skills[0].controlStatus");
+        Assert.Contains("disrupted", GamePack.FightStatuses);
+    }
+
+    [Fact]
     public void TheTestPackIsValidAndCompilesAllyEffects()
     {
         var result = PackValidator.Validate(Pack);
@@ -501,6 +536,647 @@ public sealed class PackValidatorTests
         Assert.Empty(result.Diagnostics);
         Assert.Equal(pack.Simulation.ArmorKit!.UseSeconds, result.Compiled!.Pack.Simulation.ArmorKit!.UseSeconds);
         Assert.Equal(pack.Simulation.ArmorKit.ReplacedByTalents, result.Compiled.Pack.Simulation.ArmorKit!.ReplacedByTalents);
+    }
+
+    [Fact]
+    public void AKitAbilityAndInstantKitValidateAndRoundTrip()
+    {
+        // ADR 0021: a replacing talent's ability on a cooldown stat, and the instant kit.
+        var talent = Pack.Talents[0].ID;
+        var pack = Pack with
+        {
+            Simulation = Pack.Simulation with
+            {
+                ArmorKit = Kit with { ReplacedByTalents = [talent], Abilities = [new() { Talent = talent, Cooldown = Pack.Stats[0].ID }], Instant = new() { Repair = 0.25, Cooldown = 5 } }
+            }
+        };
+        var result = PackValidator.Load(PackWriter.Write(pack));
+        Assert.Empty(result.Diagnostics);
+        var kit = result.Compiled!.Pack.Simulation.ArmorKit!;
+        Assert.Equal((talent, Pack.Stats[0].ID), (Assert.Single(kit.Abilities).Talent, kit.Abilities[0].Cooldown));
+        Assert.Equal((0.25, 5d), (kit.Instant!.Repair, kit.Instant.Cooldown));
+        // Unset, neither is written.
+        Assert.Empty(PackValidator.Load(PackWriter.Write(Pack with { Simulation = Pack.Simulation with { ArmorKit = Kit } })).Compiled!.Pack.Simulation.ArmorKit!.Abilities);
+    }
+
+    [Fact]
+    public void ABonusArmorRowReadFromAFileIsAccepted()
+    {
+        // R127: rows read from a file carry their own empty lists, which a record compares by reference.
+        var row = new SimTriggerDefinition { Talent = Pack.Talents[0].ID, Key = "rate", Kind = "bonus_armor" };
+        var read = PackValidator.Load(PackWriter.Write(Rated with { Simulation = Rated.Simulation with { Triggers = [row] } }));
+        Assert.Empty(read.Diagnostics);
+        // Lists that are present but empty, as a file can write them, set no field.
+        var empty = row with
+        {
+            Phases = System.Runtime.InteropServices.ImmutableCollectionsMarshal.AsImmutableArray(new SimPhase[0]),
+            Also = System.Runtime.InteropServices.ImmutableCollectionsMarshal.AsImmutableArray(new SimGain[0]),
+            WeaponTypes = System.Runtime.InteropServices.ImmutableCollectionsMarshal.AsImmutableArray(new string[0]),
+            AnyStatusExcept = System.Runtime.InteropServices.ImmutableCollectionsMarshal.AsImmutableArray(new string[0]),
+            WeaponTags = System.Runtime.InteropServices.ImmutableCollectionsMarshal.AsImmutableArray(new string[0])
+        };
+        Assert.DoesNotContain(PackValidator.Validate(Rated with { Simulation = Rated.Simulation with { Triggers = [empty] } }).Diagnostics, diagnostic => diagnostic.Code == "bad-sim-trigger");
+        // Another field is still refused from a file.
+        var tagged = PackValidator.Load(PackWriter.Write(Rated with { Simulation = Rated.Simulation with { Triggers = [row with { WeaponTags = ["mmr"] }] } }));
+        Assert.Contains(tagged.Diagnostics, diagnostic => diagnostic.Code == "bad-sim-trigger" && diagnostic.Path == "simulation.triggers[0]");
+    }
+
+    [Fact]
+    public void SkillsAsideAreCheckedAndRoundTrip()
+    {
+        // ADR 0022: a known skill, once, with no fight rule, and a one-line reason.
+        var skill = Pack.ActiveSkills[0];
+        var aside = new SimSkillAside { Skill = skill.ID, Why = "it marks enemies" };
+        var ruled = Pack.Simulation.Skills.FirstOrDefault(rule => rule.Skill == skill.ID);
+        GamePack With(params SimSkillAside[] rows) => Pack with
+        {
+            Simulation = Pack.Simulation with { Skills = [.. Pack.Simulation.Skills.Where(rule => rule != ruled)], SkillsAside = [.. rows] }
+        };
+        var result = PackValidator.Load(PackWriter.Write(With(aside)));
+        Assert.Empty(result.Diagnostics);
+        Assert.Equal(aside, Assert.Single(result.Compiled!.Pack.Simulation.SkillsAside));
+        int Errors(GamePack pack) => PackValidator.Validate(pack).Diagnostics.Count(diagnostic => diagnostic.Code == "bad-sim-skill-aside");
+        Assert.Equal(1, Errors(With(aside with { Skill = "nothing" })));
+        Assert.Equal(1, Errors(With(aside, aside)));
+        Assert.Equal(1, Errors(With(aside with { Why = "" })));
+        Assert.Equal(1, Errors(With(aside with { Why = "two\nlines" })));
+        Assert.Equal(1, Errors(With(aside with { Why = new string('x', 201) })));
+        // A skill with a fight rule doesn't step aside.
+        Assert.NotNull(ruled);
+        Assert.Equal(1, Errors(Pack with { Simulation = Pack.Simulation with { SkillsAside = [aside] } }));
+    }
+
+    [Fact]
+    public void ASkillRulesRequiresIsCheckedAndRoundTrips()
+    {
+        // ADR 0027: a skill rule gated on known selector values, read once per fight, round-trips.
+        var rule = Pack.Simulation.Skills.Single();
+        GamePack With(SimSkillDefinition gated) => Pack with { Simulation = Pack.Simulation with { Skills = [gated] } };
+        var gated = rule with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add("headshot_mode", "headshot") };
+        var loaded = PackValidator.Load(PackWriter.Write(With(gated)));
+        Assert.Empty(loaded.Diagnostics);
+        Assert.Equal(gated.RequiresContext, Assert.Single(loaded.Compiled!.Pack.Simulation.Skills).RequiresContext);
+        // Without a gate nothing is written, so a pack without one is unchanged.
+        Assert.Null(Assert.Single(PackValidator.Load(PackWriter.Write(With(rule))).Compiled!.Pack.Simulation.Skills).RequiresContext);
+        int Errors(ImmutableDictionary<string, string> requires, SimSkillDefinition? on = null) => PackValidator.Validate(With((on ?? rule) with { RequiresContext = requires }))
+            .Diagnostics.Count(diagnostic => diagnostic.Path.StartsWith("simulation.skills[0].requires", StringComparison.Ordinal));
+        var none = ImmutableDictionary<string, string>.Empty;
+        Assert.Equal(1, Errors(none.Add("nothing", "true")));
+        Assert.Equal(1, Errors(none.Add("headshot_mode", "elbow")));
+        Assert.Equal(1, Errors(none));
+        // The fight context gates modifiers only, and a key a rule drives changes during the fight.
+        Assert.Equal(1, Errors(none.Add(GamePack.FightContextSelector, GamePack.FightContextFight)));
+        Assert.Equal(1, Errors(none.Add("overwatch_active", "true")));
+        // A shield is placed by the fight's own scheduler.
+        Assert.Equal(1, Errors(none.Add("headshot_mode", "headshot"), rule with { Shield = "damage", Rate = "", Window = "", Impact = "" }));
+        // A headshot cycle's key and the cover a cover cycle holds change during a fight too.
+        ImmutableArray<SelectorDefinition> flags = [.. Pack.Selectors, new() { ID = "lit", Name = "Lit", Values = ["true"] }, new() { ID = "in_cover", Name = "In cover", Values = ["true"] }];
+        int FightErrors(string key, ImmutableArray<SimHeadshotCycle> cycles) => PackValidator.Validate(Pack with
+        {
+            Selectors = flags,
+            Simulation = Pack.Simulation with { Skills = [rule with { RequiresContext = none.Add(key, "true") }], HeadshotCycles = cycles }
+        }).Diagnostics.Count(diagnostic => diagnostic.Path.StartsWith("simulation.skills[0].requires", StringComparison.Ordinal));
+        Assert.Equal(0, FightErrors("lit", []));
+        Assert.Equal(1, FightErrors("lit", [new() { Talent = "talent_killer", Key = "lit" }]));
+        Assert.Equal(1, FightErrors("in_cover", []));
+    }
+
+    [Fact]
+    public void ASkillRulesTargetsIsCheckedAndRoundTrips()
+    {
+        // ADR 0027: an impact on several distinct enemies names an output, with no impacts, area, status or rate beside it.
+        var rule = Pack.Simulation.Skills.Single() with { Rate = "", Window = "", Cooldown = "duration" };
+        GamePack With(SimSkillDefinition row) => Pack with { Simulation = Pack.Simulation with { Skills = [row] } };
+        var targeted = rule with { Targets = "damage" };
+        var loaded = PackValidator.Load(PackWriter.Write(With(targeted)));
+        Assert.Empty(loaded.Diagnostics);
+        Assert.Equal("damage", Assert.Single(loaded.Compiled!.Pack.Simulation.Skills).Targets);
+        int Errors(SimSkillDefinition row) => PackValidator.Validate(With(row)).Diagnostics.Count(diagnostic => diagnostic.Code == "bad-sim-skill");
+        Assert.Equal(1, Errors(targeted with { Targets = "nothing" }));
+        Assert.Equal(1, Errors(targeted with { Impacts = "damage" }));
+        Assert.Equal(1, Errors(targeted with { Status = "burning", Window = "duration" }));
+        Assert.Equal(1, Errors(targeted with { Rate = "dps", Window = "duration" }));
+        Assert.True(Errors(targeted with { Impact = "", Rate = "dps", Window = "duration" }) >= 1);
+    }
+
+    [Fact]
+    public void ASkillRulesImpactRepairAndEndDelayAreCheckedAndRoundTrip()
+    {
+        // ADR 0028: a repair per impact names an output beside an impact; an end delay needs a cooldown from the use's end.
+        var rule = Pack.Simulation.Skills.Single() with { CooldownFromEnd = true };
+        GamePack With(SimSkillDefinition row) => Pack with { Simulation = Pack.Simulation with { Skills = [row] } };
+        var leech = rule with { ImpactRepair = "damage", EndDelay = 2 };
+        var loaded = PackValidator.Load(PackWriter.Write(With(leech)));
+        Assert.Empty(loaded.Diagnostics);
+        var back = Assert.Single(loaded.Compiled!.Pack.Simulation.Skills);
+        Assert.Equal(("damage", 2d), (back.ImpactRepair, back.EndDelay));
+        int Errors(SimSkillDefinition row) => PackValidator.Validate(With(row)).Diagnostics.Count(diagnostic => diagnostic.Code == "bad-sim-skill");
+        Assert.Equal(1, Errors(leech with { ImpactRepair = "nothing" }));
+        Assert.Equal(1, Errors(leech with { Impact = "" }));
+        // Impacts landing together would repair once for them all.
+        Assert.Equal(1, Errors(leech with { Impacts = "damage" }));
+        Assert.Equal(0, Errors(leech with { Impacts = "damage", ImpactInterval = "duration" }));
+        Assert.Equal(1, Errors(leech with { CooldownFromEnd = false }));
+        Assert.Equal(1, Errors(leech with { EndDelay = -1 }));
+        Assert.Equal(1, Errors(leech with { EndDelay = SimSkillDefinition.MaximumEndDelay + 1 }));
+        Assert.Equal(1, Errors(leech with { EndDelay = double.NaN }));
+    }
+
+    [Fact]
+    public void AChargingRuleAndItsSkillsTriggerAreCheckedAndRoundTrip()
+    {
+        // ADR 0031: a buff hive's rule times its charges as a repair skill's, with chargeFor; the skill alone owns a buff rule gaining on
+        // skill_charge.
+        var rule = Pack.Simulation.Skills.Single();
+        var charge = new SimSkillDefinition
+        {
+            Skill = rule.Skill,
+            ChargeFor = "duration",
+            RepairEvery = 0.2,
+            RepairLag = 0.35,
+            RepairCount = "damage",
+            Window = "duration",
+            Cooldown = rule.Cooldown,
+            CooldownFromEnd = true,
+            EndDelay = 2
+        };
+        var stim = new SimTriggerDefinition { Talent = rule.Skill, Kind = "buff", Key = "stim_on", On = "skill_charge", Duration = 5 };
+        GamePack With(SimSkillDefinition row, params SimTriggerDefinition[] triggers) => Pack with
+        {
+            Selectors = [.. Pack.Selectors, new() { ID = "stim_on", Name = "Stim", Values = ["true"] }],
+            Simulation = Pack.Simulation with { Skills = [row], Triggers = [.. Pack.Simulation.Triggers, .. triggers] }
+        };
+        var loaded = PackValidator.Load(PackWriter.Write(With(charge, stim)));
+        Assert.Empty(loaded.Diagnostics);
+        Assert.Equal("duration", Assert.Single(loaded.Compiled!.Pack.Simulation.Skills).ChargeFor);
+        int Errors(SimSkillDefinition row, params SimTriggerDefinition[] triggers) =>
+            PackValidator.Validate(With(row, triggers)).Diagnostics.Count(diagnostic => diagnostic.Code is "bad-sim-skill" or "bad-sim-trigger");
+        // No armor wait is needed; a repair, an armor share or a cloud isn't a charge's.
+        Assert.Contains(PackValidator.Validate(With(charge with { Repair = "damage", UseArmorBelow = 1 }, stim)).Diagnostics, diagnostic => diagnostic.Message == "A rule repairs or charges, not both");
+        Assert.Equal(1, Errors(charge with { RepairBelow = 0.9 }, stim));
+        Assert.Equal(1, Errors(charge with { RepairCloud = "duration" }, stim));
+        Assert.Equal(1, Errors(charge with { ChargeFor = "nothing" }, stim));
+        // A skill's rule must be a buff on skill_charge, of a skill that charges; only a skill's rule gains on skill_charge.
+        Assert.Equal(1, Errors(charge, stim with { Kind = "stacks", Max = 2 }));
+        Assert.Equal(1, Errors(charge, stim with { On = "hit" }));
+        Assert.Equal(1, Errors(charge with { ChargeFor = "", RepairEvery = 0, RepairLag = 0, RepairCount = "", Impact = "damage", Window = "", CooldownFromEnd = false, EndDelay = 0 }, stim));
+        var talent = Pack.Talents.First().ID;
+        Assert.Equal(1, Errors(charge, stim, stim with { Talent = talent, Key = "stim_on" }));
+        // Nor as another gain, or to end, reset or consume a talent's rule; and a charge doesn't wait for armor.
+        Assert.Equal(1, Errors(charge, stim, stim with { Talent = talent, On = "kill", Also = [new() { On = "skill_charge" }] }));
+        Assert.Equal(1, Errors(charge, stim, stim with { Talent = talent, On = "kill", ResetOn = "skill_charge" }));
+        Assert.Equal(1, Errors(charge with { UseArmorBelow = 1 }, stim));
+        // A hive charging skills (ADR 0031): chargeSkills needs chargeFor, and refresh needs chargeSkills; both round-trip.
+        var artificer = PackValidator.Load(PackWriter.Write(With(charge with { ChargeSkills = true, Refresh = "duration" }, stim)));
+        Assert.Empty(artificer.Diagnostics);
+        var read = Assert.Single(artificer.Compiled!.Pack.Simulation.Skills);
+        Assert.True(read.ChargeSkills);
+        Assert.Equal("duration", read.Refresh);
+        Assert.Equal(1, Errors(charge with { Refresh = "duration" }, stim));
+        // Holstered pulses (stage 2c): holsteredEvery needs chargeSkills and a span; holsteredLag needs holsteredEvery.
+        var pulsing = PackValidator.Load(PackWriter.Write(With(charge with { ChargeSkills = true, HolsteredEvery = 0.5, HolsteredLag = 5 }, stim)));
+        Assert.Empty(pulsing.Diagnostics);
+        Assert.Equal(5, Assert.Single(pulsing.Compiled!.Pack.Simulation.Skills).HolsteredLag);
+        Assert.Equal(1, Errors(charge with { HolsteredEvery = 0.5 }, stim));
+        Assert.Equal(1, Errors(charge with { ChargeSkills = true, HolsteredEvery = 11 }, stim));
+        Assert.Equal(1, Errors(charge with { ChargeSkills = true, HolsteredLag = 5 }, stim));
+        // A hive is holstered from its cooldown's start: one whose cooldown runs from its use, or with charges, can't pulse; nor faster
+        // than every 0.05 s.
+        string[] Messages(SimSkillDefinition row) => [.. PackValidator.Validate(With(row, stim)).Diagnostics.Select(diagnostic => diagnostic.Message)];
+        const string pulseRule = "holsteredEvery needs chargeSkills, cooldownFromEnd and no stock, and is 0.05 up to 10 s";
+        Assert.Contains(pulseRule, Messages(charge with { ChargeSkills = true, HolsteredEvery = 0.5, CooldownFromEnd = false }));
+        Assert.Contains(pulseRule, Messages(charge with { ChargeSkills = true, HolsteredEvery = 0.5, Stock = "damage" }));
+        Assert.Contains(pulseRule, Messages(charge with { ChargeSkills = true, HolsteredEvery = 0.01 }));
+        Assert.Contains(pulseRule, Messages(charge with { ChargeSkills = true, HolsteredEvery = double.NaN }));
+        Assert.Equal(1, Errors(charge with { ChargeSkills = true, HolsteredEvery = 0.5, HolsteredLag = 11 }, stim));
+        Assert.Equal(1, Errors(charge with { ChargeSkills = true, Refresh = "nothing" }, stim));
+        Assert.Contains(PackValidator.Validate(With(charge with { ChargeFor = "", ChargeSkills = true, RepairEvery = 0, RepairLag = 0, RepairCount = "", Impact = "damage", Window = "", CooldownFromEnd = false, EndDelay = 0 })).Diagnostics,
+            diagnostic => diagnostic.Message == "chargeSkills needs chargeFor");
+    }
+
+    [Fact]
+    public void ASkillOutRuleIsChecked()
+    {
+        // ADR 0032: a skill with a window owns a buff on skill_out, held for its use, with no duration; nothing else gains on it.
+        var rule = Pack.Simulation.Skills.Single();
+        var held = new SimSkillDefinition { Skill = rule.Skill, Window = "duration", Cooldown = rule.Cooldown, CooldownFromEnd = true };
+        var buff = new SimTriggerDefinition { Talent = rule.Skill, Kind = "buff", Key = "out_on", On = "skill_out" };
+        GamePack With(SimSkillDefinition row, params SimTriggerDefinition[] triggers) => Pack with
+        {
+            Selectors = [.. Pack.Selectors, new() { ID = "out_on", Name = "Out", Values = ["true"] }],
+            Simulation = Pack.Simulation with { Skills = [row], Triggers = [.. Pack.Simulation.Triggers, .. triggers] }
+        };
+        Assert.Empty(PackValidator.Load(PackWriter.Write(With(held, buff))).Diagnostics);
+        int Errors(SimSkillDefinition row, params SimTriggerDefinition[] triggers) =>
+            PackValidator.Validate(With(row, triggers)).Diagnostics.Count(diagnostic => diagnostic.Code is "bad-sim-skill" or "bad-sim-trigger");
+        // Without its skill_out buff, a window alone is no skill rule.
+        Assert.Equal(1, Errors(held));
+        Assert.Equal(1, Errors(held, buff with { Duration = 5 }));
+        Assert.Equal(1, Errors(held with { Window = "", Impact = "damage" }, buff));
+        var talent = Pack.Talents.First().ID;
+        Assert.Equal(1, Errors(held, buff, buff with { Talent = talent, Key = "out_on", On = "kill", ResetOn = "skill_out", Duration = 5 }));
+        Assert.Equal(1, Errors(held, buff, buff with { Talent = talent, Key = "out_on", On = "kill", Also = [new() { On = "skill_out" }], Duration = 5 }));
+        Assert.Equal(1, Errors(held, buff with { Kind = "stacks", Max = 2, Duration = 5 }));
+        // Held while out: nothing gates, spaces or ends it; not on a repair rule, nor one whose effects start late.
+        Assert.Equal(1, Errors(held, buff with { ConsumeOn = "target_death" }));
+        Assert.Equal(1, Errors(held, buff with { Chance = 0.5 }));
+        // A refill of the weapon put away on swaps (ADR 0033) goes on a skill_out buff alone, and round-trips.
+        Assert.Equal(0, Errors(held, buff with { RefillOnSwap = true }));
+        Assert.True(Assert.Single(PackValidator.Load(PackWriter.Write(With(held, buff with { RefillOnSwap = true }))).Compiled!.Pack.Simulation.Triggers, rule => rule.On == "skill_out").RefillOnSwap);
+        bool RefillError(params SimTriggerDefinition[] triggers) =>
+            PackValidator.Validate(With(held, triggers)).Diagnostics.Any(diagnostic => diagnostic.Path.EndsWith(".refillOnSwap", StringComparison.Ordinal));
+        var talentRule = new SimTriggerDefinition { Talent = talent, Kind = "buff", Key = "talent_on", On = "kill", Duration = 5 };
+        Assert.Equal(0, Errors(held, buff, talentRule));
+        Assert.True(RefillError(buff, talentRule with { RefillOnSwap = true }));
+        // Nor with another rule holding its key.
+        Assert.True(RefillError(buff with { RefillOnSwap = true }, talentRule with { Key = "out_on" }));
+        Assert.Contains(PackValidator.Validate(With(held with { ImpactDelay = 1, CooldownFromEnd = false }, buff)).Diagnostics,
+            diagnostic => diagnostic.Code == "bad-sim-trigger" && diagnostic.Message.StartsWith("Only a skill owns a trigger rule", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ADecoyRuleIsCheckedAndRoundTrips()
+    {
+        // ADR 0034: a skill drawing fire holds a window and a cooldown, and draws hits on its health, dealing nothing.
+        var rule = Pack.Simulation.Skills.Single();
+        var decoy = new SimSkillDefinition { Skill = rule.Skill, Window = "duration", Cooldown = rule.Cooldown, CooldownFromEnd = true, DecoyHealth = "damage" };
+        GamePack With(SimSkillDefinition row) => Pack with { Simulation = Pack.Simulation with { Skills = [row] } };
+        var loaded = PackValidator.Load(PackWriter.Write(With(decoy)));
+        Assert.Empty(loaded.Diagnostics);
+        Assert.Equal("damage", Assert.Single(loaded.Compiled!.Pack.Simulation.Skills).DecoyHealth);
+        bool Refused(SimSkillDefinition row) => PackValidator.Validate(With(row)).Diagnostics.Any(diagnostic => diagnostic.Path.EndsWith(".decoyHealth", StringComparison.Ordinal));
+        Assert.True(Refused(decoy with { Window = "" }));
+        Assert.True(Refused(decoy with { Impact = "damage" }));
+        Assert.True(Refused(decoy with { Stock = "damage" }));
+        Assert.True(Refused(decoy with { CooldownFromEnd = false }));
+        Assert.True(Refused(decoy with { Cooldown = "" }));
+        Assert.True(Refused(decoy with { Rate = "damage" }));
+        Assert.True(Refused(decoy with { ImpactDelay = 1 }));
+        Assert.True(Refused(decoy with { Area = "duration" }));
+        Assert.True(Refused(decoy with { UseArmorBelow = 1 }));
+        // Its health names an output the skill has.
+        Assert.Contains(PackValidator.Validate(With(decoy with { DecoyHealth = "nothing" })).Diagnostics, diagnostic => diagnostic.Code == "bad-sim-skill");
+    }
+
+    [Fact]
+    public void AZonesRuleIsCheckedAndRoundTrips()
+    {
+        // ADR 0036: a skill marking zones holds a window and a cooldown, and names its outputs, stats and a free selector.
+        var rule = Pack.Simulation.Skills.Single();
+        var zones = new SimSkillZones { Count = "duration", Health = "damage", Factor = "damage", Share = "armor", Multiplier = "total_damage", Key = "zone_marked" };
+        var marking = new SimSkillDefinition { Skill = rule.Skill, Window = "duration", Cooldown = rule.Cooldown, CooldownAfter = 5, Zones = zones };
+        GamePack With(SimSkillDefinition row) => Pack with
+        {
+            Selectors = [.. Pack.Selectors, new() { ID = "zone_marked", Name = "Marked", Values = ["true"] }],
+            Simulation = Pack.Simulation with { Skills = [row] }
+        };
+        var loaded = PackValidator.Load(PackWriter.Write(With(marking)));
+        Assert.Empty(loaded.Diagnostics);
+        Assert.Equal(zones, Assert.Single(loaded.Compiled!.Pack.Simulation.Skills).Zones);
+        // The factor and key may be left out.
+        Assert.Empty(PackValidator.Validate(With(marking with { Zones = zones with { Factor = "", Key = "" } })).Diagnostics);
+        bool Refused(SimSkillDefinition row, string at = ".zones") => PackValidator.Validate(With(row)).Diagnostics.Any(diagnostic => diagnostic.Path.EndsWith(at, StringComparison.Ordinal));
+        Assert.True(Refused(marking with { Window = "" }));
+        Assert.True(Refused(marking with { Cooldown = "" }));
+        Assert.True(Refused(marking with { Impact = "damage" }));
+        Assert.True(Refused(marking with { Rate = "damage" }));
+        Assert.True(Refused(marking with { Stock = "damage" }));
+        Assert.True(Refused(marking with { ImpactDelay = 1 }));
+        Assert.True(Refused(marking with { Area = "duration" }));
+        Assert.True(Refused(marking with { DecoyHealth = "damage" }));
+        Assert.True(Refused(marking with { Zones = zones with { Count = "" } }));
+        Assert.True(Refused(marking with { Zones = zones with { Health = "nothing" } }));
+        Assert.True(Refused(marking with { Zones = zones with { Factor = "nothing" } }));
+        Assert.True(Refused(marking with { Zones = zones with { Share = "nothing" } }, ".zones.share"));
+        Assert.True(Refused(marking with { Zones = zones with { Multiplier = "" } }, ".zones.multiplier"));
+        Assert.True(Refused(marking with { Zones = zones with { Key = "nothing" } }, ".zones.key"));
+        // The key is true-only, and gates no trigger or skill, since a gate is read once and the mark sets it as it goes.
+        GamePack Valued(params string[] values) => With(marking) with { Selectors = [.. Pack.Selectors, new() { ID = "zone_marked", Name = "Marked", Values = [.. values] }] };
+        Assert.Contains(PackValidator.Validate(Valued("true", "off")).Diagnostics, diagnostic => diagnostic.Path.EndsWith(".zones.key", StringComparison.Ordinal));
+        var gate = Map("zone_marked", "true");
+        Assert.True(Refused(marking with { RequiresContext = gate }, ".requires.zone_marked"));
+        var gated = With(marking) with { Simulation = With(marking).Simulation with { Triggers = [new() { Talent = "talent_killer", Key = Pack.Simulation.Triggers[0].Key, Kind = "buff", On = "kill", Duration = 5, RequiresContext = gate }] } };
+        Assert.Contains(PackValidator.Validate(gated).Diagnostics, diagnostic => diagnostic.Path.EndsWith(".requires.zone_marked", StringComparison.Ordinal));
+        // Nor does its use hold a skill_out buff.
+        var holding = With(marking) with { Simulation = With(marking).Simulation with { Triggers = [new() { Talent = rule.Skill, Key = Pack.Simulation.Triggers[0].Key, Kind = "buff", On = "skill_out" }] } };
+        Assert.Contains(PackValidator.Validate(holding).Diagnostics, diagnostic => diagnostic.Code == "bad-sim-trigger");
+        // Nor a key a trigger rule holds.
+        var triggered = With(marking) with { Simulation = With(marking).Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Key = "zone_marked" }] } };
+        Assert.Contains(PackValidator.Validate(triggered).Diagnostics, diagnostic => diagnostic.Path.EndsWith(".zones.key", StringComparison.Ordinal));
+        // One skill marks zones.
+        var second = Pack.ActiveSkills.First(skill => skill.ID == rule.Skill) with { ID = "second_marker" };
+        var both = With(marking) with
+        {
+            ActiveSkills = [.. Pack.ActiveSkills, second],
+            Simulation = Pack.Simulation with { Skills = [marking, marking with { Skill = second.ID }] }
+        };
+        Assert.Contains(PackValidator.Validate(both).Diagnostics, diagnostic => diagnostic.Message == "Only one skill marks zones");
+    }
+
+    [Fact]
+    public void AReviveRuleIsCheckedAndRoundTrips()
+    {
+        // ADR 0037: a skill reviving its user holds a window and a cooldown from its end, and names its outputs.
+        var rule = Pack.Simulation.Skills.Single();
+        var revive = new SimSkillRevive { Armor = "damage", Seconds = "duration", PoolShare = 0.5, DamageTaken = 0.5, BleedSeconds = 45, ImmuneSeconds = 5, EndAfter = 4 };
+        var reviving = new SimSkillDefinition { Skill = rule.Skill, Window = "duration", Cooldown = rule.Cooldown, CooldownFromEnd = true, Revive = revive };
+        GamePack With(SimSkillDefinition row) => Pack with { Simulation = Pack.Simulation with { Skills = [row], Triggers = [] } };
+        var loaded = PackValidator.Load(PackWriter.Write(With(reviving)));
+        Assert.Empty(loaded.Diagnostics);
+        Assert.Equal(revive, Assert.Single(loaded.Compiled!.Pack.Simulation.Skills).Revive);
+        Assert.Empty(PackValidator.Validate(With(reviving with { Revive = revive with { ImmuneSeconds = 0, EndAfter = 0 } })).Diagnostics);
+        bool Refused(SimSkillDefinition row) => PackValidator.Validate(With(row)).Diagnostics.Any(diagnostic => diagnostic.Path.EndsWith(".revive", StringComparison.Ordinal));
+        Assert.True(Refused(reviving with { Window = "" }));
+        Assert.True(Refused(reviving with { Cooldown = "" }));
+        Assert.True(Refused(reviving with { CooldownFromEnd = false }));
+        Assert.True(Refused(reviving with { Impact = "damage" }));
+        Assert.True(Refused(reviving with { Rate = "damage" }));
+        Assert.True(Refused(reviving with { Stock = "damage" }));
+        Assert.True(Refused(reviving with { DecoyHealth = "damage" }));
+        Assert.True(Refused(reviving with { Zones = new() }));
+        Assert.True(Refused(reviving with { Revive = revive with { Armor = "" } }));
+        Assert.True(Refused(reviving with { Revive = revive with { Seconds = "nothing" } }));
+        Assert.True(Refused(reviving with { Revive = revive with { PoolShare = 0 } }));
+        Assert.True(Refused(reviving with { Revive = revive with { PoolShare = 1.1 } }));
+        Assert.True(Refused(reviving with { Revive = revive with { DamageTaken = 0 } }));
+        Assert.True(Refused(reviving with { Revive = revive with { BleedSeconds = 0 } }));
+        Assert.True(Refused(reviving with { Revive = revive with { ImmuneSeconds = -1 } }));
+        Assert.True(Refused(reviving with { Revive = revive with { EndAfter = 61 } }));
+        // Nor does its use hold a skill_out buff.
+        var holding = With(reviving) with { Simulation = With(reviving).Simulation with { Triggers = [new() { Talent = rule.Skill, Key = Pack.Simulation.Triggers[0].Key, Kind = "buff", On = "skill_out" }] } };
+        Assert.Contains(PackValidator.Validate(holding).Diagnostics, diagnostic => diagnostic.Code == "bad-sim-trigger");
+        // One skill revives its user.
+        var second = Pack.ActiveSkills.First(skill => skill.ID == rule.Skill) with { ID = "second_reviver" };
+        var both = With(reviving) with
+        {
+            ActiveSkills = [.. Pack.ActiveSkills, second],
+            Simulation = Pack.Simulation with { Skills = [reviving, reviving with { Skill = second.ID }] }
+        };
+        Assert.Contains(PackValidator.Validate(both).Diagnostics, diagnostic => diagnostic.Message == "Only one skill revives its user");
+    }
+
+    [Fact]
+    public void ARepairRuleIsCheckedAndRoundTrips()
+    {
+        // ADR 0030: a repair skill's rule repairs and deals nothing, waits for armor, and checks through a window with a cooldown.
+        var rule = Pack.Simulation.Skills.Single();
+        GamePack With(SimSkillDefinition row) => Pack with { Simulation = Pack.Simulation with { Skills = [row] } };
+        var repair = new SimSkillDefinition
+        {
+            Skill = rule.Skill,
+            Repair = "damage",
+            RepairEvery = 0.2,
+            RepairLag = 1.55,
+            RepairBelow = 0.9,
+            RepairCount = "damage",
+            RepairCloud = "duration",
+            Window = "duration",
+            Cooldown = rule.Cooldown,
+            CooldownFromEnd = true,
+            EndDelay = 2,
+            UseArmorBelow = 1
+        };
+        var loaded = PackValidator.Load(PackWriter.Write(With(repair)));
+        Assert.Empty(loaded.Diagnostics);
+        var back = Assert.Single(loaded.Compiled!.Pack.Simulation.Skills);
+        Assert.Equal(("damage", 0.2, 1.55, 0.9, "damage", "duration"), (back.Repair, back.RepairEvery, back.RepairLag, back.RepairBelow, back.RepairCount, back.RepairCloud));
+        int Errors(SimSkillDefinition row) => PackValidator.Validate(With(row)).Diagnostics.Count(diagnostic => diagnostic.Code == "bad-sim-skill");
+        Assert.Equal(0, Errors(repair with { RepairLag = 0, RepairBelow = 0, RepairCount = "", RepairCloud = "" }));
+        // A repair may be read live (the owner's call after R151, for the Fixer).
+        Assert.Equal(0, Errors(repair with { RateRead = "live" }));
+        Assert.Equal(1, Errors(repair with { RateRead = "deploy" }));
+        Assert.Equal(1, Errors(repair with { Repair = "nothing" }));
+        Assert.Equal(1, Errors(repair with { UseArmorBelow = 0 }));
+        Assert.Equal(1, Errors(repair with { RepairEvery = 0 }));
+        Assert.Equal(1, Errors(repair with { RepairEvery = SimSkillDefinition.MaximumRepairEvery + 1 }));
+        Assert.Equal(1, Errors(repair with { RepairLag = -1 }));
+        Assert.Equal(1, Errors(repair with { RepairBelow = 1.5 }));
+        Assert.Equal(1, Errors(repair with { RepairCloud = "nothing" }));
+        // Its end comes from its repairs: no delayed use or cooldown after it, and no count with charges.
+        Assert.Equal(1, Errors(repair with { CooldownFromEnd = false, EndDelay = 0, CooldownAfter = 5 }));
+        Assert.True(Errors(repair with { ImpactDelay = 1 }) >= 1);
+        Assert.Equal(1, Errors(repair with { CooldownFromEnd = false, EndDelay = 0, Stock = "damage", StockInterval = 1 }));
+        Assert.Equal(0, Errors(repair with { CooldownFromEnd = false, EndDelay = 0, RepairCount = "", Stock = "damage", StockInterval = 1 }));
+        // It deals nothing, and it needs a window and a cooldown.
+        Assert.True(Errors(repair with { Impact = "damage" }) >= 1);
+        Assert.Equal(1, Errors(repair with { Window = "" }));
+        Assert.Equal(1, Errors(repair with { Cooldown = "" }));
+        // Its timing fields need it (and without it the rule deals nothing at all, which is refused too).
+        Assert.Contains(PackValidator.Validate(With(repair with { Repair = "" })).Diagnostics, diagnostic => diagnostic.Code == "bad-sim-skill" && diagnostic.Path == "simulation.skills[0].repair");
+    }
+
+    [Fact]
+    public void ASkillRulesRepairDelayAndArmorWaitAreCheckedAndRoundTrip()
+    {
+        // ADR 0030: a repair landing after its impact needs that repair; a skill used below an armor share takes a share up to 1.
+        var rule = Pack.Simulation.Skills.Single() with { CooldownFromEnd = true };
+        GamePack With(SimSkillDefinition row) => Pack with { Simulation = Pack.Simulation with { Skills = [row] } };
+        var leech = rule with { ImpactRepair = "damage", RepairDelay = 1.2, UseArmorBelow = 1 };
+        var loaded = PackValidator.Load(PackWriter.Write(With(leech)));
+        Assert.Empty(loaded.Diagnostics);
+        var back = Assert.Single(loaded.Compiled!.Pack.Simulation.Skills);
+        Assert.Equal((1.2, 1d), (back.RepairDelay, back.UseArmorBelow));
+        int Errors(SimSkillDefinition row) => PackValidator.Validate(With(row)).Diagnostics.Count(diagnostic => diagnostic.Code == "bad-sim-skill");
+        Assert.Equal(0, Errors(leech with { UseArmorBelow = 0.9 }));
+        Assert.Equal(1, Errors(leech with { ImpactRepair = "" }));
+        Assert.Equal(1, Errors(leech with { RepairDelay = -1 }));
+        Assert.Equal(1, Errors(leech with { RepairDelay = SimSkillDefinition.MaximumUseDelay + 1 }));
+        Assert.Equal(1, Errors(leech with { RepairDelay = double.NaN }));
+        Assert.Equal(1, Errors(leech with { UseArmorBelow = -0.5 }));
+        Assert.Equal(1, Errors(leech with { UseArmorBelow = 1.5 }));
+        Assert.Equal(1, Errors(leech with { UseArmorBelow = double.PositiveInfinity }));
+    }
+
+    [Fact]
+    public void ASkillRulesArmorOnlyDelaysAndCooldownAfterAreCheckedAndRoundTrip()
+    {
+        // ADR 0029: an armor-only impact, a delay from the use (longer beyond a distance), and a cooldown starting after the use.
+        var rule = Pack.Simulation.Skills.Single();
+        GamePack With(SimSkillDefinition row) => Pack with { Simulation = Pack.Simulation with { Skills = [row] } };
+        var howl = rule with { ArmorOnly = true, ImpactDelay = 0.7, FarImpactDelay = 1.2, FarFrom = 12.5, CooldownAfter = 1.2 };
+        var loaded = PackValidator.Load(PackWriter.Write(With(howl)));
+        Assert.Empty(loaded.Diagnostics);
+        Assert.Equal(howl, Assert.Single(loaded.Compiled!.Pack.Simulation.Skills));
+        int Errors(SimSkillDefinition row) => PackValidator.Validate(With(row)).Diagnostics.Count(diagnostic => diagnostic.Code == "bad-sim-skill");
+        Assert.Equal(1, Errors(howl with { Impact = "", Rate = "dps" }) - Errors(rule with { Impact = "", Rate = "dps" }));
+        Assert.Equal(1, Errors(howl with { ImpactDelay = -1, FarImpactDelay = 0, FarFrom = 0 }));
+        Assert.Equal(1, Errors(howl with { CooldownAfter = SimSkillDefinition.MaximumUseDelay + 1 }));
+        Assert.Equal(1, Errors(howl with { FarFrom = 0 }));
+        Assert.Equal(1, Errors(howl with { FarImpactDelay = 0 }));
+        // cooldownAfter is for a cooldown from the use, and nothing delayed goes with one from the end: both say so.
+        Assert.Equal(2, Errors(howl with { ImpactDelay = 0, FarImpactDelay = 0, FarFrom = 0, CooldownFromEnd = true }));
+        // A delay with a cooldown from the use's end would start the cooldown before the effects land.
+        Assert.Equal(1, Errors(howl with { CooldownAfter = 0, CooldownFromEnd = true }));
+    }
+
+    [Fact]
+    public void ASkillRulesOutrightKillIsCheckedAndRoundTrips()
+    {
+        // ADR 0029: a chance output, enemy_target profiles once each, and a delay, together beside an impact.
+        var rule = Pack.Simulation.Skills.Single();
+        GamePack With(SimSkillDefinition row) => Rated with { Simulation = Rated.Simulation with { Skills = [row] } };
+        var howl = rule with { KillChance = "damage", KillProfiles = [1], KillDelay = 1.5 };
+        var loaded = PackValidator.Load(PackWriter.Write(With(howl)));
+        Assert.Empty(loaded.Diagnostics);
+        var back = Assert.Single(loaded.Compiled!.Pack.Simulation.Skills);
+        Assert.Equal(("damage", 1.5), (back.KillChance, back.KillDelay));
+        Assert.Equal([1], back.KillProfiles);
+        int Errors(SimSkillDefinition row) => PackValidator.Validate(With(row)).Diagnostics.Count(diagnostic => diagnostic.Path.EndsWith(".killChance", StringComparison.Ordinal));
+        Assert.Equal(1, Errors(howl with { KillProfiles = [] }));
+        Assert.Equal(1, Errors(howl with { KillProfiles = [1, 1] }));
+        Assert.Equal(1, Errors(howl with { KillProfiles = [0] }));
+        Assert.Equal(1, Errors(howl with { KillProfiles = [7] }));
+        Assert.Equal(1, Errors(howl with { KillDelay = -1 }));
+        Assert.Equal(1, Errors(howl with { KillChance = "" }));
+        Assert.Equal(1, Errors(howl with { Impact = "", Rate = "dps" }));
+        Assert.Equal(1, Errors(rule with { KillDelay = 1 }));
+        // Once per enemy per use: not with several impacts, charges or other targets.
+        Assert.Equal(1, Errors(howl with { Impacts = "damage", ImpactInterval = "duration" }));
+        Assert.Equal(1, Errors(howl with { Targets = "damage", Rate = "", Window = "" }));
+        // A pack with no enemy_target profiles has none to name.
+        Assert.Contains(PackValidator.Validate(Pack with { Simulation = Pack.Simulation with { Skills = [howl] } }).Diagnostics,
+            diagnostic => diagnostic.Path.EndsWith(".killChance", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ANextHitBonusIsCheckedAndRoundTrips()
+    {
+        // ADR 0023 (Headhunter): a known talent, once, a share above 0 up to 10, a known cap stat, a window above 0 up to 600 s.
+        var bonus = new SimNextHitBonus { Talent = "talent_killer", Share = 1.25, Cap = "weapon_damage", Window = 30 };
+        GamePack With(params SimNextHitBonus[] rows) => Pack with { Simulation = Pack.Simulation with { NextHitBonuses = [.. rows] } };
+        var loaded = PackValidator.Load(PackWriter.Write(With(bonus)));
+        Assert.Empty(loaded.Diagnostics);
+        Assert.Equal(bonus, Assert.Single(loaded.Compiled!.Pack.Simulation.NextHitBonuses));
+        Assert.Contains("talent_killer", loaded.Compiled.Pack.Simulation.RuleTalents);
+        int Errors(GamePack pack, string code) => PackValidator.Validate(pack).Diagnostics.Count(diagnostic => diagnostic.Code == code);
+        Assert.Equal(1, Errors(With(bonus with { Talent = "nothing" }), "bad-sim-next-hit-bonus"));
+        Assert.Equal(1, Errors(With(bonus, bonus), "bad-sim-next-hit-bonus"));
+        Assert.Equal(1, Errors(With(bonus with { Share = 0 }), "bad-sim-next-hit-bonus"));
+        Assert.Equal(1, Errors(With(bonus with { Share = 11 }), "bad-sim-next-hit-bonus"));
+        Assert.Equal(1, Errors(With(bonus with { Window = 0 }), "bad-sim-next-hit-bonus"));
+        Assert.Equal(1, Errors(With(bonus with { Window = 601 }), "bad-sim-next-hit-bonus"));
+        Assert.Equal(1, Errors(With(bonus with { Cap = "nothing" }), "unknown-stat"));
+    }
+
+    [Fact]
+    public void AForcedShotsShapeIsCheckedAndRoundTrips()
+    {
+        // ADR 0023: forceCritical and forceWholeShot shape a forced headshot, so they need forceHeadshot.
+        var forcing = new SimTriggerDefinition
+        {
+            Talent = "talent_killer",
+            Key = "stacks",
+            On = "headshot_kill",
+            Kind = "stacks",
+            Max = 1,
+            ConsumeOn = "hit",
+            ForceHeadshot = true,
+            ForceCritical = true,
+            ForceWholeShot = true
+        };
+        GamePack With(SimTriggerDefinition rule) => Pack with { Simulation = Pack.Simulation with { Triggers = [.. Pack.Simulation.Triggers.Where(entry => entry.Key != "stacks"), rule] } };
+        var loaded = PackValidator.Load(PackWriter.Write(With(forcing)));
+        Assert.Empty(loaded.Diagnostics);
+        var read = loaded.Compiled!.Pack.Simulation.Triggers.Single(entry => entry.Key == "stacks");
+        Assert.Equal((true, true, true), (read.ForceHeadshot, read.ForceCritical, read.ForceWholeShot));
+        // Each names its own field.
+        var paths = PackValidator.Validate(With(forcing with { ForceHeadshot = false })).Diagnostics.Where(diagnostic => diagnostic.Code == "bad-sim-trigger")
+            .Select(diagnostic => diagnostic.Path[diagnostic.Path.LastIndexOf('.')..]).Order(StringComparer.Ordinal);
+        Assert.Equal([".forceCritical", ".forceWholeShot"], paths);
+    }
+
+    [Fact]
+    public void AFightContextGateIsCheckedAndRoundTrips()
+    {
+        // ADR 0023: a modifier may require the built-in fight_context, static or fight; a static gate on a talent with no fight rule warns.
+        var rules = Pack.Simulation.RuleTalents.ToHashSet(StringComparer.Ordinal);
+        var ruled = Pack.Talents.First(talent => rules.Contains(talent.ID) && !talent.Modifiers.IsDefaultOrEmpty);
+        GamePack Gate(TalentDefinition talent, string value) => Pack with
+        {
+            Talents = [.. Pack.Talents.Select(entry => entry.ID != talent.ID ? entry : entry with
+            {
+                Modifiers = [.. entry.Modifiers.Select((modifier, index) => index > 0 ? modifier : modifier with
+                {
+                    RequiresContext = (modifier.RequiresContext ?? ImmutableDictionary<string, string>.Empty).SetItem("fight_context", value)
+                })]
+            })]
+        };
+        var loaded = PackValidator.Load(PackWriter.Write(Gate(ruled, "static")));
+        Assert.Empty(loaded.Diagnostics);
+        Assert.Equal("static", loaded.Compiled!.Pack.Talents.Single(talent => talent.ID == ruled.ID).Modifiers[0].RequiresContext!["fight_context"]);
+        Assert.Empty(PackValidator.Validate(Gate(ruled, "fight")).Diagnostics);
+        Assert.Contains(PackValidator.Validate(Gate(ruled, "never")).Diagnostics, diagnostic => diagnostic.Code == "unknown-selector-value" && diagnostic.Severity == "error");
+        // Without its fight rule the same gate warns.
+        var unruled = Gate(ruled, "static");
+        unruled = unruled with { Simulation = unruled.Simulation with { Triggers = [.. unruled.Simulation.Triggers.Where(rule => rule.Talent != ruled.ID)] } };
+        var warned = Assert.Single(PackValidator.Validate(unruled).Diagnostics);
+        Assert.Equal(("warning", "static-gate-unruled"), (warned.Severity, warned.Code));
+        // Only a talent's rule can play it, so a gear item's static gate warns too.
+        var item = Pack.Items.First(entry => !entry.Modifiers.IsDefaultOrEmpty);
+        var gated = Pack with
+        {
+            Items = [.. Pack.Items.Select(entry => entry.ID != item.ID ? entry : entry with
+            {
+                Modifiers = [.. entry.Modifiers.Select((modifier, index) => index > 0 ? modifier : modifier with
+                {
+                    RequiresContext = (modifier.RequiresContext ?? ImmutableDictionary<string, string>.Empty).SetItem("fight_context", "static")
+                })]
+            })]
+        };
+        Assert.Equal("static-gate-unruled", Assert.Single(PackValidator.Validate(gated).Diagnostics).Code);
+        // A fight rule always runs in a fight, so it can't take the gate.
+        var rule = Pack.Simulation.Triggers.First(entry => entry.Kind is "buff" && entry.On.Length > 0);
+        var fightGated = Pack with
+        {
+            Simulation = Pack.Simulation with
+            {
+                Triggers = [.. Pack.Simulation.Triggers.Select(entry => entry != rule ? entry : entry with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add("fight_context", "fight") })]
+            }
+        };
+        Assert.Contains(PackValidator.Validate(fightGated).Diagnostics, diagnostic => diagnostic.Code == "bad-sim-trigger" && diagnostic.Path.EndsWith(".requires.fight_context", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void AHeadshotCycleIsCheckedAndRoundTrips()
+    {
+        // ADR 0021: one cycle per talent, on a tag some weapon carries, a true-only selector, known stats and a kill threshold from 1.
+        var weapon = Pack.Items.First(item => Pack.Slots.Any(slot => slot.ID == item.Slot && slot.Weapon));
+        var selector = new SelectorDefinition { ID = "waiting", Name = "Waiting", Values = ["true"] };
+        var stat = Pack.Stats[0].ID;
+        var cycle = new SimHeadshotCycle { Talent = Pack.Talents[0].ID, WeaponTag = "mmr", Key = "waiting", Repair = stat, BonusArmorCap = stat, Allowance = stat, KillFrom = 3 };
+        GamePack With(SimHeadshotCycle row) => Pack with
+        {
+            Items = [.. Pack.Items.Select(item => item.ID == weapon.ID ? item with { Tags = [.. item.Tags, "mmr"] } : item)],
+            Selectors = [.. Pack.Selectors, selector],
+            Simulation = Pack.Simulation with { HeadshotCycles = [row] }
+        };
+        var result = PackValidator.Load(PackWriter.Write(With(cycle)));
+        Assert.Empty(result.Diagnostics);
+        Assert.Equal(cycle, Assert.Single(result.Compiled!.Pack.Simulation.HeadshotCycles));
+        int Errors(SimHeadshotCycle row) => PackValidator.Validate(With(row)).Diagnostics.Count(diagnostic => diagnostic.Code is "bad-sim-headshot-cycle" or "unknown-stat");
+        Assert.Equal(1, Errors(cycle with { WeaponTag = "nothing" }));
+        Assert.Equal(1, Errors(cycle with { Key = "nothing" }));
+        Assert.Equal(1, Errors(cycle with { Repair = "nothing" }));
+        Assert.Equal(1, Errors(cycle with { KillFrom = 0 }));
+        Assert.Equal(1, Errors(cycle with { Talent = "nothing" }));
+    }
+
+    [Fact]
+    public void AKitAbilityAndInstantKitAreChecked()
+    {
+        var talent = Pack.Talents[0].ID;
+        int Errors(SimArmorKit kit) => PackValidator.Validate(Pack with { Simulation = Pack.Simulation with { ArmorKit = kit } }).Diagnostics
+            .Count(diagnostic => diagnostic.Code is "bad-sim-armor-kit" or "unknown-stat");
+        // Its talent must replace the kit, once; its cooldown must be a stat.
+        Assert.Equal(1, Errors(Kit with { Abilities = [new() { Talent = talent, Cooldown = Pack.Stats[0].ID }] }));
+        Assert.Equal(1, Errors(Kit with { ReplacedByTalents = [talent], Abilities = [new() { Talent = talent, Cooldown = Pack.Stats[0].ID }, new() { Talent = talent, Cooldown = Pack.Stats[0].ID }] }));
+        Assert.Equal(1, Errors(Kit with { ReplacedByTalents = [talent], Abilities = [new() { Talent = talent, Cooldown = "nothing" }] }));
+        // An instant kit without an ability is never used, which the validator warns of.
+        Assert.Contains(PackValidator.Validate(Pack with { Simulation = Pack.Simulation with { ArmorKit = Kit with { Instant = new() { Repair = 0.25, Cooldown = 5 } } } }).Diagnostics,
+            diagnostic => diagnostic.Code == "sim-instant-kit-unused" && diagnostic.Severity == "warning");
+        // An instant kit's repair is a share above 0 up to 1, and its cooldown 0 to 600 s.
+        Assert.Equal(1, Errors(Kit with { Instant = new() { Repair = 0, Cooldown = 5 } }));
+        Assert.Equal(1, Errors(Kit with { Instant = new() { Repair = 0.25, Cooldown = 601 } }));
     }
 
     [Theory]
@@ -821,6 +1497,46 @@ public sealed class PackValidatorTests
     }
 
     [Fact]
+    public void ASelectorWithADefaultMayBeDrivenOnlyByAPhasedDistanceRule()
+    {
+        // A buff rule turns its key off by removing it, which would expose the default; a phased distance rule always sets a value.
+        var rule = Pack.Simulation.Triggers[0];
+        var selector = Pack.Selectors.First(entry => entry.ID == rule.Key);
+        var withDefault = Pack with { Selectors = [.. Pack.Selectors.Select(entry => entry.ID == rule.Key ? entry with { Default = selector.Values[0] } : entry)] };
+        Assert.Contains(PackValidator.Validate(withDefault).Diagnostics, diagnostic => diagnostic.Code == "selector-default");
+        var banded = withDefault with
+        {
+            Simulation = withDefault.Simulation with
+            {
+                Triggers = [rule with { Kind = "distance", On = "", Duration = 0, Phases = [new() { Until = 15, Value = selector.Values[0] }] }]
+            }
+        };
+        Assert.DoesNotContain(PackValidator.Validate(banded).Diagnostics, diagnostic => diagnostic.Code == "selector-default");
+    }
+
+    [Fact]
+    public void AcceptsChemicalAgentsTwoStacksRulesOnOneKey()
+    {
+        // Its enemy part and its player part: one talent's, shaped alike, each gaining its own way.
+        var talent = Pack.Simulation.Triggers[0].Talent;
+        var enemy = new SimTriggerDefinition { Talent = talent, Key = "stacks", Kind = "stacks", On = "second", Max = 5, Duration = 5, Refresh = true, Decay = 1, WhileStatus = "any" };
+        var shared = Pack with { Simulation = Pack.Simulation with { Triggers = [enemy, enemy with { Gain = 2, WhileStatus = "", WhilePlayerStatus = "any" }] } };
+        Assert.DoesNotContain(PackValidator.Validate(shared).Diagnostics, diagnostic => diagnostic.Severity == "error");
+    }
+
+    [Fact]
+    public void AcceptsASharedBuffRuleAndRefusesItOnlyForShareCopies()
+    {
+        var shared = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { ShareCopies = true }] } };
+        Assert.DoesNotContain(PackValidator.Validate(shared).Diagnostics, diagnostic => diagnostic.Severity == "error");
+        // The ready rule refused above is valid without shareCopies, so that refusal is shareCopies' own.
+        var ready = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready" }] } };
+        Assert.DoesNotContain(PackValidator.Validate(ready).Diagnostics, diagnostic => diagnostic.Severity == "error");
+        var refused = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", ShareCopies = true }] } };
+        Assert.Contains(PackValidator.Validate(refused).Diagnostics, diagnostic => diagnostic.Message.Contains("shareCopies", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void AcceptsAPrimedReadyRule()
     {
         var rules = Pack with { Simulation = Pack.Simulation with { Triggers = [Pack.Simulation.Triggers[0] with { Kind = "ready", On = "", Duration = 0, PrimeHolstered = 10 }] } };
@@ -849,6 +1565,22 @@ public sealed class PackValidatorTests
         var diagnostics = PackValidator.Validate(rules).Diagnostics;
         Assert.DoesNotContain(diagnostics, diagnostic => diagnostic.Severity == "error");
         Assert.Contains(diagnostics, diagnostic => diagnostic.Code == "sim-player-status-unapplied" && diagnostic.Path == "simulation.triggers[0].whilePlayerStatus");
+    }
+
+    [Fact]
+    public void WarnsWhenEveryStatusOnThePlayerIsLeftOut()
+    {
+        // R122: with ensnared left out of any, a pack whose enemies only ensnare the player never opens the rule.
+        var diagnosticsFor = (string status) => PackValidator.Validate(Rated with
+        {
+            Simulation = Rated.Simulation with
+            {
+                EnemyStatuses = [new() { Target = 1, Status = status, Duration = 2 }],
+                Triggers = [Pack.Simulation.Triggers[0] with { WhilePlayerStatus = "any", AnyStatusExcept = ["ensnared"] }]
+            }
+        }).Diagnostics;
+        Assert.Contains(diagnosticsFor("ensnared"), diagnostic => diagnostic.Code == "sim-player-status-unapplied");
+        Assert.DoesNotContain(diagnosticsFor("blinded"), diagnostic => diagnostic.Code == "sim-player-status-unapplied");
     }
 
     [Fact]

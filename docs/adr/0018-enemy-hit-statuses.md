@@ -16,6 +16,10 @@ statuses are in, with their effects settled after ShadeTech's reading, and so ar
 5. **Talents reacting to the player's status:** included. The request asks which talents read or clear a status on the player, and
    the engine gives rules a way to read it.
 6. **The row:** a new `simulation.enemyStatuses` list.
+7. **Chemical Agent's player part** (owner, 2026-11-15, against the recommendation of an `also` entry gated on the player): R115's
+   reading has it gain 2 a second while the player is affected, beside its enemy part on the same stacks. It comes as a second stacks
+   rule on the same key. Fights let stacks rules share a key when they shape the stacks alike, so each part gains its own way into
+   one count.
 
 ## Context
 
@@ -93,6 +97,7 @@ Without a row nothing changes. Results move only when ShadeTech's rows exist, an
    `simulation.enemyStatuses` was built the same day: damaging statuses tick through armor first, and resistances shorten the
    duration, R114's likely reading. Control statuses go on with no effect, since no profile applies one. Talents reading the
    player's statuses (Chemical Agent) are the next piece. Built the same day as `whilePlayerStatus` on buff and stacks rules.
+   Stacks rules sharing a key (point 7) built 2026-11-15 (#269); R118 (ShadeTech) asks for Chemical Agent's second row.
 4. **Adoption:** a deliberate result change for fights with enemy fire against those profiles.
 
 ## Alternatives considered

@@ -30,6 +30,7 @@ public static class SimulationPresentation
         }
         if (fight.StatusDps is { } status) { text += $"\n{SimulationMetricLabels.Status}: {status.Mean:N0}"; }
         if (fight.TalentDps is { } talent) { text += $"\n{SimulationMetricLabels.Talent}: {talent.Mean:N0}"; }
+        if (fight.ZoneHits is { } zoneHits) { text += $"\nHits on marked zones/fight: {zoneHits:N1}"; }
         if (fight.KilledFraction is { } killed)
         {
             // Each fight's average, weighted by fight; fights without a kill are left out, so their share is shown.
@@ -45,9 +46,11 @@ public static class SimulationPresentation
                 : $"\nTime to clear: not reached in any fight";
         }
         if (fight.Incoming is { } received)
-        { text += $"\nIncoming damage/fight: {received.DamageTaken:N0} · Downed: {received.DownedFraction:P1}\nArmor repaired/fight: {received.ArmorRepaired:N0} · Shield absorbed/fight: {received.ShieldAbsorbed:N0}"; }
+        { text += $"\nIncoming damage/fight: {received.DamageTaken:N0} · Downed: {received.DownedFraction:P1}{(received.Revives is { } revives ? $" · Revived/fight: {revives:N1}" : "")}\nArmor repaired/fight: {received.ArmorRepaired:N0} · Shield absorbed/fight: {received.ShieldAbsorbed:N0}"; }
         if (fight.Incoming is { } kits && kits.ArmorKitsUsed + kits.ArmorKitsCancelled > 0)
         { text += $"\nArmor kits/fight: {kits.ArmorKitsUsed:N2} used · {kits.ArmorKitsCancelled:N2} cut short by going down"; }
+        if (fight.Incoming?.ArmorKitAbilityUses is { } abilityUses)
+        { text += $"\nKit ability uses/fight: {abilityUses:N2}"; }
         return text;
     }
 }

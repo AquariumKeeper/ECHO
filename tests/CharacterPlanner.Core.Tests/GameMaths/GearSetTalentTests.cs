@@ -567,8 +567,12 @@ public sealed class GearSetTalentTests
                 var output = offOutputs[i];
                 if (output.Id.StartsWith("assumed_", StringComparison.Ordinal)) { continue; } // skill DPS rates derive from the damage channels
                 var factor = 1.0;
-                // Leech Hive's and Gas Bomber's damage take no skill bonuses (R54).
-                if (IsDamageChannel(output.Id) && skill.ID is not ("skill_leech_hive" or "skill_gas_bomber_drone")) { factor = 1.3; channels++; }
+                // Leech Hive's damage takes no skill bonuses (R54), but from R145 dealt amplifiers reach its `damage`, as for Gas Bomber,
+                // whose ticks the player deals (R137), so Symptom Aggravator does. Its `overcharge_damage` (R147) is checked below, since
+                // it shows only with the overcharge preview on.
+                if (IsDamageChannel(output.Id)) { factor = 1.3; channels++; }
+                // Its poison rate reads the same tick, so it moves with it; a rate, not a channel of its own.
+                else if (skill.ID == "skill_gas_bomber_drone" && output.Id == "poison_dps") { factor = 1.3; }
                 Assert.True(Math.Abs(Outputs(on)[i].Value - (output.Value * factor)) <= 1e-7, $"{skill.ID}/{output.Id}: {Outputs(on)[i].Value}, want {output.Value * factor}");
             }
             foreach (var id in new[] { "skill_damage", "status_effects", "skill_efficiency", "symptom_aggravator_damage_bonus" })
@@ -576,7 +580,12 @@ public sealed class GearSetTalentTests
                 CloseTo(on.Calculation.Stats.Of(id), off.Calculation.Stats.Of(id), 1e-12);
             }
         }
-        Assert.True(channels == 28, $"got {channels} damage channels");
+        Assert.True(channels == 30, $"got {channels} damage channels");
+        // From R147 the Leech Hive's overcharged damage takes dealt amplifiers as its `damage` does: Symptom Aggravator's 30% reaches it.
+        var leech = four.WithActiveSkillSelection("skill_slot_1", "skill_leech_hive");
+        var preview = Context(("overcharge_damage_preview", "1"));
+        double Overcharge(ImmutableDictionary<string, string> context) => Outputs(Resolve(leech, context)).Single(output => output.Id == "overcharge_damage").Value;
+        CloseTo(Overcharge(preview.Add("target_status_affected", "true")), Overcharge(preview) * 1.3, 1e-6);
         var stacked = SelectUpgrade(SelectUpgrade(SetBuild("gear_set_eclipse_protocol", 5), "backpack", "gear_talent_symptom_aggravator").WithEquipment("chest", "chest_belstone_armory_chest"), "chest", "gear_talent_glass_cannon");
         var s = Stats(stacked, affected);
         CloseTo(s.Of("weapon_damage_multiplier"), 1.3 * 1.25, 1e-12);
@@ -625,28 +634,35 @@ public sealed class GearSetTalentTests
         ExpectSetValue(weaponOn, "weapon_damage_multiplier", "gear_set_ortiz_exuro", .4);
     }
 
-    /// <summary>G144: Hackstep converts qualifying bonus armor into total weapon damage in 5% steps, capped at 20%, for weapons only.</summary>
+    /// <summary>
+    /// G144: Hackstep's bonus armor reading multiplies weapon and skill damage, 0.4% a point up to 20% at 50 (R127), with four pieces.
+    /// </summary>
     [Fact]
     public void G144HackstepBoundariesThresholdAndWeaponStacking()
     {
+        // R127: Hackstep's bonus is a separate multiplier on all damage dealt, weapons and skills, continuous at 0.4% a point of bonus armor
+        // up to 20% at 50. It was an addition to total weapon damage in whole 5% steps.
         const string key = "hackstep_qualifying_bonus_armor_percent";
         foreach (var pieces in new[] { 3, 4, 5 })
         {
             var b = SetBuild("gear_set_system_corruption", pieces);
-            CloseTo(Stats(b, Context((key, "50"))).Of("total_weapon_damage"), pieces >= 4 ? .2 : 0, 1e-12);
-            CloseTo(Stats(b).Of("total_weapon_damage"), 0, 1e-12);
+            var fifty = Stats(b, Context((key, "50")));
+            CloseTo(fifty.Of("weapon_damage_multiplier"), pieces >= 4 ? 1.2 : 1, 1e-12);
+            CloseTo(fifty.Of("skill_damage_multiplier"), pieces >= 4 ? 1.2 : 1, 1e-12);
+            CloseTo(fifty.Of("total_weapon_damage"), Stats(b).Of("total_weapon_damage"), 1e-12);
+            CloseTo(Stats(b).Of("weapon_damage_multiplier"), 1, 1e-12);
         }
         var four = SetBuild("gear_set_system_corruption", 4);
-        foreach (var (value, want) in new[] { ("0", 0.0), ("4", 0), ("5", .02), ("24", .08), ("25", .1), ("49", .18), ("50", .2), ("100", .2), ("-1", 0), ("101", 0), ("NaN", 0), ("1.5", 0) })
+        foreach (var (value, want) in new[] { ("0", 0.0), ("4", .016), ("5", .02), ("24", .096), ("25", .1), ("49", .196), ("50", .2), ("100", .2), ("-1", 0), ("101", 0), ("NaN", 0), ("1.5", 0) })
         {
-            var got = Stats(four, Context((key, value))).Of("total_weapon_damage");
-            Assert.True(Math.Abs(got - want) <= 1e-12, $"input \"{value}\": total weapon damage {got}, want {want}");
+            var got = Stats(four, Context((key, value)));
+            Assert.True(Math.Abs(got.Of("weapon_damage_multiplier") - 1 - want) <= 1e-12, $"input \"{value}\": weapon damage multiplier {got.Of("weapon_damage_multiplier")}, want {1 + want}");
+            CloseTo(got.Of("skill_damage_multiplier"), 1 + want, 1e-12);
         }
-        foreach (var skill in Compiled.Pack.ActiveSkills)
-        {
-            var selected = four.WithActiveSkillSelection("skill_slot_1", skill.ID);
-            Assert.True(SamePreviews(Resolve(selected).ActiveSkillPreviews, Resolve(selected, Context((key, "100"))).ActiveSkillPreviews), $"changed skill {skill.ID}");
-        }
+        // Skill damage takes it: the Assault Turret's damage at 50 is 1.2 times its damage at none.
+        var turret = four.WithActiveSkillSelection("skill_slot_1", "skill_assault_turret");
+        double TurretDamage(string value) => Resolve(turret, Context((key, value))).ActiveSkillPreviews["skill_slot_1"].Outputs.Single(output => output.Id == "damage").Value;
+        CloseTo(TurretDamage("50"), TurretDamage("0") * 1.2, 1e-6);
         var armed = SelectWeapon(four, "weapon_type_assault_rifle");
         var off = Stats(armed, Weapon("primary_weapon"));
         var on = Resolve(armed, Context(("weapon_slot", "primary_weapon"), (key, "50")));
@@ -655,11 +671,11 @@ public sealed class GearSetTalentTests
         {
             CloseTo(on.Calculation.Stats.Of(id), off.Of(id) * 1.2, 1e-7);
         }
-        foreach (var id in new[] { "estimated_armor", "bonus_armor_percent", "estimated_bonus_armor", "skill_damage_multiplier" })
+        foreach (var id in new[] { "estimated_armor", "bonus_armor_percent", "estimated_bonus_armor", "total_weapon_damage" })
         {
             CloseTo(on.Calculation.Stats.Of(id), off.Of(id), 1e-12);
         }
-        ExpectSetValue(on, "total_weapon_damage", "gear_set_system_corruption", .2);
+        ExpectSetValue(on, "weapon_damage_multiplier", "gear_set_system_corruption", .2);
     }
 
     /// <summary>G145: Makeshift Repairs' budget and rate need four pieces, both upgrades apply, invalid inputs give 0, and nothing else changes.</summary>
@@ -709,20 +725,24 @@ public sealed class GearSetTalentTests
         }
     }
 
-    /// <summary>G150: Headache's armor repair and bonus armor capacity need four pieces; Stand Tall doubles the capacity only on its host.</summary>
+    /// <summary>
+    /// G150: Headache's armor repair and bonus armor cap need four pieces. The cap is a share of max armor (R127, was of an input for
+    /// current armor), doubled by Stand Tall only on its host.
+    /// </summary>
     [Fact]
     public void G150HotshotArmorCapacities()
     {
-        const string key = "headache_current_armor";
+        // The old input for current armor is kept so saved builds load, and changes nothing.
+        const string unread = "headache_current_armor";
         foreach (var pieces in new[] { 3, 4, 5 })
         {
             var b = SetBuild("gear_set_hotshot", pieces);
             var baseline = Stats(b);
-            var on = Stats(b, Context((key, "100000")));
-            var (repair, capacity) = pieces >= 4 ? (baseline.Of("character_armor") * .1, 50000.0) : (0, 0);
+            var armor = baseline.Of("character_armor");
+            var (repair, capacity) = pieces >= 4 ? (armor * .1, armor * .5) : (0, 0);
             CloseTo(baseline.Of("headache_available_armor_repair"), repair, 1e-8);
-            CloseTo(baseline.Of("headache_bonus_armor_capacity"), 0, 1e-12);
-            CloseTo(on.Of("headache_bonus_armor_capacity"), capacity, 1e-8);
+            CloseTo(baseline.Of("headache_bonus_armor_capacity"), capacity, 1e-8);
+            CloseTo(Stats(b, Context((unread, "100000"))).Of("headache_bonus_armor_capacity"), capacity, 1e-8);
         }
         var four = SetBuild("gear_set_hotshot", 4);
         foreach (var chest in new[] { false, true })
@@ -730,42 +750,39 @@ public sealed class GearSetTalentTests
             foreach (var backpack in new[] { false, true })
             {
                 var selected = four;
-                var capacity = 50000.0;
-                if (chest) { selected = SelectUpgrade(selected, "chest", "gear_talent_stand_tall"); capacity = 100000; }
+                var cap = .5;
+                if (chest) { selected = SelectUpgrade(selected, "chest", "gear_talent_stand_tall"); cap = 1; }
                 if (backpack) { selected = SelectUpgrade(selected, "backpack", "gear_talent_lucky"); }
                 foreach (var full in new[] { "true", "false" })
                 {
-                    var r = Resolve(selected, Context((key, "100000"), ("full_armor", full)));
-                    CloseTo(r.Calculation.Stats.Of("headache_bonus_armor_capacity"), capacity, 1e-8);
-                    CloseTo(r.Calculation.Stats.Of("headache_available_armor_repair"), r.Calculation.Stats.Of("character_armor") * .1, 1e-8);
+                    var r = Resolve(selected, Context(("full_armor", full)));
+                    var armor = r.Calculation.Stats.Of("character_armor");
+                    CloseTo(r.Calculation.Stats.Of("headache_bonus_armor_capacity"), armor * cap, 1e-8);
+                    CloseTo(r.Calculation.Stats.Of("headache_available_armor_repair"), armor * .1, 1e-8);
                     CloseTo(r.Calculation.Stats.Of("bonus_armor_percent"), 0, 1e-12);
-                    ExpectSetValue(r, "headache_bonus_armor_capacity", "gear_set_hotshot", capacity);
+                    ExpectSetValue(r, "headache_bonus_armor_cap", "gear_set_hotshot", cap);
                 }
             }
         }
-        foreach (var input in new[] { "-1", "10000001", "NaN", "1.5", "Infinity", "bad" })
-        {
-            CloseTo(Stats(four, Context((key, input))).Of("headache_bonus_armor_capacity"), 0, 1e-12);
-        }
-        CloseTo(Stats(four, Context((key, "10000000"))).Of("headache_bonus_armor_capacity"), 5000000, 1e-8);
+        double Capacity(BuildSnapshot b) { var s = Stats(b); return s.Of("headache_bonus_armor_capacity") / s.Of("character_armor"); }
         var invalid = four.WithTalentSelection("backpack", "talent", "gear_talent_stand_tall");
-        CloseTo(Stats(invalid, Context((key, "100000"))).Of("headache_bonus_armor_capacity"), 50000, 1e-8);
+        CloseTo(Capacity(invalid), .5, 1e-12);
         var ninja = four.WithEquipment("backpack", "backpack_ninjabike_messenger_backpack").WithTalentSelection("backpack", "talent", "gear_talent_resourceful");
-        CloseTo(Stats(ninja, Context((key, "100000"))).Of("headache_bonus_armor_capacity"), 50000, 1e-8);
-        CloseTo(Stats(ninja.WithTalentSelection("backpack", "talent", ""), Context((key, "100000"))).Of("headache_bonus_armor_capacity"), 0, 1e-12);
+        CloseTo(Capacity(ninja), .5, 1e-12);
+        CloseTo(Stats(ninja.WithTalentSelection("backpack", "talent", "")).Of("headache_bonus_armor_capacity"), 0, 1e-12);
         var armored = four.WithAttributeRoll("mask", "core_1", new("armor_gear_core", 170000))
             .WithAccountUpgrade("watch_total_armor", 50)
             .WithEquipmentUpgrade("mask", "mask_hotshot_mask", 10);
-        var a = Stats(armored, Context((key, "100000")));
+        var a = Stats(armored);
         CloseTo(a.Of("headache_available_armor_repair"), a.Of("character_armor") * .1, 1e-8);
-        CloseTo(a.Of("headache_bonus_armor_capacity"), 50000, 1e-8);
+        CloseTo(a.Of("headache_bonus_armor_capacity"), a.Of("character_armor") * .5, 1e-8);
         foreach (var skill in Compiled.Pack.ActiveSkills)
         {
             var selected = four.WithActiveSkillSelection("skill_slot_1", skill.ID);
             var off = Resolve(selected);
-            var on = Resolve(selected, Context((key, "100000")));
+            var on = Resolve(selected, Context((unread, "100000")));
             Assert.True(SamePreviews(off.ActiveSkillPreviews, on.ActiveSkillPreviews), $"changed skill {skill.ID}");
-            foreach (var id in new[] { "character_armor", "bonus_armor_percent", "estimated_bonus_armor", "estimated_armor_regeneration", "effective_repair_skills", "equipped_weapon_damage", "headache_available_armor_repair" })
+            foreach (var id in new[] { "character_armor", "bonus_armor_percent", "estimated_bonus_armor", "estimated_armor_regeneration", "effective_repair_skills", "equipped_weapon_damage", "headache_available_armor_repair", "headache_bonus_armor_capacity" })
             {
                 CloseTo(on.Calculation.Stats.Of(id), off.Calculation.Stats.Of(id), 1e-12);
             }
@@ -889,9 +906,12 @@ public sealed class GearSetTalentTests
         CloseTo(Stats(b, ctx).Of("stoic_assumed_resistance"), .088, 1e-12);
     }
 
-    /// <summary>G155: Headache's empowered headshot multiplies an eligible marksman rifle's headshots only, with four pieces.</summary>
+    /// <summary>
+    /// G155: Headache's empowered headshot multiplies the next headshot with any weapon, with four pieces (R127: the source's modifiers
+    /// have no weapon filter; the cycle sets it only after a marksman rifle headshot).
+    /// </summary>
     [Fact]
-    public void G155EligibleMMRHeadshots()
+    public void G155EmpoweredHeadshotsWithAnyWeapon()
     {
         foreach (var pieces in new[] { 3, 4, 5 })
         {
@@ -915,8 +935,12 @@ public sealed class GearSetTalentTests
                 }
                 foreach (var selected in new[] { other, "sidearm" })
                 {
-                    CloseTo(Stats(b, Context(("weapon_slot", selected), ("headache_empowered_headshot", "true"))).Of("headshot_damage_multiplier"), 1, 1e-12);
+                    CloseTo(Stats(b, Context(("weapon_slot", selected), ("headache_empowered_headshot", "true"))).Of("headshot_damage_multiplier"), factor, 1e-12);
                 }
+                // The other weapon's headshots take it too.
+                var otherOff = Stats(b, Weapon(other));
+                Assert.True(otherOff.Of("equipped_weapon_headshot_damage") > 0, "other weapon baseline missing");
+                CloseTo(Stats(b, Context(("weapon_slot", other), ("headache_empowered_headshot", "true"))).Of("equipped_weapon_headshot_damage"), otherOff.Of("equipped_weapon_headshot_damage") * factor, 1e-8);
                 foreach (var flag in new[] { "", "false", "bad" })
                 {
                     CloseTo(Stats(b, Context(("weapon_slot", owner), ("headache_empowered_headshot", flag), ("full_armor", "true"))).Of("headshot_damage_multiplier"), 1, 1e-12);

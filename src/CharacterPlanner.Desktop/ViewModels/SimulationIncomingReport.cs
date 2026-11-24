@@ -18,18 +18,25 @@ public sealed record SimulationIncomingReport(ImmutableArray<SimulationReading> 
             new("Enemy attempts / fight", incoming.Attempts.ToString("N1")),
             new("Enemy hits / fight", incoming.Hits.ToString("N1")),
             new("Blocked shots / fight", incoming.BlockedShots.ToString("N1")),
+            .. (incoming.RemovedHits is > 0 and var removed ? [new SimulationReading("Hits removed / fight", removed.ToString("N1"))] : Array.Empty<SimulationReading>()),
+            .. (incoming.DrawnHits is > 0 and var drawn ? [new SimulationReading("Hits drawn by a decoy / fight", drawn.ToString("N1"))] : Array.Empty<SimulationReading>()),
             new("Incoming damage / fight", incoming.DamageTaken.ToString("N1")),
             new("Armor breaks / fight", incoming.ArmorBreaks.ToString("N1")),
             new("Downed fights", incoming.DownedFraction.ToString("P1")),
+            // Downs a skill revived you from (ADR 0037), only where one can.
+            .. (incoming.Revives is { } revives ? [new SimulationReading("Revives / fight", revives.ToString("N2"))] : Array.Empty<SimulationReading>()),
             new("Armor repaired / fight", incoming.ArmorRepaired.ToString("N1")),
             new("Health repaired / fight", incoming.HealthRepaired.ToString("N1")),
             new("Armor kits used / fight", incoming.ArmorKitsUsed.ToString("N2")),
             new("Armor kits cut short by going down / fight", incoming.ArmorKitsCancelled.ToString("N2")),
             new("Armor repaired by kits / fight", incoming.ArmorKitRepaired.ToString("N1")),
+            .. (incoming.ArmorKitAbilityUses is { } abilityUses ? [new SimulationReading("Kit ability uses / fight", abilityUses.ToString("N2"))] : Array.Empty<SimulationReading>()),
             new("Shield absorbed / fight", incoming.ShieldAbsorbed.ToString("N1")),
             new("Shield breaks / fight", incoming.ShieldBreaks.ToString("N1")),
             new("Shield deployments / fight", incoming.ShieldDeployments.ToString("N1")),
             new("Shield repaired / fight", incoming.ShieldRepaired.ToString("N1")),
+            // A talent's drain on the shield (ADR 0026: Symbiosis), only when a weapon in the fight carries one.
+            .. (incoming.ShieldDrained is { } drained ? [new SimulationReading("Shield drained / fight", drained.ToString("N1"))] : Array.Empty<SimulationReading>()),
             new("Forced shield swaps / fight", incoming.ShieldSwitches.ToString("N1")),
             // Statuses enemies' hits put on you (ADR 0018), only when the pack has them for the fight.
             .. (incoming.StatusDamageTaken is { } statusDamage ? [new SimulationReading("Status damage on you / fight", statusDamage.ToString("N1"))] : Array.Empty<SimulationReading>()),
@@ -42,7 +49,7 @@ public sealed record SimulationIncomingReport(ImmutableArray<SimulationReading> 
         if (incoming.TimeToDown is { } down) { timings.Add(new("Time to down (s)", down)); }
         else { missing.Add("Downing: not observed."); }
         return new(readings, timings.ToImmutable(),
-            "Counts, damage and actual repairs are means across all fights. Downed fights is the fraction that went down. Zero shield totals can mean no shield was included, and zero kit totals that no kits were set. Times are seconds from fight start, only among fights where that event occurred; other fights are excluded from timing summaries.",
+            "Counts, damage and actual repairs are means across all fights. Downed fights is the fraction that going down ended, one you were revived and finished aside. Zero shield totals can mean no shield was included, and zero kit totals that no kits were set. Times are seconds from fight start, only among fights where that event occurred; other fights are excluded from timing summaries.",
             string.Join(Environment.NewLine, missing));
     }
 }

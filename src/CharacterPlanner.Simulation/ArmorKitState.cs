@@ -40,6 +40,14 @@ internal sealed class ArmorKitState(SimArmorKit kit, int carried, double atPerce
         return extended;
     }
 
+    /// <summary>Stops a use under way without spending its kit (ADR 0037: the player went down). Returns whether there was one.</summary>
+    public bool Cancel()
+    {
+        var under = Ends is not null;
+        Ends = null;
+        return under;
+    }
+
     /// <summary>Gives back one kit, never above the number carried (Efficient).</summary>
     public void Refund()
     {

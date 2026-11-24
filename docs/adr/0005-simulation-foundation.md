@@ -634,7 +634,8 @@ With driven triggers enabled, incoming events use the same status and buff state
 as weapon events, then Core re-resolves the changed state. Only incoming hit
 amount may change dynamically: enemy interval/hit probability and initial player
 pool capacities must remain fixed. Cadence/capacity changes are explicitly
-refused. Packs declare no recovery capability, so repairs fail closed: any nonzero
+refused. (From 2026-11-16, ADR 0020: a state's bonus armor may change, and the
+player's bonus armor follows it; armor and health capacities stay fixed.) Packs declare no recovery capability, so repairs fail closed: any nonzero
 resolved stat whose id names recovery (repair, regen, healing, on_kill, restore,
 recover) is refused, apart from a short documented list that is not in-fight player
 recovery (skill repair scaling, healing given to others, durations). A recovery stat
@@ -1928,7 +1929,8 @@ swapped`, and the refusal would have failed every single-weapon Frenzy run.
 
 A rule that gains on a swap event is still refused without rotation (committed
 Gunslinger), since it could never trigger and the refusal says the talent needs
-rotation. Other events stay refused when their source is off: without incoming fire,
+rotation. (Superseded 2026-11-15 by ADR 0019: such a rule now steps aside and its
+talent reads the user's setting.) Other events stay refused when their source is off: without incoming fire,
 "never damaged" would be an assumption.
 
 Contracts advance to d2p-simple-buffs-v23 and d2p-incoming-random-v27; results that

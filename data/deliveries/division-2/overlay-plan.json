@@ -1,321 +1,700 @@
 {
   "format": "shade-tech.planner-talent-rule-overlay",
   "version": 2,
-  "provenance_heading": "R115: the nail gun's bleed on the player, Chemical Agent, and Cover Shooter's source timer",
-  "base_manifest_sha256": "01f3d967eb6c742681282392ce280291cdea63c411b8e31d5e53f9f3186ffc3f",
+  "provenance_heading": "R168: swap multipliers for six weapons, and Prima Donna's row",
+  "base_manifest_sha256": "92b4603b19f9d23202b6ba20e3840a45c5594dc59d08fac5f237d0ea0e39da32",
   "evidence_packet": {
     "path": "packet.json",
-    "sha256": "59351c677ac36c87da2fadc7b20fc42f44ff19129ac17aac147d2ae10e2f9283"
+    "sha256": "647c0eb5ccb9b50bff9ec0062505ddd36685d756f58619ace8bc25f9ef1c4f32"
   },
   "changes": [
     {
       "document": "rules.json",
-      "collection": "stats",
-      "op": "append",
-      "match": {
-        "id": "npc_bleed_tick_damage"
-      },
-      "before": null,
-      "after": {
-        "id": "npc_bleed_tick_damage",
-        "name": "Enemy Bleed Tick Damage",
-        "description": "Damage of one tick of an enemy's bleed on you, every 0.5 s: 35 x the status tick skill curve (Bleed_Damage_Final, read on the enemy). Difficulty, role and enemy weapon damage don't scale it. That the enemy's skill curve equals the player's, at the same level and mode scaling, is an inference; the enemy's own level and group terms aren't established. The tick's own damage-resistance factor (BleedDamageResistanceModBonus) isn't modeled; no gear in the pack sets it (R114, R115).",
-        "format": "integer",
-        "formula": "35 * status_tick_skill_curve"
-      },
-      "evidence_paths": [
-        "docs/R115_SOURCE_REVIEW.md",
-        "docs/R114_SOURCE_REVIEW.md",
-        "docs/R112_SOURCE_REVIEW.md",
-        "sources/statuseffecttalentrule_bleed.mtalentrules",
-        "sources/npc_nailgun_impact.mskillscriptgraph",
-        "sources/mod_attributelist_code1_data23.mitemgenerationattributelists",
-        "sources/virginia_talent_exotic_mask_catalyst_chemical_agent.mtalent",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptgraph",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptjuice",
-        "sources/skillscript_exotic_talent_weapon_big_alejandro.mskillscriptgraph"
-      ],
-      "rationale": "The nail gun's bleed tick on the player: 35 x the skill curve, unscaled by difficulty (R114, R115)."
-    },
-    {
-      "document": "simulation.json",
-      "collection": "enemyStatuses",
-      "op": "append",
-      "match": {
-        "target": 5,
-        "status": "bleeding"
-      },
-      "before": null,
-      "after": {
-        "target": 5,
-        "status": "bleeding",
-        "duration": 2,
-        "tick": "npc_bleed_tick_damage",
-        "period": 0.5,
-        "tickOnApply": true,
-        "resistances": [
-          "hazard_protection",
-          "bleed_resistance"
-        ],
-        "minDuration": 0.5
-      },
-      "evidence_paths": [
-        "docs/R115_SOURCE_REVIEW.md",
-        "docs/R114_SOURCE_REVIEW.md",
-        "docs/R112_SOURCE_REVIEW.md",
-        "sources/statuseffecttalentrule_bleed.mtalentrules",
-        "sources/npc_nailgun_impact.mskillscriptgraph",
-        "sources/mod_attributelist_code1_data23.mitemgenerationattributelists",
-        "sources/virginia_talent_exotic_mask_catalyst_chemical_agent.mtalent",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptgraph",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptjuice",
-        "sources/skillscript_exotic_talent_weapon_big_alejandro.mskillscriptgraph"
-      ],
-      "rationale": "Target 5's nail gun bleeds the player for 2 s on every body hit, ticking every 0.5 s; hazard protection and the bleed resistance mod add into the status's resistance. Resistance shortening the duration, its 0.5 s floor and the first tick landing at application are inferences, the last matching the enemy-side rows (R114, R115)."
-    },
-    {
-      "document": "rules.json",
-      "collection": "talents",
+      "collection": "items",
       "op": "replace",
       "match": {
-        "id": "gear_talent_chemical_agent"
+        "id": "primary_weapon_prima_donna"
       },
       "before": {
-        "id": "gear_talent_chemical_agent",
-        "name": "Chemical Agent",
-        "description": "Catalysis: Dealing and receiving status effects (Burn, Bleed, Shock, EMP/Disrupt, Poison and blind/disorient) builds stacks of Catalysis to a maximum of 12. Each stack grants: +2% Weapon Damage, +2% Status Effects. Each enemy within 25 Meters that is affected by a status effect grants +1 stack/sec. Being affected by status effects grants +2 stacks/sec. Stacks decay at 1 stack/sec after 5s if no enemies in the radius or you are affected by status effects. Reactant: At max stacks, killing a status-affected enemy grants bonuses for 5s: +25% bonus armor.",
-        "modifiers": [
-          {
-            "stat": "weapon_damage",
-            "op": "flat",
-            "value": "0.02 * context_value('catalysis_stacks')"
-          },
-          {
-            "stat": "status_effects",
-            "op": "flat",
-            "value": "0.02 * context_value('catalysis_stacks')"
-          },
-          {
-            "stat": "bonus_armor_percent",
-            "op": "flat",
-            "value": 0.25,
-            "requires": {
-              "reactant_active": "true"
-            }
-          },
-          {
-            "stat": "reload_speed",
-            "op": "flat",
-            "value": 0.2,
-            "requires": {
-              "reactant_active": "true"
-            }
-          }
+        "id": "primary_weapon_prima_donna",
+        "name": "Prima Donna",
+        "slot": "primary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_m44",
+          "weapon_type_marksman_rifle",
+          "exotic"
         ],
-        "coverage": {
-          "status": "complete",
-          "evidence": "R35_PRIORITY2_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); Reactant reload speed traced in the graph (CHEMICAL_AGENT_HANDOFF.md)"
-        }
-      },
-      "after": {
-        "id": "gear_talent_chemical_agent",
-        "name": "Chemical Agent",
-        "description": "Catalysis: Dealing and receiving status effects (Burn, Bleed, Shock, EMP/Disrupt, Poison and blind/disorient) builds stacks of Catalysis to a maximum of 12. Each stack grants: +2% Weapon Damage, +2% Status Effects. Each enemy within 25 Meters that is affected by a status effect grants +1 stack/sec. Being affected by status effects grants +2 stacks/sec. Stacks decay at 1 stack/sec after 5s if no enemies in the radius or you are affected by status effects. Reactant: At max stacks, killing a status-affected enemy grants bonuses for 5s: +25% bonus armor.",
-        "modifiers": [
-          {
-            "stat": "weapon_damage",
-            "op": "flat",
-            "value": "0.02 * context_value('catalysis_stacks')"
-          },
-          {
-            "stat": "status_effects",
-            "op": "flat",
-            "value": "0.02 * context_value('catalysis_stacks')"
-          },
-          {
-            "stat": "bonus_armor_percent",
-            "op": "flat",
-            "value": 0.25,
-            "requires": {
-              "reactant_active": "true"
-            }
-          },
-          {
-            "stat": "reload_speed",
-            "op": "flat",
-            "value": 0.2,
-            "requires": {
-              "reactant_active": "true"
-            }
-          }
-        ],
-        "coverage": {
-          "status": "complete",
-          "evidence": "R35_PRIORITY2_REVIEW.md (talent-parameter comparison against the R32/R33 talent bundle); Reactant reload speed traced in the graph (CHEMICAL_AGENT_HANDOFF.md); R115_SOURCE_REVIEW.md (R115): its graph reads both parts each second, 1 stack for each affected enemy within 25 m and 2 while the player is under a status. Fights gain 1 a second while the enemy being shot has any status; other affected enemies, and the player's own statuses, aren't counted yet: the player part would be a second rule on the same stacks, which fights don't take"
-        }
-      },
-      "evidence_paths": [
-        "docs/R115_SOURCE_REVIEW.md",
-        "docs/R114_SOURCE_REVIEW.md",
-        "docs/R112_SOURCE_REVIEW.md",
-        "sources/statuseffecttalentrule_bleed.mtalentrules",
-        "sources/npc_nailgun_impact.mskillscriptgraph",
-        "sources/mod_attributelist_code1_data23.mitemgenerationattributelists",
-        "sources/virginia_talent_exotic_mask_catalyst_chemical_agent.mtalent",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptgraph",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptjuice",
-        "sources/skillscript_exotic_talent_weapon_big_alejandro.mskillscriptgraph"
-      ],
-      "rationale": "Chemical Agent's two source parts, and the one fights count (R115)."
-    },
-    {
-      "document": "simulation.json",
-      "collection": "triggers",
-      "op": "replace",
-      "match": {
-        "talent": "weapon_talent_cover_shooter",
-        "key": "cover_shooter_stacks"
-      },
-      "before": {
-        "talent": "weapon_talent_cover_shooter",
-        "key": "cover_shooter_stacks",
-        "on": "shot",
-        "kind": "stacks",
-        "max": 100,
-        "duration": 15,
-        "requires": {
-          "in_cover": "true"
+        "weapon": {
+          "weapon_base_damage": 417692,
+          "weapon_rpm": 55,
+          "weapon_magazine_size": 7,
+          "weapon_reload_time": 4.29,
+          "weapon_optimal_range": 55,
+          "weapon_base_headshot_damage": 0
         },
-        "resetOn": "reload_end",
-        "alsoResetOn": "swap"
+        "attributeSlots": "primary_weapon_6",
+        "modSlots": "primary_weapon_78",
+        "talentSlots": "primary_weapon_89",
+        "upgrade": "primary_weapon_1"
       },
       "after": {
-        "talent": "weapon_talent_cover_shooter",
-        "key": "cover_shooter_stacks",
-        "on": "shot",
-        "kind": "stacks",
-        "max": 100,
-        "duration": 15,
-        "requires": {
-          "in_cover": "true"
+        "id": "primary_weapon_prima_donna",
+        "name": "Prima Donna",
+        "slot": "primary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_scar",
+          "weapon_type_marksman_rifle",
+          "exotic"
+        ],
+        "weapon": {
+          "weapon_base_damage": 417692,
+          "weapon_rpm": 55,
+          "weapon_magazine_size": 7,
+          "weapon_reload_time": 4.99,
+          "weapon_optimal_range": 55,
+          "weapon_base_headshot_damage": 0,
+          "weapon_long_range": 80,
+          "weapon_max_range": 100,
+          "weapon_tactical_reload_time": 4.69,
+          "weapon_switch_speed_multiplier": 1.05,
+          "weapon_falloff_floor": 0.344408
         },
-        "resetOn": "reload_end",
-        "alsoResetOn": "swap",
-        "fromFirstGain": true,
-        "refreshOn": "kill"
+        "attributeSlots": "primary_weapon_6",
+        "modSlots": "primary_weapon_78",
+        "talentSlots": "primary_weapon_89",
+        "upgrade": "primary_weapon_1"
       },
       "evidence_paths": [
-        "docs/R115_SOURCE_REVIEW.md",
-        "docs/R114_SOURCE_REVIEW.md",
-        "docs/R112_SOURCE_REVIEW.md",
-        "sources/statuseffecttalentrule_bleed.mtalentrules",
-        "sources/npc_nailgun_impact.mskillscriptgraph",
-        "sources/mod_attributelist_code1_data23.mitemgenerationattributelists",
-        "sources/virginia_talent_exotic_mask_catalyst_chemical_agent.mtalent",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptgraph",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptjuice",
-        "sources/skillscript_exotic_talent_weapon_big_alejandro.mskillscriptgraph"
+        "sources/player_weapon_marksmanrifle_scar_t3_v1_exotic.mitem",
+        "sources/player_weapon_marksmanrifle_scar_t3.mweapon",
+        "sources/player_weapon_marksmanrifle_scar.mweapon",
+        "sources/weapon_sniper_v1.mweapon",
+        "docs/R2_REMAINING.md",
+        "docs/R25_SWAP_TIMES.md",
+        "docs/FALLOFF_FLOOR_SOURCE_REVIEW.md"
       ],
-      "rationale": "One 15 s timer from the first stack ends them all, and a kill in cover with this weapon restarts it (R112, R115)."
+      "rationale": "Its own declaration (mapped from its card): reload 4,690 ms and 4,990 ms empty, and the SCAR marksman rifle's 1.05 swap, family and minimum damage 306 (of 888.48), with the sniper base's 80 and 100 m. (R168.)"
     },
     {
       "document": "rules.json",
-      "collection": "talents",
+      "collection": "items",
       "op": "replace",
       "match": {
-        "id": "weapon_talent_cover_shooter"
+        "id": "secondary_weapon_prima_donna"
       },
       "before": {
-        "id": "weapon_talent_cover_shooter",
-        "name": "Cover Shooter",
-        "description": "Every bullet fired while in cover increases weapon damage by 1% up to 100%. The bonus lasts for 15 seconds. Getting a kill with this weapon while in cover resets the duration. The bonus damage is canceled by reloading, swapping weapons, or exiting combat.",
-        "modifiers": [
-          {
-            "stat": "weapon_damage",
-            "op": "flat",
-            "value": "0.01 * context_value('cover_shooter_stacks')"
-          }
+        "id": "secondary_weapon_prima_donna",
+        "name": "Prima Donna",
+        "slot": "secondary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_m44",
+          "weapon_type_marksman_rifle",
+          "exotic"
         ],
-        "coverage": {
-          "status": "complete",
-          "evidence": "R35_PRIORITY2_REVIEW.md (talent parameters); R112_SOURCE_REVIEW.md (R112): fights add a stack per bullet fired in cover, hit or miss, up to 100, and a completed reload or a swap clears them. Each stack lasts 15 s from its own shot. The source runs one 15 s timer from the first stack, which ends every stack together and which a kill in cover with this weapon restarts; fights model neither. The swap clear is inferred from the script's start, not shown."
-        }
+        "weapon": {
+          "weapon_base_damage": 417692,
+          "weapon_rpm": 55,
+          "weapon_magazine_size": 7,
+          "weapon_reload_time": 4.29,
+          "weapon_optimal_range": 55,
+          "weapon_base_headshot_damage": 0
+        },
+        "attributeSlots": "primary_weapon_6",
+        "modSlots": "primary_weapon_78",
+        "talentSlots": "primary_weapon_89",
+        "upgrade": "primary_weapon_1"
       },
       "after": {
-        "id": "weapon_talent_cover_shooter",
-        "name": "Cover Shooter",
-        "description": "Every bullet fired while in cover increases weapon damage by 1% up to 100%. The bonus lasts for 15 seconds. Getting a kill with this weapon while in cover resets the duration. The bonus damage is canceled by reloading, swapping weapons, or exiting combat.",
-        "modifiers": [
-          {
-            "stat": "weapon_damage",
-            "op": "flat",
-            "value": "0.01 * context_value('cover_shooter_stacks')"
-          }
+        "id": "secondary_weapon_prima_donna",
+        "name": "Prima Donna",
+        "slot": "secondary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_scar",
+          "weapon_type_marksman_rifle",
+          "exotic"
         ],
-        "coverage": {
-          "status": "complete",
-          "evidence": "R35_PRIORITY2_REVIEW.md (talent parameters); R112_SOURCE_REVIEW.md (R112, R115): fights add a stack per bullet fired in cover, hit or miss, up to 100. One 15 s timer, started by the first stack, ends them all, and a kill in cover with this weapon restarts it with the count kept, as in the source. A completed reload or a swap clears them; the swap clear is inferred from the script's start, not shown. Leaving combat also clears them in the source; fights are all in combat"
-        }
+        "weapon": {
+          "weapon_base_damage": 417692,
+          "weapon_rpm": 55,
+          "weapon_magazine_size": 7,
+          "weapon_reload_time": 4.99,
+          "weapon_optimal_range": 55,
+          "weapon_base_headshot_damage": 0,
+          "weapon_long_range": 80,
+          "weapon_max_range": 100,
+          "weapon_tactical_reload_time": 4.69,
+          "weapon_switch_speed_multiplier": 1.05,
+          "weapon_falloff_floor": 0.344408
+        },
+        "attributeSlots": "primary_weapon_6",
+        "modSlots": "primary_weapon_78",
+        "talentSlots": "primary_weapon_89",
+        "upgrade": "primary_weapon_1"
       },
       "evidence_paths": [
-        "docs/R115_SOURCE_REVIEW.md",
-        "docs/R114_SOURCE_REVIEW.md",
-        "docs/R112_SOURCE_REVIEW.md",
-        "sources/statuseffecttalentrule_bleed.mtalentrules",
-        "sources/npc_nailgun_impact.mskillscriptgraph",
-        "sources/mod_attributelist_code1_data23.mitemgenerationattributelists",
-        "sources/virginia_talent_exotic_mask_catalyst_chemical_agent.mtalent",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptgraph",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptjuice",
-        "sources/skillscript_exotic_talent_weapon_big_alejandro.mskillscriptgraph"
+        "sources/player_weapon_marksmanrifle_scar_t3_v1_exotic.mitem",
+        "sources/player_weapon_marksmanrifle_scar_t3.mweapon",
+        "sources/player_weapon_marksmanrifle_scar.mweapon",
+        "sources/weapon_sniper_v1.mweapon",
+        "docs/R2_REMAINING.md",
+        "docs/R25_SWAP_TIMES.md",
+        "docs/FALLOFF_FLOOR_SOURCE_REVIEW.md"
       ],
-      "rationale": "Cover Shooter's coverage with the source timer (R115)."
+      "rationale": "Its own declaration (mapped from its card): reload 4,690 ms and 4,990 ms empty, and the SCAR marksman rifle's 1.05 swap, family and minimum damage 306 (of 888.48), with the sniper base's 80 and 100 m. (R168.)"
     },
     {
       "document": "rules.json",
-      "collection": "numericInputs",
+      "collection": "items",
       "op": "replace",
       "match": {
-        "id": "cover_shooter_stacks"
+        "id": "primary_weapon_police_ump_45"
       },
       "before": {
-        "id": "cover_shooter_stacks",
-        "name": "Cover Shooter Stacks",
-        "description": "Assumed currently retained Cover Shooter stacks (0\u2013100), each adding 1% Weapon Damage. In a fight in cover (a cover cycle), fights count the stacks from bullets fired, and outside cover they hold 0; this value serves static comparisons. Fights hold each stack 15 s from its shot, where the source runs one timer from the first stack that a kill in cover restarts (R112).",
-        "min": 0,
-        "max": 100,
-        "default": 0
+        "id": "primary_weapon_police_ump_45",
+        "name": "Police UMP-45",
+        "slot": "primary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_ump_45",
+          "weapon_type_smg"
+        ],
+        "weapon": {
+          "weapon_base_damage": 63691.5,
+          "weapon_rpm": 650,
+          "weapon_magazine_size": 25,
+          "weapon_reload_time": 1.67,
+          "weapon_optimal_range": 19,
+          "weapon_base_headshot_damage": 0.5
+        },
+        "attributeSlots": "primary_weapon_4",
+        "modSlots": "primary_weapon_43",
+        "talentSlots": "primary_weapon_49",
+        "upgrade": "primary_weapon_1"
       },
       "after": {
-        "id": "cover_shooter_stacks",
-        "name": "Cover Shooter Stacks",
-        "description": "Assumed currently retained Cover Shooter stacks (0\u2013100), each adding 1% Weapon Damage. In a fight in cover (a cover cycle, or In cover set), fights count the stacks from bullets fired, under one 15 s timer from the first stack that a kill in cover restarts; in a fight out of cover they hold 0. This value serves static comparisons (R112, R115).",
-        "min": 0,
-        "max": 100,
-        "default": 0
+        "id": "primary_weapon_police_ump_45",
+        "name": "Police UMP-45",
+        "slot": "primary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_ump_45",
+          "weapon_type_smg"
+        ],
+        "weapon": {
+          "weapon_base_damage": 63691.5,
+          "weapon_rpm": 650,
+          "weapon_magazine_size": 25,
+          "weapon_reload_time": 1.67,
+          "weapon_optimal_range": 19,
+          "weapon_base_headshot_damage": 0.5,
+          "weapon_long_range": 30,
+          "weapon_max_range": 100,
+          "weapon_tactical_reload_time": 1.37,
+          "weapon_switch_speed_multiplier": 1,
+          "weapon_falloff_floor": 0.723354
+        },
+        "attributeSlots": "primary_weapon_4",
+        "modSlots": "primary_weapon_43",
+        "talentSlots": "primary_weapon_49",
+        "upgrade": "primary_weapon_1"
       },
       "evidence_paths": [
-        "docs/R115_SOURCE_REVIEW.md",
-        "docs/R114_SOURCE_REVIEW.md",
-        "docs/R112_SOURCE_REVIEW.md",
-        "sources/statuseffecttalentrule_bleed.mtalentrules",
-        "sources/npc_nailgun_impact.mskillscriptgraph",
-        "sources/mod_attributelist_code1_data23.mitemgenerationattributelists",
-        "sources/virginia_talent_exotic_mask_catalyst_chemical_agent.mtalent",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptgraph",
-        "sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptjuice",
-        "sources/skillscript_exotic_talent_weapon_big_alejandro.mskillscriptgraph"
+        "sources/player_weapon_submachinegun_ump45_t2_v1.mitem",
+        "sources/player_weapon_submachinegun_ump45_t2.mweapon",
+        "sources/player_weapon_submachinegun_ump45.mweapon",
+        "sources/weapon_submachinegun_v1.mweapon",
+        "docs/R2_REMAINING.md",
+        "docs/R25_SWAP_TIMES.md",
+        "docs/FALLOFF_FLOOR_SOURCE_REVIEW.md"
       ],
-      "rationale": "The text names both ways a fight is in cover (R115)."
+      "rationale": "Inferred: the item is the only one with this display name, but its community row stays unmapped (R2_REMAINING.md). The UMP-45's 1.0 swap, 1,370 ms reload, 30 and 100 m, and 98 of 135.48, the same as the Tactical UMP-45's. (R168.)"
+    },
+    {
+      "document": "rules.json",
+      "collection": "items",
+      "op": "replace",
+      "match": {
+        "id": "secondary_weapon_police_ump_45"
+      },
+      "before": {
+        "id": "secondary_weapon_police_ump_45",
+        "name": "Police UMP-45",
+        "slot": "secondary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_ump_45",
+          "weapon_type_smg"
+        ],
+        "weapon": {
+          "weapon_base_damage": 63691.5,
+          "weapon_rpm": 650,
+          "weapon_magazine_size": 25,
+          "weapon_reload_time": 1.67,
+          "weapon_optimal_range": 19,
+          "weapon_base_headshot_damage": 0.5
+        },
+        "attributeSlots": "primary_weapon_4",
+        "modSlots": "primary_weapon_43",
+        "talentSlots": "primary_weapon_49",
+        "upgrade": "primary_weapon_1"
+      },
+      "after": {
+        "id": "secondary_weapon_police_ump_45",
+        "name": "Police UMP-45",
+        "slot": "secondary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_ump_45",
+          "weapon_type_smg"
+        ],
+        "weapon": {
+          "weapon_base_damage": 63691.5,
+          "weapon_rpm": 650,
+          "weapon_magazine_size": 25,
+          "weapon_reload_time": 1.67,
+          "weapon_optimal_range": 19,
+          "weapon_base_headshot_damage": 0.5,
+          "weapon_long_range": 30,
+          "weapon_max_range": 100,
+          "weapon_tactical_reload_time": 1.37,
+          "weapon_switch_speed_multiplier": 1,
+          "weapon_falloff_floor": 0.723354
+        },
+        "attributeSlots": "primary_weapon_4",
+        "modSlots": "primary_weapon_43",
+        "talentSlots": "primary_weapon_49",
+        "upgrade": "primary_weapon_1"
+      },
+      "evidence_paths": [
+        "sources/player_weapon_submachinegun_ump45_t2_v1.mitem",
+        "sources/player_weapon_submachinegun_ump45_t2.mweapon",
+        "sources/player_weapon_submachinegun_ump45.mweapon",
+        "sources/weapon_submachinegun_v1.mweapon",
+        "docs/R2_REMAINING.md",
+        "docs/R25_SWAP_TIMES.md",
+        "docs/FALLOFF_FLOOR_SOURCE_REVIEW.md"
+      ],
+      "rationale": "Inferred: the item is the only one with this display name, but its community row stays unmapped (R2_REMAINING.md). The UMP-45's 1.0 swap, 1,370 ms reload, 30 and 100 m, and 98 of 135.48, the same as the Tactical UMP-45's. (R168.)"
+    },
+    {
+      "document": "rules.json",
+      "collection": "items",
+      "op": "replace",
+      "match": {
+        "id": "primary_weapon_the_ravenous"
+      },
+      "before": {
+        "id": "primary_weapon_the_ravenous",
+        "name": "The Ravenous",
+        "slot": "primary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_sig",
+          "weapon_type_rifle",
+          "exotic"
+        ],
+        "weapon": {
+          "weapon_base_damage": 134360,
+          "weapon_rpm": 240,
+          "weapon_magazine_size": 60,
+          "weapon_reload_time": 2.4,
+          "weapon_optimal_range": 50,
+          "weapon_base_headshot_damage": 0.8
+        },
+        "attributeSlots": "primary_weapon_5",
+        "modSlots": "primary_weapon_61",
+        "talentSlots": "primary_weapon_75",
+        "upgrade": "primary_weapon_1"
+      },
+      "after": {
+        "id": "primary_weapon_the_ravenous",
+        "name": "The Ravenous",
+        "slot": "primary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_sig",
+          "weapon_type_rifle",
+          "exotic"
+        ],
+        "weapon": {
+          "weapon_base_damage": 134360,
+          "weapon_rpm": 240,
+          "weapon_magazine_size": 60,
+          "weapon_reload_time": 2.4,
+          "weapon_optimal_range": 50,
+          "weapon_base_headshot_damage": 0.8,
+          "weapon_long_range": 80,
+          "weapon_max_range": 100,
+          "weapon_tactical_reload_time": 2.1,
+          "weapon_switch_speed_multiplier": 1.4,
+          "weapon_falloff_floor": 0.454864
+        },
+        "attributeSlots": "primary_weapon_5",
+        "modSlots": "primary_weapon_61",
+        "talentSlots": "primary_weapon_75",
+        "upgrade": "primary_weapon_1"
+      },
+      "evidence_paths": [
+        "sources/player_weapon_rifle_gilboadbr_exotic_v1.mitem",
+        "sources/player_weapon_rifle_gilboadbr_exotic.mweapon",
+        "sources/weapon_rifle_v1.mweapon",
+        "docs/R2_REMAINING.md",
+        "docs/R26_PELLETS.md",
+        "docs/R25_SWAP_TIMES.md",
+        "docs/FALLOFF_FLOOR_SOURCE_REVIEW.md"
+      ],
+      "rationale": "Inferred: the item is the only one with this display name, but its community row stays unmapped (R2_REMAINING.md). Its own weapon's 1.4 swap and 2,100 ms reload, and the rifle base's 80 and 100 m and 65 of 142.9. (R168.)"
+    },
+    {
+      "document": "rules.json",
+      "collection": "items",
+      "op": "replace",
+      "match": {
+        "id": "secondary_weapon_the_ravenous"
+      },
+      "before": {
+        "id": "secondary_weapon_the_ravenous",
+        "name": "The Ravenous",
+        "slot": "secondary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_sig",
+          "weapon_type_rifle",
+          "exotic"
+        ],
+        "weapon": {
+          "weapon_base_damage": 134360,
+          "weapon_rpm": 240,
+          "weapon_magazine_size": 60,
+          "weapon_reload_time": 2.4,
+          "weapon_optimal_range": 50,
+          "weapon_base_headshot_damage": 0.8
+        },
+        "attributeSlots": "primary_weapon_5",
+        "modSlots": "primary_weapon_61",
+        "talentSlots": "primary_weapon_75",
+        "upgrade": "primary_weapon_1"
+      },
+      "after": {
+        "id": "secondary_weapon_the_ravenous",
+        "name": "The Ravenous",
+        "slot": "secondary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_sig",
+          "weapon_type_rifle",
+          "exotic"
+        ],
+        "weapon": {
+          "weapon_base_damage": 134360,
+          "weapon_rpm": 240,
+          "weapon_magazine_size": 60,
+          "weapon_reload_time": 2.4,
+          "weapon_optimal_range": 50,
+          "weapon_base_headshot_damage": 0.8,
+          "weapon_long_range": 80,
+          "weapon_max_range": 100,
+          "weapon_tactical_reload_time": 2.1,
+          "weapon_switch_speed_multiplier": 1.4,
+          "weapon_falloff_floor": 0.454864
+        },
+        "attributeSlots": "primary_weapon_5",
+        "modSlots": "primary_weapon_61",
+        "talentSlots": "primary_weapon_75",
+        "upgrade": "primary_weapon_1"
+      },
+      "evidence_paths": [
+        "sources/player_weapon_rifle_gilboadbr_exotic_v1.mitem",
+        "sources/player_weapon_rifle_gilboadbr_exotic.mweapon",
+        "sources/weapon_rifle_v1.mweapon",
+        "docs/R2_REMAINING.md",
+        "docs/R26_PELLETS.md",
+        "docs/R25_SWAP_TIMES.md",
+        "docs/FALLOFF_FLOOR_SOURCE_REVIEW.md"
+      ],
+      "rationale": "Inferred: the item is the only one with this display name, but its community row stays unmapped (R2_REMAINING.md). Its own weapon's 1.4 swap and 2,100 ms reload, and the rifle base's 80 and 100 m and 65 of 142.9. (R168.)"
+    },
+    {
+      "document": "rules.json",
+      "collection": "items",
+      "op": "replace",
+      "match": {
+        "id": "primary_weapon_cooler"
+      },
+      "before": {
+        "id": "primary_weapon_cooler",
+        "name": "Cooler",
+        "slot": "primary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_cooler",
+          "weapon_type_rifle",
+          "named"
+        ],
+        "weapon": {
+          "weapon_base_damage": 0,
+          "weapon_rpm": 320,
+          "weapon_magazine_size": 100,
+          "weapon_reload_time": 3,
+          "weapon_optimal_range": 60,
+          "weapon_base_headshot_damage": 0
+        },
+        "attributeSlots": "primary_weapon_5",
+        "talentSlots": "primary_weapon_79",
+        "upgrade": "primary_weapon_1"
+      },
+      "after": {
+        "id": "primary_weapon_cooler",
+        "name": "Cooler",
+        "slot": "primary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_cooler",
+          "weapon_type_rifle",
+          "named"
+        ],
+        "weapon": {
+          "weapon_base_damage": 0,
+          "weapon_rpm": 320,
+          "weapon_magazine_size": 100,
+          "weapon_reload_time": 3,
+          "weapon_optimal_range": 60,
+          "weapon_base_headshot_damage": 0,
+          "weapon_long_range": 80,
+          "weapon_max_range": 100,
+          "weapon_tactical_reload_time": 2.5,
+          "weapon_switch_speed_multiplier": 1
+        },
+        "attributeSlots": "primary_weapon_5",
+        "talentSlots": "primary_weapon_79",
+        "upgrade": "primary_weapon_1"
+      },
+      "evidence_paths": [
+        "sources/player_weapon_rifle_m1a_t3_v1_named.mitem",
+        "sources/player_weapon_rifle_m1a_t3.mweapon",
+        "sources/player_weapon_rifle_m1a.mweapon",
+        "sources/weapon_rifle_v1.mweapon",
+        "docs/R2_REMAINING.md",
+        "docs/R26_PELLETS.md",
+        "docs/R25_SWAP_TIMES.md",
+        "docs/FALLOFF_FLOOR_SOURCE_REVIEW.md"
+      ],
+      "rationale": "Inferred: the item is the only one with this display name, but its community row stays unmapped (R2_REMAINING.md). The rifle base's 1.0 swap through the M1A, its 2,500 ms reload, 80 and 100 m. Its damage is 0, so it has no floor. (R168.)"
+    },
+    {
+      "document": "rules.json",
+      "collection": "items",
+      "op": "replace",
+      "match": {
+        "id": "secondary_weapon_cooler"
+      },
+      "before": {
+        "id": "secondary_weapon_cooler",
+        "name": "Cooler",
+        "slot": "secondary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_cooler",
+          "weapon_type_rifle",
+          "named"
+        ],
+        "weapon": {
+          "weapon_base_damage": 0,
+          "weapon_rpm": 320,
+          "weapon_magazine_size": 100,
+          "weapon_reload_time": 3,
+          "weapon_optimal_range": 60,
+          "weapon_base_headshot_damage": 0
+        },
+        "attributeSlots": "primary_weapon_5",
+        "talentSlots": "primary_weapon_79",
+        "upgrade": "primary_weapon_1"
+      },
+      "after": {
+        "id": "secondary_weapon_cooler",
+        "name": "Cooler",
+        "slot": "secondary_weapon",
+        "tags": [
+          "weapon",
+          "weapon_cooler",
+          "weapon_type_rifle",
+          "named"
+        ],
+        "weapon": {
+          "weapon_base_damage": 0,
+          "weapon_rpm": 320,
+          "weapon_magazine_size": 100,
+          "weapon_reload_time": 3,
+          "weapon_optimal_range": 60,
+          "weapon_base_headshot_damage": 0,
+          "weapon_long_range": 80,
+          "weapon_max_range": 100,
+          "weapon_tactical_reload_time": 2.5,
+          "weapon_switch_speed_multiplier": 1
+        },
+        "attributeSlots": "primary_weapon_5",
+        "talentSlots": "primary_weapon_79",
+        "upgrade": "primary_weapon_1"
+      },
+      "evidence_paths": [
+        "sources/player_weapon_rifle_m1a_t3_v1_named.mitem",
+        "sources/player_weapon_rifle_m1a_t3.mweapon",
+        "sources/player_weapon_rifle_m1a.mweapon",
+        "sources/weapon_rifle_v1.mweapon",
+        "docs/R2_REMAINING.md",
+        "docs/R26_PELLETS.md",
+        "docs/R25_SWAP_TIMES.md",
+        "docs/FALLOFF_FLOOR_SOURCE_REVIEW.md"
+      ],
+      "rationale": "Inferred: the item is the only one with this display name, but its community row stays unmapped (R2_REMAINING.md). The rifle base's 1.0 swap through the M1A, its 2,500 ms reload, 80 and 100 m. Its damage is 0, so it has no floor. (R168.)"
+    },
+    {
+      "document": "rules.json",
+      "collection": "items",
+      "op": "replace",
+      "match": {
+        "id": "sidearm_busy_little_bee"
+      },
+      "before": {
+        "id": "sidearm_busy_little_bee",
+        "name": "Busy Little Bee",
+        "slot": "sidearm",
+        "tags": [
+          "weapon",
+          "weapon_pf45",
+          "weapon_type_pistol",
+          "exotic"
+        ],
+        "weapon": {
+          "weapon_base_damage": 93962.5,
+          "weapon_rpm": 400,
+          "weapon_magazine_size": 10,
+          "weapon_reload_time": 1.78,
+          "weapon_optimal_range": 14.4,
+          "weapon_base_headshot_damage": 1
+        },
+        "attributeSlots": "sidearm_3",
+        "modSlots": "sidearm_10",
+        "talentSlots": "sidearm_10",
+        "upgrade": "primary_weapon_1"
+      },
+      "after": {
+        "id": "sidearm_busy_little_bee",
+        "name": "Busy Little Bee",
+        "slot": "sidearm",
+        "tags": [
+          "weapon",
+          "weapon_pf45",
+          "weapon_type_pistol",
+          "exotic"
+        ],
+        "weapon": {
+          "weapon_base_damage": 93962.5,
+          "weapon_rpm": 400,
+          "weapon_magazine_size": 10,
+          "weapon_reload_time": 1.78,
+          "weapon_optimal_range": 14.4,
+          "weapon_base_headshot_damage": 1,
+          "weapon_long_range": 40,
+          "weapon_max_range": 100,
+          "weapon_tactical_reload_time": 1.47,
+          "weapon_switch_speed_multiplier": 2,
+          "weapon_falloff_floor": 0.250163
+        },
+        "attributeSlots": "sidearm_3",
+        "modSlots": "sidearm_10",
+        "talentSlots": "sidearm_10",
+        "upgrade": "primary_weapon_1"
+      },
+      "evidence_paths": [
+        "sources/player_weapon_pistol_bee_exotic_v1.mitem",
+        "sources/player_weapon_pistol_bee_exotic.mweapon",
+        "sources/player_weapon_pistol_mp45.mweapon",
+        "sources/weapon_pistol_v1.mweapon",
+        "docs/R2_REMAINING.md",
+        "docs/R25_SWAP_TIMES.md",
+        "docs/FALLOFF_FLOOR_SOURCE_REVIEW.md"
+      ],
+      "rationale": "Inferred: the item is the only one with this display name, but its community row stays unmapped (R2_REMAINING.md). The PF45's 2.0 swap, 40 and 100 m, its 1,470 ms reload, and its own weapon's 50 of 199.87. (R168.)"
+    },
+    {
+      "document": "rules.json",
+      "collection": "items",
+      "op": "replace",
+      "match": {
+        "id": "sidearm_police_686_magnum"
+      },
+      "before": {
+        "id": "sidearm_police_686_magnum",
+        "name": "Police 686 Magnum",
+        "slot": "sidearm",
+        "tags": [
+          "weapon",
+          "weapon_magnum",
+          "weapon_type_pistol"
+        ],
+        "weapon": {
+          "weapon_base_damage": 233278,
+          "weapon_rpm": 160,
+          "weapon_magazine_size": 6,
+          "weapon_reload_time": 2.54,
+          "weapon_optimal_range": 16,
+          "weapon_base_headshot_damage": 1
+        },
+        "attributeSlots": "sidearm_3",
+        "modSlots": "sidearm_17",
+        "talentSlots": "sidearm_2",
+        "upgrade": "primary_weapon_1"
+      },
+      "after": {
+        "id": "sidearm_police_686_magnum",
+        "name": "Police 686 Magnum",
+        "slot": "sidearm",
+        "tags": [
+          "weapon",
+          "weapon_magnum",
+          "weapon_type_pistol"
+        ],
+        "weapon": {
+          "weapon_base_damage": 233278,
+          "weapon_rpm": 160,
+          "weapon_magazine_size": 6,
+          "weapon_reload_time": 2.54,
+          "weapon_optimal_range": 16,
+          "weapon_base_headshot_damage": 1,
+          "weapon_long_range": 36,
+          "weapon_max_range": 100,
+          "weapon_switch_speed_multiplier": 1.55,
+          "weapon_falloff_floor": 0.201528
+        },
+        "attributeSlots": "sidearm_3",
+        "modSlots": "sidearm_17",
+        "talentSlots": "sidearm_2",
+        "upgrade": "primary_weapon_1"
+      },
+      "evidence_paths": [
+        "sources/player_weapon_pistol_s_w586_t1_v1.mitem",
+        "sources/player_weapon_pistol_s_w586_t2_v1.mitem",
+        "sources/player_weapon_pistol_s_w586_t1.mweapon",
+        "sources/player_weapon_pistol_s_w586_t2.mweapon",
+        "sources/player_weapon_pistol_s_w586.mweapon",
+        "sources/weapon_pistol_v1.mweapon",
+        "docs/R2_REMAINING.md",
+        "docs/R2_POLICE686_REVIEW.md",
+        "docs/R25_SWAP_TIMES.md",
+        "docs/FALLOFF_FLOOR_SOURCE_REVIEW.md"
+      ],
+      "rationale": "Inferred: two items share its English name (R2_POLICE686_REVIEW.md), and both inherit the 586's 36 and 100 m and 100 of 496.21, and the pistol base's 1.55 swap. (R168.)"
     }
   ],
   "exclusions": [
-    "The bleed tick's damage resistance (BleedDamageResistanceModBonus): no stat; no gear in the pack sets it (R115).",
-    "What resistance shortens: duration is the likely reading, not shown (R114).",
-    "The first bleed tick at application: not in the data; matches the enemy-side rows (R115).",
-    "The enemy's own level and group terms in the bleed's skill curve: not established (R114).",
-    "Chemical Agent's other affected enemies within 25 m: not counted (R115).",
-    "Chemical Agent's +2 a second while the player is under a status: a second rule on catalysis_stacks, which fights refuse (trigger-key-conflict); needs an engine way (R115).",
-    "Bleed's slow and blocked regeneration on the player: no fight effect yet (R114)."
+    "Community values the source disagrees with stay: Police UMP-45's and Busy Little Bee's optimal ranges, Busy Little Bee's 1.78 s reload, and The Ravenous's magazine of 60 (R2_REMAINING.md).",
+    "The Ravenous keeps its weapon_sig tag: the pack has no tag for its candidate's family.",
+    "Cooler has no falloff floor: its damage is 0.",
+    "The manifest's game version still names Title Update Y8S3.3 (UPDATE_6615452_SOURCE_REVIEW.md)."
   ]
 }

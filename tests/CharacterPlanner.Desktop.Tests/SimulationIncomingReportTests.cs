@@ -61,6 +61,17 @@ public sealed class SimulationIncomingReportTests
         Assert.Equal(16, SimulationIncomingReport.From(new(10, 5, 100, 0.5, 0.25, null, null)).Readings.Length);
     }
 
+    [Fact]
+    public void RevivesAddTheirReadingOnlyWhereASkillRevives()
+    {
+        // ADR 0037: after the downed fights, which a revived player isn't in.
+        var report = SimulationIncomingReport.From(new(10, 5, 100, 0.5, 0.25, null, null) { Revives = 0.75 });
+        Assert.Equal(("Revives / fight", 0.75.ToString("N2")), (report.Readings[6].Label, report.Readings[6].Value));
+        Assert.Equal(17, report.Readings.Length);
+        Assert.DoesNotContain(SimulationIncomingReport.From(new(10, 5, 100, 0.5, 0.25, null, null)).Readings, row => row.Label == "Revives / fight");
+        Assert.Contains("the fraction that going down ended", report.Note, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData(false, false)]
     [InlineData(true, false)]

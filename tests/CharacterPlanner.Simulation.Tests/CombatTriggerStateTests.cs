@@ -14,6 +14,30 @@ public sealed class CombatTriggerStateTests
         return Assert.IsType<CompiledPackExpressions>(PackValidator.Load(files).Compiled);
     }
 
+    [Fact]
+    public void ABonusArmorReadingFloorsToItsGridAndStopsAtItsMax()
+    {
+        // ADR 0021: Hackstep's damage bonus reads the player's bonus armor share. Past the input's max it reads the max; with no
+        // pools to read (null), the key keeps the user's setting.
+        var committed = Pack();
+        var rule = new SimTriggerDefinition { Talent = "gear_talent_hackstep_protocol", Key = "hackstep_qualifying_bonus_armor_percent", Kind = "bonus_armor" };
+        var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(committed.Pack with
+        {
+            Simulation = committed.Pack.Simulation with { Triggers = [.. committed.Pack.Simulation.Triggers, rule] }
+        }).Compiled);
+        var state = new CombatTriggerState(pack, [rule]);
+        Assert.Equal("12", state.Context(Empty, 0, 0, 100, 12.7)[rule.Key]);
+        Assert.Equal("100", state.Context(Empty, 0, 0, 100, 150)[rule.Key]);
+        Assert.Equal("7", state.Context(Empty.Add(rule.Key, "7"), 0, 0, 100)[rule.Key]);
+        Assert.Equal("bonusArmorPercent", Assert.Throws<ArgumentOutOfRangeException>(() => state.Context(Empty, 0, 0, 100, -1)).ParamName);
+        // A max off the input's grid reads the highest value on it: 0 to 25 in steps of 10 tops out at 20.
+        var offGrid = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        {
+            NumericContextInputs = [.. pack.Pack.NumericContextInputs.Select(input => input.ID == rule.Key ? input with { Max = 25, Step = 10, Default = 0 } : input)]
+        }).Compiled);
+        Assert.Equal("20", new CombatTriggerState(offGrid, [rule]).Context(Empty, 0, 0, 100, 60)[rule.Key]);
+    }
+
     [Theory]
     [InlineData(0, "0")]
     [InlineData(3.5, "4")]

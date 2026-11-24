@@ -64,7 +64,7 @@ public static class StatResolver
             {
                 var modifier = batch.Modifiers[index];
                 if (!Applies(batch, modifier)) { continue; }
-                if (modifier.RequiresContext is { } gate && gate.Any(pair => context.GetValueOrDefault(pair.Key, "") != pair.Value)) { continue; }
+                if (modifier.RequiresContext is { } gate && gate.Any(pair => GamePack.GateValue(context, pair.Key) != pair.Value)) { continue; }
                 var contribution = new Contribution(batch.Source, modifier.Op, modifier.Value.Number);
                 // Ranked values are numeric and unconditional; pack validation rejects the rest.
                 if (batch.EffectiveRank is { } rank) { Push(modifier.Stat, contribution with { Value = modifier.Value.Number * rank }); continue; }

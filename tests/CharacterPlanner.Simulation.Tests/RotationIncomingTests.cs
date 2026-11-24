@@ -119,6 +119,28 @@ public sealed partial class IncomingFightTests
         Assert.Contains(result.Limitations, note => note.Contains("allows only the Sidearm: a raised shield swaps", StringComparison.Ordinal));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ARefillOfBothBeforeAForcedSwapDrawsTheShieldsWeaponFull(bool both)
+    {
+        // The shield (10 health, 3 s cooldown) allows only the rifle, and the sidearm's talent refills on its break. At 10 s the sidearm
+        // is in hand and the rifle empty; the shield is raised and broken at once, then forced back to the rifle. A refill of the
+        // sidearm alone leaves the rifle to reload on arrival at 11 s; a refill of both lets it fire then.
+        var fixture = WithSidearm(ShieldFixture(capacity: "10", cooldown: "3", changes: [("equipped_weapon_magazine_size", "1")]), sidearmTalent: "side",
+            change: rules =>
+            {
+                var shielded = ShieldAllows(["primary_weapon"], [])(rules);
+                return shielded with { Simulation = shielded.Simulation with { Triggers = [Buff("shield_break") with { Talent = "side", Refill = true, RefillBoth = both }] } };
+            });
+        var result = Run(fixture, SwappingUnderFire(12) with { IncludeShield = true });
+        Assert.Equal(10, result.FirstFightEvents.Last(e => e.Kind == DummyEventKind.ShieldBreak).Time);
+        Assert.Equal((10d, "secondary_weapon"), result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.SwapStarted).Select(e => (e.Time, e.WeaponSlot)).Last());
+        Assert.Equal(2, result.Incoming!.ShieldSwitches);
+        Assert.Equal(both ? 2 : 3, result.Reloads);
+        Assert.Equal(both, result.FirstFightEvents.Any(e => e.Kind == DummyEventKind.Shot && e.Time == 11));
+    }
+
     [Fact]
     public void ARaisedShieldBarsSwapsToItsBarredWeaponAndNeitherWeaponIsRefused()
     {

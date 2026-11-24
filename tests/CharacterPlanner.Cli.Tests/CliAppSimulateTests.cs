@@ -259,6 +259,26 @@ public sealed partial class CliAppTests
     }
 
     [Fact]
+    public async Task ZoneHitsAreReportedOnlyWhereASkillMarksZones()
+    {
+        // ADR 0036: the Achilles Pulse, with every body hit on a zone. A fight without it has no zoneHits field.
+        var (build, context) = await WriteDivisionWeaponBuildAsync();
+        var options = WriteSimulateOptions("""{"mode":"random","duration":10,"seed":1,"iterations":5,"includeSkills":true}""");
+        var plain = await RunAsync("build", "simulate", CommittedDivision, build, "--options", options, "--context", context);
+        Assert.False(plain.Json.GetProperty("result").TryGetProperty("zoneHits", out _));
+        var skilled = await RunAsync("build", "apply", CommittedDivision, build, WriteOperations("""
+            [{"kind":"active_skill","slot":"skill_slot_1","id":"skill_achilles_pulse"},
+             {"kind":"context","id":"practical_zone_share","value":100}]
+            """), "--context", context);
+        Assert.Equal(CliApp.Success, skilled.ExitCode);
+        File.WriteAllText(build, skilled.Json.GetProperty("result").GetProperty("document").GetRawText());
+        File.WriteAllText(context, skilled.Json.GetProperty("result").GetProperty("context").GetRawText());
+        var run = await RunAsync("build", "simulate", CommittedDivision, build, "--options", options, "--context", context);
+        Assert.Equal(CliApp.Success, run.ExitCode);
+        Assert.True(run.Json.GetProperty("result").GetProperty("zoneHits").GetDouble() > 0);
+    }
+
+    [Fact]
     public async Task ArmorKitsRunOnTheCommittedPack()
     {
         var (build, context) = await WriteDivisionWeaponBuildAsync();

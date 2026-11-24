@@ -35,6 +35,7 @@ internal static class WireJson
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         };
         options.Converters.Add(new ModifierValueConverter());
+        options.Converters.Add(new RefillWireConverter());
         options.MakeReadOnly();
         return options;
     }
@@ -179,6 +180,27 @@ public sealed class ModifierValueConverter : JsonConverter<ModifierValue>
     {
         if (value.Formula is { } formula) { writer.WriteStringValue(formula); }
         else { writer.WriteNumberValue(value.Number); }
+    }
+}
+
+/// <summary>A trigger's <c>refill</c>: <c>true</c> for the magazine in hand, <c>"both"</c> for both rotated weapons (ADR 0019).</summary>
+internal readonly record struct RefillWire(bool Refill, bool Both);
+
+/// <summary>Reads <c>refill</c> as a boolean or the string <c>"both"</c>, and writes it back the same way.</summary>
+internal sealed class RefillWireConverter : JsonConverter<RefillWire>
+{
+    public override RefillWire Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => reader.TokenType switch
+    {
+        JsonTokenType.True => new(true, false),
+        JsonTokenType.False => new(false, false),
+        JsonTokenType.String when reader.ValueTextEquals("both"u8) => new(true, true),
+        _ => throw new JsonException(WireJson.PackMessage + "refill must be true, false or \"both\"")
+    };
+
+    public override void Write(Utf8JsonWriter writer, RefillWire value, JsonSerializerOptions options)
+    {
+        if (value.Both) { writer.WriteStringValue("both"); }
+        else { writer.WriteBooleanValue(value.Refill); }
     }
 }
 

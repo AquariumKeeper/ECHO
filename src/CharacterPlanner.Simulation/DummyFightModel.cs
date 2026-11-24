@@ -192,7 +192,7 @@ public sealed record DummyFightOptions
     }
 }
 
-public enum DummyEventKind { Shot, ReloadStarted, ReloadCompleted, Kill, TargetArrived, SwapStarted, SwapCompleted, SkillImpact, SkillTick, EnemyShot, EnemyHit, ArmorBreak, Downed, EnemyShotBlocked, ArmorRepaired, HealthRepaired, ShieldRaised, ShieldHit, ShieldBreak, ShieldRepaired, TargetMarked, PreservationStarted, BurnTick, BleedTick, BonusArmorGranted, Pickup, TalentTick, ArmorKitStarted, ArmorKitUsed, TalentBlast, DebuffPassedOn, StatusPassedOn, EnemyMarked, DamageRedirected, TrapSprung, SkillAreaHit, PlayerStatusTick }
+public enum DummyEventKind { Shot, ReloadStarted, ReloadCompleted, Kill, TargetArrived, SwapStarted, SwapCompleted, SkillImpact, SkillTick, EnemyShot, EnemyHit, ArmorBreak, Downed, EnemyShotBlocked, ArmorRepaired, HealthRepaired, ShieldRaised, ShieldHit, ShieldBreak, ShieldRepaired, TargetMarked, PreservationStarted, BurnTick, BleedTick, BonusArmorGranted, Pickup, TalentTick, ArmorKitStarted, ArmorKitUsed, TalentBlast, DebuffPassedOn, StatusPassedOn, EnemyMarked, DamageRedirected, TrapSprung, SkillAreaHit, PlayerStatusTick, KitAbilityUsed, PoisonTick, ShieldDrained, OutrightKill, SkillRepair, EnemyShotDrawn, Revived, Died }
 public sealed record DummyEvent(double Time, DummyEventKind Kind, double Damage = 0, string WeaponSlot = "");
 public static class DummyEventAmounts
 {
@@ -200,7 +200,7 @@ public static class DummyEventAmounts
     public static bool CarriesAmount(this DummyEventKind kind) => kind is DummyEventKind.Shot or DummyEventKind.SkillImpact
         or DummyEventKind.SkillTick or DummyEventKind.EnemyHit or DummyEventKind.ShieldHit or DummyEventKind.ShieldRepaired
         or DummyEventKind.ArmorRepaired or DummyEventKind.HealthRepaired or DummyEventKind.PreservationStarted
-        or DummyEventKind.BurnTick or DummyEventKind.BleedTick or DummyEventKind.BonusArmorGranted or DummyEventKind.TalentTick or DummyEventKind.ArmorKitUsed or DummyEventKind.TalentBlast or DummyEventKind.DebuffPassedOn or DummyEventKind.StatusPassedOn or DummyEventKind.DamageRedirected or DummyEventKind.TrapSprung or DummyEventKind.SkillAreaHit or DummyEventKind.PlayerStatusTick;
+        or DummyEventKind.BurnTick or DummyEventKind.BleedTick or DummyEventKind.PoisonTick or DummyEventKind.BonusArmorGranted or DummyEventKind.TalentTick or DummyEventKind.ArmorKitUsed or DummyEventKind.TalentBlast or DummyEventKind.DebuffPassedOn or DummyEventKind.StatusPassedOn or DummyEventKind.DamageRedirected or DummyEventKind.TrapSprung or DummyEventKind.SkillAreaHit or DummyEventKind.PlayerStatusTick or DummyEventKind.ShieldDrained or DummyEventKind.OutrightKill or DummyEventKind.SkillRepair;
 }
 public sealed record SimulationProgress(int CompletedFights, int TotalFights);
 public sealed record FightSummary(double Mean, double StdDev, double Min, double P5, double P50, double P95, double Max);
@@ -253,10 +253,26 @@ public sealed record IncomingFightResult(double Attempts, double Hits, double Da
     FightSummary? TimeToFirstArmorBreak, FightSummary? TimeToDown)
 {
     public double BlockedShots { get; init; }
+    /// <summary>
+    /// Landing hits removed before they reach the player (ADR 0034: the Trophy System's reflections), apart from blocked shots; null for a
+    /// pack that can remove none.
+    /// </summary>
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public double? RemovedHits { get; init; }
+    /// <summary>Enemy hits drawn onto a decoy (ADR 0034), or null for a pack with no decoy.</summary>
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public double? DrawnHits { get; init; }
+    /// <summary>Downs a skill revived the player from (ADR 0037), or null in a fight whose skills revive nobody. A revived player isn't in
+    /// <see cref="DownedFraction"/>, which counts fights a down ended.</summary>
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public double? Revives { get; init; }
     public double ShieldAbsorbed { get; init; }
     public double ShieldBreaks { get; init; }
     public double ShieldDeployments { get; init; }
     public double ShieldRepaired { get; init; }
+    /// <summary>Shield health lost to a talent's drain (ADR 0026: Symbiosis), or null in a fight whose weapons carry none.</summary>
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public double? ShieldDrained { get; init; }
     /// <summary>Swaps forced by a shield that allows only one rotated weapon: to it when raised, back after a break.</summary>
     public double ShieldSwitches { get; init; }
     public double ArmorRepaired { get; init; }
@@ -264,6 +280,10 @@ public sealed record IncomingFightResult(double Attempts, double Hits, double Da
     public double ArmorKitsUsed { get; init; }
     /// <summary>Kit uses the player went down during: the weapon stopped for them, but no repair landed and they aren't in <see cref="ArmorKitsUsed"/>.</summary>
     public double ArmorKitsCancelled { get; init; }
+    /// <summary>Uses of a talent's ability that is the build's kit (ADR 0021: Hackstep Protocol), or null in a fight without one; its repair
+    /// isn't in <see cref="ArmorKitRepaired"/>.</summary>
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public double? ArmorKitAbilityUses { get; init; }
     /// <summary>The part of <see cref="ArmorRepaired"/> that armor kits repaired.</summary>
     public double ArmorKitRepaired { get; init; }
     /// <summary>The part of <see cref="DamageTaken"/> that statuses on the player dealt (ADR 0018); null when the pack has none for the fight.</summary>
@@ -290,6 +310,9 @@ public sealed record DummyFightResult(
     /// <summary>DPS of talent debuffs (Toxic Delivery), when a selected talent has one; part of the total, not of status DPS.</summary>
     public FightSummary? TalentDps { get; init; }
     public FightSummary? TotalDps { get; init; }
+    /// <summary>Weapon hits on a skill's marked zones per fight (ADR 0036: the Achilles Pulse), or null in a fight whose skills mark none.</summary>
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public double? ZoneHits { get; init; }
     public double Swaps { get; init; }
     public double Kills { get; init; }
     public ImmutableArray<double> KillTimes { get; init; } = [];

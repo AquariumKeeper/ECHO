@@ -29,9 +29,10 @@ pinned in `Directory.Packages.props` and restored from the committed lock files.
 ```powershell
 ./scripts/verify.ps1      # locked restore, formatting, Release build with warnings as errors, all tests
 ./packaging/package.ps1   # self-contained single-file ZIP in artifacts/, with a native window smoke test
+./scripts/compare-frozen-builds.ps1 -Base <ref>   # 42 fight runs of the frozen builds, against another commit
 ```
 
-Both scripts take `-Dotnet <path>` to use a specific SDK executable.
+These scripts take `-Dotnet <path>` to use a specific SDK executable.
 
 ## Layout
 

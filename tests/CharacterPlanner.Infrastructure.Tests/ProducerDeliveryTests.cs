@@ -23,23 +23,28 @@ public sealed class ProducerDeliveryTests
     {
         // These ship or guide a release, and by hand they drift a candidate at a time.
         using var manifest = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Pack, "manifest.json")));
-        var candidate = string.Join('.', manifest.RootElement.GetProperty("version").GetString()!.Split('.')[^3..]);
-        Assert.Contains(candidate, File.ReadAllText(Path.Combine(Data, "..", "docs", document)), StringComparison.Ordinal);
+        var version = manifest.RootElement.GetProperty("version").GetString()!;
+        var candidate = string.Join('.', version.Split('.')[^3..]);
+        var text = File.ReadAllText(Path.Combine(Data, "..", "docs", document));
+        Assert.Contains(candidate, text, StringComparison.Ordinal);
+        // A doc that gives the whole version, date and all, gives this one: the date moves with the candidate too.
+        foreach (System.Text.RegularExpressions.Match named in System.Text.RegularExpressions.Regex.Matches(text, @"y8s3\.3-pve\.\d{4}-\d{2}-\d{2}\.r\d+\.candidate\.\d+"))
+        { Assert.Equal(version, named.Value); }
     }
 
     [Fact]
     public void AdoptedDeliveryMatchesItsPinnedManifestAndEveryOutput()
     {
-        Assert.Equal("bc0afd6f8fae05a8ea1648b001ce56dfc77e6f086a694c844d05ea2655021ef1", Hash(Path.Combine(Pack, "manifest.json")));
-        Assert.Equal("71a0339bc5f94881c43db2813b09adbc46e2fd1e9a52dac13f4fe1800c9026df", Hash(Path.Combine(Delivery, "assembly.json")));
+        Assert.Equal("e417acb4ff14589aa77b912c11df3a9edafc32ecc6538e9fae9522dd10907bbe", Hash(Path.Combine(Pack, "manifest.json")));
+        Assert.Equal("ae4bdee56617b1d1395eb98eeae6d7b71c5570530ac2640dd64253e743acf56d", Hash(Path.Combine(Delivery, "assembly.json")));
         using var assembly = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Delivery, "assembly.json")));
         Assert.True(assembly.RootElement.GetProperty("complete_pack_assembled").GetBoolean());
         Assert.False(assembly.RootElement.GetProperty("complete_native_source_derivation").GetBoolean());
         var outputs = assembly.RootElement.GetProperty("outputs").EnumerateObject().ToArray();
-        Assert.Equal(42, outputs.Length);
+        Assert.Equal(77, outputs.Length);
         var evidence = outputs.Where(output => output.Name.StartsWith(Evidence, StringComparison.Ordinal)).ToArray();
-        Assert.Equal(17, evidence.Length);
-        Assert.Equal("59351c677ac36c87da2fadc7b20fc42f44ff19129ac17aac147d2ae10e2f9283",
+        Assert.Equal(52, evidence.Length);
+        Assert.Equal("647c0eb5ccb9b50bff9ec0062505ddd36685d756f58619ace8bc25f9ef1c4f32",
             evidence.Single(output => output.Name == Evidence + "packet.json").Value.GetProperty("sha256").GetString());
         var adopted = outputs.Except(evidence).ToArray();
         foreach (var output in adopted)
@@ -64,16 +69,17 @@ public sealed class ProducerDeliveryTests
         using var report = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Delivery, "reports", "talent-overlay.json")));
         var root = report.RootElement;
         Assert.True(root.GetProperty("ok").GetBoolean());
-        Assert.Equal("bc0afd6f8fae05a8ea1648b001ce56dfc77e6f086a694c844d05ea2655021ef1", root.GetProperty("pack_manifest_sha256").GetString());
-        // This sits on the r112-r113 candidate.
-        Assert.Equal("01f3d967eb6c742681282392ce280291cdea63c411b8e31d5e53f9f3186ffc3f", root.GetProperty("base_manifest_sha256").GetString());
+        Assert.Equal("e417acb4ff14589aa77b912c11df3a9edafc32ecc6538e9fae9522dd10907bbe", root.GetProperty("pack_manifest_sha256").GetString());
+        // This sits on r167.candidate.1 (R167: Hive haste), copied and checked in the commit before it.
+        Assert.Equal("92b4603b19f9d23202b6ba20e3840a45c5594dc59d08fac5f237d0ea0e39da32", root.GetProperty("base_manifest_sha256").GetString());
         Assert.Equal(Hash(Path.Combine(Delivery, "overlay-plan.json")), root.GetProperty("overlay_plan_sha256").GetString());
-        // R115: the bleed's tick stat and row, Chemical Agent's and Cover Shooter's text, and Cover Shooter's rule and input text.
-        Assert.Equal(6, root.GetProperty("changes").GetArrayLength());
+        // R168: ten weapon rows, for the six weapons that had no swap multiplier.
+        Assert.Equal(10, root.GetProperty("changes").GetArrayLength());
         Assert.True(root.GetProperty("assets_sha256_unchanged").GetBoolean());
         Assert.True(root.GetProperty("presentation_and_share_bytes_unchanged").GetBoolean());
-        Assert.False(root.GetProperty("stats_unchanged").GetBoolean());
-        Assert.False(root.GetProperty("talent_modifiers_unchanged").GetBoolean());
+        // Items alone: every stat and talent is unchanged, as the overlay's own rows say (ADocumentChangesOnlyByItsOverlayRows undoes them).
+        Assert.True(root.GetProperty("stats_unchanged").GetBoolean());
+        Assert.True(root.GetProperty("talent_modifiers_unchanged").GetBoolean());
         Assert.False(root.GetProperty("runtime_verified").GetBoolean());
     }
 
@@ -90,6 +96,15 @@ public sealed class ProducerDeliveryTests
         foreach (var change in plan["changes"]!.AsArray().Where(change => change!["document"]!.GetValue<string>() == file).Reverse())
         {
             var collection = adopted[change!["collection"]!.GetValue<string>()]!;
+            // A single object (the armor kit, R127) is replaced whole, matched by nothing; one an overlay created goes.
+            if (collection is JsonObject whole && change["match"]!.AsObject().Count == 0)
+            {
+                Assert.True(JsonNode.DeepEquals(whole, change["after"]));
+                var named = change["collection"]!.GetValue<string>();
+                if (change["before"] is { } prior) { adopted[named] = prior.DeepClone(); }
+                else { adopted.AsObject().Remove(named); }
+                continue;
+            }
             // Curves are keyed by id, each holding its points.
             if (collection is JsonObject keyed)
             {
@@ -114,7 +129,9 @@ public sealed class ProducerDeliveryTests
     public void EverySelectorSaysWhatItIsAndWhereItGoes()
     {
         var selectors = JsonNode.Parse(File.ReadAllBytes(Path.Combine(Pack, "rules.json")))!["selectors"]!.AsArray();
-        Assert.Equal(132, selectors.Count);
+        // R133 added Salvage's refill key, R143 the Demolisher Firefly's setting, R151 the hives' keys, R154 the Defender's and
+        // Fortified's, R157 the Precision's, and R159 the Trophy's.
+        Assert.Equal(146, selectors.Count);
         using var presentation = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(Pack, "presentation.json")));
         var sections = presentation.RootElement.GetProperty("layout").GetProperty("assumptionSections")
             .EnumerateArray().Select(section => section.GetProperty("name").GetString()).ToArray();

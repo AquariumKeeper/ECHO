@@ -8,15 +8,20 @@ public sealed record IncomingHit(double DamageTaken, double BonusArmorDamage, do
 public sealed record IncomingRepair(double Armor, double Health);
 
 /// <summary>
-/// Player pools for incoming damage. Mitigation is supplied by Core before applying a hit. Bonus armor is the build's
-/// static amount plus timed grants (temporary armor), all spent before armor: grants first, soonest to lapse first,
-/// since the static amount never expires. A grant is lost at its expiry.
+/// Player pools for incoming damage. Mitigation is supplied by Core before applying a hit. Bonus armor is the fight state's
+/// amount plus timed grants (temporary armor) and lasting bonus armor (ADR 0021), all spent before armor: grants first, soonest to
+/// lapse first, then the lasting amount, then the state's, which lapses only when the state changes (ADR 0020). A grant is lost at
+/// its expiry.
 /// </summary>
 public sealed class IncomingDamageState
 {
-    /// <summary>Static bonus armor plus every grant live at the last pool update (a hit, repair or regeneration).</summary>
-    public double BonusArmor => staticBonus + timed.Sum(grant => grant.Amount);
+    /// <summary>The state's bonus armor left, plus every grant live at the last pool update (a hit, repair or regeneration).</summary>
+    public double BonusArmor => BonusArmorAt(clock);
+
+    /// <summary>Bonus armor at <paramref name="time"/>: the state's left, and the grants not yet lapsed by then (ADR 0021's reading).</summary>
+    public double BonusArmorAt(double time) => stateBonusLeft + lasting + timed.Where(grant => grant.Until > time).Sum(grant => grant.Amount);
     public double MaxArmor => maxArmor;
+    public double MaxHealth => maxHealth;
     public double Armor { get; private set; }
     public double Health { get; private set; }
     public bool Downed => Health == 0;
@@ -25,7 +30,11 @@ public sealed class IncomingDamageState
     public double? FirstArmorBreak { get; private set; }
     public double? DownAt { get; private set; }
     private double clock;
-    private double staticBonus;
+    // The state's bonus armor left, and the amount the state gives (ADR 0020).
+    private double stateBonusLeft;
+    private double stateBonus;
+    // Bonus armor with no expiry, until damage spends it (ADR 0021: Headache at full armor).
+    private double lasting;
     // Timed bonus armor grants, ordered by expiry so the soonest to lapse is spent first.
     private readonly List<(double Amount, double Until)> timed = [];
     private readonly double maxArmor;
@@ -37,7 +46,8 @@ public sealed class IncomingDamageState
             !double.IsFinite(health) || health <= 0)
         { throw new ArgumentOutOfRangeException(nameof(armor), "Player pools must be finite and nonnegative, with positive health"); }
         Armor = armor;
-        staticBonus = bonusArmor;
+        stateBonusLeft = bonusArmor;
+        stateBonus = bonusArmor;
         Health = health;
         maxArmor = armor;
         maxHealth = health;
@@ -60,9 +70,13 @@ public sealed class IncomingDamageState
             bonusDamage += spent;
         }
         timed.RemoveAll(grant => grant.Amount <= 0);
-        var staticDamage = Math.Min(staticBonus, remaining);
-        remaining -= staticDamage;
-        bonusDamage += staticDamage;
+        var lastingDamage = Math.Min(lasting, remaining);
+        remaining -= lastingDamage;
+        bonusDamage += lastingDamage;
+        lasting -= lastingDamage;
+        var stateDamage = Math.Min(stateBonusLeft, remaining);
+        remaining -= stateDamage;
+        bonusDamage += stateDamage;
         var armorDamage = Math.Min(Armor, remaining);
         remaining -= armorDamage;
         var healthDamage = Math.Min(Health, remaining);
@@ -72,7 +86,7 @@ public sealed class IncomingDamageState
         // Restored armor does not absorb the same hit's overflow into health, and a downed player receives none.
         var repaired = armorBroken && !downed ? Math.Min(maxArmor, armorRepairOnBreak) : 0;
         var taken = Downed ? 0 : damage - remaining;
-        staticBonus -= staticDamage;
+        stateBonusLeft -= stateDamage;
         Armor -= armorDamage;
         Armor += repaired;
         Health -= healthDamage;
@@ -98,6 +112,31 @@ public sealed class IncomingDamageState
         return amount;
     }
 
+    /// <summary>
+    /// Follow a new fight state's bonus armor (ADR 0020). A rise adds the difference to what's left, so damage already taken stays
+    /// taken; a fall keeps no more than the new amount, and none at 0. A downed player gains none. Returns the amount gained.
+    /// </summary>
+    public double FollowStateBonusArmor(double amount)
+    {
+        if (!double.IsFinite(amount) || amount < 0) { throw new ArgumentOutOfRangeException(nameof(amount)); }
+        var gained = amount > stateBonus && !Downed ? amount - stateBonus : 0;
+        stateBonusLeft = amount >= stateBonus ? stateBonusLeft + gained : Math.Min(stateBonusLeft, amount);
+        stateBonus = amount;
+        return gained;
+    }
+
+    /// <summary>
+    /// Adds bonus armor with no expiry, spent after timed grants and before the state's (ADR 0021: Headache). A downed player gains none.
+    /// Returns the amount added.
+    /// </summary>
+    public double AddLastingBonusArmor(double amount)
+    {
+        if (!double.IsFinite(amount) || amount < 0) { throw new ArgumentOutOfRangeException(nameof(amount)); }
+        if (Downed) { return 0; }
+        lasting += amount;
+        return amount;
+    }
+
     /// <summary>Integrate a constant armor rate since the last pool update, capped before multiplication to avoid overflow.</summary>
     public IncomingRepair Regenerate(double armorPerSecond, double time)
     {
@@ -115,6 +154,34 @@ public sealed class IncomingDamageState
     {
         if (!double.IsFinite(fraction) || fraction < 0 || fraction > 1) { throw new ArgumentOutOfRangeException(nameof(fraction)); }
         return Repair((maxArmor - Armor) * fraction, 0, time);
+    }
+
+    /// <summary>Takes back a down that a revive is coming for (ADR 0037): the pools stay spent, and the fight goes on.</summary>
+    public void AwaitRevive()
+    {
+        if (!Downed) { throw new InvalidOperationException("Only a downed player awaits a revive"); }
+        DownAt = null;
+    }
+
+    /// <summary>The player dies while down (ADR 0037), so the fight ends now.</summary>
+    public void Perish(double time)
+    {
+        if (!Downed || !double.IsFinite(time) || time < clock) { throw new ArgumentOutOfRangeException(nameof(time)); }
+        DownAt = time;
+        clock = time;
+    }
+
+    /// <summary>A downed player is revived (ADR 0037): full health and a share of maximum armor, with no bonus armor.</summary>
+    public IncomingRepair Revive(double armorShare, double time)
+    {
+        if (!Downed || !double.IsFinite(time) || time < clock) { throw new ArgumentOutOfRangeException(nameof(time)); }
+        if (!double.IsFinite(armorShare) || armorShare < 0) { throw new ArgumentOutOfRangeException(nameof(armorShare)); }
+        timed.Clear();
+        (lasting, stateBonusLeft) = (0, 0);
+        Health = maxHealth;
+        Armor = maxArmor * Math.Min(1, armorShare);
+        clock = time;
+        return new(Armor, Health);
     }
 
     /// <summary>Immediate recovery capped to missing pools. It grants no bonus armor and cannot revive a downed player.</summary>

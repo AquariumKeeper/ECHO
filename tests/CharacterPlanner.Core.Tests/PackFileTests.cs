@@ -96,7 +96,28 @@ public sealed class PackFileTests
     [Fact]
     public void CancelAndBankFieldsRoundTripAndAreOmittedWhenUnset()
     {
-        var trigger = new SimTriggerDefinition { Talent = "t", Key = "k", On = "swapped", Kind = "buff", Duration = 5, CancelOn = "swapped", CancelFor = 5, RefreshOn = "kill", WhilePlayerStatus = "bleeding" };
+        var trigger = new SimTriggerDefinition
+        {
+            Talent = "t",
+            Key = "k",
+            On = "swapped",
+            Kind = "buff",
+            Duration = 5,
+            CancelOn = "swapped",
+            CancelFor = 5,
+            RefreshOn = "kill",
+            WhilePlayerStatus = "bleeding",
+            AnyStatusExcept = ["ensnared"],
+            Refill = true,
+            RefillBoth = true,
+            ShareCopies = true,
+            WeaponTypes = ["weapon_type_smg", "weapon_type_rifle"],
+            DifferentTypes = true,
+            EveryPerType = true,
+            AssumeWithoutDistance = true,
+            LockoutAlways = true,
+            GainAtLockoutEnd = true
+        };
         var bank = new SimTriggerDefinition
         {
             Talent = "t",
@@ -111,7 +132,8 @@ public sealed class PackFileTests
             ClearGrant = "temporary_armor",
             ClearAmount = 0.05,
             ClearDuration = 10,
-            FromFirstGain = true
+            FromFirstGain = true,
+            Refill = true
         };
         var primed = new SimTriggerDefinition { Talent = "t", Key = "p", Kind = "ready", PrimeHolstered = 10 };
         var pack = Tiny with { Simulation = Tiny.Simulation with { Triggers = [trigger, bank, primed] } };
@@ -123,6 +145,8 @@ public sealed class PackFileTests
         Assert.Null(triggers[1]!["refreshOn"]);
         Assert.Equal("bleeding", triggers[0]!["whilePlayerStatus"]!.GetValue<string>());
         Assert.Null(triggers[1]!["whilePlayerStatus"]);
+        Assert.Equal("ensnared", triggers[0]!["anyStatusExcept"]![0]!.GetValue<string>());
+        Assert.Null(triggers[1]!["anyStatusExcept"]);
         Assert.Equal("s_banked", triggers[1]!["bank"]!.GetValue<string>());
         Assert.Null(triggers[1]!["cancelOn"]);
         Assert.Null(triggers[0]!["bank"]);
@@ -130,11 +154,28 @@ public sealed class PackFileTests
         Assert.Equal(("swapped", 5.0, ""), (read[0].CancelOn, read[0].CancelFor, read[0].Bank));
         Assert.Equal(("kill", ""), (read[0].RefreshOn, read[1].RefreshOn));
         Assert.Equal(("bleeding", ""), (read[0].WhilePlayerStatus, read[1].WhilePlayerStatus));
+        Assert.Equal(["ensnared"], read[0].AnyStatusExcept);
+        Assert.Empty(read[1].AnyStatusExcept);
         Assert.Equal((false, true), (read[0].FromFirstGain, read[1].FromFirstGain));
         Assert.True(triggers[1]!["fromFirstGain"]!.GetValue<bool>());
         Assert.Null(triggers[0]!["fromFirstGain"]);
         Assert.Equal(10, triggers[2]!["primeHolstered"]!.GetValue<double>());
         Assert.Null(triggers[0]!["primeHolstered"]);
+        Assert.Equal("both", triggers[0]!["refill"]!.GetValue<string>());
+        Assert.True(triggers[1]!["refill"]!.GetValue<bool>());
+        Assert.Null(triggers[2]!["refill"]);
+        Assert.True(triggers[0]!["shareCopies"]!.GetValue<bool>());
+        Assert.Null(triggers[1]!["shareCopies"]);
+        Assert.Equal((true, false), (read[0].ShareCopies, read[1].ShareCopies));
+        Assert.Equal(["weapon_type_smg", "weapon_type_rifle"], read[0].WeaponTypes);
+        Assert.Empty(read[1].WeaponTypes);
+        Assert.Equal((true, true, true), (read[0].DifferentTypes, read[0].EveryPerType, read[0].AssumeWithoutDistance));
+        Assert.Equal((false, false, false), (read[1].DifferentTypes, read[1].EveryPerType, read[1].AssumeWithoutDistance));
+        Assert.Null(triggers[1]!["weaponTypes"]);
+        Assert.True(triggers[0]!["differentTypes"]!.GetValue<bool>());
+        Assert.Equal((true, true, false, false), (read[0].LockoutAlways, read[0].GainAtLockoutEnd, read[1].LockoutAlways, read[1].GainAtLockoutEnd));
+        Assert.Null(triggers[1]!["lockoutAlways"]);
+        Assert.Equal((true, true, true, false, false, false), (read[0].Refill, read[0].RefillBoth, read[1].Refill, read[1].RefillBoth, read[2].Refill, read[2].RefillBoth));
         Assert.Equal(10, read[2].PrimeHolstered);
         Assert.Equal(("", 0.0, "s_banked"), (read[1].CancelOn, read[1].CancelFor, read[1].Bank));
         Assert.Equal(("temporary_armor", 0.05, 10.0), (read[1].ClearGrant, read[1].ClearAmount, read[1].ClearDuration));
@@ -295,6 +336,21 @@ public sealed class PackFileTests
         AssertRejected(WithFile(PackFiles.Rules, Rules.Replace("\"level\": 40,", "\"level\": 40, \"level\": 41,", StringComparison.Ordinal)), "json-duplicate-property", "rules.json:$.level");
         AssertRejected(WithFile(PackFiles.Presentation, """{"theme":{"colors":{"primary":"#000000","primary":"#FFFFFF"}}}""" + "\n"),
             "json-duplicate-property", "presentation.json:$.theme.colors.primary");
+    }
+
+    [Theory]
+    [InlineData("\"neither\"")]
+    [InlineData("\"\"")]
+    [InlineData("1")]
+    public void ARefillIsTrueFalseOrBoth(string value)
+    {
+        var pack = Tiny with { Simulation = Tiny.Simulation with { Triggers = [new() { Talent = "t", Key = "k", On = "kill", Kind = "buff", Duration = 5, Refill = true }] } };
+        var simulation = Encoding.UTF8.GetString(PackWriter.Write(pack)[PackFiles.Simulation].Span);
+        Assert.Contains("\"refill\": true", simulation, StringComparison.Ordinal);
+        AssertRejected(WithFile(PackFiles.Simulation, simulation.Replace("\"refill\": true", $"\"refill\": {value}", StringComparison.Ordinal), pack),
+            "json-structure", "simulation.json:$.triggers[0]");
+        var unset = Read(WithFile(PackFiles.Simulation, simulation.Replace("\"refill\": true", "\"refill\": false", StringComparison.Ordinal), pack));
+        Assert.False(Assert.IsType<GamePack>(unset.Pack).Simulation.Triggers[0].Refill);
     }
 
     [Fact]

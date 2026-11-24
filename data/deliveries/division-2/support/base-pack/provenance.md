@@ -2978,3 +2978,521 @@ Whole-row preconditions and source evidence are captured in this assembly. This 
 Seed manifest SHA-256: `bd45f16ce0b33da0425556113e8f509e5e4da92016ba8ac714fd13c724dd2be9`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
 
 Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R115: the nail gun's bleed on the player, Chemical Agent, and Cover Shooter's source timer
+
+Base manifest `01f3d967eb6c742681282392ce280291cdea63c411b8e31d5e53f9f3186ffc3f`; overlay plan `33b769cefe49dc24875202d45924d581c57e48f61fc7e94d5e948310f85e9d4e`; evidence packet `59351c677ac36c87da2fadc7b20fc42f44ff19129ac17aac147d2ae10e2f9283`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `05319d576ec30c37977128382efbde701fa13c071994ef7006d5d9eb5caeb32e`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R116: the swap talents in fights
+
+Base manifest `bc0afd6f8fae05a8ea1648b001ce56dfc77e6f086a694c844d05ea2655021ef1`; overlay plan `bc6d6950502844f61a6be96db0b7f3c25eb52d15f19843bdf11af697eb924c1b`; evidence packet `5e7d1c1a4db7ec7ecdee3a5fb0fb86880b85cac335dbf999a1ef276477fe051a`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `885a96604c0c772bdb11da466d32ed283054151c4967c2fb8681ec638e39b32d`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R117: R116's second candidate, with Versatile's bands and Unwavering's full lockout
+
+Base manifest `c0e0eda9c7f6247e3d0743735db5baead784b01d14104008eac01d94f87e664a`; overlay plan `0b87360c1be3f5c4938aaf1c15b3bbb3dd5bee4e9b036e0ee6312e87d74638dd`; evidence packet `27f3a33cf4acf5a60e1be879d9283c20d2b4bdbdae1febdc826421d15637f026`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `1937072490fea0f1fdbb8a6eec08d1ce079c08e00a130e6c1e438ab7d98c8650`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R118: Chemical Agent's player part, and the primed selectors' text
+
+Base manifest `388848ddf2d20c5f79fd3a4df57cd478e550cc524e0203c692fd22d04f020538`; overlay plan `f9723814baa29ec258c6eafef76c960f8eaa5d0da23b5d3b0509522ea556e159`; evidence packet `cfa6592e6d5fba39c32f328be3f173078e20d326f830e7c55fa5d439182ea30a`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `8c43c3bd396c02dc7f35e32b7ca4415fc2d4a5e99c6c21cfce00bd9c61bf2190`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R119: two text slips in Chemical Agent's rows
+
+Base manifest `f87bf38066cdd14d5937f8dce9e58ee137a8ac81834c2f8a5383371165633aee`; overlay plan `f2622f34ac41f9a9d4bad65f2ca0bc0fd501db2399ca6ccae92201bf4d0dc496`; evidence packet `40bdb145febea1f9fcbbfbec2bca7038d5357c4d7ac3d65b23253101ba643cfd`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `8f984f1bfc75e192065e6b3c259b1d1631b75a4c7caeaf4788025b8ffab8a473`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R121: Reactant's row without its grant
+
+Base manifest `9d88b3d1bbbbeede9b1626d35c8a524527f559577bcbcf4cb437a03373855d90`; overlay plan `831bcb8503635bfdf2818e45c1039de5357b951ec2fb843df79481bf1569bd98`; evidence packet `9c4358b57a1019980951971bb4025fb6f51c7ed900fbc4fa25928d5eee8aa097`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `adf550beb13c465c94cef5c074c7905af6e3e3f65daa2f401d9115e27901407d`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R123: Chemical Agent's rows without ensnared
+
+Base manifest `e5b7651312ef2bc8d7230786f33b3ed0f1aae43c96427532b5c9afb54114e873`; overlay plan `3266e3307119e512216c1ce911ecc2a0d4216309835d7f9a9ebda90216fc300f`; evidence packet `77e3346877d0624836461340de542b14ef9ff767a4e5345822e6342a18111dd7`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `a5ea712c7586a8b3b5366a02d7ac25cc7c89343d82e034d4c0676940d48f517f`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R124: Catalysis text on statuses fights don't apply
+
+Base manifest `cea4383cadf383a82c15f0f29dd9058b01086bf845721d9ab648d63a12e6f071`; overlay plan `d454da5f86599f435b90d0feaf691078797879fbd04ee928eb011296eb3b74ba`; evidence packet `cbcc3f1bfc066419c9dac53168a84bfecda78bd7b06cd04edc370babde80e76a`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `f286572fa2d32f29eb69478a7f7949d6fb21d829d8a67294f5382640014c5cb4`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## Build 6615452: Afterburn's new values
+
+Base manifest `dbe18a67320505aa0a83e377d8adba24a9a2d17406eec43b942d52abe9a53b3a`; overlay plan `91b2f833d18b0a1a22167731ece9842a5b6ab2d6b8fca0be37b55e57116a5b78`; evidence packet `cedcc99f0b7d532900b551cec20e90372769e1c21e573f8d96459191d3d817fc`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `2b0c89d8d61ca2d496ff18f54196404ec6f1365c80c246c0bc2276f2f5c44e6f`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R125: Afterburn and Corrosive Trap text
+
+Base manifest `321673a0fc2e8ec117ebeadb25fa8b7e9a362677c24f521ca39aa702bfab1702`; overlay plan `754ce6d8926374bd59f245b8fa7b5292c5ef8c6a5f76c9d3ee33ab3a7476ceb9`; evidence packet `d0ba07f89359ef3867f924ae43136d139972ba5f200c429aeeebc454262a7a31`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `1b096f39a3d40689e6daa63ddc957623a110beda1c4c3f2d92a4e031f9f1894c`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R127: Hackstep Protocol and Headache rows
+
+Base manifest `3fae03f88039ab6ca1a6dc8d1bc6d2a874ecb6b6cda8d4f9eff5ca1460b14f20`; overlay plan `5b8b7d4529986c7b74a7fb11315d033dce07c0328f90e8a82b902900efc0c3d4`; evidence packet `4c400dcb2cd224ae840a59485fffae102adb04bf02e0971b482202db93d81689`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `6863ba234d02c67407ac48b05cb34a5b791d7dec8aa7fcca4b737c7333a24e22`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R128: skills that play no part in a fight
+
+Base manifest `351cc7ee6cd5beb4d4992432d6f2d018be24d492efa96b4ca68fd4f1ad858947`; overlay plan `29b98cee189a390bedb45f199c0dc6e09a477dcd3b58ad0a462c0e087b86327b`; evidence packet `c0ef51ef441d1a952a3674e0e73778d5b7691bbc252daebd15eaeb5fb8702a6f`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `eeeb51972e5997486cf0a5a82f5a895c981bbb89405cae07996e9a794aa2c4d3`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R129: Hackstep and Headache text after r127, and Hackstep's reach
+
+Base manifest `481bcdc7a27b4073d08ca7bf7c98783373a6ec8cb0df8dbe2958ac4759fcd85f`; overlay plan `7933dd9d997cfa87bdbd413d8e6508b0da2e07f4876a473792556ce5ce437007`; evidence packet `41e632bd382e87a83c1900ba988b77220b94d1663aa8d9ca27ba31e0d7279f93`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `9575591bf3ca6a23430626d112be9a4ab1fc0405e46786e741d73b773924f289`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R130: what Hackstep's bonus already reaches, coverage and text after r129
+
+Base manifest `f764b20fe109f4d10c1fd6df85ca42a29d60a03a6ed13df2798bcea19daca901`; overlay plan `9cd8eeba522a6726d5a20ecdae41ea11c0dce86434de1b37ee2473d633f2d664`; evidence packet `f37eef08ee2a9ec746f57ee5196ed550d880cbef16957327778e88ec2a9792d9`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `ad6e842a6567c8e33d5cea6b63fd274108101db6cc22f2b25e132a0489f93b3c`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R131: fight rows for the nine damaging skills, Striker and Bombardier first
+
+Base manifest `1e8b70438b69927d45a89b8c4f5359ac9587cf4f84d1bbc0774544bff2e65bfd`; overlay plan `d9a8483258a6ba51639f6d6c4d058f31b9867877fe773b8a3032f7a00c420ad7`; evidence packet `da719c7d1bfaae994cc85f2e4e4525cd3baadd281bca9dc7d68e041476e2cb04`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `bc878d56bab58ca7fc74026d1231dbad16a42c44b8a3728145e0376f6414097d`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R132: Head Scratcher's fight row, readings for Headhunter, Determined and Salvage
+
+Base manifest `d1cb7d3a538a174915390d7b659dd23e37cf9a8b9009c0b719dfa1cb278bbe0f`; overlay plan `126f5cf117eba29b3d1c3ad8484aedb206e571f9f73543a54f152544996b748c`; evidence packet `40b9f479f1619a4d8dc20678048a852a84705f79cfbeec44333bf16b421e27de`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `cb84fca05a6ee0a6ba51712fed1bce20c283a4720a8d03f8ad55f253bf495222`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R133: Salvage, Determined and Headhunter in fights, ADR 0023's rows
+
+Base manifest `99937c98f6f0590acaac4062664471b1a3bf93a2902f685345e61be2baa72194`; overlay plan `976ef95485b69a827bf817e24427eaa45245810e0a4417e53920a10d1ff11175`; evidence packet `de640b38e7d2f361051af7836e955ef5f5bc45e192b9d0e52e7bbc7596ab3995`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `134c82dbf4897bbf0efee63025c7c7258def93e8fdb3b41147a9138ae4216cbb`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R135: Determined's own keys, Headhunter's static cap on the fight's
+
+Base manifest `b69bcff541d97781a3d81dfd04bdd17329b4654d508e4f817bcf2a388cbb9602`; overlay plan `5b243245789e7cda2a5f5bd511101e99d449ebef05ee5a9df503b19d7ae436e9`; evidence packet `f95bddd88c57cfe233e48bd3b87bef068be2c9ef6ebfb29ac46ae8760fc2efe7`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `ba0f18c2657c255a10d9a9e613dccadd46ae941a0215fe49f5ec4a23f0ba08f6`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R136: poison's row and Gas Bomber Drone's rule, ADR 0024's rows
+
+Base manifest `041aa814ec00c80173402fcd6d69aee70eacddf8218561fba39c5e3108f53a6a`; overlay plan `e28c231bc2d19560025e014241a0e66bf7e74b2185d30333544c151c022d17bc`; evidence packet `96a5b935cff1a789ab0f05a009c6666248416895d45107daa3e1d72abf485d7c`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `0047c8c6c1b01b04b88d32022338ac52f5aafc75826e576a8973dd27334095f2`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R137: Gas Bomber's poison_dps and the player's damage terms
+
+Base manifest `be580c647f8a8b1b8d55da7a66a0fb6c6a483a7e106eb3941ced869727cc6f51`; overlay plan `53f44007969ecfb5c813f20a7ea1c726db9ec6be75be89853194b21da88ed3e2`; evidence packet `7a9d843d5cf47cc7dbab26661e4e35eeaf92fe08597c32a0731be10956402a4a`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `4e66896259d5958e76e95722e7d5723f2a9334d18a370a65b27e18a14970ed13`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R139: ADR 0025's rows, Overflowing on reload_empty, the magazine formula and Pakhan
+
+Base manifest `bf6d1d2b34f2d70bafab3515f7bcc45305d62a4a58990c3057817c992173d55d`; overlay plan `2b466034f5cd981db71bf2ab22f235b921faf5fa934dc953fee08daadade539c`; evidence packet `129873a57405e6c568295d4dda19e13781e37efef847ec81a164ec87b693e25f`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `79107257c15ad1b891cfe3770e1ae7288f4b8995c6d81ef4b9898b3146440c7a`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R141: ADR 0026's rows, Symbiosis's drain
+
+Base manifest `94380ffe5a89e3db5b76a4b5cff884382dbb2e470d1eb72990fa1eed5c0dabe0`; overlay plan `14f9fe9558f2c881ec23b435ab1c315407d845ed24b5e7374f912b3039867d8b`; evidence packet `a5c0518d88325a259c26b953006588a57bd2fcb6cd70f8a8f93ad0959c85bbac`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `f28784e30be5e65de50e76834c004a9159dd6fa7ed04ecbc2c8063d866279bb1`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R143: ADR 0027's rows, the Demolisher Firefly in fights
+
+Base manifest `998a54f53b78e2ac818e15d268aa51e4e6068a1c87d3f725ce79e68f08e99ad1`; overlay plan `dc5bd270abaca7fec268f03dc1e4e9fe7dc2f8eeade57b9d0cf468bbc4e0b690`; evidence packet `062eabc92f4d3379c980e2ff6c66f0ace2339ad06edb7a568a409575cd1819be`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `5f5a332c68bba06dda1588afca7d719e8a1c9559a36326c392eaac284a2125b8`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R145: ADR 0028's rows, the Leech Hive in fights
+
+Base manifest `a925bac06e409533bbe80c33bf269582b4cd913159468c3c00f0db78d9800793`; overlay plan `aeed35da824fa7ff4df69e925cea546e631b159e5c1983544e2e19e97fedbc30`; evidence packet `407f44f9ddeb2002010202ec65665ae75953ec41a0e0597ff5a5c61a91378975`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `77a63e816a628c44bb2fcfc07a98412d0c749afa3fc413c32be3bc87acd9449b`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R147: ADR 0029's rows, The Howl in fights, and the Leech's overcharge
+
+Base manifest `6a851fcb05738933ef4893f5230c863d404fa0ba69eab370694899566feddfd5`; overlay plan `92e1a2563b646940b4b4a132549e4f1321f1eb2afa3331eba2f1887a3fe1f9c3`; evidence packet `025a0e797f8762940bebb3337e318cd5480d249e2fb8c0363a9c9f296c05d326`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `c81a4b465a61f8911f36ee2d162586042fd81e91701d1fd44ad65db05db7d2fa`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R149: ADR 0030's rows, the repair skills in fights
+
+Base manifest `3038a4763a16b6e2caad1506c047fed29cfab32cf54fa9fa56557d81038dec8d`; overlay plan `c0f07bf5d97db8fecfa8b451864fe9e7722bcd1dbd699ce95f9636abcdb1980f`; evidence packet `94e2387c03ecc8a27d5c3f6a30486aef855ce63faa468430b8af39a6cbef5954`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `99daccc35b9267f038b187944a121d30b245f49367cd85e8c1c27437e4cd55de`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R151: ADR 0031's rows, the Booster and Artificer Hives in fights
+
+Base manifest `a19773580b2352d8b30734fa3b1fd485b0469794389e395b5e5428601c8d7f35`; overlay plan `a5b4ea5cfdc1b62347805048f4cad8205b97aeefae19dc74d7377ecc99ee727d`; evidence packet `933eeb4975d81868be18be6c8633e91e8b5a52c4d7c129e8f8ff4ba0eefa6c97`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `bd54268d125251e4a9e96e8b6bc90fe51876d4db8ce71e2bacd2d1fabf4ed396`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R152: live reads for the Assault Turret, Oxidizer and Fixer
+
+Base manifest `ab95c77c16cfb66384ee5944c13bc065a5d94a836a5d3c90bd19cb5eb3411bdb`; overlay plan `dcb242f386e013112f9c7a3ab2ef6c7f392fee034323b831272266f4ad5549b1`; evidence packet `6e3f3a013b4e4a0b57eb3615b3c270b46c60b870abb4faf67704d37f26ccf974`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `5e1f54520a482a77f6b35c960c4d984d3d53c238de073603b4f2680e3b0980c5`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R154: ADR 0032's rows, the Defender Drone and Fortified Smart Cover in fights
+
+Base manifest `04380918190c0441952e31b8fcc18ef8419330cb038f89f527afc964914a8f0f`; overlay plan `e045c804d1fe7d0ced4a1e72dde07720e078f6b6ed27119511084bb266f9bbbe`; evidence packet `e279ab9e2e94a789395ae1a814132830f853b88ccbc69854d134ac72002d37e5`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `153a364ded35857f206907c41237f79f7144865d8b4a8b8b0ad014b22b94f6ba`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R155: the Fortified's text on a cover cycle
+
+Base manifest `8d36d86489899e80ca27d199ee44e0ce14fb132ed67171ef64efd45e71b44234`; overlay plan `e3d8515d0722794ace7e697721ccb7227dd631026ec21283662c922d84a12f66`; evidence packet `f81375e188c27e18ad4c07873f0b99864dad9a368e706ea72bafc34fe918fdd7`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `be6e554380e3beb04b165478bc7c56b8d3c8dd409191bf1f9252d5ef33dfadcd`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R157: ADR 0033's rows, the Precision Smart Cover in fights
+
+Base manifest `c57040f64049107ceb2d45670dca2db39bd1ab0570ed168bdd3ea73bd96eb478`; overlay plan `1292d5c54fbb7550bbe218acff9260cb83f0279d5ff89cbc37d0bf7be3b5a134`; evidence packet `090751a1f3e1f52af1c761ae42e62ea1f86287f71bc047aa9245572756c97f39`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `7343db12a05e04ca2ac94dee9b92caa55dc818904319c63207d976a9b4502389`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R159: ADR 0034's rows, the Trophy System Drone and Decoy in fights
+
+Base manifest `a7fb51dd5e5dd91c2fdbf40f1069efe8d212c2513b7fa78de7b23e80f2647dcf`; overlay plan `c192634af01ce209bae5978ccf72dba60ef982038c4555c016dcccf6f435e118`; evidence packet `c5a52290123f6bc83a75e63c39ba43742687ae85610a61bae135f824f5ea96b7`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `7062ca0840b03634b6b89297ba1e38218a4c5fed30df858b6598c3131c50fc51`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R161: ADR 0035's rows, the Jammer Pulse and EMP Sticky Bomb in fights
+
+Base manifest `bf01ea8c7dc9c122e54c125e2dc21b7aba2c0cab722681de2616d673c479ecf8`; overlay plan `498a991482a690d2bc45af5a8edfd48c4508340099ee196d020f9459df78ff0e`; evidence packet `b2d41916f313fd9cd5badcfb0d182b8d707e424828f368480256f130e42d67ac`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `ce5de5b1ad30850264d6c6e85019e03e80963d16e964f60dda60ede37b3581e4`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R163: ADR 0036's rows, the Achilles Pulse in fights
+
+Base manifest `4e204d34add6c5a83de1d8a8f5fd639294bfac4c612154fc87c3354c895c383c`; overlay plan `0987ece935cf48864030274c43c8020742418b21e922e7e3b642537b9a94cb38`; evidence packet `0b5326fd07c144912184303be58142c9ed72eb8b7801d57eea7b13dc8481510b`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `3f4d3d9c28d3c99ac24f970c7914e8fa4fe929bfd17e38ae78b9fbb13b49eab5`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R164: text only, the Achilles Pulse's key and coverage lines
+
+Base manifest `b6a464eaa55f960fa96b312ad482712ce476f2db78261030d9f1e82c0e2ce290`; overlay plan `f6e185ac9ac36f1aa086f24c8d35a73b0464ecaf64256d0b512001b026129157`; evidence packet `0c8f6cef733cecadf9ea8f57647a37a372385f11f6b9e530d03711a69a880684`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `4aa54119c04c4e4847e18e4b957051e82567b9c299a4092ebad6ad70bd483a97`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R166: ADR 0037's rows, the Reviver Hive in fights
+
+Base manifest `f8cfa2d6d9066610e59d33c49d66fff1baad3260623c52f0104e61ce8b095d9e`; overlay plan `d3c0a8e66e1689b1c18423ebb92db95506962cfee6a5a902603f7dc225795e2c`; evidence packet `7c3bd3716da9cd6dd955f8f654ac17e8722d70df3f35e92e1a3bdb91739161ec`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `8880df8d2c2fd45c62b0671948f99183a27855e55ee0416be925fdfe244f3b70`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.
+
+
+## R167: Hive haste in the hives' cooldowns, and the Reviver Hive's text
+
+Base manifest `c0fa9b329f6eef66d774aa991bcf9a2b7af8660bb9203bbebce50e6402e7ff99`; overlay plan `e76a4407f10028d71744f55b8a0cfe629219b7550f3d8c256d4ee4a7429569cc`; evidence packet `1556c4a3e971cf424266cc47dc8f0e81f5c8eeacb54eef9d351ff667a70e4025`.
+
+Whole-row preconditions and source evidence are captured in this assembly. This is a reviewed authored-model proposal, not runtime verification or consumer adoption. Unresolved behavior is explicitly excluded in overlay-plan.json. Artwork, share codes and all unselected model rows are preserved. Source archive defaults are not applied.
+
+
+## Verified artwork packaging
+
+Seed manifest SHA-256: `931817072ce214fa05b4598711d87c9cdbec4674016f58b5a208d448660182b7`. Assets digest: `5d935a3700a533d6cd8549b93fd9045ecb34ee0937fb50f9b73353459203ef3d`.
+
+Registered artwork copied unchanged. Source attribution, licenses and preparation notes remain verbatim in presentation.json; hashes do not establish artwork rights.

@@ -15,7 +15,7 @@ public static class EquipmentEffectSelection
 {
     public static SelectedEquipmentEffects Select(GamePack pack, BuildSnapshot build, ResolvedLoadout loadout, ResolvedAssumptions assumptions)
     {
-        var context = assumptions.Explicit;
+        var context = assumptions.Effective;
         var index = PackIndex.Of(pack);
         var attributes = index.Attributes;
         var mods = index.Mods;

@@ -87,6 +87,20 @@ public sealed class AssumptionViewModelTests : IDisposable
         Assert.False(gunslinger.IsVisible);
     }
 
+    /// <summary>A selector with a pack default (ADR 0019: Versatile's bands) names it on its unset choice.</summary>
+    [Fact]
+    public void ASelectorsDefaultIsNamedOnItsUnsetChoice()
+    {
+        var pack = TestPack.Division.Pack with
+        {
+            Selectors = [.. TestPack.Division.Pack.Selectors.Select(selector => selector.ID == "versatile_active" ? selector with { Default = "true" } : selector)]
+        };
+        var cards = AssumptionViewModel.Cards(editor, pack).Select(card => card.Assumption).OfType<SelectorAssumptionViewModel>().ToArray();
+        var versatile = cards.Single(card => card.Id == "versatile_active");
+        Assert.Equal(("", "Default (On)"), (versatile.Selected.Id, versatile.Selected.Name));
+        Assert.Equal("Default", cards.First(card => card.Id != "versatile_active").Selected.Name);
+    }
+
     /// <summary>A stored value the pack doesn't list is shown in the dropdown, not as a blank.</summary>
     [Fact]
     public async Task UnlistedValuesAreShown()

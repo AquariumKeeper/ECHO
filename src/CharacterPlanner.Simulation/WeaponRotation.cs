@@ -28,6 +28,10 @@ public sealed class WeaponRotation
     // single weapon's does: empty, unless it's a cover reload topping up a part-used magazine.
     private readonly double[] loadedAt = [0, 0];
     private readonly double[] reloadingRounds = [0, 0];
+    // Each weapon's magazine as last filled (ADR 0025), and what it was before a committed reload still under way, which readings see
+    // until it completes.
+    private readonly double[] capacity;
+    private readonly double[] capacityBefore = [0, 0];
     private readonly WeaponSwapMode mode;
     private readonly double swapTime;
     private int active;
@@ -38,6 +42,7 @@ public sealed class WeaponRotation
         this.mode = mode;
         this.swapTime = swapTime;
         ammo = [weapons[0].Magazine, weapons[1].Magazine];
+        capacity = [weapons[0].Magazine, weapons[1].Magazine];
     }
 
     public string ActiveSlot => weapons[active].Slot;
@@ -52,10 +57,47 @@ public sealed class WeaponRotation
     private (double Reload, double SwapSpeed, double SwitchMultiplier) Timing(Weapon weapon)
     {
         var timing = DrivenTiming?.Invoke(weapon.Slot) ?? (weapon.Reload, weapon.SwapSpeed, weapon.SwitchMultiplier);
-        if (!double.IsFinite(timing.Reload) || timing.Reload < 0 || !double.IsFinite(timing.SwapSpeed) || !double.IsFinite(timing.SwitchMultiplier) || timing.SwitchMultiplier <= 0)
+        if (!double.IsFinite(timing.Reload) || timing.Reload < 0 || !ValidSwap(timing.SwapSpeed, timing.SwitchMultiplier))
         { throw new SimulationException("weapon-stat-invalid", "Invalid rotation reload or swap speed"); }
         return timing;
     }
+    /// <summary>A driven fight's magazine for a weapon, in the state as it stands at a time (ADR 0025); without one each keeps its
+    /// own.</summary>
+    internal Func<string, double, double>? DrivenMagazine { get; set; }
+
+    // The magazine a fill of this weapon loads at this time.
+    private double Size(int index, double time)
+    {
+        var weapon = weapons[index];
+        if (weapon.NoReload || DrivenMagazine is null) { return weapon.Magazine; }
+        var size = DrivenMagazine(weapon.Slot, time);
+        if (!double.IsFinite(size) || size < 1) { throw new SimulationException("weapon-stat-invalid", "Invalid rotation magazine"); }
+        return size;
+    }
+
+    private int IndexOf(string slot) => weapons[0].Slot == slot ? 0 : weapons[1].Slot == slot ? 1 : throw new ArgumentException("Unknown weapon slot", nameof(slot));
+
+    /// <summary>The magazine a reading of this weapon sees at <paramref name="time"/>: as last filled, or as it was before a committed
+    /// reload still under way, alongside <see cref="ReadableRounds"/>.</summary>
+    internal double Capacity(string slot, double time)
+    {
+        var index = IndexOf(slot);
+        return time < loadedAt[index] ? capacityBefore[index] : capacity[index];
+    }
+
+    /// <summary>A committed reload of this weapon, read again as it starts, after its events: what they changed sizes it (Overflowing
+    /// turns on as its counted reload starts, R138).</summary>
+    internal void ReloadStarting(string slot, double time)
+    {
+        var index = IndexOf(slot);
+        if (weapons[index].NoReload) { return; }
+        ammo[index] = capacity[index] = Loads(index, time, reloadingRounds[index]);
+    }
+
+    // A reload loads the weapon's magazine at this time, and never fewer rounds than it started with: a cover top-up whose own events
+    // shrink the magazine (Overflowing spent as it starts) keeps what it held.
+    private double Loads(int index, double time, double rounds) => Math.Max(Size(index, time), rounds);
+
     internal ResolvedBuild Resolution(string slot) => weapons.Single(weapon => weapon.Slot == slot).Resolution;
     public double Rounds(string slot) => slot == weapons[0].Slot ? ammo[0] : slot == weapons[1].Slot ? ammo[1] : throw new ArgumentException("Unknown weapon slot", nameof(slot));
 
@@ -66,10 +108,19 @@ public sealed class WeaponRotation
         return time < loadedAt[index] ? reloadingRounds[index] : ammo[index];
     }
 
-    // The magazine is committed full now; readings see the rounds it held until the reload completes.
-    private void CommitReload(int index, double readyAt, double rounds = 0)
+    /// <summary>The rounds the weapon's committed reload started with, read as that reload starts (reload_empty, R138). Unlike
+    /// <see cref="ReadableRounds"/> it doesn't depend on the time, so a reload taking no time still reads them.</summary>
+    internal double ReloadStartRounds(string slot)
     {
-        ammo[index] = weapons[index].Magazine;
+        var index = weapons[0].Slot == slot ? 0 : weapons[1].Slot == slot ? 1 : throw new ArgumentException("Unknown weapon slot", nameof(slot));
+        return reloadingRounds[index];
+    }
+
+    // The magazine is committed full now; readings see the rounds it held until the reload completes.
+    private void CommitReload(int index, double readyAt, double time, double rounds = 0)
+    {
+        capacityBefore[index] = capacity[index];
+        ammo[index] = capacity[index] = Loads(index, time, rounds);
         loadedAt[index] = readyAt;
         reloadingRounds[index] = rounds;
     }
@@ -94,7 +145,13 @@ public sealed class WeaponRotation
             var timing = WeaponTiming.Read(stats);
             var speed = stats.GetValueOrDefault("effective_swap_speed", 0);
             var multiplier = stats.GetValueOrDefault("weapon_switch_speed_multiplier", 1);
-            if (!double.IsFinite(speed) || !double.IsFinite(multiplier) || multiplier <= 0)
+            // A weapon without a multiplier of its own (the pack's stat is 0) has no swap time to play.
+            if (multiplier == 0)
+            {
+                var name = resolved.Loadout.Equipped.First(item => item.SlotId == slot).Item.Name;
+                throw new SimulationException("weapon-stat-invalid", $"The pack has no swap speed for {name}, so a weapon rotation with it can't be timed");
+            }
+            if (!double.IsFinite(speed) || !double.IsFinite(multiplier) || multiplier < 0)
             { throw new SimulationException("weapon-stat-invalid", "Invalid rotation swap speed"); }
             return new(slot, resolved, timing.Magazine, timing.Interval, timing.Reload, speed, multiplier, timing.NoReload);
         }
@@ -106,7 +163,32 @@ public sealed class WeaponRotation
     {
         var (_, fromSpeed, fromMultiplier) = Timing(from);
         var (_, toSpeed, toMultiplier) = Timing(to);
-        return swapTime / 2 / fromMultiplier / Math.Max(0.1, 1 + fromSpeed) + swapTime / 2 / toMultiplier / Math.Max(0.1, 1 + toSpeed);
+        return SwapDuration(fromSpeed, fromMultiplier, toSpeed, toMultiplier);
+    }
+
+    private static bool ValidSwap(double speed, double multiplier) => double.IsFinite(speed) && double.IsFinite(multiplier) && multiplier > 0;
+
+    private double SwapDuration(double fromSpeed, double fromMultiplier, double toSpeed, double toMultiplier) =>
+        swapTime / 2 / fromMultiplier / Math.Max(0.1, 1 + fromSpeed) + swapTime / 2 / toMultiplier / Math.Max(0.1, 1 + toSpeed);
+
+    /// <summary>
+    /// A swap's own time, read again as it starts, after its events: a bonus the swap ends (Unwavering's handling, cancelled by the swap
+    /// away) speeds neither its holster nor its draw (the owner's reading, 2026-11-15; the source leaves when the bonus goes open). It
+    /// only ever slows the swap: a bonus the swap's own events gain applies from the next swap, as before. The arrival, any reload after
+    /// it (its length as decided, read again as it begins) and the ready time move with it. An action the rotation no longer has in hand
+    /// is left as it is.
+    /// </summary>
+    internal WeaponAction RetimeSwap(WeaponAction action, double fromSpeed, double fromMultiplier, double toSpeed, double toMultiplier)
+    {
+        if (action.Kind != WeaponActionKind.Swap || action.SwapCompletedAt is not { } arrived || ReadyAt != action.ReadyAt) { return action; }
+        if (!ValidSwap(fromSpeed, fromMultiplier) || !ValidSwap(toSpeed, toMultiplier)) { throw new SimulationException("weapon-stat-invalid", "Invalid rotation swap speed"); }
+        var swapped = action.StartedAt + SwapDuration(fromSpeed, fromMultiplier, toSpeed, toMultiplier);
+        if (!double.IsFinite(swapped) || swapped <= action.StartedAt) { throw new SimulationException("time-not-advancing", "A swap cannot advance time"); }
+        if (swapped <= arrived) { return action; }
+        var ready = action.ReloadedDestination ? swapped + (action.ReadyAt - arrived) : swapped;
+        if (action.ReloadedDestination) { loadedAt[weapons[0].Slot == action.To ? 0 : 1] = ready; }
+        ReadyAt = ready;
+        return action with { SwapCompletedAt = swapped, ReadyAt = ready };
     }
 
     /// <summary>Handle a queued external kill once the current action is ready; never consumes a round. A swap the
@@ -138,7 +220,7 @@ public sealed class WeaponRotation
         var reloaded = !to.NoReload && ammo[other] < 1;
         if (reloaded) { next += Timing(to).Reload; }
         if (!double.IsFinite(next) || next <= time) { throw new SimulationException("time-not-advancing", "Forced swap cannot advance time"); }
-        if (reloaded) { CommitReload(other, next); }
+        if (reloaded) { CommitReload(other, next, time); }
         active = other;
         ReadyAt = next;
         return new(WeaponActionKind.Swap, from.Slot, to.Slot, time, next) { ReloadedDestination = reloaded, SwapCompletedAt = swapped, Forced = true };
@@ -151,11 +233,12 @@ public sealed class WeaponRotation
     {
         if (!double.IsFinite(time) || time < ReadyAt) { throw new ArgumentOutOfRangeException(nameof(time)); }
         var weapon = weapons[active];
-        if (weapon.NoReload || ammo[active] >= weapon.Magazine || mode == WeaponSwapMode.WhenEmpty && swapAllowed) { return null; }
+        // Against the magazine as loaded: a state's larger magazine alone doesn't start a reload.
+        if (weapon.NoReload || ammo[active] >= capacity[active] || mode == WeaponSwapMode.WhenEmpty && swapAllowed) { return null; }
         var reload = Timing(weapon).Reload;
         var next = time + reload;
         if (!double.IsFinite(next) || reload > 0 && next <= time) { throw new SimulationException("time-not-advancing", "Cover reload cannot advance time"); }
-        CommitReload(active, next, ammo[active]);
+        CommitReload(active, next, time, ammo[active]);
         ReadyAt = next;
         return new(WeaponActionKind.Reload, weapon.Slot, weapon.Slot, time, next);
     }
@@ -163,6 +246,7 @@ public sealed class WeaponRotation
     private void UndoReload(int index)
     {
         ammo[index] = reloadingRounds[index];
+        capacity[index] = capacityBefore[index];
         loadedAt[index] = 0;
         reloadingRounds[index] = 0;
     }
@@ -189,12 +273,68 @@ public sealed class WeaponRotation
         return ReadyAt = action.StartedAt;
     }
 
+    /// <summary>
+    /// Puts a committed action off until <paramref name="until"/> (ADR 0037: the player is down until then): a swap not yet begun swaps
+    /// then, and a reload, begun or not, starts over then. A swap under way finishes, its reload on arrival waiting. An action the
+    /// rotation no longer has in hand, or that comes later anyway, is left as it is. Returns the action as it now stands.
+    /// </summary>
+    internal WeaponAction Defer(WeaponAction action, bool swapBegun, double until)
+    {
+        if (ReadyAt != action.ReadyAt) { return action; }
+        var start = action.Kind == WeaponActionKind.Swap && swapBegun ? action.ReloadStartsAt ?? double.PositiveInfinity : action.StartedAt;
+        if (action.Kind == WeaponActionKind.Continue || start >= until) { return action; }
+        var later = until - start;
+        var ready = action.ReadyAt + later;
+        if (!double.IsFinite(ready) || ready < until) { throw new SimulationException("time-not-advancing", "A put-off weapon action cannot advance time"); }
+        ReadyAt = ready;
+        if (action.ReloadStartsAt is not null) { loadedAt[weapons[0].Slot == action.To ? 0 : 1] = ready; }
+        return action with
+        {
+            StartedAt = action.Kind == WeaponActionKind.Swap && swapBegun ? action.StartedAt : until,
+            SwapCompletedAt = action.SwapCompletedAt is { } arrived ? arrived + later : null,
+            ReadyAt = ready
+        };
+    }
+
+    /// <summary>
+    /// A swap's reload on arrival, timed again as it begins: the swap's events and what changed while it ran can change the drawn
+    /// weapon's reload (Unwavering's bonus cancelled by the swap away, R117), which the decision to swap read before they came. The
+    /// swap's own time stays as decided. An action the rotation no longer has in hand (a refill took it back) is left as it is.
+    /// Returns the action as it now stands.
+    /// </summary>
+    internal WeaponAction RetimeArrival(WeaponAction action, double reload)
+    {
+        if (!action.ReloadedDestination || action.SwapCompletedAt is not { } arrived || ReadyAt != action.ReadyAt) { return action; }
+        var next = arrived + reload;
+        if (!double.IsFinite(next) || reload > 0 && next <= arrived) { throw new SimulationException("time-not-advancing", "A reload on arrival cannot advance time"); }
+        if (next == action.ReadyAt) { return action; }
+        loadedAt[weapons[0].Slot == action.To ? 0 : 1] = next;
+        ReadyAt = next;
+        return action with { ReadyAt = next };
+    }
+
     /// <summary>A triggered refill (Dread Edict, Kill Confirmed) fills the weapon in hand, which may not be the
     /// weapon a scheduled swap is heading to.</summary>
-    internal void Refill(string slot)
+    internal void Refill(string slot, double time)
     {
         var index = weapons[0].Slot == slot ? 0 : weapons[1].Slot == slot ? 1 : throw new ArgumentException("Unknown weapon slot", nameof(slot));
-        if (!weapons[index].NoReload) { ammo[index] = weapons[index].Magazine; }
+        if (!weapons[index].NoReload) { ammo[index] = capacity[index] = Size(index, time); }
+    }
+
+    /// <summary>A refill that never lowers a weapon's rounds (ADR 0033: the Precision's on a swap), as a driven magazine's load doesn't.</summary>
+    internal void RefillUp(string slot, double time)
+    {
+        var index = weapons[0].Slot == slot ? 0 : weapons[1].Slot == slot ? 1 : throw new ArgumentException("Unknown weapon slot", nameof(slot));
+        if (weapons[index].NoReload) { return; }
+        var size = Size(index, time);
+        if (ammo[index] < size) { ammo[index] = capacity[index] = size; }
+    }
+
+    /// <summary>A refill of both weapons (refill "both", ADR 0019: Faster Than Reloading) fills the holstered one too.</summary>
+    internal void RefillAll(double time)
+    {
+        Refill(weapons[0].Slot, time);
+        Refill(weapons[1].Slot, time);
     }
 
     /// <summary>Commit one shot at or after ReadyAt. Holstered weapons retain ammo and never reload themselves.
@@ -206,7 +346,7 @@ public sealed class WeaponRotation
         if (!double.IsFinite(time) || time < ReadyAt) { throw new ArgumentOutOfRangeException(nameof(time)); }
         var from = weapons[active];
         var other = 1 - active;
-        var remaining = from.NoReload ? ammo[active] : refilled ? from.Magazine : ammo[active] - 1;
+        var remaining = from.NoReload ? ammo[active] : refilled ? capacity[active] = Size(active, time) : ammo[active] - 1;
         if (interval is { } given && (!double.IsFinite(given) || given <= 0)) { throw new ArgumentOutOfRangeException(nameof(interval)); }
         var next = time + (interval ?? from.Interval);
         if (stopAt < next) { next = stopAt.Value; }
@@ -228,7 +368,8 @@ public sealed class WeaponRotation
         {
             kind = WeaponActionKind.Reload;
             next += Timing(from).Reload;
-            remaining = from.Magazine;
+            // The reload's commit loads the magazine below.
+            remaining = 0;
         }
         double? swappedAt = kind == WeaponActionKind.Swap ? next : null;
         if (destination != active && !weapons[destination].NoReload && ammo[destination] < 1)
@@ -238,8 +379,8 @@ public sealed class WeaponRotation
         }
         if (!double.IsFinite(next) || next <= time) { throw new SimulationException("time-not-advancing", "Weapon action cannot advance time"); }
         ammo[active] = remaining;
-        if (kind == WeaponActionKind.Reload) { CommitReload(active, next); }
-        if (reloadedDestination) { CommitReload(destination, next); }
+        if (kind == WeaponActionKind.Reload) { CommitReload(active, next, time); }
+        if (reloadedDestination) { CommitReload(destination, next, time); }
         active = destination;
         ReadyAt = next;
         return new(kind, from.Slot, weapons[active].Slot, started, next) { ReloadedDestination = reloadedDestination, SwapCompletedAt = swappedAt };

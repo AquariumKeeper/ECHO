@@ -33,6 +33,27 @@ public sealed class EffectCoverageTests
         Assert.DoesNotContain("several enemies at once", Assert.Single(Committed("gear_talent_veer_override", pack: elsewhere).Channels, entry => entry.Kind == EffectCoverage.DrivenConditions).Note, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void AHeadshotCycleHasItsOwnChannelAndDrivesItsKey()
+    {
+        // ADR 0021 (R127 review): a cycle's key is driven, as a rule's is, and the cycle says what fights do with it.
+        var pack = GameMaths.Division.Compiled.Pack;
+        var driven = pack.Simulation.Triggers.Select(rule => rule.Key).ToHashSet(StringComparer.Ordinal);
+        var (talent, key) = pack.Talents.Where(entry => pack.Items.Any(item => item.TalentSlots.Any(slot => slot.Choices.Contains(entry.ID))))
+            .SelectMany(entry => entry.Modifiers.SelectMany(modifier => (modifier.RequiresContext ?? ImmutableDictionary<string, string>.Empty).Keys)
+                .Where(id => !driven.Contains(id) && pack.Selectors.Any(selector => selector.ID == id)).Select(id => (entry.ID, id))).First();
+        IEnumerable<string> Sources(TalentEffectCoverage row, string kind) => row.Channels.Where(channel => channel.Kind == kind).SelectMany(channel => channel.Sources);
+        Assert.Contains(key, Sources(Committed(talent), EffectCoverage.AssumptionConditions));
+        var cycled = pack with
+        {
+            Simulation = pack.Simulation with { HeadshotCycles = [new() { Talent = talent, WeaponTag = "x", Key = key, Repair = "x", BonusArmorCap = "x", Allowance = "x", KillFrom = 3 }] }
+        };
+        var row = Committed(talent, pack: cycled);
+        Assert.Contains(row.Channels, channel => channel.Kind == EffectCoverage.TalentHeadshotCycle);
+        Assert.Contains(key, Sources(row, EffectCoverage.DrivenConditions));
+        Assert.DoesNotContain(key, Sources(row, EffectCoverage.AssumptionConditions));
+    }
+
     [Theory]
     [InlineData(3, false)]
     [InlineData(4, true)]
@@ -194,7 +215,8 @@ public sealed class EffectCoverageTests
 
     [Theory]
     [InlineData("gear_talent_glass_cannon", new[] { EffectCoverage.StaticModifiers })]
-    [InlineData("gear_talent_headhunter", new[] { EffectCoverage.StaticModifiers, EffectCoverage.ExpectedValueModifiers })]
+    // R133: Headhunter's next-hit bonus plays in driven fights; outside them its estimate holds.
+    [InlineData("gear_talent_headhunter", new[] { EffectCoverage.StaticModifiers, EffectCoverage.ExpectedValueModifiers, EffectCoverage.TalentNextHitBonus })]
     [InlineData("weapon_talent_killer", new[] { EffectCoverage.DrivenConditions, "authored-combat-rules" })]
     [InlineData("gear_talent_focus", new[] { EffectCoverage.AssumptionConditions })]
     // Clutch's previews stay assumption-driven; its fight repairs are pack rules since the R43 candidate.

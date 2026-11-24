@@ -17,7 +17,7 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
     public const string SwapsUnderFire = "Weapon swaps under incoming fire require talent triggers";
     public const string SwapWhenEmpty = "Swap instead of reloading";
     public const string SwapAfterKill = "Swap after each kill";
-    public const string IncomingLabel = "Enemies fire back (armor breaks, going down ends your damage)";
+    public const string IncomingLabel = "Enemies fire back (armor breaks, going down ends the fight unless you're revived)";
     private readonly PlannerSession session;
     private readonly IUiDispatcher ui;
     private readonly SessionSimulation simulation;
@@ -316,8 +316,34 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
         // Each slot's "Use when", checked as the engine checks it.
         var build = session.Snapshot.State.Build;
         var damaging = session.Pack.Pack.Simulation.Skills.Select(rule => rule.Skill).ToHashSet(StringComparer.Ordinal);
+        var aside = session.Pack.Pack.Simulation.SkillsAside.Select(entry => entry.Skill).ToHashSet(StringComparer.Ordinal);
+        // So does a skill whose gate the settings don't hold (ADR 0027), read as the engine reads them: unset selectors at their
+        // defaults, and cover held on through a cover cycle.
+        var settings = ResolveAssumptions.WithSelectorDefaults(session.Pack.Pack, session.Snapshot.State.Assumptions);
+        if (cover && session.Pack.Pack.Selectors.Any(selector => selector.ID == DummyFightOptions.CoverInput)) { settings = settings.SetItem(DummyFightOptions.CoverInput, "true"); }
+        aside.UnionWith(session.Pack.Pack.Simulation.Skills.Where(rule => !ResolveAssumptions.Matches(rule.RequiresContext, settings)).Select(rule => rule.Skill));
+        // So does one used only once armor falls, without enemy fire (ADR 0030).
+        if (!Incoming) { aside.UnionWith(session.Pack.Pack.Simulation.Skills.Where(rule => rule.UseArmorBelow > 0).Select(rule => rule.Skill)); }
+        // And one reviving its user, whom nothing downs then (ADR 0037).
+        if (!Incoming) { aside.UnionWith(session.Pack.Pack.Simulation.Skills.Where(rule => rule.Revive is not null).Select(rule => rule.Skill)); }
+        // And a buff hive, whose charges turn on buffs, without talent triggers (ADR 0031).
+        if (!DriveBuffs) { aside.UnionWith(session.Pack.Pack.Simulation.Skills.Where(rule => rule.ChargeFor.Length > 0).Select(rule => rule.Skill)); }
+        // And a skill whose use holds a buff (ADR 0032).
+        if (!DriveBuffs) { aside.UnionWith(session.Pack.Pack.Simulation.Triggers.Where(rule => rule.On == "skill_out").Select(rule => rule.Talent)); }
+        // And a hive charging skills with no other skill of the build's whose uses it could reach: one with a window, not a control
+        // skill's, a zone mark's, a self-revive's, a shield or another hive's charges, and not stepping aside itself (ADR 0031). The engine also needs the window above
+        // 0 and the use to run for it, so it has the last word.
+        var chosen = build.ActiveSkillSelections.Values.ToHashSet(StringComparer.Ordinal);
+        var rules = session.Pack.Pack.Simulation.Skills;
+        foreach (var hive in rules.Where(rule => rule.ChargeSkills && chosen.Contains(rule.Skill)).ToArray())
+        {
+            if (!rules.Any(other => other.Skill != hive.Skill && chosen.Contains(other.Skill) && !aside.Contains(other.Skill) && other.Window.Length > 0 &&
+                other.ChargeFor.Length == 0 && !other.ControlStatus && other.Zones is null && other.Revive is null && other.Shield.Length == 0)) { aside.Add(hive.Skill); }
+        }
         foreach (var use in SkillUses)
         {
+            // A skill that steps aside is never used, so the engine drops its slot's condition (ADR 0022).
+            if (aside.Contains(build.ActiveSkillSelections.GetValueOrDefault(use.Slot, ""))) { continue; }
             if (use.Problem(IncludeSkills, damaging.Contains(build.ActiveSkillSelections.GetValueOrDefault(use.Slot, "")), DriveBuffs, enemies ? EnemyCount() : null,
                 CultureInfo.CurrentCulture) is { } useProblem) { Problem = useProblem; return; }
         }
@@ -341,8 +367,13 @@ public sealed class SimulateViewModel : ViewModelBase, IDisposable
             Rotation = asked.Item5.Length == 0 ? null : new(asked.Item5)
         });
         var names = pack.Pack.Talents.ToDictionary(talent => talent.ID, talent => talent.Name, StringComparer.Ordinal);
+        // A buff hive owns its charges' rule (ADR 0031).
+        foreach (var skill in pack.Pack.ActiveSkills) { names.TryAdd(skill.ID, skill.Name); }
         ImmutableArray<Choice> keys = [.. pack.Pack.Simulation.Triggers.Where(rule => talents.Contains(rule.Talent) && rule.Key.Length > 0)
-            .Select(rule => new Choice(rule.Key, $"{names.GetValueOrDefault(rule.Talent, rule.Talent)}: {rule.Key}")).DistinctBy(choice => choice.Id)];
+            .Select(rule => new Choice(rule.Key, $"{names.GetValueOrDefault(rule.Talent, rule.Talent)}: {rule.Key}"))
+            // A selected skill's zone mark sets a key too (ADR 0036).
+            .Concat(pack.Pack.Simulation.Skills.Where(rule => DriveBuffs && rule.Zones is { Key.Length: > 0 } && snapshot.State.Build.ActiveSkillSelections.Values.Contains(rule.Skill))
+                .Select(rule => new Choice(rule.Zones!.Key, $"{names.GetValueOrDefault(rule.Skill, rule.Skill)}: {rule.Zones.Key}"))).DistinctBy(choice => choice.Id)];
         foreach (var use in SkillUses) { use.Offer(keys); }
     }
 

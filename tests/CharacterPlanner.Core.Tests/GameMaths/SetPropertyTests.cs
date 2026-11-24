@@ -306,7 +306,7 @@ public sealed class SetPropertyTests
 
     /// <summary>
     /// G140: Cavalier, Hotshot, System Corruption and Ember Engine properties and upgrades, isolated from other stats
-    /// (Cavalier's full charge time and Hackstep's available bonus armor follow the four-piece bonus).
+    /// (Cavalier's full charge time, Headache's bonus armor cap and Hackstep's available bonus armor follow the four-piece bonus).
     /// </summary>
     [Fact]
     public void G140CombatSetPropertiesAndIsolation()
@@ -316,6 +316,12 @@ public sealed class SetPropertyTests
             if (tc.Set == "cavalier" && id == "charging_full_charge_time")
             {
                 Near(r.Of(id), pieces >= 4 ? 7 : 0, 1e-12, $"{tc.Set} {pieces} pieces {id}");
+                return true;
+            }
+            // R127: Headache's cap is a share of max armor.
+            if (tc.Set == "hotshot" && id == "headache_bonus_armor_capacity")
+            {
+                Near(r.Of(id), r.Of("character_armor") * r.Of("headache_bonus_armor_cap"), 1e-8, $"{tc.Set} {pieces} pieces {id}");
                 return true;
             }
             if (tc.Set == "system_corruption" && id == "hackstep_available_bonus_armor")

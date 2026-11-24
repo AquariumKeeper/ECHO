@@ -3,7 +3,7 @@
 The planner's numbers come from sources that sometimes disagree.
 One reading on the item card or stats screen usually
 settles it. Values below are for the bundled pack
-(`y8s3.3-pve.2026-11-14.r115.candidate.1`).
+(`y8s3.3-pve.2026-11-24.r168.candidate.1`).
 
 ## How to report a reading
 
@@ -22,13 +22,43 @@ For each check, send:
 Most skill changes in this build come from the game files, with no in-game reading yet.
 These matter most. Read them on the skill screen, and note the bonus you used:
 
+- **Transference Overclock and hives:** does each hive's cooldown shorten by 15% a Skill
+  Tier (90% at tier 6, 105% overcharged), apart from Skill Haste?
+- **Prima Donna:** does its card show a reload of about 4.34 s with no reload bonus beyond
+  its fixed mods, and is a reload with rounds left about 4.08 s?
+- **Police UMP-45:** does its card show an optimal range of 16 m (the game files) or 19 m
+  (the planner)?
 - **Hive health:** read a Stinger Hive's health with no Skill Health, then with a known
   amount. The planner counts Skill Health twice, as the game's formula does:
   `(1 + tier + bonus) × (1 + bonus)`. That looks odd, so a reading would settle it.
 - **Leech Hive:** read its damage with no Skill Damage, then with a known amount. The
   planner gives it no bonus.
 - **Gas Bomber:** read its poison damage and duration, with and without Skill Damage and
-  Status Effects. The planner gives them no bonus, and this is its weakest reading.
+  Status Effects. The planner gives them no bonus, and this is its weakest reading. Then read
+  it with Glass Cannon on: the planner raises it by Glass Cannon's 25%, since the player deals
+  the ticks, but that's an inference from the source.
+- **Gas Bomber's cloud:** keep an enemy standing in one cloud and time its poison. Does it
+  end about 10 s after the cloud lands (one poison, not refreshed), or about 13 s (the 8 s
+  cloud plus a 5 s poison)? Fights give 13 s.
+- **The Howl's outright kill:** use it on fresh grunts at full health, then on grunts shot once.
+  Does only the second group ever die outright, and does a Veteran or a Named? With a talent
+  that procs on kills, do its outright kills trigger it? Fights: Normal and Veteran only,
+  below full health, and no talent credit.
+- **Leech Hive cadence and repair:** stand about 5 m from the hive with one enemy in range and
+  time the leeches: about 0.5 s apart, as fights assume? At full armor and damaged health,
+  does it restore any health? Fights give armor only.
+- **Demolisher Firefly on a weakpoint:** use it on an enemy with a weakpoint (a flamer's fuel
+  tank, say). Does its health or armor bar drop at the hit, beyond any explosion of the
+  weakpoint? Then use it again once the weakpoints are gone, and compare. Fights count every
+  payload as a body hit. Also time launch to each strike on 1 and 3 marked targets: fights
+  land them all at launch.
+- **Symbiosis's drain:** raise a Crusader with the Oxpecker and don't fire. Does the shield
+  break after about 10 s, with its cooldown, or stop above 0? Fights break it. Then switch
+  to a sidearm, and throw a grenade: does it keep losing health? Fights drain it only with
+  the Oxpecker in hand.
+- **Poison on armor:** poison an enemy whose armor is still up. Does its health drop under
+  the armor, or does nothing happen until the armor is gone? The source marks the tick
+  health only; fights take it off armor first, as a burn's.
 - **Bleeds:** read a Stinger Hive or Explosive Seeker bleed tick, with and without Skill
   Damage. The planner now adds Skill Damage.
 - **Explosions:** read a Firestarter or Airburst explosion, with and without Status
@@ -88,8 +118,9 @@ These matter most. Read them on the skill screen, and note the bonus you used:
   source data multiplies, `curve × (1 + mods)`. The two readings settle which.
 - **Crusader and Striker shields:** check whether you can fire your sidearm while
   holding them.
-- **The Ravenous:** read the magazine on the weapon card. It fires two bullets a
-  round; the planner counts one until the card's magazine is known.
+- **The Ravenous:** read the magazine on the weapon card. The game files have 30 rounds of
+  two bullets. The planner has 60 rounds whose damage is already both bullets', so if 60
+  counts bullets, it gives the weapon twice its magazine.
 - **Burn and bleed ticks:** with a weapon talent that burns or bleeds an enemy,
   record a video of the damage numbers from one application, so the interval and
   per-tick damage can be read frame by frame. The planner ticks these from the
@@ -229,6 +260,50 @@ and what you were shooting at.
 - **Abridged:** with two non-named rifles of one type and a stat talent such as
   Near Sighted on the secondary, check the primary's stability on its card. The
   planner adds the secondary talent's effect while the primary is out.
+
+- **Hackstep Protocol and Energize:** with System Corruption's four pieces and
+  Energize, use Hackstep below full armor and watch for Energize's overcharge
+  bonus. The planner, by ShadeTech's source reading (R127), expects none: the
+  ability isn't an armor kit for the kit talents.
+
+- **Hackstep and Glass Cannon on burns:** with a weapon talent's burn (not a
+  skill's), compare burn tick damage with and without Glass Cannon (or Hackstep's
+  bonus up). The planner applies neither to those ticks or to Toxic Delivery; the
+  source read (R129) doesn't say whether the game does. A skill's own burn or
+  bleed already takes both in the planner, through skill damage.
+
+- **Headhunter on a chain of headshot kills:** with Headhunter, make a headshot kill,
+  then kill a second enemy with a headshot as your next hit. Does that second kill's hit
+  show the bonus damage? The planner adds the waiting bonus to it, then arms a new one
+  from it; R132's reading doesn't say whether the game keeps the bonus off that hit.
+
+- **Achilles Pulse's zones:** pulse an enemy with Achilles and shoot a marked zone
+  until it breaks; compare the damage of those hits, and of hits after it breaks,
+  with an unmarked enemy. ShadeTech's reading (R162) is that a hit on a zone takes the
+  headshot multiplier, applied by the game's engine, and that a zone's bonus ends as its
+  health is spent. Does a body hit on a zone match a headshot, does a marked head take
+  more than an ordinary headshot, do armor and health both take it, and does it count as
+  a headshot for talents? The planner's engine counts it on both, as a body hit.
+- **Achilles Pulse's mark and cooldown:** does a mark alone give Spotter's and Flatline's
+  bonus, and does the cooldown start about 5 s after the mark lands?
+- **Achilles Pulse and headshot talents:** does a body shot on a marked zone take In
+  Plain Sight's, Headache's or Breadbasket's bonus, and does it build or spend Headache's
+  bonus or Breadbasket's or Shakedown's stacks? The planner gives it Breadbasket's bonus
+  and not the others', builds both talents' stacks, and spends none.
+- **Achilles Pulse with Alternating Current or Tend and Befriend:** with either's bonus on
+  the Achilles Pulse, does a marked zone take more damage? The planner adds it, as it
+  does a grade of Expertise.
+
+- **Reviver Hive on its user:** deploy a Reviver Hive and get downed in its range
+  with no allies near. ShadeTech's reading (R165) is that it revives you, once a hive,
+  taking every charge, about 3 s after you go down, at full health and 25% of maximum
+  armor at tier 0 (10% more a tier), with 5 s of immunity. Note the time, the armor, how
+  many charges went, whether hits hurt you in the next 5 s, and when the hive ends.
+- **Fire while downed:** downed with the hive out, do enemies keep shooting you, and do
+  hits take half? The planner assumes both, on a pool of half your health.
+- **Solo with no Reviver Hive:** at 0 health, do you die at once?
+- **Combat Medic and the Reviver Hive:** does it cut the hive's cooldown (124 s from 180 s
+  before haste) and lengthen its life, and no other hive's?
 
 ## Party buffs
 

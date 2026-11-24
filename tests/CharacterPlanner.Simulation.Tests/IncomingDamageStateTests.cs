@@ -18,6 +18,59 @@ public sealed class IncomingDamageStateTests
     }
 
     [Fact]
+    public void TheStatesBonusArmorAddsARiseAndCapsAFall()
+    {
+        // ADR 0020: 5 at the start, spent to 2, then the state gives 15: the rise of 10 joins what's left.
+        var state = new IncomingDamageState(20, 5, 30);
+        state.Apply(3, 1);
+        Assert.Equal(10, state.FollowStateBonusArmor(15));
+        Assert.Equal(12, state.BonusArmor);
+        // A fall to 8 keeps no more than 8, a rise back to 15 adds 7, and 0 takes it all.
+        Assert.Equal(0, state.FollowStateBonusArmor(8));
+        Assert.Equal(8, state.BonusArmor);
+        Assert.Equal(7, state.FollowStateBonusArmor(15));
+        Assert.Equal(15, state.BonusArmor);
+        Assert.Equal(0, state.FollowStateBonusArmor(0));
+        Assert.Equal(0, state.BonusArmor);
+        // A fall below what's left of a spent amount changes nothing: 10, spent to 4, then 6.
+        state.FollowStateBonusArmor(10);
+        state.Apply(6, 2);
+        state.FollowStateBonusArmor(6);
+        Assert.Equal(4, state.BonusArmor);
+        // Spent before armor, after any timed grant.
+        state.GrantBonusArmor(1, 2, 5);
+        var hit = state.Apply(3, 3);
+        Assert.Equal((3.0, 0.0), (hit.BonusArmorDamage, hit.ArmorDamage));
+        Assert.Equal(2, state.BonusArmor);
+        Assert.Throws<ArgumentOutOfRangeException>(() => state.FollowStateBonusArmor(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => state.FollowStateBonusArmor(double.NaN));
+    }
+
+    [Fact]
+    public void LastingBonusArmorIsSpentAfterGrantsAndBeforeTheStates()
+    {
+        // ADR 0021: Headache's bonus armor at full armor has no expiry.
+        var state = new IncomingDamageState(20, 5, 30);
+        Assert.Equal(4, state.AddLastingBonusArmor(4));
+        state.GrantBonusArmor(2, 0, 10);
+        Assert.Equal(11, state.BonusArmorAt(0.5));
+        // A hit of 5: the grant's 2, then 3 of the lasting 4; the state's 5 untouched.
+        Assert.Equal(5, state.Apply(5, 1).BonusArmorDamage);
+        Assert.Equal(6, state.BonusArmor);
+        Assert.Equal(6, state.BonusArmorAt(1000));
+        Assert.Throws<ArgumentOutOfRangeException>(() => state.AddLastingBonusArmor(-1));
+    }
+
+    [Fact]
+    public void ADownedPlayerGainsNoStateBonusArmor()
+    {
+        var state = new IncomingDamageState(0, 0, 10);
+        Assert.True(state.Apply(10, 1).Downed);
+        Assert.Equal(0, state.FollowStateBonusArmor(20));
+        Assert.Equal(0, state.BonusArmor);
+    }
+
+    [Fact]
     public void InvalidRegenerationLeavesClockAndPoolsUnchanged()
     {
         var state = new IncomingDamageState(20, 0, 30);

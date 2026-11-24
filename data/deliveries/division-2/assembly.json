@@ -1,127 +1,267 @@
 {
   "format": "shade-tech.planner-v2-assembly",
   "version": 1,
-  "plan_sha256": "512cd996647ed62c299d46ae9c04b17f43a672e1a603c93db03bdce8570e4f3b",
-  "pack_manifest_sha256": "bc0afd6f8fae05a8ea1648b001ce56dfc77e6f086a694c844d05ea2655021ef1",
+  "plan_sha256": "019c3527d4b4351b7475c05f386931df97c7065d2be579c22abb2222aeb9312a",
+  "pack_manifest_sha256": "e417acb4ff14589aa77b912c11df3a9edafc32ecc6538e9fae9522dd10907bbe",
   "complete_pack_assembled": true,
   "complete_native_source_derivation": false,
   "consumer_accepted": false,
   "runtime_verified": false,
   "outputs": {
     "support/base-pack/manifest.json": {
-      "sha256": "01f3d967eb6c742681282392ce280291cdea63c411b8e31d5e53f9f3186ffc3f",
-      "bytes": 1834
+      "sha256": "92b4603b19f9d23202b6ba20e3840a45c5594dc59d08fac5f237d0ea0e39da32",
+      "bytes": 1829
     },
     "support/base-pack/presentation.json": {
       "sha256": "ff5c53ebe81229b726e2e427c934d3353e0316f5a960aac6c5682bac78452047",
       "bytes": 20263
     },
     "support/base-pack/provenance.md": {
-      "sha256": "4104b32a246151664ecdf2716cb50d9ca138b4896db673a88a2c2f3e962056e1",
-      "bytes": 233935
+      "sha256": "931a87e59a398d07d9fe1b82bad38d3f511a1dce02ae410c08e16fe47bb7dccd",
+      "bytes": 271880
     },
     "support/base-pack/share-codes.json": {
       "sha256": "7ad28718e2f57edbee9512fcbe778df324b3a931ccccf976efaeeb7fa02c4087",
       "bytes": 209
     },
     "support/base-pack/simulation.json": {
-      "sha256": "20b30afd243e440be42848e90510312e001ef1748024553cebb7d86c0a8fcd13",
-      "bytes": 45453
+      "sha256": "1004717eb7df3d3b244d77a0aaf0ebbfc9de2eaa9a80d100a0a536ad97b7e32c",
+      "bytes": 61946
     },
     "support/base-pack/rules.json": {
-      "sha256": "e8d8b87d5b4025de68c2fb17d575a9ef9aa73eadefcfa610cba936caf939f1e4",
-      "bytes": 2572468
+      "sha256": "12645ac677d12f39b2892374766025da3cff7e5d89b7e6c038145698362df1d7",
+      "bytes": 2638026
     },
     "support/evidence/packet.json": {
-      "sha256": "59351c677ac36c87da2fadc7b20fc42f44ff19129ac17aac147d2ae10e2f9283",
-      "bytes": 3117
+      "sha256": "647c0eb5ccb9b50bff9ec0062505ddd36685d756f58619ace8bc25f9ef1c4f32",
+      "bytes": 8665
     },
-    "support/evidence/docs/R112_SOURCE_REVIEW.md": {
-      "sha256": "627af76b9ebb420c3d8a002f64c9244e500f118889dfb946b9687b4d59e08730",
-      "bytes": 4364
+    "support/evidence/docs/FALLOFF_FLOOR_SOURCE_REVIEW.md": {
+      "sha256": "f804ce224c9763df25d4075ae97504452cc7bd7bf3a2a0b2b7c032bbaa5c72c0",
+      "bytes": 4628
     },
-    "support/evidence/docs/R114_SOURCE_REVIEW.md": {
-      "sha256": "9587600dd82e807c88f71990749b9b989ec2707a2b6941fd220c443ccfd02982",
-      "bytes": 9623
+    "support/evidence/docs/R25_SWAP_TIMES.md": {
+      "sha256": "6b0fed61ca555977b10561a08c37829e1f2250f6fc7cb15286242613f2d9da96",
+      "bytes": 10611
     },
-    "support/evidence/docs/R115_SOURCE_REVIEW.md": {
-      "sha256": "750a802427abc3a7e93b81eb609f952bda871a3712a5a380ed87fe45c43706ee",
-      "bytes": 4090
+    "support/evidence/docs/R26_PELLETS.md": {
+      "sha256": "3f92e8619e6b4b23f12139fed1f70ac5e26fa79e0b951f6bd71671127cb952ff",
+      "bytes": 3613
     },
-    "support/evidence/sources/mod_attributelist_code1_data23.mitemgenerationattributelists": {
-      "sha256": "7e031f60ba9e6270c916ee567d766ecf5ec8ecd9f37b4fe225090113bd9068e1",
-      "bytes": 7249
+    "support/evidence/docs/R2_POLICE686_REVIEW.md": {
+      "sha256": "b3d95d8fdd55bf83b09e535cd2e38d7162e411803c027983b89d140fd8cdbedb",
+      "bytes": 2366
     },
-    "support/evidence/sources/npc_nailgun_impact.mskillscriptgraph": {
-      "sha256": "c359e4bea5c9de7a3ff7be0912f0b5218c85bd657316a3a2767e931ad335f490",
-      "bytes": 7398
+    "support/evidence/docs/R2_REMAINING.md": {
+      "sha256": "15697b9e3d46316edd33604f5c93a694123fd8545908856b1c7b87dba79a3502",
+      "bytes": 10478
     },
-    "support/evidence/sources/npc_nailgun_impact.mskillscriptgraph.json": {
-      "sha256": "3cbd8e240c080c6978e4c68df3b6cde902f26d74922ba29764080b8456a9abde",
-      "bytes": 836
+    "support/evidence/sources/player_weapon_marksmanrifle_scar.mweapon": {
+      "sha256": "e1742c28a9ee8be93934058f92a71eb98d3738ede4a959d2ac68fa696f23f63c",
+      "bytes": 3181
     },
-    "support/evidence/sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptgraph": {
-      "sha256": "f27503bab63345bfae3e6e8253b8eb85d5a007f0c63ebf4cea2fe8fbad0a04e1",
-      "bytes": 8445
+    "support/evidence/sources/player_weapon_marksmanrifle_scar.mweapon.json": {
+      "sha256": "059033bdfda37fc3156c8f8f887985a0030b56aa51eb542484366ed323d9464c",
+      "bytes": 859
     },
-    "support/evidence/sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptgraph.json": {
-      "sha256": "cada12c71bab068903f643deeaefa59138cbce572ebb9f8f96029b5108086a32",
-      "bytes": 875
+    "support/evidence/sources/player_weapon_marksmanrifle_scar_t3.mweapon": {
+      "sha256": "eb068561743003eaa84c92040032c8f0212543ba7edaee724868c523e7e46c4f",
+      "bytes": 806
     },
-    "support/evidence/sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptjuice": {
-      "sha256": "195ee54a75023591bb402154e9454ecf293130de8c2f65dc4bb896c2a9c8efa4",
-      "bytes": 605
+    "support/evidence/sources/player_weapon_marksmanrifle_scar_t3.mweapon.json": {
+      "sha256": "03a5bec5fdbd4abf0d6337a72908eb07d70cb27e176183bc283252bf58dcae4e",
+      "bytes": 860
     },
-    "support/evidence/sources/skillscript_exotic_mask_virginia_catalyst_chemical_agent.mskillscriptjuice.json": {
-      "sha256": "b922a05c481b65ecec184c75844383a1d6e3fe83e742a8dbc4360aa33d7f3cbf",
-      "bytes": 871
+    "support/evidence/sources/player_weapon_marksmanrifle_scar_t3_v1_exotic.mitem": {
+      "sha256": "f4fd0086a746a30bb7656ddd4ca33ea86224ef002192a693f11993b130431339",
+      "bytes": 3467
     },
-    "support/evidence/sources/skillscript_exotic_talent_weapon_big_alejandro.mskillscriptgraph": {
-      "sha256": "5aab6777ef87117cef145a3571c9d1cdf7bbdb7da5f4b6b678c6c7387b5981d7",
-      "bytes": 4753
+    "support/evidence/sources/player_weapon_marksmanrifle_scar_t3_v1_exotic.mitem.json": {
+      "sha256": "c890b0486670572c02ac488725fca3d0f59cc8e1a54f9545a189da6c9fb69f0c",
+      "bytes": 868
     },
-    "support/evidence/sources/skillscript_exotic_talent_weapon_big_alejandro.mskillscriptgraph.json": {
-      "sha256": "080c7a4b9f3ef462c4c071d6c2130671b630f05d56f40eee0195eb55900948e2",
-      "bytes": 864
+    "support/evidence/sources/player_weapon_pistol_bee_exotic.mweapon": {
+      "sha256": "6d7b14ae2ef871482825838569a6cb9d6be4ff98a827320d34147dba45a12a3b",
+      "bytes": 819
     },
-    "support/evidence/sources/statuseffecttalentrule_bleed.mtalentrules": {
-      "sha256": "126049a10ab9ddc7914cec153f5796766cd8e5ec984570f23aee5b23dc7ff5a3",
-      "bytes": 4506
+    "support/evidence/sources/player_weapon_pistol_bee_exotic.mweapon.json": {
+      "sha256": "922c670416d8534cd3acb9b70e4700d3503f4d120b93cb326da2bc8ee8fb2b49",
+      "bytes": 856
     },
-    "support/evidence/sources/statuseffecttalentrule_bleed.mtalentrules.json": {
-      "sha256": "95ecc47df412c286ed5ce0b904174c7976618a8ca903c47ec705682c17b32ffe",
+    "support/evidence/sources/player_weapon_pistol_bee_exotic_v1.mitem": {
+      "sha256": "56dc98a866f410661eb52fbc1bdab160e8bdcfc079a80e8a6a8570ff7d053779",
+      "bytes": 3628
+    },
+    "support/evidence/sources/player_weapon_pistol_bee_exotic_v1.mitem.json": {
+      "sha256": "19f4f06f5497a5fe1cdcc0cef12a050b879ab79de758d06df9f1fb9a9dd9e6b4",
+      "bytes": 857
+    },
+    "support/evidence/sources/player_weapon_pistol_mp45.mweapon": {
+      "sha256": "84de68a3690f08aa4cf6e4e9501d8cbf17bfb49fe61e2dd68742e498bab65635",
+      "bytes": 2356
+    },
+    "support/evidence/sources/player_weapon_pistol_mp45.mweapon.json": {
+      "sha256": "d869be155ba3f8ff41636f55c55d477666479f160fb37ab6e9c10260e92a310c",
+      "bytes": 852
+    },
+    "support/evidence/sources/player_weapon_pistol_s_w586.mweapon": {
+      "sha256": "2230e7fe4d1aa322fb016b21980eb04761cbcd34b7adf390567a45044171c3e2",
+      "bytes": 2317
+    },
+    "support/evidence/sources/player_weapon_pistol_s_w586.mweapon.json": {
+      "sha256": "a6fad741d81716c22bf093883e9ec9fd3d1da4aea6f9852e3278e4eaa69a5aad",
+      "bytes": 854
+    },
+    "support/evidence/sources/player_weapon_pistol_s_w586_t1.mweapon": {
+      "sha256": "1bf5acbf1fc6769acb549e3525140da93a44c2b73eee135768c16c5490b899c4",
+      "bytes": 770
+    },
+    "support/evidence/sources/player_weapon_pistol_s_w586_t1.mweapon.json": {
+      "sha256": "d24f24acd559d8e64e04579579ebf39814705459e368cbc072fada6a9c6d8f3f",
+      "bytes": 855
+    },
+    "support/evidence/sources/player_weapon_pistol_s_w586_t1_v1.mitem": {
+      "sha256": "8244c6139ed499256cbf1c90fa9a66bb584d7305638cd5a058f4a406b7401029",
+      "bytes": 1772
+    },
+    "support/evidence/sources/player_weapon_pistol_s_w586_t1_v1.mitem.json": {
+      "sha256": "d67aeb68fff5a73691f6646127b52a782d85b1701e8d79e9f576fb95daa3d181",
+      "bytes": 856
+    },
+    "support/evidence/sources/player_weapon_pistol_s_w586_t2.mweapon": {
+      "sha256": "932905392688bcdb30f7c89e44de89de2663d0420577a2015970241d9f3cd8f8",
+      "bytes": 479
+    },
+    "support/evidence/sources/player_weapon_pistol_s_w586_t2.mweapon.json": {
+      "sha256": "1850bac28c58080e95ab99ced45284081a8f97e63bfe4c6de68a1d32dce6ccd8",
+      "bytes": 854
+    },
+    "support/evidence/sources/player_weapon_pistol_s_w586_t2_v1.mitem": {
+      "sha256": "148452cd8ccdd024ad17fbf0b9418e97f7d29753ff16452e6cad6ebfb1db29ee",
+      "bytes": 1094
+    },
+    "support/evidence/sources/player_weapon_pistol_s_w586_t2_v1.mitem.json": {
+      "sha256": "69296711a177e7b7b8198a11831fd2699bfab699b87517cb1383b43694687061",
+      "bytes": 855
+    },
+    "support/evidence/sources/player_weapon_rifle_gilboadbr_exotic.mweapon": {
+      "sha256": "f97755162e939727a84db996d2dbd7357b6804f7e23707e57ec798a44ef46373",
+      "bytes": 2766
+    },
+    "support/evidence/sources/player_weapon_rifle_gilboadbr_exotic.mweapon.json": {
+      "sha256": "6ba9575ecbc4a25116bc6b220b1c2709138b20031b8a1ad96bc57f015aa3da05",
       "bytes": 863
     },
-    "support/evidence/sources/virginia_talent_exotic_mask_catalyst_chemical_agent.mtalent": {
-      "sha256": "add506b61c4e1b0ba4ce31fa1591505cea5559de46b6dfa38ae2568b0a8a57bc",
-      "bytes": 6571
+    "support/evidence/sources/player_weapon_rifle_gilboadbr_exotic_v1.mitem": {
+      "sha256": "b1d8bcda3ece4300531375e965e653079f908e6a46e852be6ee61c4125e67acc",
+      "bytes": 3705
     },
-    "support/evidence/sources/virginia_talent_exotic_mask_catalyst_chemical_agent.mtalent.json": {
-      "sha256": "fe241ca87b201cdcc84ee77665e3a40d07555e2d1dfa4eb7fd9fea7c851c22d1",
-      "bytes": 878
+    "support/evidence/sources/player_weapon_rifle_gilboadbr_exotic_v1.mitem.json": {
+      "sha256": "b3b03e4fcb9c92ba0a5b6bb1a7140ddc7dc3ada78b335ce5c50c545c755e072b",
+      "bytes": 862
+    },
+    "support/evidence/sources/player_weapon_rifle_m1a.mweapon": {
+      "sha256": "245f798eaf882b28f506d7239fc0af10b489377366b3c182a488b03a5be1cad4",
+      "bytes": 2510
+    },
+    "support/evidence/sources/player_weapon_rifle_m1a.mweapon.json": {
+      "sha256": "1b473dd9bb2e124359db7a72dcde8b3c57bd5343cc07009ae47171895032d4c9",
+      "bytes": 849
+    },
+    "support/evidence/sources/player_weapon_rifle_m1a_t3.mweapon": {
+      "sha256": "8bc9f28454471d28c145afa3d3b9de73322338133f8de1eefe0dc613aa31ffca",
+      "bytes": 636
+    },
+    "support/evidence/sources/player_weapon_rifle_m1a_t3.mweapon.json": {
+      "sha256": "68bac2da91033b06f698fbe48f85362c93275a97715061e1b8c7d65a71c653f8",
+      "bytes": 851
+    },
+    "support/evidence/sources/player_weapon_rifle_m1a_t3_v1_named.mitem": {
+      "sha256": "8aa352124816a42d6e8db3a7c133f5c17a1920be424d5d3c69dd42513779b3fe",
+      "bytes": 4161
+    },
+    "support/evidence/sources/player_weapon_rifle_m1a_t3_v1_named.mitem.json": {
+      "sha256": "42c4d78323f77bd65db21d298764ed5c0cddde3149e97b10bca1d235dcb7f794",
+      "bytes": 858
+    },
+    "support/evidence/sources/player_weapon_submachinegun_ump45.mweapon": {
+      "sha256": "9c0bc674529fd04ecedbdd16731b4703dbd3c209f400e734d448586053410723",
+      "bytes": 2728
+    },
+    "support/evidence/sources/player_weapon_submachinegun_ump45.mweapon.json": {
+      "sha256": "ace8aa8c80ef455b286d7f2aa91dd1bccc3d277ea2f45ad075631957c43913cb",
+      "bytes": 859
+    },
+    "support/evidence/sources/player_weapon_submachinegun_ump45_t2.mweapon": {
+      "sha256": "a8b58bc1b0cd4b3578e51eeae6b30136750aad6548e7d0f2c4cdb87fdf40cb11",
+      "bytes": 489
+    },
+    "support/evidence/sources/player_weapon_submachinegun_ump45_t2.mweapon.json": {
+      "sha256": "5d3463916ae1c5e0b5c8a1c73103e18959f9e521041f6ef127446bde9f7805f7",
+      "bytes": 861
+    },
+    "support/evidence/sources/player_weapon_submachinegun_ump45_t2_v1.mitem": {
+      "sha256": "c1bc878ca62323a9e999037a41803665df2350f55a7544d76ac9a10f145653bc",
+      "bytes": 1377
+    },
+    "support/evidence/sources/player_weapon_submachinegun_ump45_t2_v1.mitem.json": {
+      "sha256": "480ccad758524f01040c1ac66f06ec5c8a2c585115531c291b1281bcd71e166f",
+      "bytes": 861
+    },
+    "support/evidence/sources/weapon_pistol_v1.mweapon": {
+      "sha256": "ef1ec0aae5539d181304e865cf8c47ac4f8bb27575d03a4c1b8b49b17d39602f",
+      "bytes": 4059
+    },
+    "support/evidence/sources/weapon_pistol_v1.mweapon.json": {
+      "sha256": "703cfd8f9de8ec5ce8c84ef5743d7c4affb38be91c4bd983d72e80c5ba79dd60",
+      "bytes": 843
+    },
+    "support/evidence/sources/weapon_rifle_v1.mweapon": {
+      "sha256": "5b6cf7b69dc84f8a271ec66a68571dc60c93aef60599dd72ab81b5dade120893",
+      "bytes": 4775
+    },
+    "support/evidence/sources/weapon_rifle_v1.mweapon.json": {
+      "sha256": "49cfc7a19b6b90d2c6d3e265bdfb77071c79578e1731cfaa0562c70a2f70f63e",
+      "bytes": 841
+    },
+    "support/evidence/sources/weapon_sniper_v1.mweapon": {
+      "sha256": "b9822e98960bcf08d16a7807c02191e7a831ce4a6c051ad61c804ff6bd36cf34",
+      "bytes": 4224
+    },
+    "support/evidence/sources/weapon_sniper_v1.mweapon.json": {
+      "sha256": "89ef79912f1712ecfc01ece886fb83e10161a76006e4110ffd56651baa1fffd0",
+      "bytes": 843
+    },
+    "support/evidence/sources/weapon_submachinegun_v1.mweapon": {
+      "sha256": "37e0c87c5aea339e36ea82b870fd5f3b4ea9e68bba4ef7dba01b75cd3dd9325e",
+      "bytes": 4236
+    },
+    "support/evidence/sources/weapon_submachinegun_v1.mweapon.json": {
+      "sha256": "ad85139ce0074cc431ec07415eb296b712410490598d605dfeaf538e369a3172",
+      "bytes": 850
     },
     "pack/presentation.json": {
       "sha256": "ff5c53ebe81229b726e2e427c934d3353e0316f5a960aac6c5682bac78452047",
       "bytes": 20263
     },
     "pack/provenance.md": {
-      "sha256": "d889064197dd68c11f7bb60e8534d8f4bad25a55ceae1b9e40c78ab92ece3b8e",
-      "bytes": 234992
+      "sha256": "9917ce6e3b007ef70a3db1bf488beb6e9a410fe8b000f772aea65a42f064cc6f",
+      "bytes": 272908
     },
     "pack/share-codes.json": {
       "sha256": "7ad28718e2f57edbee9512fcbe778df324b3a931ccccf976efaeeb7fa02c4087",
       "bytes": 209
     },
     "pack/simulation.json": {
-      "sha256": "2ce6a3375550b6b83ec9b5eb666b22446def41b53f5cadd08153b80fdabeb4da",
-      "bytes": 45815
+      "sha256": "1004717eb7df3d3b244d77a0aaf0ebbfc9de2eaa9a80d100a0a536ad97b7e32c",
+      "bytes": 61946
     },
     "pack/rules.json": {
-      "sha256": "afd6e2421fa01f76daa2762a04dfc88ed70bb18d8b24232f77a29a0e00128bef",
-      "bytes": 2573515
+      "sha256": "fe4b60cc18cbe32df7f47d37da8e6f3151608afc7eca16d37e5a91514f13d95d",
+      "bytes": 2639888
     },
     "pack/manifest.json": {
-      "sha256": "bc0afd6f8fae05a8ea1648b001ce56dfc77e6f086a694c844d05ea2655021ef1",
+      "sha256": "e417acb4ff14589aa77b912c11df3a9edafc32ecc6538e9fae9522dd10907bbe",
       "bytes": 1829
     },
     "pack/assets/original-slots/slot_backpack.png": {
@@ -157,24 +297,24 @@
       "bytes": 1712
     },
     "overlay-plan.json": {
-      "sha256": "33b769cefe49dc24875202d45924d581c57e48f61fc7e94d5e948310f85e9d4e",
-      "bytes": 16149
+      "sha256": "529a7ca17095f2abe154371b6f111cef385eb8a783d22a368d5110c5a5944f70",
+      "bytes": 24149
     },
     "support/intermediate-manifest.json": {
-      "sha256": "05319d576ec30c37977128382efbde701fa13c071994ef7006d5d9eb5caeb32e",
-      "bytes": 1838
+      "sha256": "aa165ca04926412815eceeb41295b51878dcd4b941b2a295602ba3d28f5dccaf",
+      "bytes": 1833
     },
     "reports/artwork.json": {
-      "sha256": "70f55e995e265caac1e8f6e273f0757dfe9c0ffd77ce6559ad293505975f7a2f",
+      "sha256": "4c1ba6d9135cac0ca86886d174222dc80ce85b3bdafb0cf49be4779c34e3b763",
       "bytes": 11813
     },
     "composition-plan.json": {
-      "sha256": "512cd996647ed62c299d46ae9c04b17f43a672e1a603c93db03bdce8570e4f3b",
+      "sha256": "019c3527d4b4351b7475c05f386931df97c7065d2be579c22abb2222aeb9312a",
       "bytes": 506
     },
     "reports/talent-overlay.json": {
-      "sha256": "52105efdb9a035b6dbcfc4ee82b9bc2ddf4d4447d9cedd952048d0f2682bc9a0",
-      "bytes": 16771
+      "sha256": "d4221cc02a2ac7aee4acc2c7ebf6cd5cd5fe3bb25892ae199cb80e015f7cefa4",
+      "bytes": 24895
     }
   }
 }

@@ -963,14 +963,31 @@ public sealed partial class DummyWeaponSimulatorTests
     }
 
     [Fact]
-    public void PersistentBuffCannotSilentlyChangeMagazineCapacity()
+    public void PersistentBuffChangesMagazineCapacityAtTheNextFill()
     {
+        // ADR 0025: a single weapon's triggered magazine size no longer refuses the fight; it applies at the next fill. Overflowing's
+        // shape: a buff on every third reload, spent by the next, so fewer reloads fit the same shots.
         var (original, _) = BuffBuild("equipped_weapon_magazine_size", "reload");
         var rules = original.Pack with { Simulation = new() { Triggers = [original.Pack.Simulation.Triggers[0] with { Count = 3, Duration = 0, ConsumeOn = "reload" }] } };
         var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
         var build = BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test_buff");
-        Assert.Equal("buff-timing-unsupported", Assert.Throws<SimulationException>(() => Run(pack, build, Context,
-            new() { Duration = 10, Mode = SimulationMode.Random, Iterations = 1, DriveSimpleBuffs = true })).Code);
+        var driven = Run(pack, build, Context, new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 1, DriveSimpleBuffs = true, CaptureFirstFightEvents = true });
+        Assert.True(driven.TimedTriggerUptime["buff"].Seconds > 0);
+        // Shots between reload completions: the buffed fills hold more rounds than the rest.
+        var magazines = new List<int>();
+        var shots = 0;
+        var loaded = false;
+        foreach (var entry in driven.FirstFightEvents)
+        {
+            if (entry.Kind == DummyEventKind.Shot) { shots++; }
+            else if (entry.Kind == DummyEventKind.ReloadCompleted)
+            {
+                if (loaded) { magazines.Add(shots); }
+                (shots, loaded) = (0, true);
+            }
+        }
+        Assert.True(magazines.Count >= 3, $"{magazines.Count} magazines");
+        Assert.True(magazines.Max() > magazines.Min(), string.Join(", ", magazines));
     }
 
     [Fact]
@@ -1243,10 +1260,15 @@ public sealed partial class DummyWeaponSimulatorTests
         var build = BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "gun").WithTalentSelection("primary_weapon", "talent", "test_buff");
         var result = Run(pack, build, Context, new() { Duration = 4, Mode = SimulationMode.Random, Iterations = 1, DriveSimpleBuffs = true, CaptureFirstFightEvents = true });
         Assert.Equal(new double[] { 10, 30, 50, 50 }, result.FirstFightEvents.Where(e => e.Kind == DummyEventKind.Shot).Select(e => e.Damage));
-        var unsupported = rules with { Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { Also = [new() { On = "shield_break", Gain = 1 }] }] } };
+        var unsupported = rules with { Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { Also = [new() { On = "damaged", Gain = 1 }] }] } };
         var unsupportedPack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(unsupported).Compiled);
         Assert.Equal("trigger-event-unsupported", Assert.Throws<SimulationException>(() => Run(unsupportedPack, build, Context,
             new() { Mode = SimulationMode.Random, Iterations = 1, DriveSimpleBuffs = true })).Code);
+        // A shield's breaking is heard in any driven fight; without a shield in it, it never comes, and the result says so.
+        var shieldless = rules with { Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { Also = [new() { On = "shield_break", Gain = 1 }] }] } };
+        var shieldlessResult = Run(Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(shieldless).Compiled), build, Context,
+            new() { Duration = 4, Mode = SimulationMode.Random, Iterations = 1, DriveSimpleBuffs = true });
+        Assert.Contains(shieldlessResult.Limitations, note => note.StartsWith("This fight has no shield", StringComparison.Ordinal));
     }
 
     // Shot damage is capped by the target, so these trigger checks observe a triggered reload time instead:

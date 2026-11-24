@@ -66,7 +66,9 @@ public static class PackCapabilities
         TalentCopy => pack.Talents.Any(talent => talent.CopiesTalent is not null),
         EquipmentLimits => !pack.EquipmentLimits.IsDefaultOrEmpty,
         TalentCoverage => pack.Talents.Any(talent => talent.Coverage is not null),
-        _ => !pack.Simulation.Triggers.IsDefaultOrEmpty || !pack.Simulation.Skills.IsDefaultOrEmpty || !pack.Simulation.StatusDamage.IsDefaultOrEmpty
+        _ => !pack.Simulation.Triggers.IsDefaultOrEmpty || !pack.Simulation.Skills.IsDefaultOrEmpty || !pack.Simulation.StatusDamage.IsDefaultOrEmpty ||
+            !pack.Simulation.SkillsAside.IsDefaultOrEmpty || !pack.Simulation.HeadshotCycles.IsDefaultOrEmpty ||
+            !pack.Simulation.NextHitBonuses.IsDefaultOrEmpty
     }).ToImmutableArray();
 }
 

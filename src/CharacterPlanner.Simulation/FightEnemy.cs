@@ -68,6 +68,10 @@ internal sealed class FightEnemy
     public double Armor => pool?.Armor ?? 0;
     public double Health => pool?.Health ?? 0;
     public bool Dead => pool?.Dead ?? true;
+    /// <summary>Whether the enemy has lost health (ADR 0029: The Howl's outright kill needs it).</summary>
+    public bool HealthBelowFull => pool is not null && pool.Health < fullHealth;
+    /// <summary>Kills the enemy outright, returning the armor and health it had left.</summary>
+    public double Finish() => Apply(double.MaxValue, 1, 1);
     public double Apply(double raw, double armorFactor, double healthFactor) => pool?.Apply(raw, armorFactor, healthFactor) ?? 0;
     public double RemainingPercent() => pool?.RemainingPercent(fullArmor, fullHealth) ?? 0;
 }

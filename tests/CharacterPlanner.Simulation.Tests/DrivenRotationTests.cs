@@ -563,7 +563,7 @@ public sealed partial class DummyWeaponSimulatorTests
     private static double[] Shots(DummyFightResult result) => [.. result.FirstFightEvents.Where(entry => entry.Kind == DummyEventKind.Shot).Select(entry => entry.Time)];
 
     // One round each, a shot every 1.5 s, and a refill on some whole seconds.
-    private static (CompiledPackExpressions Pack, BuildSnapshot Build) SecondRefill(long count) => RotatingBuff("second", gear: true, change: rules => rules with
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) SecondRefill(long count, bool both = false) => RotatingBuff("second", gear: true, change: rules => rules with
     {
         Stats = [.. rules.Stats.Select(stat => stat.ID switch
         {
@@ -572,7 +572,7 @@ public sealed partial class DummyWeaponSimulatorTests
             "enemy_target_health" => stat with { Formula = "100000" },
             _ => stat
         })],
-        Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { Refill = true, Count = count }] }
+        Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { Refill = true, RefillBoth = both, Count = count }] }
     });
 
     [Fact]
@@ -597,6 +597,45 @@ public sealed partial class DummyWeaponSimulatorTests
         Assert.Equal([0, 3, 4.5], Shots(result));
         Assert.Equal((2d, 0d), (result.Swaps, result.Reloads));
         Assert.Equal([1.5, 6], result.FirstFightEvents.Where(entry => entry.Kind == DummyEventKind.SwapStarted).Select(entry => entry.Time));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ARefillOfBothWeaponsFillsTheHolsteredOneToo(bool both)
+    {
+        // As above: the fourth second refills the second weapon, which fires again at 4.5 and swaps 6 to 7.5 onto the first. With the
+        // first emptied at 0, a refill of the hand alone leaves it to reload on arrival, 7.5 to 9.5; a refill of both filled it at 4 s.
+        var (pack, build) = SecondRefill(4, both);
+        var result = Run(pack, build, Context, DrivenRotation(10) with { Rotation = new("secondary_weapon", SwapTime: 1.5) });
+        Assert.Equal([1.5, 6], Times(result, DummyEventKind.SwapStarted));
+        Assert.Equal(both ? 0 : 1, result.Reloads);
+        Assert.Equal(both ? [0, 3, 4.5, 7.5, 9] : [0, 3, 4.5, 9.5], Shots(result));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void AShotsRefillOfBothWeaponsFillsTheHolsteredOneBeforeTheRotationDecides(bool both)
+    {
+        // One round each, a shot every 1.5 s, and every second shot refills. The shot at 0 empties the first weapon and swaps 1.5 to 3; the
+        // shot at 3 refills the second, and with both the first too. The shot at 4.5 empties the second and swaps 6 to 7.5 onto the first:
+        // refilled, it fires at once; otherwise it reloads 7.5 to 9.5 first.
+        var (pack, build) = RotatingBuff("shot", gear: true, change: rules => rules with
+        {
+            Stats = [.. rules.Stats.Select(stat => stat.ID switch
+            {
+                "equipped_weapon_magazine_size" => stat with { Formula = "1" },
+                "equipped_weapon_rpm" => stat with { Formula = "40" },
+                "enemy_target_health" => stat with { Formula = "100000" },
+                _ => stat
+            })],
+            Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { Refill = true, RefillBoth = both, Count = 2 }] }
+        });
+        var result = Run(pack, build, Context, DrivenRotation(10) with { Rotation = new("secondary_weapon", SwapTime: 1.5) });
+        Assert.Equal([1.5, 6], Times(result, DummyEventKind.SwapStarted));
+        Assert.Equal(both ? 0 : 1, result.Reloads);
+        Assert.Equal(both ? [0, 3, 4.5, 7.5, 9] : [0, 3, 4.5, 9.5], Shots(result));
     }
 
     [Fact]
@@ -637,6 +676,334 @@ public sealed partial class DummyWeaponSimulatorTests
         Assert.Equal(7, result.TimedTriggerUptime["buff@primary_weapon"].Seconds, 10);
         Assert.Equal(5, result.TimedTriggerUptime["buff@secondary_weapon"].Seconds, 10);
         Assert.DoesNotContain("buff", result.TimedTriggerUptime.Keys);
+    }
+
+    // ADR 0019, Unwavering's shape on both weapons: the draw gains for 5 s, and a swap away cancels it and locks it out for 5 s.
+    // Swaps start at 1, 3 and 7 s. Shared: the draw at 1 gains; the swap at 3 cancels and locks the one key to 8, so the draws at 3
+    // and 7 gain nothing: 2 s. Copied: the swap at 3 locks only the sidearm's copy, so the rifle's draw at 3 gains until the swap at 7
+    // cancels it: 2 + 4 s, under two keys.
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ARuleSharedByBothWeaponsCopiesDrivesOneKeyThatASwapAwayLocksForTheDraw(bool share)
+    {
+        var (pack, build) = OnBothWeapons(rules => rules with
+        {
+            Simulation = new()
+            {
+                Triggers = [rules.Simulation.Triggers[0] with { On = "swapped", Duration = 5, CancelOn = "swap", CancelFor = 5, ShareCopies = share }]
+            }
+        });
+        var result = Run(pack, build, Context, DrivenRotation(10));
+        Assert.Equal(new[] { 1.0, 3, 7 }, Times(result, DummyEventKind.SwapStarted));
+        if (share)
+        {
+            Assert.Equal(2, result.TimedTriggerUptime["buff"].Seconds, 9);
+            Assert.DoesNotContain(result.TimedTriggerUptime.Keys, key => key.Contains('@', StringComparison.Ordinal));
+            Assert.Contains(result.Limitations, note => note.StartsWith("Buff is on both weapons, and its shared rules aren't copied", StringComparison.Ordinal) &&
+                note.EndsWith("a cancel on the weapon a swap leaves holds for the one drawn", StringComparison.Ordinal));
+        }
+        else
+        {
+            Assert.Equal(2, result.TimedTriggerUptime["buff@secondary_weapon"].Seconds, 9);
+            Assert.Equal(4, result.TimedTriggerUptime["buff@primary_weapon"].Seconds, 9);
+            Assert.DoesNotContain(result.Limitations, note => note.Contains("shared rules", StringComparison.Ordinal));
+        }
+    }
+
+    // Versatile's shape (ADR 0019) on gear: the draw gains for 1 s, with the rifle typed and the sidearm an SMG or a rifle. Swaps at 1
+    // (the SMG drawn), 3 (the rifle) and 7 s (the SMG).
+    private static (CompiledPackExpressions Pack, BuildSnapshot Build) Versatile(string sidearm, double every = 0, bool perType = false, bool different = false) =>
+        RotatingBuff("swapped", gear: true, change: rules => rules with
+        {
+            Items = [.. rules.Items.Select(item => item.ID switch
+            {
+                "gun" => item with { Tags = ["weapon_type_rifle"] },
+                "other" => item with { Tags = [sidearm] },
+                _ => item
+            })],
+            Simulation = new()
+            {
+                Triggers = [rules.Simulation.Triggers[0] with { Duration = 1, Every = every, WeaponTypes = ["weapon_type_smg", "weapon_type_rifle"],
+                    DifferentTypes = different, EveryPerType = perType }]
+            }
+        });
+
+    [Theory]
+    [InlineData("weapon_type_smg", 3)]
+    [InlineData("weapon_type_rifle", 0)]
+    public void AGainOnDifferentWeaponTypesNeedsTheTwoWeaponsUnalike(string sidearm, double uptime)
+    {
+        var (pack, build) = Versatile(sidearm, different: true);
+        var result = Run(pack, build, Context, DrivenRotation(10));
+        Assert.Equal(new[] { 1.0, 3, 7 }, Times(result, DummyEventKind.SwapStarted));
+        Assert.Equal(uptime, result.TimedTriggerUptime["buff"].Seconds, 9);
+    }
+
+    [Theory]
+    [InlineData(false, 2)]
+    [InlineData(true, 3)]
+    public void ACooldownPerWeaponTypeLetsTheOtherTypesDrawGain(bool perType, double uptime)
+    {
+        // Every 5 s: one cooldown blocks the rifle's draw at 3 s after the SMG's at 1 s; one per type lets it gain.
+        var (pack, build) = Versatile("weapon_type_smg", every: 5, perType: perType);
+        Assert.Equal(uptime, Run(pack, build, Context, DrivenRotation(10)).TimedTriggerUptime["buff"].Seconds, 9);
+    }
+
+    [Fact]
+    public void ADistanceRuleThatMayAssumeStepsAsideWithoutADistance()
+    {
+        // Versatile's bands: without a fight distance the rule steps aside, its key reads the user's setting and the result says so; a
+        // distance rule that may not assume still refuses; with a distance the reading runs.
+        (CompiledPackExpressions, BuildSnapshot) Banded(bool assume) => RotatingBuff(change: rules => rules with
+        {
+            Selectors = [.. rules.Selectors, new() { ID = "range", Name = "Range", Values = ["close", "far"] }],
+            Simulation = new()
+            {
+                Triggers = [.. rules.Simulation.Triggers, new() { Talent = "test_buff", Key = "range", Kind = "distance",
+                    Phases = [new() { Until = 15, Value = "close" }, new() { Until = 1000, Value = "far" }], AssumeWithoutDistance = assume }]
+            }
+        });
+        var (pack, build) = Banded(true);
+        var result = Run(pack, build, Context, DrivenRotation(4) with { Rotation = null });
+        Assert.Contains("This fight has no distance, so these read your setting, or the pack's default, for their range: Buff", result.Limitations);
+        var (strict, strictBuild) = Banded(false);
+        Assert.Equal("distance-required", Assert.Throws<SimulationException>(() => Run(strict, strictBuild, Context, DrivenRotation(4) with { Rotation = null })).Code);
+        var placed = Run(pack, build, Context, DrivenRotation(4) with { Rotation = null, Distance = 10 });
+        Assert.DoesNotContain(placed.Limitations, note => note.StartsWith("This fight has no distance", StringComparison.Ordinal));
+        // Stepping aside doesn't skip the checks: a band reading on a key a buff rule drives is refused with or without a distance.
+        var (clash, clashBuild) = RotatingBuff(change: rules => rules with
+        {
+            Selectors = [.. rules.Selectors.Select(selector => selector.ID == "buff" ? selector with { Values = ["true", "far"] } : selector)],
+            Simulation = new()
+            {
+                Triggers = [.. rules.Simulation.Triggers, new() { Talent = "test_buff", Key = "buff", Kind = "distance",
+                    Phases = [new() { Until = 15, Value = "true" }, new() { Until = 1000, Value = "far" }], AssumeWithoutDistance = true }]
+            }
+        });
+        Assert.Equal("trigger-key-conflict", Assert.Throws<SimulationException>(() => Run(clash, clashBuild, Context, DrivenRotation(4) with { Rotation = null })).Code);
+        Assert.Equal("trigger-key-conflict", Assert.Throws<SimulationException>(() => Run(clash, clashBuild, Context, DrivenRotation(4) with { Rotation = null, Distance = 10 })).Code);
+    }
+
+    [Fact]
+    public void ABandRuleSteppingAsideLeavesTheSelectorAtItsDefault()
+    {
+        // Versatile's bands (ADR 0019): the talent's +10 is gated on the band "any", the selector's default. Without a distance the
+        // band rule steps aside and the key reads "any", so the bonus holds; at 10 m it reads "close", and the bonus is off.
+        var (pack, build) = RotatingBuff(change: rules => rules with
+        {
+            Selectors = [.. rules.Selectors, new() { ID = "range", Name = "Range", Values = ["any", "close", "far"], Default = "any" }],
+            Talents = [rules.Talents[0] with { Modifiers = [rules.Talents[0].Modifiers[0] with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add("range", "any") }] }],
+            Simulation = new()
+            {
+                Triggers = [new() { Talent = "test_buff", Key = "range", Kind = "distance",
+                    Phases = [new() { Until = 15, Value = "close" }, new() { Until = 1000, Value = "far" }], AssumeWithoutDistance = true }]
+            }
+        });
+        double FirstShot(double? distance) => Run(pack, build, Context, DrivenRotation(2) with { Rotation = null, Distance = distance })
+            .FirstFightEvents.First(entry => entry.Kind == DummyEventKind.Shot).Damage;
+        Assert.Equal(20, FirstShot(null));
+        Assert.Equal(10, FirstShot(10));
+    }
+
+    [Fact]
+    public void WithoutRotationAGateOnDifferingWeaponTypesStepsAside()
+    {
+        // With one weapon there's no second to compare, so a type-gated rule on a kill steps aside for the user's setting.
+        var (pack, build) = RotatingBuff("kill", gear: true, change: rules => rules with
+        {
+            Items = [.. rules.Items.Select(item => item.ID == "gun" ? item with { Tags = ["weapon_type_rifle"] } : item)],
+            Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { WeaponTypes = ["weapon_type_rifle"], DifferentTypes = true }] }
+        });
+        var result = Run(pack, build, Context, DrivenRotation(4) with { Rotation = null });
+        Assert.Contains("This fight has no weapon rotation, so these read your setting and never react to a swap: Buff", result.Limitations);
+        Assert.DoesNotContain("buff", result.TimedTriggerUptime.Keys);
+    }
+
+    [Fact]
+    public void HolsteredEffectsOfATalentOnBothWeaponsReadItsSharedKey()
+    {
+        // Back and Forth's swap-from shape on both weapons: +5 damage while holstered, on a shared key gained on a swap. After the swap
+        // at 1 s the holstered copy (the rifle's) adds 5 to the sidearm's shot, and after the swap back at 3 s the sidearm's adds 5 to
+        // the rifle's. Copied instead, the holstered copy would read the copy in hand's key, so that's still refused.
+        GamePack Shape(GamePack rules, bool share) => rules with
+        {
+            Selectors = [.. rules.Selectors, new() { ID = "from", Name = "From", Values = ["true"] }],
+            Talents = [rules.Talents[0] with
+            {
+                Modifiers = [rules.Talents[0].Modifiers[0] with { Value = new(5), WhileHolstered = true, RequiresContext = ImmutableDictionary<string, string>.Empty.Add("from", "true") }]
+            }],
+            Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { Key = "from", On = "swap", ShareCopies = share }] }
+        };
+        var (pack, build) = OnBothWeapons(rules => Shape(rules, share: true));
+        var result = Run(pack, build, Context, DrivenRotation(7));
+        Assert.Equal(new double[] { 10, 105, 15 }, result.FirstFightEvents.Where(entry => entry.Kind == DummyEventKind.Shot).Select(entry => entry.Damage));
+        var (copied, copiedBuild) = OnBothWeapons(rules => Shape(rules, share: false));
+        Assert.Contains("needs its rules shared", Assert.Throws<SimulationException>(() => Run(copied, copiedBuild, Context, DrivenRotation(7))).Message, StringComparison.Ordinal);
+        // One copied rule beside the shared one is enough to refuse.
+        var (mixed, mixedBuild) = OnBothWeapons(rules =>
+        {
+            var shaped = Shape(rules, share: true);
+            return shaped with { Simulation = new() { Triggers = [.. shaped.Simulation.Triggers, rules.Simulation.Triggers[0]] } };
+        });
+        Assert.Contains("needs its rules shared", Assert.Throws<SimulationException>(() => Run(mixed, mixedBuild, Context, DrivenRotation(7))).Message, StringComparison.Ordinal);
+        // So is one key gating both its in-hand and holstered effects, which one gain would count twice.
+        var (twice, twiceBuild) = OnBothWeapons(rules =>
+        {
+            var shaped = Shape(rules, share: true);
+            var holstered = shaped.Talents[0].Modifiers[0];
+            return shaped with { Talents = [shaped.Talents[0] with { Modifiers = [holstered, holstered with { WhileHolstered = false }] }] };
+        });
+        Assert.Contains("different keys", Assert.Throws<SimulationException>(() => Run(twice, twiceBuild, Context, DrivenRotation(7))).Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AHolsteredEffectReadingAKeyCopiedPerWeaponIsRefused()
+    {
+        // The talent on both weapons copies its key per weapon; another talent on the rifle reading that key while holstered would read the
+        // sidearm's copy, not its own weapon's.
+        var (pack, build) = OnBothWeapons(rules => rules with
+        {
+            Talents = [.. rules.Talents, new()
+            {
+                ID = "reader",
+                Name = "Reader",
+                Modifiers = [rules.Talents[0].Modifiers[0] with { WhileHolstered = true }]
+            }],
+            Items = [.. rules.Items.Select(item => item.Slot == "primary_weapon" ? item with { TalentSlots = [.. item.TalentSlots, new() { ID = "second", Choices = ["reader"] }] } : item)]
+        });
+        var refused = Assert.Throws<SimulationException>(() => Run(pack, build.WithTalentSelection("primary_weapon", "second", "reader"), Context, DrivenRotation(7)));
+        Assert.Contains("reads a key a talent on both swapped weapons copies", refused.Message, StringComparison.Ordinal);
+    }
+
+    // ADR 0019, Unwavering's full lockout on the rifle: swaps at 1, 3 and 7 s. Today the draw at 3 s gains until the swap at 7 s (4 s).
+    // With the lockout starting on any swap away, the swap at 1 s locks the rifle out to 6 s, so the draw at 3 s gains nothing; the
+    // rifle is in hand at 6 s, so the bonus comes then, until the swap at 7 s cancels it (1 s).
+    [Theory]
+    [InlineData(false, 4)]
+    [InlineData(true, 1)]
+    public void UnwaveringsLockoutStartsOnAnySwapAwayAndItsBonusComesAtTheEnd(bool full, double uptime)
+    {
+        var (pack, build) = RotatingBuff(change: rules => rules with
+        {
+            Simulation = new()
+            {
+                Triggers = [rules.Simulation.Triggers[0] with { On = "swapped", Duration = 5, CancelOn = "swap", CancelFor = 5, LockoutAlways = full, GainAtLockoutEnd = full }]
+            }
+        });
+        var result = Run(pack, build, Context, DrivenRotation(10));
+        Assert.Equal(new[] { 1.0, 3, 7 }, Times(result, DummyEventKind.SwapStarted));
+        Assert.Equal(uptime, result.TimedTriggerUptime["buff"].Seconds, 9);
+    }
+
+    [Theory]
+    [InlineData(true, 2)]
+    [InlineData(false, 1)]
+    public void ASwapsArrivalReloadReadsTheStateAsItBegins(bool cancelled, double reload)
+    {
+        // R117: a bonus that speeds reloads (-1 s of 2) gains on each shot, on both weapons. The shot that empties a weapon decides the
+        // swap with the bonus up. Cancelled by the swap away, it's gone when the drawn weapon's reload begins, which takes the full 2 s;
+        // kept, the reload takes 1 s. A rule on reload_end fires at the completion as retimed, so its uptime runs from the first one.
+        var (pack, build) = OnBothWeapons(rules => rules with
+        {
+            Selectors = [.. rules.Selectors, new() { ID = "done", Name = "Done", Values = ["true"] }],
+            Talents = [rules.Talents[0] with { Modifiers = [rules.Talents[0].Modifiers[0] with { Stat = "equipped_weapon_reload_time", Value = new(-1) }] }],
+            Simulation = new()
+            {
+                Triggers = [rules.Simulation.Triggers[0] with { On = "shot", Duration = 100, CancelOn = cancelled ? "swap" : "", ShareCopies = true },
+                    new() { Talent = "test_buff", Key = "done", Kind = "buff", On = "reload_end", Duration = 100, ShareCopies = true }]
+            }
+        });
+        var result = Run(pack, build, Context, DrivenRotation(12));
+        var starts = Times(result, DummyEventKind.ReloadStarted);
+        var ends = Times(result, DummyEventKind.ReloadCompleted);
+        Assert.NotEmpty(starts);
+        Assert.Equal(starts.Length, ends.Length);
+        Assert.All(starts.Zip(ends), pair => Assert.Equal(reload, pair.Second - pair.First, 9));
+        Assert.Equal(12 - ends[0], result.TimedTriggerUptime["done"].Seconds, 9);
+    }
+
+    [Theory]
+    [InlineData(true, 1)]
+    [InlineData(false, 0.5)]
+    public void ASwapsOwnTimeReadsTheBonusAfterItsEvents(bool cancelled, double swap)
+    {
+        // The owner's reading (2026-11-15): a bonus the swap ends speeds neither its holster nor its draw. A shared bonus doubling swap
+        // speed gains on each shot, so it's up when each swap is decided. Cancelled by the swap away, each 1 s swap takes its full time;
+        // kept, half.
+        var (pack, build) = OnBothWeapons(rules => rules with
+        {
+            Stats = [.. rules.Stats, new() { ID = "effective_swap_speed", Formula = "0" }],
+            Talents = [rules.Talents[0] with { Modifiers = [rules.Talents[0].Modifiers[0] with { Stat = "effective_swap_speed", Value = new(1) }] }],
+            Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { On = "shot", Duration = 100, CancelOn = cancelled ? "swap" : "", ShareCopies = true }] }
+        });
+        var result = Run(pack, build, Context, DrivenRotation(12) with { Rotation = new("secondary_weapon", SwapTime: 1) });
+        var starts = Times(result, DummyEventKind.SwapStarted);
+        var arrivals = Times(result, DummyEventKind.SwapCompleted);
+        Assert.NotEmpty(starts);
+        // A swap starting before the fight's end may arrive after it, beyond the trace.
+        Assert.InRange(arrivals.Length, starts.Length - 1, starts.Length);
+        Assert.All(starts.Zip(arrivals), pair => Assert.Equal(swap, pair.Second - pair.First, 9));
+        // An emptied weapon reloads as it arrives, at the retimed arrival, and the reload count matches the trace.
+        var reloads = Times(result, DummyEventKind.ReloadStarted);
+        Assert.NotEmpty(reloads);
+        Assert.All(reloads, at => Assert.Contains(at, arrivals));
+        Assert.Equal(reloads.Length, result.Reloads);
+    }
+
+    [Fact]
+    public void ABonusASwapsOwnEventsGainSpeedsOnlyTheNextSwap()
+    {
+        // A bonus doubling swap speed, gained on the draw (swapped) and lasting: it isn't up when the first swap is decided, and the swap
+        // it fires on stays at its full 1 s; later swaps are decided with it up and take half.
+        var (pack, build) = OnBothWeapons(rules => rules with
+        {
+            Stats = [.. rules.Stats, new() { ID = "effective_swap_speed", Formula = "0" }],
+            Talents = [rules.Talents[0] with { Modifiers = [rules.Talents[0].Modifiers[0] with { Stat = "effective_swap_speed", Value = new(1) }] }],
+            Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { On = "swapped", Duration = 100, ShareCopies = true }] }
+        });
+        var result = Run(pack, build, Context, DrivenRotation(12) with { Rotation = new("secondary_weapon", SwapTime: 1) });
+        var times = Times(result, DummyEventKind.SwapStarted).Zip(Times(result, DummyEventKind.SwapCompleted), (start, end) => end - start).ToArray();
+        Assert.True(times.Length >= 2);
+        Assert.Equal(1, times[0], 9);
+        Assert.All(times.Skip(1), duration => Assert.Equal(0.5, duration, 9));
+    }
+
+    [Fact]
+    public void ASharedRuleGatedOnACopiedKeyIsRefused()
+    {
+        // A copied rule's key is per weapon, and a shared rule has no weapon of its own to pick the copy.
+        var (pack, build) = OnBothWeapons(rules => rules with
+        {
+            Selectors = [.. rules.Selectors, new() { ID = "primed", Name = "Primed", Values = ["true"] }],
+            Simulation = new()
+            {
+                Triggers = [new() { Talent = "test_buff", Key = "primed", Kind = "ready", PrimeHolstered = 1 },
+                    rules.Simulation.Triggers[0] with { On = "swapped", WhileKey = "primed", ShareCopies = true }]
+            }
+        });
+        var refused = Assert.Throws<SimulationException>(() => Run(pack, build, Context, DrivenRotation(10)));
+        Assert.Equal("rotation-shared-talent-unsupported", refused.Code);
+        Assert.Contains("A rule shared by a talent's copies", refused.Message, StringComparison.Ordinal);
+        // So is one with a magazine-sized cap, each weapon's own.
+        var (capped, cappedBuild) = OnBothWeapons(rules => rules with
+        {
+            NumericContextInputs = [.. rules.NumericContextInputs, new() { ID = "heat", Name = "Heat", Min = 0, Max = 100, Step = 1, Default = 0 }],
+            Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { Key = "heat", Kind = "stacks", Max = 100, MaxMagazine = 0.5, ShareCopies = true }] }
+        });
+        Assert.Contains("A rule shared by a talent's copies", Assert.Throws<SimulationException>(() => Run(capped, cappedBuild, Context, DrivenRotation(10))).Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ASharedRuleWithoutACancelIsNotedWithoutOne()
+    {
+        // Back and Forth's swap-to shape: no cancel, so the note doesn't speak of one.
+        var (pack, build) = OnBothWeapons(rules => rules with
+        {
+            Simulation = new() { Triggers = [rules.Simulation.Triggers[0] with { On = "swapped", Duration = 10, ShareCopies = true }] }
+        });
+        var note = Assert.Single(Run(pack, build, Context, DrivenRotation(10)).Limitations, note => note.StartsWith("Buff is on both weapons", StringComparison.Ordinal));
+        Assert.DoesNotContain("cancel", note, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -712,15 +1079,60 @@ public sealed partial class DummyWeaponSimulatorTests
     }
 
     [Fact]
-    public void WithoutRotationARuleThatGainsOnASwapIsStillRefused()
+    public void WithoutRotationARuleThatGainsOnASwapStepsAsideForTheUsersSetting()
     {
-        // Committed Gunslinger gains on swapped: with one weapon it could never trigger, so the run says it needs rotation.
+        // Committed Gunslinger gains on swapped. With one weapon nothing swaps (ADR 0019), so its rule steps aside: the talent reads the
+        // user's setting, +23% total weapon damage when set, and the result names it. It was refused before.
         var pack = CommittedPack();
         var build = BuildSnapshot.Create(pack.Pack).WithEquipment("primary_weapon", "primary_weapon_acr")
             .WithEquipment("chest", "chest_n_5_11_tactical_chest").WithTalentSelection("chest", "talent", "gear_talent_gunslinger");
-        Assert.Equal("trigger-event-unsupported", Assert.Throws<SimulationException>(() => DummyWeaponSimulator.RunAgainstTargets(pack, build, Context,
-            new() { Duration = 10, Mode = SimulationMode.Random, Iterations = 1, DriveSimpleBuffs = true },
-            cancellationToken: TestContext.Current.CancellationToken)).Code);
+        DummyFightResult Fight(ImmutableDictionary<string, string> context) => DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
+            new() { Duration = 10, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true }, cancellationToken: TestContext.Current.CancellationToken);
+        var unset = Fight(Context);
+        var set = Fight(Context.SetItem("gunslinger_active", "true"));
+        Assert.Contains("This fight has no weapon rotation, so these read your setting and never react to a swap: Gunslinger", unset.Limitations);
+        Assert.True(set.WeaponDps.Mean > unset.WeaponDps.Mean * 1.1);
+    }
+
+    [Fact]
+    public void WithoutRotationAPrimedRuleStepsAsideForTheUsersSetting()
+    {
+        // A primed rule never primes with one weapon, so it steps aside: the talent's +10 damage, gated on the prime, follows the user's
+        // setting, and the result names the talent.
+        var (pack, build) = RotatingBuff(change: rules => rules with
+        {
+            Selectors = [.. rules.Selectors, new() { ID = "primed", Name = "Primed", Values = ["true"] }],
+            Talents = [rules.Talents[0] with { Modifiers = [rules.Talents[0].Modifiers[0] with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add("primed", "true") }] }],
+            Simulation = new() { Triggers = [new() { Talent = "test_buff", Key = "primed", Kind = "ready", PrimeHolstered = 1 }] }
+        });
+        var unset = Run(pack, build, Context, DrivenRotation(4) with { Rotation = null });
+        var set = Run(pack, build, Context.SetItem("primed", "true"), DrivenRotation(4) with { Rotation = null });
+        Assert.Contains("This fight has no weapon rotation, so these read your setting and never react to a swap: Buff", unset.Limitations);
+        Assert.True(set.WeaponDps.Mean > unset.WeaponDps.Mean);
+    }
+
+    [Fact]
+    public void WithoutRotationRulesGainingOnlyOnSwapsStepAsideAndOthersKeepTheirOtherGains()
+    {
+        // Without a rotation: stacks gaining on a swap and a hit run on the hits; stacks gaining on two swap events, and a status rule
+        // gaining on a swap, step aside rather than refuse the fight.
+        var (pack, build) = RotatingBuff(change: rules => rules with
+        {
+            Selectors = [.. rules.Selectors, new() { ID = "burn", Name = "Burn", Values = ["true"] }],
+            NumericContextInputs = [.. rules.NumericContextInputs, new() { ID = "heat", Name = "Heat", Min = 0, Max = 5, Step = 1, Default = 0 },
+                new() { ID = "spin", Name = "Spin", Min = 0, Max = 5, Step = 1, Default = 0 }],
+            Simulation = new()
+            {
+                Triggers = [new() { Talent = "test_buff", Key = "heat", Kind = "stacks", Max = 5, On = "swapped", Also = [new() { On = "hit", Gain = 1 }] },
+                    new() { Talent = "test_buff", Key = "spin", Kind = "stacks", Max = 5, On = "swap", Also = [new() { On = "swap_after_kill", Gain = 1 }] },
+                    new() { Talent = "test_buff", Key = "burn", Kind = "status", Status = "burning", On = "swapped", Duration = 1 },
+                    rules.Simulation.Triggers[0]]
+            }
+        });
+        var result = Run(pack, build, Context, DrivenRotation(4) with { Rotation = null });
+        Assert.True(result.TimedTriggerUptime["heat"].Seconds > 0);
+        Assert.DoesNotContain("spin", result.TimedTriggerUptime.Keys);
+        Assert.Contains("This fight has no weapon rotation, so these read your setting and never react to a swap: Buff", result.Limitations);
     }
 
     // Shots alternate gun (10), other (100), gun; the gear buff adds 10. Untagged or gun-tagged, the gun's first hit buffs the

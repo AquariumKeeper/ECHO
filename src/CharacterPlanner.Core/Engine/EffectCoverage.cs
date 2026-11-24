@@ -67,6 +67,8 @@ public static class EffectCoverage
     public const string TalentRedirect = "talent-redirect";
     public const string TalentTrap = "talent-trap";
     public const string TalentPassOn = "talent-pass-on";
+    public const string TalentHeadshotCycle = "talent-headshot-cycle";
+    public const string TalentNextHitBonus = "talent-next-hit-bonus";
 
     /// <summary>The producer's source audit of the talent's mechanic (pack <c>coverage</c>, R35).</summary>
     public const string SourceAudit = "source-audit";
@@ -82,10 +84,10 @@ public static class EffectCoverage
     {
         var loadout = LoadoutResolver.Resolve(pack, build);
         var assumptions = ResolveAssumptions.Resolve(pack, context);
-        var inputs = assumptions.Explicit.SetItems(assumptions.Numeric.Select(pair =>
+        var inputs = assumptions.Effective.SetItems(assumptions.Numeric.Select(pair =>
             KeyValuePair.Create(pair.Key, pair.Value.ToString("R", CultureInfo.InvariantCulture))));
         var talents = PackIndex.Of(pack).Talents;
-        var copies = TalentCopySelection.Sources(pack, build, loadout, context);
+        var copies = TalentCopySelection.Sources(pack, build, loadout, assumptions.Effective);
         var rows = ImmutableArray.CreateBuilder<TalentEffectCoverage>();
         foreach (var entry in loadout.Equipped)
         {
@@ -93,7 +95,7 @@ public static class EffectCoverage
             {
                 var id = build.TalentSelections.GetValueOrDefault(entry.SlotId)?.GetValueOrDefault(slot.ID) ?? "";
                 if (!slot.Choices.Contains(id) || !talents.TryGetValue(id, out var talent)) { continue; }
-                rows.Add(DescribeTalent(pack, talent, entry.SlotId, entry.EffectsActive(context), copies, inputs));
+                rows.Add(DescribeTalent(pack, talent, entry.SlotId, entry.EffectsActive(assumptions.Effective), copies, inputs));
             }
         }
         // Some set talents (e.g. Dead Man's Hand) are inherent and have no selectable item talent slot.
@@ -106,7 +108,8 @@ public static class EffectCoverage
             ? SetBonusSelection.FullSetTalents(pack, SetBonusSelection.Resolve(pack, equipped, selected).ActiveSets).ToHashSet(StringComparer.Ordinal) : [];
         foreach (var talent in unselected)
         { rows.Add(DescribeTalent(pack, talent, "", !SetBonusSelection.RunsAtTopBonus(pack, talent) || fullSetTalents.Contains(talent.ID), copies, inputs)); }
-        return new(rows.ToImmutable(), inputs) { Party = PartyEffectSelection.Select(pack, build) };
+        // Fights set the fight context; it's no input (ADR 0023).
+        return new(rows.ToImmutable(), inputs.Remove(GamePack.FightContextSelector)) { Party = PartyEffectSelection.Select(pack, build) };
     }
 
     private static TalentEffectCoverage DescribeTalent(GamePack pack, TalentDefinition talent, string slot, bool active,
@@ -157,6 +160,12 @@ public static class EffectCoverage
         // A debuff passing on at a death (ADR 0013), in the same fights.
         if (pack.Simulation.PassOns.Any(rule => rule.Talent == talent.ID))
         { channels.Add(new(TalentPassOn, [talent.ID], "Pack pass-on at a death exists (a debuff's stacks or a status); driven simulations with several enemies and an enemy spacing apply it. Static comparisons don't include it.")); }
+        // A consecutive-headshot cycle (ADR 0021, Headache), in driven fights.
+        if (pack.Simulation.HeadshotCycles.Any(rule => rule.Talent == talent.ID))
+        { channels.Add(new(TalentHeadshotCycle, [talent.ID], "Pack consecutive-headshot cycle exists; driven simulations count the weapon's headshots and apply its next-headshot bonus, repair and refill. Static comparisons don't include it.")); }
+        // A bonus on the hit after a headshot kill (ADR 0023, Headhunter), in driven fights.
+        if (pack.Simulation.NextHitBonuses.Any(rule => rule.Talent == talent.ID))
+        { channels.Add(new(TalentNextHitBonus, [talent.ID], "Pack next-hit bonus exists; driven simulations add a share of a headshot kill's damage to the next landed hit. Static comparisons use the talent's own estimate.")); }
         return new(slot, talent.ID, talent.Name, active, channels.ToImmutable());
     }
 
@@ -171,20 +180,28 @@ public static class EffectCoverage
         // A set talent's rule drives its key for the talents reading it (Veer Override reads Apex Engine's stacks).
         var rules = pack.Simulation.Triggers.Where(rule => rule.Talent == talent.ID || PackIndex.Of(pack).RuledSetTalents.Any(ruled => ruled.ID == rule.Talent)).ToArray();
         var driven = rules.SelectMany(rule => new[] { rule.Key, rule.Bank }).Where(key => key.Length > 0).ToHashSet(StringComparer.Ordinal);
+        // A headshot cycle drives its key as a rule does (ADR 0021).
+        driven.UnionWith(pack.Simulation.HeadshotCycles.Where(rule => rule.Talent == talent.ID || PackIndex.Of(pack).RuledSetTalents.Any(ruled => ruled.ID == rule.Talent))
+            .Select(rule => rule.Key));
         var required = new Dictionary<string, string>(StringComparer.Ordinal);
         var read = new HashSet<string>(StringComparer.Ordinal);
         var unconditional = 0;
         var buildConditioned = 0;
         var expected = 0;
+        var fightContext = GamePack.GateValue(inputs, GamePack.FightContextSelector);
         foreach (var modifier in talent.Modifiers)
         {
+            // A modifier the fight context sets aside here (a static value in a driven fight, ADR 0023) isn't part of this result; the
+            // context isn't an assumption either, since fights set it.
+            if (modifier.RequiresContext?.TryGetValue(GamePack.FightContextSelector, out var wanted) == true && wanted != fightContext) { continue; }
+            var gates = modifier.RequiresContext?.Remove(GamePack.FightContextSelector) ?? ImmutableDictionary<string, string>.Empty;
             // The pack's practical_* stats are per-shot rates (hits, headshots, kills); formulas over them average events.
             if (Identifiers(modifier.When).Union(modifier.Value.Formula is { } source ? Identifiers(source) : []).Any(id => id.StartsWith("practical_", StringComparison.Ordinal)))
             { expected++; }
             var reads = Reads(modifier.When).Union(modifier.Value.Formula is { } formula ? Reads(formula) : []).ToHashSet(StringComparer.Ordinal);
-            foreach (var (key, value) in modifier.RequiresContext ?? ImmutableDictionary<string, string>.Empty) { required[key] = value; }
+            foreach (var (key, value) in gates) { required[key] = value; }
             read.UnionWith(reads);
-            if ((modifier.RequiresContext?.Count ?? 0) == 0 && reads.Count == 0)
+            if (gates.Count == 0 && reads.Count == 0)
             {
                 if (modifier.When.Length == 0) { unconditional++; } else { buildConditioned++; }
             }
@@ -199,12 +216,20 @@ public static class EffectCoverage
         // A count needs several enemies at once, so elsewhere its key stays the assumption.
         var counted = rules.Where(rule => rule.Kind == "count" && !rules.Any(other => other.Kind != "count" && other.Key == rule.Key)).Select(rule => rule.Key).ToHashSet(StringComparer.Ordinal);
         var countedKeys = keys.Where(counted.Contains).ToImmutableArray();
-        var drivenKeys = keys.Where(key => driven.Contains(key) && !counted.Contains(key)).ToImmutableArray();
+        // A bonus armor reading needs the player's pools, so only fights under enemy fire read it (ADR 0021).
+        var pooled = rules.Where(rule => rule.Kind == "bonus_armor" && !rules.Any(other => other.Kind != "bonus_armor" && other.Key == rule.Key)).Select(rule => rule.Key).ToHashSet(StringComparer.Ordinal);
+        var pooledKeys = keys.Where(pooled.Contains).ToImmutableArray();
+        var drivenKeys = keys.Where(key => driven.Contains(key) && !counted.Contains(key) && !pooled.Contains(key)).ToImmutableArray();
         var assumedKeys = keys.Where(key => !driven.Contains(key)).ToImmutableArray();
         if (!drivenKeys.IsEmpty)
         {
             yield return new(DrivenConditions, drivenKeys,
                 $"Conditional on {State(drivenKeys)}, which this talent's combat rules drive in talent-trigger simulations; static comparisons use the assumption as chosen, not proc uptime.");
+        }
+        if (!pooledKeys.IsEmpty)
+        {
+            yield return new(DrivenConditions, pooledKeys,
+                $"Conditional on {State(pooledKeys)}, which this talent's combat rules read from the player's bonus armor in fights under enemy fire; any other fight and static comparisons use the assumption as chosen.");
         }
         if (!countedKeys.IsEmpty)
         {
@@ -249,6 +274,13 @@ public static class EffectCoverage
         try { return ExpressionParser.Parse(source); }
         catch (ExpressionException) { return null; }
     });
+
+    /// <summary>The context keys a modifier reads: its gates', its condition's and its formula's.</summary>
+    public static ImmutableHashSet<string> ContextReads(StatModifier modifier)
+    {
+        ArgumentNullException.ThrowIfNull(modifier);
+        return Reads(modifier.When).Union(modifier.Value.Formula is { } formula ? Reads(formula) : []).Union(modifier.RequiresContext?.Keys ?? []);
+    }
 
     // Loaded packs are validated; an unparsable expression is still reported conservatively as an assumption read.
     private static ImmutableHashSet<string> Reads(string expression) =>

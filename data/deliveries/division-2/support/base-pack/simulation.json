@@ -644,7 +644,7 @@
     {
       "talent": "weapon_talent_overflowing",
       "key": "overflowing_active",
-      "on": "reload",
+      "on": "reload_empty",
       "kind": "buff",
       "consumeOn": "reload",
       "count": 3
@@ -652,7 +652,7 @@
     {
       "talent": "weapon_talent_perfect_overflowing",
       "key": "overflowing_active",
-      "on": "reload",
+      "on": "reload_empty",
       "kind": "buff",
       "consumeOn": "reload",
       "count": 2
@@ -903,7 +903,10 @@
       "max": 12,
       "refresh": true,
       "decay": 1,
-      "whileStatus": "any"
+      "whileStatus": "any",
+      "anyStatusExcept": [
+        "ensnared"
+      ]
     },
     {
       "talent": "weapon_talent_mosquito_song",
@@ -1258,7 +1261,7 @@
       "key": "afterburn_stacks",
       "on": "hit_pellet",
       "kind": "stacks",
-      "max": 20,
+      "max": 30,
       "resetOn": "reload",
       "consumeOn": "target_death"
     },
@@ -1592,7 +1595,360 @@
         "in_cover": "true"
       },
       "resetOn": "reload_end",
-      "alsoResetOn": "swap"
+      "alsoResetOn": "swap",
+      "fromFirstGain": true,
+      "refreshOn": "kill"
+    },
+    {
+      "talent": "weapon_talent_unwavering",
+      "key": "unwavering_active",
+      "on": "swapped",
+      "kind": "buff",
+      "duration": 5,
+      "cancelOn": "swap",
+      "cancelFor": 5,
+      "refreshOn": "kill",
+      "shareCopies": true,
+      "lockoutAlways": true,
+      "gainAtLockoutEnd": true
+    },
+    {
+      "talent": "weapon_talent_perfect_unwavering",
+      "key": "unwavering_active",
+      "on": "swapped",
+      "kind": "buff",
+      "duration": 5,
+      "cancelOn": "swap",
+      "cancelFor": 5,
+      "refreshOn": "kill",
+      "shareCopies": true,
+      "lockoutAlways": true,
+      "gainAtLockoutEnd": true
+    },
+    {
+      "talent": "weapon_talent_back_and_forth",
+      "key": "back_and_forth_swap_to_active",
+      "on": "swapped",
+      "kind": "buff",
+      "duration": 10,
+      "cancelOn": "swap",
+      "shareCopies": true
+    },
+    {
+      "talent": "weapon_talent_back_and_forth",
+      "key": "back_and_forth_swap_from_active",
+      "on": "swap",
+      "kind": "buff",
+      "duration": 10,
+      "cancelOn": "swapped",
+      "shareCopies": true
+    },
+    {
+      "talent": "weapon_talent_perfect_back_and_forth",
+      "key": "back_and_forth_swap_to_active",
+      "on": "swapped",
+      "kind": "buff",
+      "duration": 10,
+      "cancelOn": "swap",
+      "shareCopies": true
+    },
+    {
+      "talent": "weapon_talent_perfect_back_and_forth",
+      "key": "back_and_forth_swap_from_active",
+      "on": "swap",
+      "kind": "buff",
+      "duration": 10,
+      "cancelOn": "swapped",
+      "shareCopies": true
+    },
+    {
+      "talent": "weapon_talent_perturb",
+      "key": "perturb_primed",
+      "kind": "ready",
+      "primeHolstered": 10
+    },
+    {
+      "talent": "weapon_talent_perturb",
+      "key": "perturb_active",
+      "on": "swapped",
+      "kind": "buff",
+      "duration": 20,
+      "whileKey": "perturb_primed",
+      "cancelOn": "swap"
+    },
+    {
+      "talent": "weapon_talent_faster_than_reloading",
+      "key": "faster_than_reloading_primed",
+      "kind": "ready",
+      "primeHolstered": 5
+    },
+    {
+      "talent": "weapon_talent_faster_than_reloading",
+      "key": "faster_than_reloading_active",
+      "on": "swapped",
+      "kind": "buff",
+      "whileKey": "faster_than_reloading_primed",
+      "refill": "both",
+      "cancelOn": "swap",
+      "consumeOn": "reload_end"
+    },
+    {
+      "talent": "gear_talent_versatile",
+      "key": "versatile_active",
+      "on": "swapped",
+      "kind": "buff",
+      "duration": 10,
+      "weaponTypes": [
+        "weapon_type_shotgun",
+        "weapon_type_smg",
+        "weapon_type_rifle",
+        "weapon_type_marksman_rifle",
+        "weapon_type_lmg",
+        "weapon_type_assault_rifle"
+      ],
+      "differentTypes": true,
+      "every": 5,
+      "everyPerType": true,
+      "cancelOn": "swap"
+    },
+    {
+      "talent": "gear_talent_perfect_versatile",
+      "key": "versatile_active",
+      "on": "swapped",
+      "kind": "buff",
+      "duration": 10,
+      "weaponTypes": [
+        "weapon_type_shotgun",
+        "weapon_type_smg",
+        "weapon_type_rifle",
+        "weapon_type_marksman_rifle",
+        "weapon_type_lmg",
+        "weapon_type_assault_rifle"
+      ],
+      "differentTypes": true,
+      "every": 5,
+      "everyPerType": true,
+      "cancelOn": "swap"
+    },
+    {
+      "talent": "gear_talent_versatile",
+      "key": "versatile_range",
+      "kind": "distance",
+      "phases": [
+        {
+          "until": 15,
+          "value": "close"
+        },
+        {
+          "until": 25,
+          "value": "mid"
+        },
+        {
+          "until": 1000,
+          "value": "far"
+        }
+      ],
+      "assumeWithoutDistance": true
+    },
+    {
+      "talent": "gear_talent_perfect_versatile",
+      "key": "versatile_range",
+      "kind": "distance",
+      "phases": [
+        {
+          "until": 15,
+          "value": "close"
+        },
+        {
+          "until": 25,
+          "value": "mid"
+        },
+        {
+          "until": 1000,
+          "value": "far"
+        }
+      ],
+      "assumeWithoutDistance": true
+    },
+    {
+      "talent": "gear_talent_chemical_agent",
+      "key": "catalysis_stacks",
+      "on": "second",
+      "kind": "stacks",
+      "duration": 5,
+      "max": 12,
+      "refresh": true,
+      "decay": 1,
+      "gain": 2,
+      "whilePlayerStatus": "any",
+      "anyStatusExcept": [
+        "ensnared"
+      ]
+    },
+    {
+      "talent": "gear_talent_chemical_agent",
+      "key": "reactant_active",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 5,
+      "whileKey": "catalysis_stacks",
+      "whileFull": true,
+      "whileStatus": "any",
+      "anyStatusExcept": [
+        "ensnared"
+      ]
+    },
+    {
+      "talent": "gear_talent_hackstep_protocol",
+      "key": "hackstep_repair",
+      "kind": "buff",
+      "on": "kit_ability",
+      "duration": 0.1,
+      "grant": "armor_repair",
+      "grantAmountStat": "hackstep_armor_repair_share"
+    },
+    {
+      "talent": "gear_talent_hackstep_protocol",
+      "key": "hackstep_bonus_armor_active",
+      "kind": "buff",
+      "on": "kit_ability",
+      "duration": 5,
+      "grant": "temporary_armor",
+      "grantDuration": 5,
+      "grantAmountStat": "hackstep_bonus_armor_grant"
+    },
+    {
+      "talent": "gear_talent_hackstep_protocol",
+      "key": "hackstep_qualifying_bonus_armor_percent",
+      "kind": "bonus_armor"
+    },
+    {
+      "talent": "weapon_talent_head_scratcher",
+      "key": "target_confused",
+      "on": "kill",
+      "kind": "status",
+      "duration": 10,
+      "count": 4,
+      "status": "disoriented"
+    },
+    {
+      "talent": "weapon_talent_perfect_head_scratcher",
+      "key": "target_confused",
+      "on": "kill",
+      "kind": "status",
+      "duration": 10,
+      "count": 3,
+      "status": "disoriented"
+    },
+    {
+      "talent": "weapon_talent_salvage",
+      "key": "salvage_refill_event",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 0.001,
+      "chance": 0.7,
+      "refill": true
+    },
+    {
+      "talent": "weapon_talent_salvage",
+      "key": "salvage_refill_event",
+      "on": "skill_kill",
+      "kind": "buff",
+      "duration": 0.001,
+      "chance": 0.7,
+      "refill": true
+    },
+    {
+      "talent": "weapon_talent_perfect_salvage",
+      "key": "salvage_refill_event",
+      "on": "kill",
+      "kind": "buff",
+      "duration": 0.001,
+      "chance": 0.85,
+      "refill": true
+    },
+    {
+      "talent": "weapon_talent_perfect_salvage",
+      "key": "salvage_refill_event",
+      "on": "skill_kill",
+      "kind": "buff",
+      "duration": 0.001,
+      "chance": 0.85,
+      "refill": true
+    },
+    {
+      "talent": "weapon_talent_determined",
+      "key": "determined_armed",
+      "on": "headshot_kill",
+      "kind": "stacks",
+      "max": 1,
+      "consumeOn": "hit",
+      "forceHeadshot": true,
+      "forceWholeShot": true
+    },
+    {
+      "talent": "weapon_talent_perfect_determined",
+      "key": "perfect_determined_armed",
+      "on": "headshot_kill",
+      "kind": "stacks",
+      "max": 1,
+      "consumeOn": "hit",
+      "forceHeadshot": true,
+      "forceWholeShot": true,
+      "forceCritical": true
+    },
+    {
+      "talent": "weapon_talent_pakhan",
+      "key": "pakhan_stacks",
+      "on": "kill",
+      "kind": "stacks",
+      "max": 4,
+      "weaponTags": [
+        "weapon_type_lmg"
+      ],
+      "resetOn": "reload_end"
+    },
+    {
+      "talent": "skill_booster_hive",
+      "kind": "buff",
+      "key": "booster_stim_active",
+      "on": "skill_charge",
+      "durationStat": "booster_stim_seconds"
+    },
+    {
+      "talent": "skill_artificer_hive",
+      "kind": "buff",
+      "key": "artificer_bonus_active",
+      "on": "skill_charge",
+      "duration": 10
+    },
+    {
+      "talent": "skill_defender_drone",
+      "kind": "buff",
+      "key": "defender_drone_active",
+      "on": "skill_out"
+    },
+    {
+      "talent": "skill_fortified_smart_cover",
+      "kind": "buff",
+      "key": "fortified_cover_active",
+      "on": "skill_out"
+    },
+    {
+      "talent": "skill_precision_smart_cover",
+      "kind": "buff",
+      "key": "precision_cover_active",
+      "on": "skill_out",
+      "refillOnSwap": true,
+      "requires": {
+        "in_cover": "true"
+      }
+    },
+    {
+      "talent": "skill_trophy_system_drone",
+      "kind": "buff",
+      "key": "trophy_system_active",
+      "on": "skill_out"
     }
   ],
   "skills": [
@@ -1613,7 +1969,8 @@
       "rate": "assumed_burst_cycle_dps",
       "window": "duration_seconds",
       "cooldown": "cooldown_seconds",
-      "cooldownFromEnd": true
+      "cooldownFromEnd": true,
+      "rateRead": "live"
     },
     {
       "skill": "skill_incinerator_turret",
@@ -1655,7 +2012,8 @@
       "window": "cloud_duration_seconds",
       "cooldown": "ammo_recovery_seconds",
       "stock": "charge_capacity",
-      "stockInterval": 2
+      "stockInterval": 2,
+      "rateRead": "live"
     },
     {
       "skill": "skill_explosive_seeker_mine",
@@ -1798,6 +2156,228 @@
       "impacts": "charge_capacity",
       "cooldown": "use_cycle_seconds",
       "impactInterval": "reload_seconds"
+    },
+    {
+      "skill": "skill_blackout_seeker",
+      "impact": "damage",
+      "cooldown": "cooldown_seconds",
+      "area": "radius_meters",
+      "areaFull": "area_full_meters",
+      "areaEdge": 0.5,
+      "status": "blinded",
+      "window": "blind_duration_seconds",
+      "controlStatus": true
+    },
+    {
+      "skill": "skill_gas_bomber_drone",
+      "window": "cloud_duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "status": "poisoned",
+      "statusRate": "poison_dps",
+      "statusWindow": "poison_duration_seconds",
+      "area": "radius_meters"
+    },
+    {
+      "skill": "skill_demolisher_firefly",
+      "impact": "damage",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true,
+      "targets": "target_capacity",
+      "requires": {
+        "target_weakpoint_or_mech": "true"
+      }
+    },
+    {
+      "skill": "skill_leech_hive",
+      "impact": "damage",
+      "impacts": "charge_capacity",
+      "impactInterval": "leech_interval_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true,
+      "endDelay": 2,
+      "impactRepair": "repair",
+      "repairDelay": 1.2
+    },
+    {
+      "skill": "skill_the_howl",
+      "impact": "armor_damage",
+      "armorOnly": true,
+      "area": "radius_meters",
+      "status": "shocked",
+      "controlStatus": true,
+      "window": "shock_duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownAfter": 1.2,
+      "impactDelay": 0.7,
+      "farImpactDelay": 1.2,
+      "farFrom": 12.5,
+      "killChance": "instakill_chance",
+      "killProfiles": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "killDelay": 1.5
+    },
+    {
+      "skill": "skill_fixer_drone",
+      "repair": "repair",
+      "repairEvery": 1,
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true,
+      "useArmorBelow": 1,
+      "rateRead": "live"
+    },
+    {
+      "skill": "skill_repair_trap",
+      "repair": "repair",
+      "repairEvery": 0.1,
+      "repairLag": 0.3,
+      "repairCount": "deployable_capacity",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true,
+      "useArmorBelow": 1
+    },
+    {
+      "skill": "skill_restorer_hive",
+      "repair": "repair",
+      "repairEvery": 0.2,
+      "repairLag": 1.55,
+      "repairCount": "charge_capacity",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true,
+      "endDelay": 2,
+      "useArmorBelow": 1
+    },
+    {
+      "skill": "skill_mender_seeker_mine",
+      "repair": "repair_rate",
+      "repairEvery": 0.5,
+      "repairBelow": 0.9,
+      "repairCloud": "cloud_duration_seconds",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true,
+      "useArmorBelow": 1
+    },
+    {
+      "skill": "skill_reinforcer_chem_launcher",
+      "repair": "repair_over_time",
+      "repairEvery": 0.5,
+      "repairCloud": "cloud_duration_seconds",
+      "window": "cloud_duration_seconds",
+      "cooldown": "ammo_recovery_seconds",
+      "stock": "charge_capacity",
+      "stockInterval": 1.5,
+      "useArmorBelow": 1
+    },
+    {
+      "skill": "skill_booster_hive",
+      "chargeFor": "stim_duration_seconds",
+      "repairEvery": 0.2,
+      "repairLag": 0.35,
+      "repairCount": "charge_capacity",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true,
+      "endDelay": 2
+    },
+    {
+      "skill": "skill_artificer_hive",
+      "chargeFor": "flight_seconds",
+      "chargeSkills": true,
+      "refresh": "skill_refresh_reference_seconds",
+      "repairEvery": 0.2,
+      "repairLag": 0.75,
+      "repairCount": "charge_capacity",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true,
+      "endDelay": 2,
+      "holsteredEvery": 0.5,
+      "holsteredLag": 5
+    },
+    {
+      "skill": "skill_defender_drone",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true
+    },
+    {
+      "skill": "skill_fortified_smart_cover",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true
+    },
+    {
+      "skill": "skill_precision_smart_cover",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true
+    },
+    {
+      "skill": "skill_trophy_system_drone",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true
+    },
+    {
+      "skill": "skill_decoy",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true,
+      "decoyHealth": "skill_health"
+    },
+    {
+      "skill": "skill_jammer_pulse",
+      "window": "disrupt_duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "status": "disrupted",
+      "controlStatus": true,
+      "area": "radius_meters",
+      "areaFromPlayer": true,
+      "impactDelay": 2
+    },
+    {
+      "skill": "skill_emp_sticky_bomb",
+      "window": "disrupt_duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "status": "disrupted",
+      "controlStatus": true,
+      "area": "radius_meters"
+    },
+    {
+      "skill": "skill_achilles_pulse",
+      "window": "effect_duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownAfter": 5,
+      "zones": {
+        "count": "zone_capacity",
+        "health": "zone_health_reference",
+        "factor": "zone_damage_factor",
+        "share": "practical_zone_fraction",
+        "multiplier": "zone_hit_multiplier",
+        "key": "target_pulsed"
+      }
+    },
+    {
+      "skill": "skill_reviver_hive",
+      "window": "duration_seconds",
+      "cooldown": "cooldown_seconds",
+      "cooldownFromEnd": true,
+      "revive": {
+        "armor": "revive_armor_share",
+        "seconds": "revive_seconds",
+        "poolShare": 0.5,
+        "damageTaken": 0.5,
+        "bleedSeconds": 45,
+        "immuneSeconds": 5,
+        "endAfter": 4
+      }
     }
   ],
   "statusDamage": [
@@ -1814,6 +2394,12 @@
       "period": 0.5,
       "tickOnApply": true,
       "armorBonus": "damage_to_armor"
+    },
+    {
+      "status": "poisoned",
+      "tick": "poison_tick_damage",
+      "period": 0.5,
+      "tickOnApply": true
     }
   ],
   "talentDamage": [
@@ -1865,7 +2451,17 @@
     ],
     "replacedByTalents": [
       "gear_talent_hackstep_protocol"
-    ]
+    ],
+    "abilities": [
+      {
+        "talent": "gear_talent_hackstep_protocol",
+        "cooldown": "hackstep_cooldown"
+      }
+    ],
+    "instant": {
+      "repair": 0.25,
+      "cooldown": 5
+    }
   },
   "blasts": [
     {
@@ -1931,6 +2527,60 @@
     {
       "input": "enemy_target",
       "value": 3
+    }
+  ],
+  "enemyStatuses": [
+    {
+      "target": 5,
+      "status": "bleeding",
+      "duration": 2,
+      "tick": "npc_bleed_tick_damage",
+      "period": 0.5,
+      "tickOnApply": true,
+      "resistances": [
+        "hazard_protection",
+        "bleed_resistance"
+      ],
+      "minDuration": 0.5
+    }
+  ],
+  "headshotCycles": [
+    {
+      "talent": "gear_talent_headache",
+      "weaponTag": "weapon_type_marksman_rifle",
+      "key": "headache_empowered_headshot",
+      "repair": "headache_armor_repair_share",
+      "bonusArmorCap": "headache_bonus_armor_cap",
+      "allowance": "headache_miss_allowance",
+      "killFrom": 3
+    }
+  ],
+  "skillsAside": [
+    {
+      "skill": "skill_scanner_pulse",
+      "why": "marks enemies around you, which fights don't model; set Target is pulsed for talents that need it"
+    },
+    {
+      "skill": "skill_remote_pulse",
+      "why": "a placed scanner that marks enemies near it, which fights don't model; set Target is pulsed for talents that need it"
+    },
+    {
+      "skill": "skill_tactician_drone",
+      "why": "a drone that marks enemies in its scan range, which fights don't model; set Target is pulsed for talents that need it"
+    }
+  ],
+  "nextHitBonuses": [
+    {
+      "talent": "gear_talent_headhunter",
+      "share": 1.25,
+      "cap": "headhunter_bonus_cap",
+      "window": 30
+    },
+    {
+      "talent": "gear_talent_perfect_headhunter",
+      "share": 1.5,
+      "cap": "headhunter_bonus_cap",
+      "window": 30
     }
   ]
 }

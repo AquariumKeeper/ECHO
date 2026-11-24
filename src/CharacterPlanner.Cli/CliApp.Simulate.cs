@@ -94,6 +94,8 @@ internal static partial class CliApp
         }, ResultJson)!;
         // Each conditioned skill slot's uses and held time (ADR 0014), only in a fight that set them, so other results read as before.
         if (!fight.SkillUses.IsEmpty) { written["result"]!["skillUses"] = JsonSerializer.SerializeToNode(Sorted(fight.SkillUses), ResultJson); }
+        // Hits on marked zones (ADR 0036), only in a fight whose skills mark them.
+        if (fight.ZoneHits is { } zoneHits) { written["result"]!["zoneHits"] = zoneHits; }
         output.WriteLine(written.ToJsonString(ResultJson));
         return Success;
     }

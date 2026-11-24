@@ -88,6 +88,7 @@ internal sealed record SelectorWire
     [JsonPropertyName("values")] public required List<string> Values { get; init; }
     [JsonPropertyName("section")] public string? Section { get; init; }
     [JsonPropertyName("description")] public string? Description { get; init; }
+    [JsonPropertyName("default")] public string? Default { get; init; }
 }
 
 internal sealed record NumericInputWire
@@ -390,12 +391,15 @@ internal sealed record SimulationWire
 {
     [JsonPropertyName("triggers")] public List<TriggerWire>? Triggers { get; init; }
     [JsonPropertyName("skills")] public List<SimSkillWire>? Skills { get; init; }
+    [JsonPropertyName("skillsAside")] public List<SkillAsideWire>? SkillsAside { get; init; }
     [JsonPropertyName("statusDamage")] public List<StatusDamageWire>? StatusDamage { get; init; }
     [JsonPropertyName("talentDamage")] public List<TalentDamageWire>? TalentDamage { get; init; }
     [JsonPropertyName("blasts")] public List<BlastWire>? Blasts { get; init; }
     [JsonPropertyName("spreads")] public List<SpreadWire>? Spreads { get; init; }
     [JsonPropertyName("redirects")] public List<RedirectWire>? Redirects { get; init; }
     [JsonPropertyName("traps")] public List<TrapWire>? Traps { get; init; }
+    [JsonPropertyName("headshotCycles")] public List<HeadshotCycleWire>? HeadshotCycles { get; init; }
+    [JsonPropertyName("nextHitBonuses")] public List<NextHitBonusWire>? NextHitBonuses { get; init; }
     [JsonPropertyName("passOns")] public List<PassOnWire>? PassOns { get; init; }
     [JsonPropertyName("distanceDefaults")] public List<DistanceDefaultWire>? DistanceDefaults { get; init; }
     [JsonPropertyName("incomingDefaults")] public List<IncomingDefaultWire>? IncomingDefaults { get; init; }
@@ -429,6 +433,66 @@ internal sealed record ArmorKitWire
     [JsonPropertyName("maxUseSeconds")] public required double MaxUseSeconds { get; init; }
     [JsonPropertyName("replacedBySpecializations")] public List<string>? ReplacedBySpecializations { get; init; }
     [JsonPropertyName("replacedByTalents")] public List<string>? ReplacedByTalents { get; init; }
+    [JsonPropertyName("abilities")] public List<KitAbilityWire>? Abilities { get; init; }
+    [JsonPropertyName("instant")] public InstantKitWire? Instant { get; init; }
+}
+
+internal sealed record HeadshotCycleWire
+{
+    [JsonPropertyName("talent")] public required string Talent { get; init; }
+    [JsonPropertyName("weaponTag")] public required string WeaponTag { get; init; }
+    [JsonPropertyName("key")] public required string Key { get; init; }
+    [JsonPropertyName("repair")] public required string Repair { get; init; }
+    [JsonPropertyName("bonusArmorCap")] public required string BonusArmorCap { get; init; }
+    [JsonPropertyName("allowance")] public required string Allowance { get; init; }
+    [JsonPropertyName("killFrom")] public required int KillFrom { get; init; }
+}
+
+internal sealed record NextHitBonusWire
+{
+    [JsonPropertyName("talent")] public required string Talent { get; init; }
+    [JsonPropertyName("share")] public required double Share { get; init; }
+    [JsonPropertyName("cap")] public required string Cap { get; init; }
+    [JsonPropertyName("window")] public required double Window { get; init; }
+}
+
+internal sealed record KitAbilityWire
+{
+    [JsonPropertyName("talent")] public required string Talent { get; init; }
+    [JsonPropertyName("cooldown")] public required string Cooldown { get; init; }
+}
+
+internal sealed record SkillAsideWire
+{
+    [JsonPropertyName("skill")] public required string Skill { get; init; }
+    [JsonPropertyName("why")] public required string Why { get; init; }
+}
+
+internal sealed record SkillZonesWire
+{
+    [JsonPropertyName("count")] public string? Count { get; init; }
+    [JsonPropertyName("health")] public string? Health { get; init; }
+    [JsonPropertyName("factor")] public string? Factor { get; init; }
+    [JsonPropertyName("share")] public string? Share { get; init; }
+    [JsonPropertyName("multiplier")] public string? Multiplier { get; init; }
+    [JsonPropertyName("key")] public string? Key { get; init; }
+}
+
+internal sealed record SkillReviveWire
+{
+    [JsonPropertyName("armor")] public string? Armor { get; init; }
+    [JsonPropertyName("seconds")] public string? Seconds { get; init; }
+    [JsonPropertyName("poolShare")] public double? PoolShare { get; init; }
+    [JsonPropertyName("damageTaken")] public double? DamageTaken { get; init; }
+    [JsonPropertyName("bleedSeconds")] public double? BleedSeconds { get; init; }
+    [JsonPropertyName("immuneSeconds")] public double? ImmuneSeconds { get; init; }
+    [JsonPropertyName("endAfter")] public double? EndAfter { get; init; }
+}
+
+internal sealed record InstantKitWire
+{
+    [JsonPropertyName("repair")] public required double Repair { get; init; }
+    [JsonPropertyName("cooldown")] public required double Cooldown { get; init; }
 }
 
 internal sealed record DistanceDefaultWire
@@ -521,6 +585,7 @@ internal sealed record TriggerWire
     [JsonPropertyName("max")] public long? Max { get; init; }
     [JsonPropertyName("refresh")] public bool? Refresh { get; init; }
     [JsonPropertyName("fromFirstGain")] public bool? FromFirstGain { get; init; }
+    [JsonPropertyName("refillOnSwap")] public bool? RefillOnSwap { get; init; }
     [JsonPropertyName("every")] public double? Every { get; init; }
     [JsonPropertyName("everyGroup")] public string? EveryGroup { get; init; }
     [JsonPropertyName("chance")] public double? Chance { get; init; }
@@ -533,7 +598,7 @@ internal sealed record TriggerWire
     [JsonPropertyName("percent")] public bool? Percent { get; init; }
     [JsonPropertyName("within")] public double? Within { get; init; }
     [JsonPropertyName("count")] public long? Count { get; init; }
-    [JsonPropertyName("refill")] public bool? Refill { get; init; }
+    [JsonPropertyName("refill")] public RefillWire? Refill { get; init; }
     [JsonPropertyName("gain")] public long? Gain { get; init; }
     [JsonPropertyName("also")] public List<GainWire>? Also { get; init; }
     [JsonPropertyName("decay")] public double? Decay { get; init; }
@@ -544,7 +609,15 @@ internal sealed record TriggerWire
     [JsonPropertyName("gainWhileHolstered")] public double? GainWhileHolstered { get; init; }
     [JsonPropertyName("whileStatus")] public string? WhileStatus { get; init; }
     [JsonPropertyName("primeHolstered")] public double? PrimeHolstered { get; init; }
+    [JsonPropertyName("shareCopies")] public bool? ShareCopies { get; init; }
+    [JsonPropertyName("weaponTypes")] public List<string>? WeaponTypes { get; init; }
+    [JsonPropertyName("differentTypes")] public bool? DifferentTypes { get; init; }
+    [JsonPropertyName("everyPerType")] public bool? EveryPerType { get; init; }
+    [JsonPropertyName("assumeWithoutDistance")] public bool? AssumeWithoutDistance { get; init; }
+    [JsonPropertyName("lockoutAlways")] public bool? LockoutAlways { get; init; }
+    [JsonPropertyName("gainAtLockoutEnd")] public bool? GainAtLockoutEnd { get; init; }
     [JsonPropertyName("whilePlayerStatus")] public string? WhilePlayerStatus { get; init; }
+    [JsonPropertyName("anyStatusExcept")] public List<string>? AnyStatusExcept { get; init; }
     [JsonPropertyName("pool")] public string? Pool { get; init; }
     [JsonPropertyName("poolMax")] public long? PoolMax { get; init; }
     [JsonPropertyName("cancelOn")] public string? CancelOn { get; init; }
@@ -556,6 +629,8 @@ internal sealed record TriggerWire
     [JsonPropertyName("clearDuration")] public double? ClearDuration { get; init; }
     [JsonPropertyName("weaponTags")] public List<string>? WeaponTags { get; init; }
     [JsonPropertyName("forceHeadshot")] public bool? ForceHeadshot { get; init; }
+    [JsonPropertyName("forceCritical")] public bool? ForceCritical { get; init; }
+    [JsonPropertyName("forceWholeShot")] public bool? ForceWholeShot { get; init; }
     [JsonPropertyName("grant")] public string? Grant { get; init; }
     [JsonPropertyName("grantAmount")] public double? GrantAmount { get; init; }
     [JsonPropertyName("grantDuration")] public double? GrantDuration { get; init; }
@@ -606,6 +681,7 @@ internal sealed record SimSkillWire
     [JsonPropertyName("areaFull")] public string? AreaFull { get; init; }
     [JsonPropertyName("areaEdge")] public double? AreaEdge { get; init; }
     [JsonPropertyName("controlStatus")] public bool? ControlStatus { get; init; }
+    [JsonPropertyName("areaFromPlayer")] public bool? AreaFromPlayer { get; init; }
     [JsonPropertyName("shield")] public string? Shield { get; init; }
     [JsonPropertyName("regeneration")] public string? Regeneration { get; init; }
     [JsonPropertyName("weapons")] public List<string>? Weapons { get; init; }
@@ -618,6 +694,34 @@ internal sealed record SimSkillWire
     [JsonPropertyName("statusRate")] public string? StatusRate { get; init; }
     [JsonPropertyName("statusWindow")] public string? StatusWindow { get; init; }
     [JsonPropertyName("statusArmorBonus")] public string? StatusArmorBonus { get; init; }
+    [JsonPropertyName("requires")] public Dictionary<string, string>? Requires { get; init; }
+    [JsonPropertyName("targets")] public string? Targets { get; init; }
+    [JsonPropertyName("impactRepair")] public string? ImpactRepair { get; init; }
+    [JsonPropertyName("endDelay")] public double? EndDelay { get; init; }
+    [JsonPropertyName("repairDelay")] public double? RepairDelay { get; init; }
+    [JsonPropertyName("useArmorBelow")] public double? UseArmorBelow { get; init; }
+    [JsonPropertyName("repair")] public string? Repair { get; init; }
+    [JsonPropertyName("repairEvery")] public double? RepairEvery { get; init; }
+    [JsonPropertyName("repairLag")] public double? RepairLag { get; init; }
+    [JsonPropertyName("repairBelow")] public double? RepairBelow { get; init; }
+    [JsonPropertyName("repairCount")] public string? RepairCount { get; init; }
+    [JsonPropertyName("repairCloud")] public string? RepairCloud { get; init; }
+    [JsonPropertyName("chargeFor")] public string? ChargeFor { get; init; }
+    [JsonPropertyName("chargeSkills")] public bool? ChargeSkills { get; init; }
+    [JsonPropertyName("refresh")] public string? Refresh { get; init; }
+    [JsonPropertyName("decoyHealth")] public string? DecoyHealth { get; init; }
+    [JsonPropertyName("zones")] public SkillZonesWire? Zones { get; init; }
+    [JsonPropertyName("revive")] public SkillReviveWire? Revive { get; init; }
+    [JsonPropertyName("holsteredEvery")] public double? HolsteredEvery { get; init; }
+    [JsonPropertyName("holsteredLag")] public double? HolsteredLag { get; init; }
+    [JsonPropertyName("armorOnly")] public bool? ArmorOnly { get; init; }
+    [JsonPropertyName("impactDelay")] public double? ImpactDelay { get; init; }
+    [JsonPropertyName("farImpactDelay")] public double? FarImpactDelay { get; init; }
+    [JsonPropertyName("farFrom")] public double? FarFrom { get; init; }
+    [JsonPropertyName("cooldownAfter")] public double? CooldownAfter { get; init; }
+    [JsonPropertyName("killChance")] public string? KillChance { get; init; }
+    [JsonPropertyName("killProfiles")] public List<int>? KillProfiles { get; init; }
+    [JsonPropertyName("killDelay")] public double? KillDelay { get; init; }
 }
 
 internal sealed record PresentationWire

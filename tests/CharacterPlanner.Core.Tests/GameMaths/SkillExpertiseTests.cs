@@ -86,9 +86,11 @@ public sealed class SkillExpertiseTests
                             if (o.Formula.Contains("skill_upgrade_rank", StringComparison.Ordinal))
                             {
                                 if (rank == 0 && slot == "skill_slot_1") { channels++; }
+                                // The Achilles Pulse's zone factor (R163) has no tier bonus.
                                 var curve = $"{skill.ID}_{o.Id}_tiers";
-                                Assert.True(p.Curves.ContainsKey(curve), $"missing curve {curve}");
-                                var bonus = p.Curves[curve][tier].Y;
+                                var untiered = o.Id == "zone_damage_factor";
+                                Assert.True(untiered || p.Curves.ContainsKey(curve), $"missing curve {curve}");
+                                var bonus = untiered ? 0 : p.Curves[curve][tier].Y;
                                 expected *= (1 + bonus + (rank * .01)) / (1 + bonus);
                                 Assert.True(graded.Inputs.GetValueOrDefault("skill_upgrade_rank") == rank, $"missing grade input on {skill.ID} {o.Id}");
                             }
@@ -107,7 +109,7 @@ public sealed class SkillExpertiseTests
                     }
                 }
             }
-            Assert.True(channels == 17, $"reviewed damage channels={channels} at tier {tier}");
+            Assert.True(channels == 18, $"reviewed damage channels={channels} at tier {tier}");
         }
     }
 

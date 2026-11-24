@@ -69,6 +69,11 @@ public sealed record SelectorDefinition
     public string Description { get; init; } = "";
     public string Section { get; init; } = "";
     public ImmutableArray<string> Values { get; init; } = [];
+    /// <summary>
+    /// The value an unset selector reads, one of <see cref="Values"/>; empty for none, so an unset selector matches no
+    /// <c>requires</c>. Versatile's bands (ADR 0019): "any", the weapon's own band, keeps its bonus where no distance is known.
+    /// </summary>
+    public string Default { get; init; } = "";
 }
 
 public sealed record NumericContextInputDefinition
@@ -422,6 +427,11 @@ public sealed record SimTriggerDefinition
     /// gains don't move it (Cover Shooter, R112). <see cref="RefreshOn"/> may restart it.
     /// </summary>
     public bool FromFirstGain { get; init; }
+    /// <summary>
+    /// On a <c>skill_out</c> buff (ADR 0033: the Precision Smart Cover): while it's on, each weapon swap refills the weapon put away to a
+    /// full magazine, with no reload event.
+    /// </summary>
+    public bool RefillOnSwap { get; init; }
     public double Every { get; init; }
     /// <summary>
     /// On a buff, stacks or ready rule with an <see cref="Every"/>: rules naming the same group share their cooldown, so one fires only if
@@ -450,6 +460,11 @@ public sealed record SimTriggerDefinition
     public double Within { get; init; }
     public long Count { get; init; }
     public bool Refill { get; init; }
+    /// <summary>
+    /// With <see cref="Refill"/> (the pack's <c>refill: "both"</c>, ADR 0019: Faster Than Reloading): the holstered weapon of a rotation
+    /// is refilled too, not only the weapon in hand.
+    /// </summary>
+    public bool RefillBoth { get; init; }
     public long Gain { get; init; }
     public ImmutableArray<SimGain> Also { get; init; } = [];
     public double Decay { get; init; }
@@ -472,6 +487,60 @@ public sealed record SimTriggerDefinition
     /// it stood before, with whileKey.
     /// </summary>
     public double PrimeHolstered { get; init; }
+    /// <summary>
+    /// On a buff or stacks rule with an event (ADR 0019: Unwavering, Back and Forth): with the talent on both rotated weapons, the
+    /// rule isn't copied per weapon. It drives one key from whichever weapon is in hand, so a swap's cancel on the weapon leaving
+    /// holds for the one drawn, and a gain on the draw replaces the other copy's.
+    /// </summary>
+    public bool ShareCopies { get; init; }
+    /// <summary>
+    /// The item tags that name weapon types (ADR 0019: Versatile), for <see cref="DifferentTypes"/> and <see cref="EveryPerType"/>. A
+    /// weapon's type is the first of these it carries.
+    /// </summary>
+    public ImmutableArray<string> WeaponTypes { get; init; } = [];
+    /// <summary>On a buff or stacks rule: it gains only when the event's weapon and the other rotated weapon are both typed, by
+    /// <see cref="WeaponTypes"/>, and of different types.</summary>
+    public bool DifferentTypes { get; init; }
+    /// <summary>On a buff or stacks rule with <see cref="Every"/>: the cooldown runs for each type of the event's weapon apart, and a
+    /// weapon without a type gains nothing.</summary>
+    public bool EveryPerType { get; init; }
+    /// <summary>On a distance rule: a fight without a distance doesn't refuse it; the rule steps aside and its key reads the user's
+    /// setting, and the result says so (ADR 0019: Versatile keeps its assumption).</summary>
+    public bool AssumeWithoutDistance { get; init; }
+    /// <summary>On a buff with <see cref="CancelOn"/> and <see cref="CancelFor"/> (ADR 0019: Unwavering): the event starts the lockout
+    /// whether the buff is on or not.</summary>
+    public bool LockoutAlways { get; init; }
+    /// <summary>On such a buff: when the lockout ends with the rule's talent's weapon in hand, the buff gains for its duration (Unwavering's
+    /// bonus after a lockout). A draw during the lockout gains nothing then.</summary>
+    public bool GainAtLockoutEnd { get; init; }
+    /// <summary>
+    /// Whether this stacks rule and another can write one key (Chemical Agent's enemy and player parts): one talent's, with the same
+    /// cap, duration, refresh and decay. Neither may clear, purge, force a headshot or keep state of its own beside the stacks (a pool,
+    /// bank, clear grant, refreshOn, holstered gain, shared timer or magazine cap), so the two gaining in one event come out as one gain
+    /// of their sum, in either order. Each gains its own way into the one count.
+    /// </summary>
+    public bool SharesStacksWith(SimTriggerDefinition other) => FitsSharedStacks(this) && FitsSharedStacks(other) && Talent == other.Talent &&
+        Max == other.Max && Duration == other.Duration && DurationStat == other.DurationStat && Refresh == other.Refresh && Decay == other.Decay;
+
+    /// <summary>What <see cref="SharesStacksWith"/> asks, for the validator's and the fight's refusals.</summary>
+    public const string SharedStacksRule = "Stacks rules on one key must be one talent's, with the same max, duration, refresh and decay, and none may " +
+        "reset, consume, purge, force a headshot, or have a pool, bank, clear grant, refreshOn, gainWhileHolstered, fromFirstGain or maxMagazine";
+
+    // Plain timed stacks on the key, gained and expiring only.
+    private static bool FitsSharedStacks(SimTriggerDefinition rule) => rule.Kind == "stacks" && rule.Pool.Length == 0 && rule.Bank.Length == 0 &&
+        rule.ClearGrant.Length == 0 && rule.RefreshOn.Length == 0 && rule.GainWhileHolstered == 0 && !rule.FromFirstGain && rule.MaxMagazine == 0 &&
+        rule.ResetOn.Length == 0 && rule.AlsoResetOn.Length == 0 && rule.ConsumeOn.Length == 0 && !rule.Purge && !rule.ForceHeadshot;
+
+    /// <summary>
+    /// Whether <see cref="LockoutAlways"/> and <see cref="GainAtLockoutEnd"/> sit on a rule they suit: a timed buff with a lockout and
+    /// nothing that consumes, resets, counts or cools it down. The gain at a lockout's end passes no gate, chance or activation delay
+    /// and gives no grant or refill, so a rule with one of those can't take it. The validator and the fight both ask this.
+    /// </summary>
+    public bool LockoutFieldsFit => !(LockoutAlways || GainAtLockoutEnd) ||
+        Kind == "buff" && CancelOn.Length > 0 && CancelFor > 0 && Duration > 0 && ConsumeOn.Length == 0 && ResetOn.Length == 0 &&
+        !CooldownFromEnd && Count == 0 && Every == 0 &&
+        (!GainAtLockoutEnd || WhileKey.Length == 0 && WhileStatus.Length == 0 && WhilePlayerStatus.Length == 0 && WhileArmorBelow == 0 &&
+            WhileStatAtLeast is null && Chance >= 1 && Grant.Length == 0 && !Refill && ActiveAfter == 0);
     /// <summary>The longest a weapon must be put away to prime a rule.</summary>
     public const double MaximumPrimeHolstered = 600;
     public string WhileStatus { get; init; } = "";
@@ -480,6 +549,19 @@ public sealed record SimTriggerDefinition
     /// (ADR 0018). A fight without statuses on the player never opens it.
     /// </summary>
     public string WhilePlayerStatus { get; init; } = "";
+    /// <summary>
+    /// With <see cref="WhileStatus"/> or <see cref="WhilePlayerStatus"/> "any": statuses that don't count toward it, so "any" means any
+    /// other status (Chemical Agent's check leaves out ensnared, R122).
+    /// </summary>
+    public ImmutableArray<string> AnyStatusExcept { get; init; } = [];
+
+    /// <summary>
+    /// Whether <see cref="AnyStatusExcept"/> fits: unset, or with "any" on either gate, distinct statuses that <paramref name="known"/>
+    /// accepts, leaving at least one of the <paramref name="count"/> known statuses to count. The validator and the fight both ask this.
+    /// </summary>
+    public bool AnyStatusExceptFits(Func<string, bool> known, int count) => AnyStatusExcept.IsDefaultOrEmpty ||
+        (WhileStatus == "any" || WhilePlayerStatus == "any") && AnyStatusExcept.All(known) &&
+        AnyStatusExcept.Distinct(StringComparer.Ordinal).Count() == AnyStatusExcept.Length && AnyStatusExcept.Length < count;
     public string Pool { get; init; } = "";
     public long PoolMax { get; init; }
     /// <summary>A buff ends when this event fires while it is active, and can't be gained again for <see cref="CancelFor"/> seconds.</summary>
@@ -512,6 +594,13 @@ public sealed record SimTriggerDefinition
     /// headshot, and that shot's own event spends the rule.
     /// </summary>
     public bool ForceHeadshot { get; init; }
+    /// <summary>With <see cref="ForceHeadshot"/>: the forced hit is also a critical hit (ADR 0023: Perfect Determined).</summary>
+    public bool ForceCritical { get; init; }
+    /// <summary>
+    /// With <see cref="ForceHeadshot"/>: every landed pellet of the forced shot is forced, not only the first (ADR 0023: Determined, by
+    /// the owner's call).
+    /// </summary>
+    public bool ForceWholeShot { get; init; }
     /// <summary>
     /// What a buff or ready rule grants each time it fires: "temporary_armor" (<see cref="GrantAmount"/> of max armor as
     /// bonus armor for <see cref="GrantDuration"/> seconds), "shield_repair" (that share of the shield's health),
@@ -624,10 +713,15 @@ public sealed record SimSkillDefinition
     /// <summary>The widest skill area, in metres.</summary>
     public const double MaximumArea = 50;
     /// <summary>
-    /// Whether a control skill's <see cref="Status"/> (shocked, disoriented, ensnared or blinded) goes on the enemy being shot as the
+    /// Whether a control skill's <see cref="Status"/> (shocked, disoriented, ensnared, blinded or disrupted) goes on the enemy being shot as the
     /// skill is used, for the duration its <see cref="Window"/> output gives, and with an <see cref="Area"/> on those in it (ADR 0017).
     /// </summary>
     public bool ControlStatus { get; init; }
+    /// <summary>
+    /// A control status's <see cref="Area"/> measured from the player rather than the enemy being shot (ADR 0035: the Jammer Pulse):
+    /// an enemy is reached when its own distance from the player is within it.
+    /// </summary>
+    public bool AreaFromPlayer { get; init; }
     public string Shield { get; init; } = "";
     public string Regeneration { get; init; } = "";
     public ImmutableArray<string> Weapons { get; init; } = [];
@@ -647,6 +741,115 @@ public sealed record SimSkillDefinition
     public string StatusWindow { get; init; } = "";
     /// <summary>A stat that adds to the armor factor of the status's damage, as <see cref="RateArmorBonus"/> does for the rate.</summary>
     public string StatusArmorBonus { get; init; } = "";
+    /// <summary>
+    /// Selector values the fight's context must hold for the skill to act (ADR 0027: the Demolisher Firefly's weakpoint). Read once for
+    /// the whole fight; when they aren't held, the skill steps aside as a <see cref="SimSkillAside"/> skill does.
+    /// </summary>
+    public ImmutableDictionary<string, string>? RequiresContext { get; init; }
+    /// <summary>
+    /// The output with the most distinct enemies a use's impact strikes, one each, as it's used (ADR 0027: the Demolisher Firefly's
+    /// targets): the enemy being shot, then the nearest others. Empty for the enemy being shot alone.
+    /// </summary>
+    public string Targets { get; init; } = "";
+    /// <summary>
+    /// The output with the armor each landed impact repairs on the player, under enemy fire, capped at the maximum, whether or not
+    /// it's needed (ADR 0028: the Leech Hive). Empty for none.
+    /// </summary>
+    public string ImpactRepair { get; init; } = "";
+    /// <summary>The seconds between a use's last impact and its end, which a cooldown from the end waits out (ADR 0028: 2 s).</summary>
+    public double EndDelay { get; init; }
+    /// <summary>The longest <see cref="EndDelay"/>, in seconds.</summary>
+    public const double MaximumEndDelay = 60;
+    /// <summary>
+    /// Seconds from each landed impact to its <see cref="ImpactRepair"/> (ADR 0030: the Leech Hive's travel time plus 0.8 s); 0 for a
+    /// repair with the impact. A repair due at or after the fight's end lands nothing.
+    /// </summary>
+    public double RepairDelay { get; init; }
+    /// <summary>
+    /// The share of the player's maximum armor their armor must be below for the skill to be used (ADR 0030: 1, below full, for the
+    /// repair skills); 0 for no such wait. A ready skill waits until it holds. Without enemy fire it never does, so the skill steps aside.
+    /// </summary>
+    public double UseArmorBelow { get; init; }
+    /// <summary>
+    /// A repair skill's (ADR 0030): the output with the armor each repair restores on the player, capped, or with a
+    /// <see cref="RepairCloud"/> the armor a second. Empty for a skill that repairs nothing this way. Through the use's window,
+    /// every <see cref="RepairEvery"/> seconds from the use, the skill checks the player's armor: below <see cref="RepairBelow"/>
+    /// of the maximum (below full when 0), and with the last repair landed and its cloud over, it repairs, landing
+    /// <see cref="RepairLag"/> seconds later. Each repair spends one of <see cref="RepairCount"/>'s, if it has one; with all spent the
+    /// use ends, <see cref="EndDelay"/> after the last landed.
+    /// </summary>
+    public string Repair { get; init; } = "";
+    public double RepairEvery { get; init; }
+    public double RepairLag { get; init; }
+    public double RepairBelow { get; init; }
+    /// <summary>The output with how many repairs a use holds (charges, mines); empty for as many as its window allows.</summary>
+    public string RepairCount { get; init; } = "";
+    /// <summary>
+    /// The output with the seconds each repair lasts as a cloud, restoring half of <see cref="Repair"/> every 0.5 s from 0.5 s after it
+    /// lands, whatever the player's armor; empty for a repair that lands at once.
+    /// </summary>
+    public string RepairCloud { get; init; } = "";
+    /// <summary>
+    /// A buff hive's (ADR 0031): the output with the seconds each charge's buff lasts. Its charges are timed as a repair skill's
+    /// (<see cref="RepairEvery"/>, <see cref="RepairLag"/>, <see cref="RepairCount"/>), with no armor test: each lands as a
+    /// <c>skill_charge</c> event that only the skill's own trigger rules hear, and the next waits until this long after it. Empty for none.
+    /// </summary>
+    public string ChargeFor { get; init; } = "";
+    /// <summary>
+    /// Whether a buff hive's charges go to the build's other skills (ADR 0031: the Artificer), not the player: each to a use of another
+    /// slot's skill whose window runs, and the same use again only <see cref="ChargeFor"/> after the last one landed on it.
+    /// </summary>
+    public bool ChargeSkills { get; init; }
+    /// <summary>The output with the seconds each charge adds to the running use it lands on (ADR 0031); empty for none.</summary>
+    public string Refresh { get; init; } = "";
+    /// <summary>
+    /// A skill that draws enemy fire (ADR 0034: the Decoy): the output with its health. While its use runs and its health lasts, enemy
+    /// hits land on it instead of the player, each spending the stat <c>decoy_damage_share</c> of its raw damage; spent, the use ends.
+    /// Empty for none.
+    /// </summary>
+    public string DecoyHealth { get; init; } = "";
+    /// <summary>A skill marking zones on the enemy being shot (ADR 0036: the Achilles Pulse); null for none.</summary>
+    public SimSkillZones? Zones { get; init; }
+    /// <summary>A skill reviving its user once a use, when enemy fire downs them while it's out (ADR 0037: the Reviver Hive); null for none.</summary>
+    public SimSkillRevive? Revive { get; init; }
+    /// <summary>
+    /// A hive charging skills while holstered (ADR 0031 stage 2c): the seconds between its pulses whenever it isn't out, each sending a
+    /// charge to every running use that may take one without spending any, and the seconds from a pulse to its landing (the distance read
+    /// as seconds), after which the target takes the next only as long again. 0 for no pulses.
+    /// </summary>
+    public double HolsteredEvery { get; init; }
+    public double HolsteredLag { get; init; }
+    /// <summary>The shortest <see cref="HolsteredEvery"/>, in seconds.</summary>
+    public const double MinimumHolsteredEvery = 0.05;
+    /// <summary>The longest <see cref="RepairEvery"/>, in seconds.</summary>
+    public const double MaximumRepairEvery = 10;
+    /// <summary>Whether the impact stops at the enemy's armor and never reaches health (ADR 0029: The Howl).</summary>
+    public bool ArmorOnly { get; init; }
+    /// <summary>
+    /// Seconds from a use to its effects (ADR 0029: The Howl's wind-up and wave), or <see cref="FarImpactDelay"/> in a fight whose
+    /// enemy distance is beyond <see cref="FarFrom"/> metres. The cooldown still counts from the use.
+    /// </summary>
+    public double ImpactDelay { get; init; }
+    public double FarImpactDelay { get; init; }
+    public double FarFrom { get; init; }
+    /// <summary>Seconds after a use that its cooldown starts, for a cooldown not from the use's end (ADR 0029: 1.2 s).</summary>
+    public double CooldownAfter { get; init; }
+    /// <summary>The longest <see cref="ImpactDelay"/>, <see cref="FarImpactDelay"/>, <see cref="CooldownAfter"/> or <see cref="KillDelay"/>, in seconds.</summary>
+    public const double MaximumUseDelay = 10;
+    /// <summary>
+    /// The output with the chance (0 to 1) that a landed impact kills an enemy outright (ADR 0029: The Howl), rolled once per enemy it
+    /// reaches whose profile is in <see cref="KillProfiles"/> and whose health is below full. The enemy dies <see cref="KillDelay"/> later,
+    /// with no kill repair or kill event for talents. Empty for none.
+    /// </summary>
+    public string KillChance { get; init; } = "";
+    /// <summary>The <c>enemy_target</c> profiles an outright kill can reach (ADR 0029: Normal and Veteran).</summary>
+    public ImmutableArray<int> KillProfiles { get; init; } = [];
+    public double KillDelay { get; init; }
+    /// <summary>
+    /// Whether the <see cref="Area"/> is a cloud's (ADR 0024): a status window's with no impact, putting its status on everyone in it
+    /// while the use applies. An impact's area puts its status on once per impact instead.
+    /// </summary>
+    public bool IsCloud => Area.Length > 0 && Impact.Length == 0 && StatusRate.Length > 0;
 }
 
 /// <summary>Damage a target takes while a status is on it: a tick of the resolved stat every period.</summary>
@@ -836,10 +1039,19 @@ public sealed record SimDistanceBand
 /// <summary>
 /// The armor kit a fight can use (ADR 0010): it repairs <see cref="Repair"/> of max armor when its use ends. Each hit during use
 /// adds <see cref="ExtendSeconds"/>, at most once per that long, up to <see cref="MaxUseSeconds"/> in all. A build with one of
-/// the replacing specializations or talents has a different kit, which fights don't model yet.
+/// the replacing specializations or talents has a different kit: fights model it only for a talent in <see cref="Abilities"/>.
 /// </summary>
 public sealed record SimArmorKit
 {
+    /// <summary>
+    /// Talents whose ability is the build's kit (ADR 0021: Hackstep Protocol). In a fight with kits, the ability is used, as a kit is,
+    /// when armor is below the kit threshold at the weapon's next decision, but at once, with no use time, on its own cooldown and
+    /// with no count; it fires <c>kit_ability</c>, whose rules grant its repair and bonus armor. While it cools, an
+    /// <see cref="Instant"/> kit from the carried count is used instead.
+    /// </summary>
+    public ImmutableArray<SimKitAbility> Abilities { get; init; } = [];
+    /// <summary>The instant kit (a double press): used only in fights with a kit ability, while the ability cools.</summary>
+    public SimInstantKit? Instant { get; init; }
     public double Repair { get; init; }
     public double UseSeconds { get; init; }
     public double ExtendSeconds { get; init; }
@@ -848,10 +1060,115 @@ public sealed record SimArmorKit
     public ImmutableArray<string> ReplacedByTalents { get; init; } = [];
 }
 
+/// <summary>
+/// A talent's cycle of consecutive headshots with weapons carrying <see cref="WeaponTag"/> (ADR 0021: Headache, R126). Each shot with
+/// such a weapon counts: a headshot adds 1, and from <see cref="KillFrom"/> on only a headshot that kills does. Any other shot (a body
+/// hit, a shot that lands nothing, or a headshot that doesn't kill from <see cref="KillFrom"/>) is a miss: the count goes back to 0,
+/// unless the <see cref="Allowance"/> stat's misses per cycle forgive it. Swapping weapons resets the cycle. On the new count: at 1,
+/// <see cref="Key"/> goes on until the next headshot with any weapon has landed; at 2, <see cref="Repair"/> of max armor is repaired, or
+/// at full armor added as lasting bonus armor while bonus armor is below <see cref="BonusArmorCap"/> of max armor; at 3, the magazine
+/// is refilled; past 3, all three. Stats are read as the fight starts.
+/// </summary>
+public sealed record SimHeadshotCycle
+{
+    public string Talent { get; init; } = "";
+    public string WeaponTag { get; init; } = "";
+    public string Key { get; init; } = "";
+    public string Repair { get; init; } = "";
+    public string BonusArmorCap { get; init; } = "";
+    public string Allowance { get; init; } = "";
+    public int KillFrom { get; init; }
+}
+
+/// <summary>
+/// A talent's bonus on the hit after a headshot kill (ADR 0023: Headhunter). A headshot kill with any weapon arms it: <see cref="Share"/>
+/// of the killing pellet's damage as dealt (the player's own bonuses, before the dead enemy's armor and the health it had left), up to
+/// the <see cref="Cap"/> stat of the weapon in hand. The next pellet to land on a living enemy, any weapon and body shots included, adds
+/// it and spends it, and meets that enemy's armor like the rest of the hit. A new headshot kill replaces it, sized without the bonus it
+/// carried; it lapses after <see cref="Window"/> seconds. The cap is read for each weapon as the fight starts.
+/// </summary>
+public sealed record SimNextHitBonus
+{
+    public string Talent { get; init; } = "";
+    public double Share { get; init; }
+    public string Cap { get; init; } = "";
+    public double Window { get; init; }
+}
+
+/// <summary>A talent's kit ability: its <see cref="Cooldown"/> stat, in seconds, read as the fight starts.</summary>
+public sealed record SimKitAbility
+{
+    public string Talent { get; init; } = "";
+    public string Cooldown { get; init; } = "";
+}
+
+/// <summary>
+/// A skill that plays no part in a fight (ADR 0022): a fight with skills on runs without it, never using it, rather than refusing the
+/// build. <see cref="Why"/> says what it does that fights don't model, for the result's note.
+/// </summary>
+public sealed record SimSkillAside
+{
+    public string Skill { get; init; } = "";
+    public string Why { get; init; } = "";
+}
+
+/// <summary>
+/// Zones a skill's use marks on the enemy being shot for the use's window (ADR 0036: the Achilles Pulse). While it's marked and the
+/// zones' health lasts, <see cref="Share"/> of the weapon's body hits on it land on a zone: each deals the body hit's damage with the
+/// zone multiplier, <see cref="Multiplier"/> × <see cref="Factor"/> (at least 1), added to critical damage as a headshot's is, and
+/// spends that much of the zones' health. It stays a body hit for every event and talent.
+/// </summary>
+public sealed record SimSkillZones
+{
+    /// <summary>The output with how many zones a use marks.</summary>
+    public string Count { get; init; } = "";
+    /// <summary>The output with each zone's health.</summary>
+    public string Health { get; init; } = "";
+    /// <summary>The output multiplying the stat's multiplier (Expertise), read as the use deploys; empty for 1.</summary>
+    public string Factor { get; init; } = "";
+    /// <summary>The stat with the share of body hits landing on a zone, held to 0 to 1, read at each shot.</summary>
+    public string Share { get; init; } = "";
+    /// <summary>The stat with the multiplier a zone hit takes in place of a body hit's 1, read at each shot.</summary>
+    public string Multiplier { get; init; } = "";
+    /// <summary>The selector that reads "true" on the marked enemy in fights driving keys, over the user's own setting; empty for none.</summary>
+    public string Key { get; init; } = "";
+}
+
+/// <summary>
+/// A skill's self-revive (ADR 0037: the Reviver Hive). The user going down while a use runs spends it: they're out of the fight for
+/// <see cref="Seconds"/>, fire landing on a downed pool, then back at full health and <see cref="Armor"/> of maximum armor.
+/// </summary>
+public sealed record SimSkillRevive
+{
+    /// <summary>The output with the share of maximum armor restored, read as the use deploys; over 1 counts as 1.</summary>
+    public string Armor { get; init; } = "";
+    /// <summary>The output with the seconds from going down to the revive, read as the use deploys.</summary>
+    public string Seconds { get; init; } = "";
+    /// <summary>The downed pool, as a share of maximum health.</summary>
+    public double PoolShare { get; init; }
+    /// <summary>The share of damage a downed player takes.</summary>
+    public double DamageTaken { get; init; }
+    /// <summary>The seconds an untouched downed pool lasts, bleeding out at a steady rate.</summary>
+    public double BleedSeconds { get; init; }
+    /// <summary>The seconds after the revive in which nothing hurts the player; 0 for none.</summary>
+    public double ImmuneSeconds { get; init; }
+    /// <summary>The seconds from the revive to the use's end, where its cooldown starts.</summary>
+    public double EndAfter { get; init; }
+}
+
+/// <summary>The instant kit: <see cref="Repair"/> of max armor at once, a kit spent, on its own <see cref="Cooldown"/> in seconds.</summary>
+public sealed record SimInstantKit
+{
+    public double Repair { get; init; }
+    public double Cooldown { get; init; }
+}
+
 public sealed record SimulationRules
 {
     public ImmutableArray<SimTriggerDefinition> Triggers { get; init; } = [];
     public ImmutableArray<SimSkillDefinition> Skills { get; init; } = [];
+    /// <summary>Skills that step aside in fights (ADR 0022).</summary>
+    public ImmutableArray<SimSkillAside> SkillsAside { get; init; } = [];
     public ImmutableArray<SimStatusDamageDefinition> StatusDamage { get; init; } = [];
     public ImmutableArray<SimTalentDamageDefinition> TalentDamage { get; init; } = [];
     /// <summary>Talents' blasts on other enemies (ADR 0013).</summary>
@@ -860,6 +1177,9 @@ public sealed record SimulationRules
     public ImmutableArray<SimSpreadDefinition> Spreads { get; init; } = [];
     public ImmutableArray<SimRedirectDefinition> Redirects { get; init; } = [];
     public ImmutableArray<SimTrapDefinition> Traps { get; init; } = [];
+    /// <summary>Talents' consecutive-headshot cycles (ADR 0021: Hotshot's Headache).</summary>
+    public ImmutableArray<SimHeadshotCycle> HeadshotCycles { get; init; } = [];
+    public ImmutableArray<SimNextHitBonus> NextHitBonuses { get; init; } = [];
     /// <summary>Talents' debuffs passing on at a death (ADR 0013).</summary>
     public ImmutableArray<SimPassOnDefinition> PassOns { get; init; } = [];
     public ImmutableArray<SimDistanceDefault> DistanceDefaults { get; init; } = [];
@@ -867,6 +1187,15 @@ public sealed record SimulationRules
     /// <summary>Statuses enemies' hits put on the player (ADR 0018).</summary>
     public ImmutableArray<SimEnemyStatusDefinition> EnemyStatuses { get; init; } = [];
     public SimArmorKit? ArmorKit { get; init; }
+
+    /// <summary>
+    /// Every talent a fight rule names, in any of the lists above: one place, so a new kind of rule isn't left out of the set talents
+    /// that run at their set's top bonus (R127).
+    /// </summary>
+    public IEnumerable<string> RuleTalents => Triggers.Select(rule => rule.Talent).Concat(TalentDamage.Select(rule => rule.Talent))
+        .Concat(Blasts.Select(rule => rule.Talent)).Concat(Spreads.Select(rule => rule.Talent)).Concat(PassOns.Select(rule => rule.Talent))
+        .Concat(Redirects.Select(rule => rule.Talent)).Concat(Traps.Select(rule => rule.Talent)).Concat(HeadshotCycles.Select(rule => rule.Talent)).Concat(NextHitBonuses.Select(rule => rule.Talent))
+        .Concat(ArmorKit?.Abilities.Select(ability => ability.Talent) ?? []);
 }
 
 public sealed record Theme
@@ -992,6 +1321,22 @@ public sealed record EquipmentLimitDefinition
 public sealed record GamePack
 {
     public const string WeaponSlotSelector = "weapon_slot";
+    /// <summary>The statuses fights know, in order (poison from ADR 0024).</summary>
+    // ADR 0035: disrupted (the Jammer Pulse's and EMP Sticky Bomb's) last, so the others keep their order.
+    public static readonly ImmutableArray<string> FightStatuses = ["burning", "bleeding", "poisoned", "shocked", "ensnared", "blinded", "disoriented", "disrupted"];
+    /// <summary>The fight statuses that deal damage over time, by a <c>statusDamage</c> row or a skill's own rate.</summary>
+    public static readonly ImmutableHashSet<string> DamagingStatuses = ImmutableHashSet.Create(StringComparer.Ordinal, "burning", "bleeding", "poisoned");
+    /// <summary>
+    /// Built in (ADR 0023): "fight" in fights with talent triggers, "static" everywhere else, unset included. A modifier that requires
+    /// "static" holds only outside those fights, so the pack can set a static expected value aside where a fight rule plays it.
+    /// </summary>
+    public const string FightContextSelector = "fight_context";
+    public const string FightContextStatic = "static";
+    public const string FightContextFight = "fight";
+
+    /// <summary>A selector's value as a requires gate reads it: <see cref="FightContextSelector"/> is "static" while unset.</summary>
+    public static string GateValue(IReadOnlyDictionary<string, string> context, string key) =>
+        context.TryGetValue(key, out var value) ? value : key == FightContextSelector ? FightContextStatic : "";
 
     public string ID { get; init; } = "";
     public string Name { get; init; } = "";

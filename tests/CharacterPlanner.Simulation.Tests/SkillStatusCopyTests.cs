@@ -36,7 +36,7 @@ public sealed partial class IncomingFightTests
         var copied = CopyFight(SkillCopyFixture(spread: true, passOn: false));
         Assert.Equal([1.1, 2.1], Times(copied, DummyEventKind.BurnTick).Select(at => Math.Round(at, 6)));
         Assert.All(copied.FirstFightEvents.Where(e => e.Kind == DummyEventKind.BurnTick), e => Assert.Equal(4, e.Damage, 6));
-        Assert.Contains(copied.Limitations, note => note.Contains("a skill's own burn or bleed", StringComparison.Ordinal));
+        Assert.Contains(copied.Limitations, note => note.Contains("a skill's own burn, bleed or poison", StringComparison.Ordinal));
         // Without the field the burn doesn't spread, and the fight is the one without a spread at all.
         var plain = CopyFight(SkillCopyFixture(spread: true, passOn: false, skillStatuses: false));
         Assert.Empty(Times(plain, DummyEventKind.BurnTick));

@@ -46,7 +46,29 @@ public sealed class LegacyResolutionTests
         // Regicide's blast damage (R88, 2026-11-09), read only by fights with an enemy spacing.
         "regicide_blast_damage",
         // The nail gun's bleed tick on the player (R115, 2026-11-14), read only by fights with enemy fire.
-        "npc_bleed_tick_damage"];
+        "npc_bleed_tick_damage",
+        // Headhunter's next-hit cap (R133, 2026-11-19), and the unamplified weapon damage it reads (R135, 2026-11-19), which
+        // equipped_weapon_damage also reads, so every build resolves it.
+        "headhunter_bonus_cap", "weapon_damage_unamplified",
+        // Symbiosis's shield drain (R141, 2026-11-20), read only by fights with a shield under fire.
+        "shield_health_loss_share",
+        // Poison's default tick (R136, 2026-11-19), read only by fights, and Gas Bomber's (R137, 2026-11-20), read by its previews.
+        "poison_tick_damage", "gas_bomber_poison_tick_damage",
+        // The Booster's stim seconds (5 s at tier 0, read only by fights) and the Artificer's skill bonus (0 unless its key is on), both
+        // R151, 2026-11-21; checked below for the frozen builds.
+        "booster_stim_seconds", "artificer_skill_bonus",
+        // The Defender Drone's cut (R154, 2026-11-22), 0 unless its key is on; enemy_damage_taken_factor reads it, unchanged at 0.
+        "defender_drone_cut",
+        // The Trophy System Drone's share of hits removed (0 unless its key is on) and the Decoy's damage share (0.4 an elite's, 0.2
+        // others'), both R159, 2026-11-22, read only by fights with enemy fire.
+        "enemy_hit_removed_share", "decoy_damage_share",
+        // Whether disrupt stops the enemy's fire (R161, 2026-11-22), 1 for target 2 alone, read only by fights with enemy fire.
+        "enemy_disrupt_stops_fire",
+        // The Achilles Pulse's zones (R163, 2026-11-23), read only by fights marking them: the share's setting (0 by default), the zone's
+        // multiplier (the weapon in hand's headshot multiplier) and the talents' bonus on its factor (0 here).
+        "practical_zone_fraction", "zone_hit_multiplier", "achilles_pulse_damage_bonus",
+        // Combat Medic's bonus to the Reviver Hive (R166, 2026-11-24), 0 without it.
+        "reviver_hive_efficiency"];
     private sealed record Suite(byte[] PackBytes, int Count);
     private static readonly Dictionary<string, Suite> Suites = new(StringComparer.Ordinal)
     {
@@ -293,6 +315,21 @@ public sealed class LegacyResolutionTests
             // Stats added to the committed pack after the freeze on purpose (ADR 0002, ledger P01) must be present and are
             // compared by their own tests; every frozen stat still matches exactly.
             if (division) { Assert.All(AddedStats, id => Assert.True(actual.Calculation.Stats.ContainsKey(id), $"Missing added stat {id}")); }
+            // R151's two and R154's hold their defaults in every frozen build: no hive or Defender key is on there, and no frozen build
+            // overcharges.
+            if (division)
+            {
+                Assert.Equal(0, actual.Calculation.Stats["artificer_skill_bonus"]);
+                Assert.Equal(5, actual.Calculation.Stats["booster_stim_seconds"], 12);
+                Assert.Equal(0, actual.Calculation.Stats["defender_drone_cut"]);
+                Assert.Equal(0, actual.Calculation.Stats["enemy_hit_removed_share"]);
+                Assert.Contains(actual.Calculation.Stats["decoy_damage_share"], new[] { 0.2, 0.4 });
+                Assert.Contains(actual.Calculation.Stats["enemy_disrupt_stops_fire"], new[] { 0.0, 1.0 });
+                Assert.Equal(0, actual.Calculation.Stats["practical_zone_fraction"]);
+                Assert.Equal(1 + actual.Calculation.Stats["weapon_total_headshot_damage"], actual.Calculation.Stats["zone_hit_multiplier"], 12);
+                Assert.Equal(0, actual.Calculation.Stats["achilles_pulse_damage_bonus"]);
+                Assert.Equal(0, actual.Calculation.Stats["reviver_hive_efficiency"]);
+            }
             CheckValues(stats, division ? actual.Calculation.Stats.RemoveRange(AddedStats) : actual.Calculation.Stats);
         });
         Add("buildOutputs", () =>

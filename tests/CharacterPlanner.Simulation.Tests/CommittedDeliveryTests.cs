@@ -547,6 +547,46 @@ public sealed partial class DummyWeaponSimulatorTests
         Assert.DoesNotContain("Enemy Hit Rate", quiet.Coverage.InputBasis, StringComparison.Ordinal);
     }
 
+    // One item for each slot a set covers: its four-piece talent and more.
+    private static string[] SetPieces(GamePack pack, string set) =>
+        [.. pack.Sets.Single(entry => entry.ID == set).Items.Select(id => pack.Items.Single(item => item.ID == id)).GroupBy(item => item.Slot).Select(group => group.First().ID)];
+
+    private static DummyFightResult SetFightUnderFire(string set, int? kits = null, string weapon = "primary_weapon_acr", string? headshots = null)
+    {
+        var pack = CommittedPack();
+        var context = Context.Add("enemy_target", "1").Add("enemy_difficulty", "1");
+        if (headshots is not null) { context = context.Add("practical_hit_rate", "100").Add("practical_headshot_share", headshots); }
+        return DummyWeaponSimulator.RunAgainstTargets(pack, Equip(pack.Pack, [.. SetPieces(pack.Pack, set), weapon]), context,
+            new() { Duration = 30, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, ArmorKits = kits, ArmorKitAtPercent = kits is null ? null : 50 },
+            cancellationToken: TestContext.Current.CancellationToken);
+    }
+
+    [Theory]
+    [InlineData("gear_set_future_initiative", "Ground Control's repair doesn't happen in this fight: it repairs only when you repair an ally, and fights have no allies")]
+    [InlineData("gear_set_umbra_initiative", "From the Shadows Into the Light's repair doesn't happen in this fight: Shadow stacks built in the open repair only as they're spent in cover, and fights never move between the two")]
+    [InlineData("gear_set_system_corruption", "Hackstep Protocol's repair doesn't happen in this fight: it is the build's armor kit, and this fight uses no kits")]
+    public void CommittedSetRepairsNoFightReachesStepAsideUnderFire(string set, string note)
+    {
+        // ADR 0021: these sets refused every fight under enemy fire for their repairs; the fight now runs without them and says why.
+        var result = SetFightUnderFire(set);
+        Assert.Contains(note, result.Limitations);
+        Assert.NotNull(result.Incoming);
+    }
+
+    [Fact]
+    public void CommittedSetRepairsFightsReachRunUnderFire()
+    {
+        // ADR 0021, r127.candidate.1: Hotshot and System Corruption with kits refused every fight under fire. Now Headache's cycle repairs
+        // with a marksman rifle landing headshots, and Hackstep's ability is the kit.
+        var hotshot = SetFightUnderFire("gear_set_hotshot", weapon: "primary_weapon_m700_carbon", headshots: "100");
+        Assert.Contains(hotshot.Limitations, note => note.Contains("counts consecutive headshots with weapons tagged weapon_type_marksman_rifle", StringComparison.Ordinal));
+        // The repair is the cycle's: with no headshots there's none.
+        Assert.True(hotshot.Incoming!.ArmorRepaired > 0);
+        Assert.Equal(0, SetFightUnderFire("gear_set_hotshot", weapon: "primary_weapon_m700_carbon", headshots: "0").Incoming!.ArmorRepaired);
+        var hackstep = SetFightUnderFire("gear_set_system_corruption", kits: 3);
+        Assert.True(hackstep.Incoming!.ArmorKitAbilityUses > 0);
+    }
+
     private static string[] ApexPieces(int pieces) => [.. new[] { "mask_zenith_mask", "chest_apogee_chest_plate", "backpack_wolf_pack", "gloves_pinnacle_gloves" }.Take(pieces)];
 
     [Theory]
@@ -615,13 +655,17 @@ public sealed partial class DummyWeaponSimulatorTests
     [Fact]
     public void CommittedAfterburnCountsLandedPellets()
     {
-        // A stack per pellet, each worth a pellet's damage: as many stacks as a shot has pellets make one shot's weapon damage.
+        // A stack per pellet, each worth 13% of a pellet's damage (build 6615452; it was 100%), up to 30 (was 20): as many stacks as a
+        // shot has pellets make 13% of one shot's weapon damage.
         var pack = CommittedPack();
         var rule = Assert.Single(pack.Pack.Simulation.Triggers, candidate => candidate.Talent == "gear_talent_afterburn");
-        Assert.Equal("hit_pellet", rule.On);
+        Assert.Equal(("hit_pellet", 30L), (rule.On, rule.Max));
         var stats = BuildResolver.Resolve(pack, Equip(pack.Pack, "primary_weapon_acs_12"), Context.Add("afterburn_stacks", "8")).Calculation.Stats;
         Assert.Equal(8, stats["equipped_weapon_pellets"]);
-        Assert.Equal(stats["equipped_weapon_damage"], stats["afterburn_detonation_damage"], 6);
+        Assert.Equal(0.13 * stats["equipped_weapon_damage"], stats["afterburn_detonation_damage"], 6);
+        // The input takes the new cap: 30 stacks are 30 x 13% of a pellet's damage, beyond the old 20.
+        var full = BuildResolver.Resolve(pack, Equip(pack.Pack, "primary_weapon_acs_12"), Context.Add("afterburn_stacks", "30")).Calculation.Stats;
+        Assert.Equal(30 * 0.13 * full["equipped_weapon_damage"] / 8, full["afterburn_detonation_damage"], 6);
     }
 
     [Fact]
@@ -785,6 +829,22 @@ public sealed partial class DummyWeaponSimulatorTests
         // The count replaces what's assumed, so setting those inputs changes nothing here.
         var assumed = context.Add("adrenaline_rush_active", "true").Add("adrenaline_rush_stacks", "3");
         Assert.Equal(far, Down(11, assumed, perfect));
+    }
+
+    [Fact]
+    public void CommittedBloodsuckerGainsBonusArmorFromItsKillsUnderFire()
+    {
+        // ADR 0020: each kill's stack raises bonus_armor_percent, and the player gains the rise. Before, the first kill's stack was refused
+        // under enemy fire.
+        var pack = CommittedPack();
+        const string Talent = "gear_talent_bloodsucker";
+        var item = pack.Pack.Items.First(item => item.TalentSlots.Any(slot => slot.Choices.Contains(Talent)));
+        var build = Equip(pack.Pack, "primary_weapon_acr").WithEquipment(item.Slot, item.ID).WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(Talent)).ID, Talent);
+        var result = DummyWeaponSimulator.RunAgainstTargets(pack, build, Context.Add("enemy_target", "1").Add("enemy_difficulty", "1"),
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var kill = result.FirstFightEvents.First(entry => entry.Kind == DummyEventKind.Kill).Time;
+        Assert.Contains(result.FirstFightEvents, entry => entry.Kind == DummyEventKind.BonusArmorGranted && entry.Time == kill && entry.Damage > 0);
     }
 
     [Fact]
@@ -999,8 +1059,9 @@ public sealed partial class DummyWeaponSimulatorTests
     // Incinerator Turret's rate became its burn's statusRate (R68), and its live read went with it.
     [InlineData("skill_incinerator_turret", "")]
     [InlineData("skill_stinger_hive", "live")]
-    [InlineData("skill_assault_turret", "")]
-    [InlineData("skill_oxidizer_chem_launcher", "")]
+    // The owner chose live reads for the Assault Turret and Oxidizer after R151, so the Artificer's bonus reaches them out (R152).
+    [InlineData("skill_assault_turret", "live")]
+    [InlineData("skill_oxidizer_chem_launcher", "live")]
     [InlineData("skill_burn_sticky_bomb", "")]
     public void CommittedRatesFollowOrHoldAsR57Found(string skill, string rateRead) =>
         Assert.Equal(rateRead, CommittedPack().Pack.Simulation.Skills.Single(rule => rule.Skill == skill).RateRead);
@@ -1163,6 +1224,173 @@ public sealed partial class DummyWeaponSimulatorTests
             cancellationToken: TestContext.Current.CancellationToken).TotalDps!.Mean;
         Assert.True(Dps(pack, true) > Dps(without, true));
         Assert.Equal(Dps(without, false), Dps(pack, false));
+    }
+
+    [Fact]
+    public void CommittedVersatileGainsOnlyInItsWeaponsBand()
+    {
+        // Adopted with r116.candidate.2 (R117): Versatile on the 5.11 backpack, an SMG and an ACR SS rifle swapping when empty. The swap
+        // between their types drives the bonus, but each class has its band: at 20 m neither the SMG (close) nor the rifle (far) is in
+        // it, so the talent adds nothing; at 10 m the SMG's bonus holds.
+        var pack = CommittedPack();
+        var bare = BuildSnapshot.Create(pack.Pack).WithEquipment("primary_weapon", "primary_weapon_converted_smg_9")
+            .WithEquipment("secondary_weapon", "secondary_weapon_acr_ss").WithEquipment("backpack", "backpack_n_5_11_tactical_backpack");
+        var versatile = bare.WithTalentSelection("backpack", "talent", "gear_talent_versatile");
+        double Dps(BuildSnapshot build, double meters) => DummyWeaponSimulator.RunAgainstTargets(pack, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("enemy_difficulty", "4"),
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, Rotation = new("secondary_weapon"), Distance = meters },
+            cancellationToken: TestContext.Current.CancellationToken).WeaponDps.Mean;
+        Assert.Equal(Dps(bare, 20), Dps(versatile, 20), 6);
+        Assert.True(Dps(versatile, 10) > Dps(bare, 10));
+        // Beyond 25 m the rifle's band holds; without a distance the band reads "any" and both keep the bonus.
+        Assert.True(Dps(versatile, 30) > Dps(bare, 30));
+        double Unplaced(BuildSnapshot build) => DummyWeaponSimulator.RunAgainstTargets(pack, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("enemy_difficulty", "4"),
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, Rotation = new("secondary_weapon") },
+            cancellationToken: TestContext.Current.CancellationToken).WeaponDps.Mean;
+        Assert.True(Unplaced(versatile) > Unplaced(bare));
+    }
+
+    [Fact]
+    public void CommittedChemicalAgentsTwoPartsGainIntoOneCount()
+    {
+        // Adopted with r118.candidate.1 (R118, ADR 0018 point 7): +1 a second while the target has a status, +2 while one is on the player,
+        // into one count. The target's part alone, one; both, three; the player's part alone, two.
+        var rules = CommittedPack().Pack.Simulation.Triggers.Where(rule => rule.Talent == "gear_talent_chemical_agent" && rule.Key == "catalysis_stacks").ToArray();
+        Assert.Equal(2, rules.Length);
+        var enemy = Assert.Single(rules, rule => rule.WhileStatus == "any");
+        var player = Assert.Single(rules, rule => rule.WhilePlayerStatus == "any");
+        Assert.Equal(2, player.Gain);
+        Assert.True(enemy.SharesStacksWith(player));
+        var onPlayer = false;
+        var state = new TimedBuffState(rules) { PlayerStatusOn = (_, _) => onPlayer };
+        var burning = new HashSet<string> { "burning" };
+        string Count(double time) => state.Context(ImmutableDictionary<string, string>.Empty, time)["catalysis_stacks"];
+        state.Fire("second", 1, burning);
+        Assert.Equal("1", Count(1));
+        onPlayer = true;
+        state.Fire("second", 2, burning);
+        Assert.Equal("4", Count(2));
+        state.Fire("second", 3, new HashSet<string>());
+        Assert.Equal("6", Count(3));
+    }
+
+    [Fact]
+    public void CommittedReactantFiresOnAKillAtFullCatalysisOfAnEnemyWithAStatus()
+    {
+        // Adopted with r120.candidate.2 (R120, R121): a kill at 12 stacks of an enemy with a status turns Reactant on for 5 s, and a later
+        // such kill restarts it. No grant: its bonus armor is the talent's modifier, following the fight's state (ADR 0020).
+        var rules = CommittedPack().Pack.Simulation.Triggers.Where(rule => rule.Talent == "gear_talent_chemical_agent").ToArray();
+        var reactant = Assert.Single(rules, rule => rule.Key == "reactant_active");
+        Assert.Equal(("kill", "buff", 5.0, ""), (reactant.On, reactant.Kind, reactant.Duration, reactant.Grant));
+        var burning = new HashSet<string> { "burning" };
+        var none = new HashSet<string>();
+        TimedBuffState Filled(int seconds)
+        {
+            var state = new TimedBuffState(rules);
+            for (var second = 1; second <= seconds; second++) { state.Fire("second", second, burning); }
+            return state;
+        }
+        bool On(TimedBuffState state, double time) => state.Context(ImmutableDictionary<string, string>.Empty, time).GetValueOrDefault("reactant_active") == "true";
+        var below = Filled(11);
+        below.Fire("kill", 11.5, burning);
+        Assert.False(On(below, 11.5));
+        var bare = Filled(12);
+        bare.Fire("kill", 12.5, none);
+        Assert.False(On(bare, 12.5));
+        var full = Filled(12);
+        full.Fire("kill", 12.5, burning);
+        Assert.True(On(full, 17.4));
+        Assert.False(On(full, 17.6));
+        full.Fire("kill", 17.0, burning);
+        Assert.True(On(full, 21.9));
+    }
+
+    [Fact]
+    public void CommittedChemicalAgentLeavesOutEnsnared()
+    {
+        // Adopted with r123.candidate.1 (R122, R123): the source's check leaves out ensnare, so an enemy only ensnared gains no Catalysis,
+        // and killing one at 12 stacks doesn't turn Reactant on.
+        var rules = CommittedPack().Pack.Simulation.Triggers.Where(rule => rule.Talent == "gear_talent_chemical_agent").ToArray();
+        Assert.Equal(3, rules.Length);
+        Assert.All(rules, rule => Assert.Equal(["ensnared"], rule.AnyStatusExcept));
+        // The player part: a player only ensnared gains nothing either, and bleeding gains 2.
+        var onPlayer = new HashSet<string> { "ensnared" };
+        var state = new TimedBuffState(rules) { PlayerStatusOn = (status, _) => status == "any" ? onPlayer.Count > 0 : onPlayer.Contains(status) };
+        var ensnared = new HashSet<string> { "ensnared" };
+        state.Fire("second", 1, ensnared);
+        Assert.Equal("0", state.Context(ImmutableDictionary<string, string>.Empty, 1).GetValueOrDefault("catalysis_stacks", "0"));
+        onPlayer.Add("bleeding");
+        state.Fire("second", 1.5, ensnared);
+        Assert.Equal("2", state.Context(ImmutableDictionary<string, string>.Empty, 1.5)["catalysis_stacks"]);
+        onPlayer.Clear();
+        for (var second = 2; second <= 13; second++) { state.Fire("second", second, new HashSet<string> { "burning" }); }
+        state.Fire("kill", 13.5, ensnared);
+        Assert.NotEqual("true", state.Context(ImmutableDictionary<string, string>.Empty, 13.5).GetValueOrDefault("reactant_active"));
+        state.Fire("kill", 13.6, new HashSet<string> { "ensnared", "shocked" });
+        Assert.Equal("true", state.Context(ImmutableDictionary<string, string>.Empty, 13.6)["reactant_active"]);
+    }
+
+    [Fact]
+    public void CommittedReactantDrivesAFightThatFillsCatalysis()
+    {
+        // ShadeTech's R121 setup without enemy fire: Iron Lung's Ardent burns once its heat is full, filling Catalysis, and kills of the
+        // burning target turn Reactant on for part of the fight. Its setting is ignored there: driven fights read the kills.
+        var pack = CommittedPack();
+        var build = Equip(pack.Pack, "primary_weapon_iron_lung", "mask_catalyst");
+        var context = Context.Add("enemy_target", "5").Add("enemy_difficulty", "4");
+        var result = DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
+            new() { Duration = 120, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var uptime = result.TimedTriggerUptime["reactant_active"].Seconds;
+        Assert.InRange(uptime, 1, 119);
+    }
+
+    [Fact]
+    public void CommittedVersatilesBandHoldsWithoutARotation()
+    {
+        // The ledger's exception (r116.candidate.2): without a rotation Versatile reads the user's setting, but its band follows any
+        // fight with a set distance. With the setting on, a rifle gains beyond 25 m and not at 10 m, where it gained before.
+        var pack = CommittedPack();
+        var bare = BuildSnapshot.Create(pack.Pack).WithEquipment("primary_weapon", "primary_weapon_acr_ss")
+            .WithEquipment("backpack", "backpack_n_5_11_tactical_backpack");
+        var versatile = bare.WithTalentSelection("backpack", "talent", "gear_talent_versatile");
+        double Dps(BuildSnapshot build, double meters) => DummyWeaponSimulator.RunAgainstTargets(pack, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("enemy_difficulty", "4").Add("versatile_active", "true"),
+            new() { Duration = 30, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, Distance = meters },
+            cancellationToken: TestContext.Current.CancellationToken).WeaponDps.Mean;
+        Assert.Equal(Dps(bare, 10), Dps(versatile, 10), 6);
+        Assert.True(Dps(versatile, 30) > Dps(bare, 30));
+    }
+
+    [Fact]
+    public void CommittedBackAndForthOnBothWeaponsGivesOnlyTheSwapToGroup()
+    {
+        // Adopted with r116.candidate.2: both groups shared, so with the talent on both ACRs each draw's swap-to group replaces the
+        // swap-from group, as in the source, and the fight runs where it was refused.
+        var pack = CommittedPack();
+        var build = BuildSnapshot.Create(pack.Pack).WithEquipment("primary_weapon", "primary_weapon_acr").WithEquipment("secondary_weapon", "secondary_weapon_acr")
+            .WithTalentSelection("primary_weapon", "talent", "weapon_talent_back_and_forth").WithTalentSelection("secondary_weapon", "talent", "weapon_talent_back_and_forth");
+        var result = DummyWeaponSimulator.RunAgainstTargets(pack, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("enemy_difficulty", "4"),
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, Rotation = new("secondary_weapon") },
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(result.TimedTriggerUptime["back_and_forth_swap_to_active"].Seconds > 0);
+        Assert.Equal(0, result.TimedTriggerUptime["back_and_forth_swap_from_active"].Seconds);
+    }
+
+    [Fact]
+    public void CommittedSwapTalentRowsTakeTheirSourceShapes()
+    {
+        // The adopted rows (R116, R117): Unwavering's full lockout, Perturb's and Faster Than Reloading's primes, and the latter's refill
+        // of both weapons, ended by the pistol's reload completing.
+        var triggers = CommittedPack().Pack.Simulation.Triggers;
+        Assert.All(triggers.Where(rule => rule.Key == "unwavering_active"), rule =>
+            Assert.Equal((true, true, true, "swap", 5.0), (rule.LockoutAlways, rule.GainAtLockoutEnd, rule.ShareCopies, rule.CancelOn, rule.CancelFor)));
+        Assert.Equal(10, Assert.Single(triggers, rule => rule.Key == "perturb_primed").PrimeHolstered);
+        Assert.Equal(5, Assert.Single(triggers, rule => rule.Key == "faster_than_reloading_primed").PrimeHolstered);
+        var faster = Assert.Single(triggers, rule => rule.Key == "faster_than_reloading_active");
+        Assert.Equal((true, true, "reload_end", "faster_than_reloading_primed"), (faster.Refill, faster.RefillBoth, faster.ConsumeOn, faster.WhileKey));
     }
 
     [Fact]
@@ -1738,7 +1966,7 @@ public sealed partial class DummyWeaponSimulatorTests
     [Fact]
     public void FuturePerfectWithFuturePerfectionIsRefused()
     {
-        // Their Overcharge rows share `future_perfect_overcharge` (R73). Their Skill Tier stacks share a key too, which may have one owner,
+        // Their Overcharge rows share `future_perfect_overcharge` (R73). Their Skill Tier stacks share a key too, across two talents,
         // so a build with both doesn't fight. The source never has both active (R73), so this blocks no build the game allows.
         var pack = CommittedPack();
         var build = SixTierCores(pack.Pack, "skill_stinger_hive").WithTalentSelection("primary_weapon", "talent", "weapon_talent_future_perfect")
@@ -1746,7 +1974,7 @@ public sealed partial class DummyWeaponSimulatorTests
         var refused = Assert.Throws<SimulationException>(() => DummyWeaponSimulator.RunAgainstTargets(pack, build, Context.Add("enemy_target", "1").Add("enemy_difficulty", "1"),
             new() { Duration = 10, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, Rotation = new("secondary_weapon") },
             cancellationToken: TestContext.Current.CancellationToken));
-        Assert.Contains("one owner rule", refused.Message, StringComparison.Ordinal);
+        Assert.Contains("Stacks rules on one key must be one talent's", refused.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -2000,16 +2228,15 @@ public sealed partial class DummyWeaponSimulatorTests
     }
 
     [Theory]
-    [InlineData("skill_leech_hive", "damage")]
-    [InlineData("skill_the_howl", "armor_damage")]
-    [InlineData("skill_blackout_seeker", "damage")]
     [InlineData("skill_corrosive_trap", "damage")]
-    [InlineData("skill_gas_bomber_drone", "damage")]
-    [InlineData("skill_trophy_system_drone", "cooldown_seconds")]
+    [InlineData("skill_striker_drone", "damage")]
     public void CommittedY8S33SkillsPreviewButDontFight(string skill, string output)
     {
-        // The Y8S3.3 skills are previews only: they resolve in both slots, and a fight with damaging skills is refused rather than
-        // run without them, as for any skill with no rule.
+        // The Y8S3.3 skills with no rule are previews only: they resolve in both slots, and a fight with damaging skills is refused
+        // rather than run without them, as for any skill with no rule. Blackout Seeker has a rule since r131.candidate.1 (R131),
+        // Gas Bomber Drone since r136.candidate.1 (R136), Leech Hive since r145.candidate.1 (R145), and The Howl since
+        // r147.candidate.1 (R147); the Trophy System Drone, once here, since r159.candidate.1 (R159), the Jammer Pulse since
+        // r161.candidate.1 (R161), the Achilles Pulse since r163.candidate.1 (R163), and the Reviver Hive since r166.candidate.1 (R166).
         var pack = CommittedPack();
         foreach (var slot in new[] { "skill_slot_1", "skill_slot_2" })
         {
@@ -2026,6 +2253,668 @@ public sealed partial class DummyWeaponSimulatorTests
         Assert.Equal("skill-rule-required", refusal.Code);
         // Without them the same build fights.
         Assert.True(DummyWeaponSimulator.RunAgainstTargets(pack, selected, context, new() { Duration = 5 }, cancellationToken: TestContext.Current.CancellationToken).ShotsFired > 0);
+    }
+
+    [Fact]
+    public void ASetTalentWhoseOnlyRuleIsAHeadshotCycleRunsInFights()
+    {
+        // R127: a slotless set talent joins fights at its set's top bonus when it has a rule, a headshot cycle included.
+        var committed = CommittedPack().Pack;
+        var pack = committed with { Simulation = committed.Simulation with { HeadshotCycles = [] } };
+        var headache = pack.Talents.Single(talent => talent.ID == "gear_talent_headache");
+        Assert.False(SetBonusSelection.RunsAtTopBonus(pack, headache));
+        var cycled = pack with
+        {
+            Simulation = pack.Simulation with
+            {
+                HeadshotCycles = [new() { Talent = "gear_talent_headache", WeaponTag = "weapon_type_marksman_rifle", Key = "x", Repair = "x", BonusArmorCap = "x", Allowance = "x", KillFrom = 3 }]
+            }
+        };
+        Assert.True(SetBonusSelection.RunsAtTopBonus(cycled, headache));
+    }
+
+    [Fact]
+    public void CommittedHeadScratcherConfusesAfterItsKills()
+    {
+        // R132 (r132.candidate.1): Thunder Strike's shape with Confuse (disoriented) for 10 s after 4 kills, so its 30% now reads the
+        // fight's own confusion where it read the user's setting.
+        var pack = CommittedPack();
+        const string Talent = "weapon_talent_head_scratcher";
+        var rule = pack.Pack.Simulation.Triggers.Single(entry => entry.Talent == Talent);
+        Assert.Equal(("target_confused", "kill", "status", "disoriented", 4L, 10.0), (rule.Key, rule.On, rule.Kind, rule.Status, rule.Count, rule.Duration));
+        Assert.Equal(rule with { Talent = "weapon_talent_perfect_head_scratcher", Count = 3 },
+            pack.Pack.Simulation.Triggers.Single(entry => entry.Talent == "weapon_talent_perfect_head_scratcher"));
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(Talent)));
+        var build = Equip(pack.Pack, item.ID).WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(Talent)).ID, Talent);
+        var context = Context.SetItem(GamePack.WeaponSlotSelector, item.Slot).Add("practical_hit_rate", "90").Add("enemy_target", "3").Add("enemy_difficulty", "1");
+        DummyFightResult Fight(CompiledPackExpressions fought) => DummyWeaponSimulator.RunAgainstTargets(fought, build, context,
+            new() { Duration = 120, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var confused = Fight(pack);
+        Assert.True(confused.TargetStatusUptime.TryGetValue("disoriented", out var uptime) && uptime.Seconds > 0, "no confusion");
+        var without = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        {
+            Simulation = pack.Pack.Simulation with { Triggers = [.. pack.Pack.Simulation.Triggers.Where(entry => entry.Talent != Talent)] }
+        }).Compiled);
+        Assert.True(confused.WeaponDps.Mean > Fight(without).WeaponDps.Mean);
+    }
+
+    [Fact]
+    public void CommittedBlackoutSeekerBlastsAndBlinds()
+    {
+        // R131 (r131.candidate.1): one blast per use, full within 1 m and half at the radius, and a blind on each enemy in it.
+        var pack = CommittedPack();
+        var rule = pack.Pack.Simulation.Skills.Single(entry => entry.Skill == "skill_blackout_seeker");
+        Assert.Equal(("damage", "radius_meters", "area_full_meters", 0.5, "blinded", true),
+            (rule.Impact, rule.Area, rule.AreaFull, rule.AreaEdge, rule.Status, rule.ControlStatus));
+        var build = Equip(pack.Pack, "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", "skill_blackout_seeker");
+        var fight = DummyWeaponSimulator.RunAgainstTargets(pack, build, Context.Add("enemy_target", "1").Add("enemy_difficulty", "1").Add("enemy_hit_rate", "0"),
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(fight.SkillDps!.Total.Mean > 0);
+        Assert.True(fight.TargetStatusUptime.TryGetValue("blinded", out var blind) && blind.Seconds > 0, "no blind");
+        // In a group 3 m apart the blast reaches a neighbour on the falloff line: full to 1 m, half at the radius.
+        var radius = BuildResolver.Resolve(pack, build, Context).ActiveSkillPreviews["skill_slot_1"].Outputs.Single(entry => entry.Id == "radius_meters").Value;
+        Assert.True(radius > 3, $"radius {radius}");
+        var group = DummyWeaponSimulator.RunAgainstTargets(pack, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("enemy_target", "1").Add("enemy_difficulty", "4").Add("enemy_hit_rate", "0"),
+            new() { Duration = 30, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true, EnemiesAtOnce = 4, EnemySpacing = 3, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var impact = group.FirstFightEvents.First(entry => entry.Kind == DummyEventKind.SkillImpact);
+        var area = group.FirstFightEvents.First(entry => entry.Kind == DummyEventKind.SkillAreaHit && entry.Time == impact.Time);
+        Assert.Equal(1 - 0.5 * (3 - 1) / (radius - 1), area.Damage / impact.Damage, 3);
+    }
+
+    [Fact]
+    public void AStaticValueGatedOutOfFightsLetsARulePlayIt()
+    {
+        // ADR 0023 stage 1, with one row and gate of our own in place of the pack's (r133 has its own, on kills and skill kills):
+        // Salvage's static rounds-returned value requires fight_context static, and a kill rule refills in its place. Outside fights the value holds; driven fights set it aside and
+        // run where they refused; a fight without talent triggers keeps it, and still refuses.
+        var committed = CommittedPack();
+        const string Salvage = "weapon_talent_salvage";
+        var gate = ImmutableDictionary<string, string>.Empty.Add(GamePack.FightContextSelector, GamePack.FightContextStatic);
+        var rules = committed.Pack with
+        {
+            Selectors = [.. committed.Pack.Selectors, new() { ID = "salvage_refill", Name = "Salvage refill", Values = ["true"], Section = "Talents and gear" }],
+            Talents = [.. committed.Pack.Talents.Select(talent => talent.ID != Salvage ? talent : talent with
+            {
+                Modifiers = [.. talent.Modifiers.Select(modifier => modifier with { RequiresContext = gate })]
+            })],
+            Simulation = committed.Pack.Simulation with
+            {
+                Triggers = [.. committed.Pack.Simulation.Triggers.Where(rule => rule.Talent != Salvage),
+                    new() { Talent = Salvage, Key = "salvage_refill", On = "kill", Kind = "buff", Duration = 0.001, Chance = 0.7, Refill = true }]
+            }
+        };
+        var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(Salvage)));
+        var build = Equip(pack.Pack, item.ID).WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(Salvage)).ID, Salvage);
+        var context = Context.SetItem(GamePack.WeaponSlotSelector, item.Slot).Add("enemy_target", "1").Add("enemy_difficulty", "1").Add("enemy_hit_rate", "0");
+        double Returned(ImmutableDictionary<string, string> at) => BuildResolver.Resolve(pack, build, at).Calculation.Stats.GetValueOrDefault("practical_rounds_returned_per_shot");
+        Assert.True(Returned(context) > 0, "the static value holds outside fights");
+        Assert.Equal(0, Returned(context.Add(GamePack.FightContextSelector, GamePack.FightContextFight)));
+        DummyFightResult Fight(bool driven, CompiledPackExpressions? fought = null) => DummyWeaponSimulator.RunAgainstTargets(fought ?? pack, build,
+            context.Add(GamePack.FightContextSelector, GamePack.FightContextFight),
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = driven },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var played = Fight(true);
+        Assert.True(played.Kills > 0);
+        // It's no input, so the result's coverage doesn't list it; and the static value it set aside isn't described as part of the fight.
+        Assert.DoesNotContain(GamePack.FightContextSelector, played.Coverage.Inputs.Keys);
+        bool Averaged(EffectCoverageReport report) => report.Talents.Single(row => row.Talent == Salvage).Channels.Any(channel => channel.Kind == EffectCoverage.ExpectedValueModifiers);
+        Assert.False(Averaged(played.Coverage));
+        Assert.True(Averaged(EffectCoverage.Describe(pack.Pack, build, context)));
+        // The rule refills: the same gate with no rule reloads more.
+        var unplayed = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules with
+        {
+            Simulation = rules.Simulation with { Triggers = [.. rules.Simulation.Triggers.Where(rule => rule.Talent != Salvage)] }
+        }).Compiled);
+        Assert.True(played.Reloads < Fight(true, unplayed).Reloads, $"reloads {played.Reloads} with the rule");
+        // The user's setting doesn't reach a fight: an undriven one reads static, and the value still refuses there.
+        Assert.Equal("shot-mechanic-unsupported", Assert.Throws<SimulationException>(() => Fight(false)).Code);
+    }
+
+    [Theory]
+    [InlineData("weapon_talent_salvage")]
+    [InlineData("weapon_talent_perfect_salvage")]
+    [InlineData("weapon_talent_determined")]
+    [InlineData("weapon_talent_perfect_determined")]
+    [InlineData("gear_talent_headhunter")]
+    [InlineData("gear_talent_perfect_headhunter")]
+    public void CommittedShotMechanicTalentsPlayInDrivenFights(string talent)
+    {
+        // R133 (r133.candidate.1, ADR 0023): each static value is gated on fight_context: static, and a fight rule plays the mechanic.
+        // Outside fights the value holds; a driven fight with targets runs where it refused; one without talent triggers still refuses.
+        var pack = CommittedPack();
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(talent)));
+        var weapon = pack.Pack.Slots.Single(slot => slot.ID == item.Slot).Weapon;
+        var build = Equip(pack.Pack, weapon ? [item.ID] : [item.ID, "primary_weapon_acr"])
+            .WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(talent)).ID, talent);
+        var context = Context.SetItem(GamePack.WeaponSlotSelector, weapon ? item.Slot : "primary_weapon").Add("practical_hit_rate", "90").Add("practical_headshot_share", "30")
+            .Add("enemy_target", "3").Add("enemy_difficulty", "1");
+        var stats = BuildResolver.Resolve(pack, build, context).Calculation.Stats;
+        Assert.True(stats.GetValueOrDefault("practical_shot_bonus_damage") + stats.GetValueOrDefault("practical_rounds_returned_per_shot") > 0, "the static value");
+        Assert.Contains(pack.Pack.Talents.Single(entry => entry.ID == talent).Modifiers,
+            modifier => modifier.RequiresContext?.GetValueOrDefault(GamePack.FightContextSelector) == GamePack.FightContextStatic);
+        // Long enough for a forced shot to save whole shots: a target dies at its health either way.
+        var options = new DummyFightOptions { Duration = 120, Mode = SimulationMode.Random, Iterations = 5, Seed = 1, DriveSimpleBuffs = true };
+        DummyFightResult Fight(bool driven) => DummyWeaponSimulator.RunAgainstTargets(pack, build, context, options with { DriveSimpleBuffs = driven },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var played = Fight(true);
+        Assert.True(played.Kills > 0);
+        Assert.Equal("shot-mechanic-unsupported", Assert.Throws<SimulationException>(() => Fight(false)).Code);
+        // The mechanic adds something: without the talent's rows, the same gated fight over the same draws deals less.
+        var unplayed = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        {
+            Simulation = pack.Pack.Simulation with
+            {
+                Triggers = [.. pack.Pack.Simulation.Triggers.Where(rule => rule.Talent != talent)],
+                NextHitBonuses = [.. pack.Pack.Simulation.NextHitBonuses.Where(rule => rule.Talent != talent)]
+            }
+        }).Compiled);
+        var without = DummyWeaponSimulator.RunAgainstTargets(unplayed, build, context, options,
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(played.WeaponDps.Mean > without.WeaponDps.Mean, $"{played.WeaponDps.Mean} against {without.WeaponDps.Mean}");
+    }
+
+    [Fact]
+    public void ANextHitBonusAddsToTheHitAfterAHeadshotKill()
+    {
+        // ADR 0023 stage 3, with Headhunter's row and gate of our own until ShadeTech's: a headshot kill arms 125% of its killing pellet
+        // as dealt, capped, for the next landed hit. The draws don't change, so the same fight deals more with it, and nothing with a
+        // cap of 0.
+        var committed = CommittedPack();
+        const string Headhunter = "gear_talent_headhunter";
+        var gate = ImmutableDictionary<string, string>.Empty.Add(GamePack.FightContextSelector, GamePack.FightContextStatic);
+        var item = committed.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(Headhunter)));
+        var build = Equip(committed.Pack, [item.ID, "primary_weapon_acr"])
+            .WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(Headhunter)).ID, Headhunter);
+        var context = Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "100").Add("practical_headshot_share", "40")
+            .Add("enemy_target", "1").Add("enemy_difficulty", "1").Add("enemy_hit_rate", "0");
+        DummyFightResult Fight(string? cap)
+        {
+            var rules = committed.Pack with
+            {
+                Stats = [.. committed.Pack.Stats, new() { ID = "test_headhunter_cap", Formula = "0" }],
+                Talents = [.. committed.Pack.Talents.Select(talent => talent.ID != Headhunter ? talent : talent with
+                {
+                    Modifiers = [.. talent.Modifiers.Select(modifier => modifier with { RequiresContext = gate })]
+                })],
+                Simulation = committed.Pack.Simulation with
+                {
+                    NextHitBonuses = cap is null ? [] : [new() { Talent = Headhunter, Share = 1.25, Cap = cap, Window = 30 }]
+                }
+            };
+            var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+            return DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
+                new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true },
+                cancellationToken: TestContext.Current.CancellationToken);
+        }
+        var without = Fight(null);
+        Assert.True(without.Kills > 0);
+        var with = Fight("equipped_weapon_damage");
+        Assert.True(with.WeaponDps.Mean > without.WeaponDps.Mean, $"the bonus: {with.WeaponDps.Mean} against {without.WeaponDps.Mean}, kills {with.Kills} against {without.Kills}; notes: {string.Join(" | ", with.Limitations.Where(note => note.Contains("headshot", StringComparison.Ordinal)))}");
+        Assert.Contains(with.Limitations, note => note.Contains("of a headshot kill's killing pellet", StringComparison.Ordinal));
+        Assert.Equal(without.WeaponDps.Mean, Fight("test_headhunter_cap").WeaponDps.Mean);
+    }
+
+    [Fact]
+    public void CommittedGasBomberPoisonsInFightsWithSkills()
+    {
+        // R136 (r136.candidate.1, ADR 0024): Gas Bomber Drone's rule poisons the enemy being shot through its 8 s cloud, at poison_dps
+        // (the per-tick damage at one tick per 0.5 s), and it runs where every fight with skills refused it. A poison skill needs the
+        // poisoned statusDamage row, for its copies on other enemies: without it the pack is refused.
+        var committed = CommittedPack();
+        const string Skill = "skill_gas_bomber_drone";
+        var rule = committed.Pack.Simulation.Skills.Single(entry => entry.Skill == Skill);
+        Assert.True(rule.IsCloud);
+        Assert.Equal(("poisoned", "poison_dps", "poison_duration_seconds"), (rule.Status, rule.StatusRate, rule.StatusWindow));
+        var row = committed.Pack.Simulation.StatusDamage.Single(entry => entry.Status == "poisoned");
+        Assert.Equal(("poison_tick_damage", 0.5), (row.Tick, row.Period));
+        Assert.Contains(PackValidator.Validate(committed.Pack with
+        {
+            Simulation = committed.Pack.Simulation with { StatusDamage = [.. committed.Pack.Simulation.StatusDamage.Where(entry => entry.Status != "poisoned")] }
+        }).Diagnostics, diagnostic => diagnostic.Code == "bad-sim-skill" && diagnostic.Path.EndsWith(".status", StringComparison.Ordinal));
+        var build = Equip(committed.Pack, "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", Skill);
+        var context = Context.Add("enemy_target", "1").Add("enemy_difficulty", "4").Add("enemy_hit_rate", "0");
+        var fight = DummyWeaponSimulator.RunAgainstTargets(committed, build, context,
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        // The rule has no rate and no impact, so its skill damage is the poison's.
+        Assert.True(fight.SkillDps!.Total.Mean > 0);
+        // Each use poisons for its 8 s cloud and 5 s after, at no more than the build's poison_dps (armor and the enemy's health can only
+        // lower it), and the next use comes a 30 s cooldown after the use.
+        var rate = BuildResolver.Resolve(committed, build, context).ActiveSkillPreviews["skill_slot_1"].Outputs.Single(output => output.Id == "poison_dps").Value;
+        Assert.True(rate > 0);
+        var ticks = fight.FirstFightEvents.Where(entry => entry.Kind == DummyEventKind.SkillTick).ToArray();
+        var first = ticks[0].Time;
+        var early = ticks.Where(entry => entry.Time < first + 20).ToArray();
+        Assert.All(early, entry => Assert.True(entry.Time <= first + 13.1, $"a tick at {entry.Time}"));
+        Assert.True(early.Sum(entry => entry.Damage) <= rate * 13.1, $"{early.Sum(entry => entry.Damage)} against {rate}");
+        Assert.DoesNotContain(ticks, entry => entry.Time > first + 13.1 && entry.Time < first + 29.9);
+        Assert.Contains(ticks, entry => entry.Time >= first + 29.9);
+    }
+
+    [Fact]
+    public void CommittedGasBomberCloudReachesEnemiesWithinItsRadius()
+    {
+        // ADR 0024 stage 2b on the committed rule: the cloud's poison goes on every other enemy within its 3 m of the enemy being shot
+        // while it applies, and ticks there by the poisoned row, carrying the skill's rate. Neighbours 3 m apart are in it; without a
+        // spacing nobody else is. An area with a rate and no status window isn't a cloud, and is refused.
+        var pack = CommittedPack();
+        const string Skill = "skill_gas_bomber_drone";
+        var cloud = pack.Pack.Simulation.Skills.Single(entry => entry.Skill == Skill);
+        Assert.Contains(PackValidator.Validate(pack.Pack with
+        {
+            Simulation = pack.Pack.Simulation with
+            {
+                Skills = [.. pack.Pack.Simulation.Skills.Select(entry => entry.Skill == Skill ? cloud with { Status = "", StatusRate = "", StatusWindow = "", Rate = "poison_dps" } : entry)]
+            }
+        }).Diagnostics, diagnostic => diagnostic.Code == "bad-sim-skill" && diagnostic.Path.EndsWith(".area", StringComparison.Ordinal));
+        var build = Equip(pack.Pack, "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", Skill);
+        var context = Context.Add("enemy_target", "1").Add("enemy_difficulty", "4").Add("enemy_hit_rate", "0");
+        DummyFightResult Fight(double? spacing) => DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
+            new() { Duration = 30, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true, EnemiesAtOnce = 4, EnemySpacing = spacing, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var spaced = Fight(3);
+        Assert.Contains(spaced.FirstFightEvents, entry => entry.Kind == DummyEventKind.PoisonTick && entry.Damage > 0);
+        Assert.True(spaced.StatusDps!.Mean > 0);
+        Assert.Contains(spaced.Limitations, note => note.Contains("walk out of a cloud", StringComparison.Ordinal));
+        var alone = Fight(null);
+        Assert.DoesNotContain(alone.FirstFightEvents, entry => entry.Kind == DummyEventKind.PoisonTick);
+        Assert.DoesNotContain(alone.Limitations, note => note.Contains("walk out of a cloud", StringComparison.Ordinal));
+        // The enemy being shot takes the poison as skill damage, so the status damage is the neighbours' alone.
+        Assert.True(spaced.StatusDps.Mean > (alone.StatusDps?.Mean ?? 0), $"{spaced.StatusDps.Mean} against {alone.StatusDps?.Mean}");
+        // A neighbour keeps it no longer than the window's end plus one application: 8 s and 5 s from a use, within a tick.
+        var ticks = spaced.FirstFightEvents.Where(entry => entry.Kind == DummyEventKind.PoisonTick).Select(entry => entry.Time).ToArray();
+        var firstUse = spaced.FirstFightEvents.First(entry => entry.Kind == DummyEventKind.SkillTick).Time;
+        Assert.All(ticks.Where(time => time < firstUse + 20), time => Assert.True(time <= firstUse + 13.1, $"a tick at {time}"));
+        // An impact's area (the Burn Sticky Bomb's) isn't a cloud: its status goes on once per impact, and no cloud note.
+        var bomb = DummyWeaponSimulator.RunAgainstTargets(pack, Equip(pack.Pack, "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", "skill_burn_sticky_bomb"), context,
+            new() { Duration = 30, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true, EnemiesAtOnce = 4, EnemySpacing = 3 },
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.DoesNotContain(bomb.Limitations, note => note.Contains("walk out of a cloud", StringComparison.Ordinal));
+        Assert.False(pack.Pack.Simulation.Skills.Single(rule => rule.Skill == "skill_artillery_turret").IsCloud);
+    }
+
+    [Fact]
+    public void ATalentsPoisonTicksAsPoisonInStatusDamage()
+    {
+        // ADR 0024: a talent's status rule can put poison on, and the committed poisoned row (R136) ticks it as PoisonTick events in
+        // status DPS. Sadist's kill rule, made to poison for the test.
+        var committed = CommittedPack();
+        const string Talent = "weapon_talent_sadist";
+        var rules = committed.Pack with
+        {
+            Simulation = committed.Pack.Simulation with
+            {
+                Triggers = [.. committed.Pack.Simulation.Triggers.Select(rule => rule.Talent == Talent ? rule with { Status = "poisoned" } : rule)]
+            }
+        };
+        var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(Talent)));
+        var build = Equip(pack.Pack, item.ID).WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(Talent)).ID, Talent);
+        var fight = DummyWeaponSimulator.RunAgainstTargets(pack, build,
+            Context.SetItem(GamePack.WeaponSlotSelector, item.Slot).Add("practical_hit_rate", "100").Add("enemy_target", "1").Add("enemy_difficulty", "1"),
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.Contains(fight.FirstFightEvents, entry => entry.Kind == DummyEventKind.PoisonTick && entry.Damage > 0);
+        Assert.DoesNotContain(fight.FirstFightEvents, entry => entry.Kind == DummyEventKind.BleedTick);
+        Assert.True(fight.StatusDps!.Mean > 0);
+        Assert.True(fight.TargetStatusUptime["poisoned"].Seconds > 0);
+    }
+
+    [Theory]
+    [InlineData("weapon_talent_overflowing", 3)]
+    [InlineData("weapon_talent_perfect_overflowing", 2)]
+    public void CommittedOverflowingDoublesTheMagazineEveryFewReloads(string talent, int every)
+    {
+        // ADR 0025, stage 1 with the committed row: the counted reload's start turns Overflowing on, and that reload loads the doubled
+        // magazine; the next reload's start spends it, and that one loads the usual size. A driven fight used to refuse it
+        // (buff-timing-unsupported), as did a rotation.
+        var pack = CommittedPack();
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(talent)));
+        var build = Equip(pack.Pack, item.ID).WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(talent)).ID, talent);
+        var context = Context.SetItem(GamePack.WeaponSlotSelector, item.Slot).Add("practical_hit_rate", "100").Add("enemy_target", "1").Add("enemy_difficulty", "4");
+        var fight = DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
+            new() { Duration = 120, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        // Shots between reload completions: each magazine's rounds.
+        var magazines = new List<int>();
+        var shots = 0;
+        var loaded = false;
+        foreach (var entry in fight.FirstFightEvents)
+        {
+            if (entry.Kind == DummyEventKind.Shot) { shots++; }
+            else if (entry.Kind == DummyEventKind.ReloadCompleted)
+            {
+                if (loaded) { magazines.Add(shots); }
+                (shots, loaded) = (0, true);
+            }
+        }
+        Assert.True(magazines.Count >= 2 * every, $"{magazines.Count} magazines");
+        var usual = magazines.Min();
+        Assert.Contains(2 * usual, magazines);
+        // magazines[i] is reload i + 1's, so the doubled magazine is each count-th reload's.
+        for (var index = 0; index < magazines.Count; index++)
+        {
+            Assert.Equal((index + 1) % every == 0 ? 2 * usual : usual, magazines[index]);
+        }
+        Assert.True(fight.TimedTriggerUptime["overflowing_active"].Seconds > 0);
+        // Under a rotation it runs too (ADR 0025 stage 2b): each weapon fills to its own state's magazine.
+        var rotated = DummyWeaponSimulator.RunAgainstTargets(pack,
+            build.WithEquipment("sidearm", pack.Pack.Items.First(entry => entry.Slot == "sidearm").ID), context,
+            new() { Duration = 120, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, Rotation = new("sidearm"), CaptureFirstFightEvents = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(rotated.TimedTriggerUptime["overflowing_active"].Seconds > 0);
+        // The Overflowing weapon's own magazines, between its reloads: the usual size, and twice it.
+        var own = new List<int>();
+        (shots, loaded) = (0, false);
+        foreach (var entry in rotated.FirstFightEvents.Where(entry => entry.WeaponSlot == item.Slot))
+        {
+            if (entry.Kind == DummyEventKind.Shot) { shots++; }
+            else if (entry.Kind == DummyEventKind.ReloadCompleted)
+            {
+                if (loaded) { own.Add(shots); }
+                (shots, loaded) = (0, true);
+            }
+        }
+        Assert.True(own.Count >= every, string.Join(", ", own));
+        Assert.Equal(new[] { usual, 2 * usual }, own.Distinct().Order());
+        // With a cover cycle under a rotation (after kills, so cover reloads top up), it runs.
+        var covered = DummyWeaponSimulator.RunAgainstTargets(pack,
+            build.WithEquipment("sidearm", pack.Pack.Items.First(entry => entry.Slot == "sidearm").ID), context.Add("enemy_hit_rate", "0"),
+            new()
+            {
+                Duration = 120,
+                Mode = SimulationMode.Random,
+                Iterations = 1,
+                Seed = 1,
+                DriveSimpleBuffs = true,
+                IncludeIncoming = true,
+                Rotation = new("sidearm", WeaponSwapMode.AfterKill),
+                PeekSeconds = 2,
+                CoverSeconds = 1,
+                PeekHitShare = 0.5
+            },
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(covered.ShotsFired > 0);
+    }
+
+    [Fact]
+    public void CommittedPakhanStacksFromKillsAndSizesTheNextMagazine()
+    {
+        // R139 (r139.candidate.1): Pakhan's stacks come from kills with an LMG, up to 4, and a finished reload clears them after
+        // loading the magazine they size (ADR 0025). A driven fight builds them, where they stayed at the setting, and the enlarged
+        // magazines mean fewer reloads than with the rule taken away.
+        const string Talent = "weapon_talent_pakhan";
+        var committed = CommittedPack();
+        var item = committed.Pack.Items.First(entry => entry.Slot == "primary_weapon" && entry.TalentSlots.Any(slot => slot.Choices.Contains(Talent)));
+        var build = Equip(committed.Pack, item.ID).WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(Talent)).ID, Talent);
+        var context = Context.SetItem(GamePack.WeaponSlotSelector, item.Slot).Add("practical_hit_rate", "90").Add("practical_headshot_share", "30")
+            .Add("enemy_target", "3").Add("enemy_difficulty", "1");
+        var options = new DummyFightOptions { Duration = 120, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true };
+        var driven = DummyWeaponSimulator.RunAgainstTargets(committed, build, context, options, cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(driven.TimedTriggerUptime["pakhan_stacks"].Seconds > 0);
+        var without = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(committed.Pack with
+        {
+            Simulation = committed.Pack.Simulation with { Triggers = [.. committed.Pack.Simulation.Triggers.Where(rule => rule.Talent != Talent)] }
+        }).Compiled);
+        var still = DummyWeaponSimulator.RunAgainstTargets(without, build, context, options, cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(driven.Reloads < still.Reloads, $"{driven.Reloads} against {still.Reloads}");
+    }
+
+    [Fact]
+    public void AnEmptyReloadIsReloadEmptyAndAPartialOneIsNot()
+    {
+        // R138: Overflowing counts only reloads from empty, and its committed row counts reload_empty since R139. reload_empty fires
+        // after reload when the magazine was empty, so against the same row on reload, a fight where every reload is from empty plays
+        // the same; with a cover cycle, whose reloads behind cover can start with rounds left, the partial ones don't count.
+        const string Talent = "weapon_talent_overflowing";
+        var committed = CommittedPack();
+        var moved = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(committed.Pack with
+        {
+            Simulation = committed.Pack.Simulation with
+            {
+                Triggers = [.. committed.Pack.Simulation.Triggers.Select(rule => rule.Talent == Talent ? rule with { On = "reload" } : rule)]
+            }
+        }).Compiled);
+        var item = committed.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(Talent)));
+        var build = Equip(committed.Pack, item.ID).WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(Talent)).ID, Talent);
+        var context = Context.SetItem(GamePack.WeaponSlotSelector, item.Slot).Add("practical_hit_rate", "100").Add("enemy_target", "1").Add("enemy_difficulty", "4")
+            .Add("enemy_hit_rate", "0");
+        double Uptime(CompiledPackExpressions pack, DummyFightOptions options) => DummyWeaponSimulator.RunAgainstTargets(pack, build, context, options,
+            cancellationToken: TestContext.Current.CancellationToken).TimedTriggerUptime["overflowing_active"].Seconds;
+        var open = new DummyFightOptions { Duration = 120, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true };
+        Assert.Equal(Uptime(committed, open), Uptime(moved, open));
+        var covered = open with { PeekSeconds = 2, CoverSeconds = 1, PeekHitShare = 0.5 };
+        Assert.NotEqual(Uptime(committed, covered), Uptime(moved, covered));
+    }
+
+    [Fact]
+    public void CommittedRestrainedNeverFiresInAFightWithoutAShield()
+    {
+        // Restrained's rule is on shield_break. A fight without a shield, whether the build has none or the fight leaves it out, has
+        // none to break, so the rule never fires and the result names it, as skill events in a fight without skills; it was refused
+        // (trigger-event-unsupported).
+        const string Talent = "weapon_talent_restrained";
+        var pack = CommittedPack();
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(Talent)));
+        var build = Equip(pack.Pack, item.ID).WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(Talent)).ID, Talent);
+        var context = Context.SetItem(GamePack.WeaponSlotSelector, item.Slot).Add("practical_hit_rate", "90").Add("enemy_target", "1").Add("enemy_difficulty", "1");
+        var options = new DummyFightOptions { Duration = 30, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true };
+        var plain = DummyWeaponSimulator.RunAgainstTargets(pack, build, context, options, cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(plain.ShotsFired > 0);
+        Assert.Equal(0, plain.TimedTriggerUptime["restrained_active"].Seconds);
+        Assert.Contains(plain.Limitations, note => note.StartsWith("This fight has no shield", StringComparison.Ordinal) && note.Contains("Restrained", StringComparison.Ordinal));
+        var shielded = DummyWeaponSimulator.RunAgainstTargets(pack, build.WithActiveSkillSelection("skill_slot_1", "skill_striker_shield"), context, options,
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.Equal(0, shielded.TimedTriggerUptime["restrained_active"].Seconds);
+        Assert.Contains(shielded.Limitations, note => note.StartsWith("This fight has no shield", StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("weapon_talent_close_personal")]
+    [InlineData("weapon_talent_perfect_close_personal")]
+    public void CommittedClosePersonalGainsOnKillsWithinItsRange(string talent)
+    {
+        // Close & Personal's row is a buff on kill within 7 m. Driven fights used to refuse the range (trigger-unsupported); a kill
+        // now gains it where the enemy is within 7 m, not at 10 m, and with no fight distance the range is taken as met, with a note.
+        var pack = CommittedPack();
+        var item = pack.Pack.Items.First(entry => entry.TalentSlots.Any(slot => slot.Choices.Contains(talent)));
+        var build = Equip(pack.Pack, item.ID).WithTalentSelection(item.Slot, item.TalentSlots.First(slot => slot.Choices.Contains(talent)).ID, talent);
+        var context = Context.SetItem(GamePack.WeaponSlotSelector, item.Slot).Add("practical_hit_rate", "90").Add("practical_headshot_share", "30")
+            .Add("enemy_target", "1").Add("enemy_difficulty", "1");
+        DummyFightResult Fight(double? distance) => DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
+            new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, Distance = distance },
+            cancellationToken: TestContext.Current.CancellationToken);
+        const string Note = "a talent rule's range";
+        var near = Fight(5);
+        Assert.True(near.Kills > 0);
+        Assert.True(near.TimedTriggerUptime["close_personal_active"].Seconds > 0);
+        Assert.DoesNotContain(near.Limitations, note => note.Contains(Note, StringComparison.Ordinal));
+        var far = Fight(10);
+        Assert.True(far.Kills > 0);
+        Assert.Equal(0, far.TimedTriggerUptime["close_personal_active"].Seconds);
+        var anywhere = Fight(null);
+        Assert.True(anywhere.TimedTriggerUptime["close_personal_active"].Seconds > 0);
+        Assert.Contains(anywhere.Limitations, note => note.Contains(Note, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void CommittedDeterminedAndItsPerfectRotateOnTheirOwnKeys()
+    {
+        // R135 (r135.candidate.1): Perfect Determined arms its own key, as each talent's script holds its own flag, so a rotation with
+        // both runs where r133's one shared key refused it (trigger-key-conflict). Each weapon's headshot kill arms only its own talent.
+        var pack = CommittedPack();
+        var rules = pack.Pack.Simulation.Triggers.Where(rule => rule.Talent is "weapon_talent_determined" or "weapon_talent_perfect_determined").ToArray();
+        Assert.Equal(["determined_armed", "perfect_determined_armed"], rules.Select(rule => rule.Key).Order(StringComparer.Ordinal));
+        var perfect = pack.Pack.Items.First(entry => entry.Slot == "primary_weapon" && entry.TalentSlots.Any(slot => slot.Choices.Contains("weapon_talent_perfect_determined")));
+        var plain = pack.Pack.Items.First(entry => entry.Slot == "sidearm" && entry.TalentSlots.Any(slot => slot.Choices.Contains("weapon_talent_determined")));
+        var build = Equip(pack.Pack, perfect.ID, plain.ID)
+            .WithTalentSelection(perfect.Slot, perfect.TalentSlots.First(slot => slot.Choices.Contains("weapon_talent_perfect_determined")).ID, "weapon_talent_perfect_determined")
+            .WithTalentSelection(plain.Slot, plain.TalentSlots.First(slot => slot.Choices.Contains("weapon_talent_determined")).ID, "weapon_talent_determined");
+        var context = Context.SetItem(GamePack.WeaponSlotSelector, "primary_weapon").Add("practical_hit_rate", "90").Add("practical_headshot_share", "30")
+            .Add("enemy_target", "3").Add("enemy_difficulty", "1");
+        var result = DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
+            new() { Duration = 120, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, Rotation = new("sidearm") },
+            cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(result.Kills > 0);
+        // Each key is armed for some of the fight, by its own weapon's headshot kills.
+        Assert.True(result.TimedTriggerUptime["determined_armed"].Seconds > 0, "Determined armed");
+        Assert.True(result.TimedTriggerUptime["perfect_determined_armed"].Seconds > 0, "Perfect Determined armed");
+    }
+
+    [Fact]
+    public void AForcedShotCanTakeTheWholeShotAndACrit()
+    {
+        // ADR 0023 stage 2, in Determined's shape on a shotgun talent of our own choosing (no shotgun offers Determined, and the shape is
+        // generic): a headshot kill arms one stack, and the next hit spends it as a headshot. By the owner's call every landed pellet of
+        // that shot is forced, and Perfect Determined's also crits. The random draws don't change, so the same fight deals more with each.
+        var committed = CommittedPack();
+        var ruled = committed.Pack.Simulation.RuleTalents.ToHashSet(StringComparer.Ordinal);
+        var item = committed.Pack.Items.First(entry => entry.Tags.Contains("weapon_type_shotgun") && entry.TalentSlots.Any(slot => slot.Choices.Any(Plain)));
+        bool Plain(string id) => !ruled.Contains(id) && committed.Pack.Talents.Single(talent => talent.ID == id).Modifiers.All(modifier => modifier.Value.Formula is null || !modifier.Value.Formula.Contains("practical_", StringComparison.Ordinal));
+        var slot = item.TalentSlots.First(entry => entry.Choices.Any(Plain));
+        var Determined = slot.Choices.First(Plain);
+        var build = Equip(committed.Pack, item.ID).WithTalentSelection(item.Slot, slot.ID, Determined);
+        var context = Context.SetItem(GamePack.WeaponSlotSelector, item.Slot).Add("practical_hit_rate", "100").Add("practical_headshot_share", "20")
+            .Add("enemy_target", "1").Add("enemy_difficulty", "1").Add("enemy_hit_rate", "0");
+        DummyFightResult Fight(bool whole, bool critical)
+        {
+            var rules = committed.Pack with
+            {
+                Simulation = committed.Pack.Simulation with
+                {
+                    Triggers = [.. committed.Pack.Simulation.Triggers, new()
+                    {
+                        Talent = Determined, Key = "determined_armed", On = "headshot_kill", Kind = "stacks", Max = 1, ConsumeOn = "hit",
+                        ForceHeadshot = true, ForceWholeShot = whole, ForceCritical = critical
+                    }]
+                }
+            };
+            var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+            return DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
+                new() { Duration = 60, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true },
+                cancellationToken: TestContext.Current.CancellationToken);
+        }
+        var first = Fight(false, false);
+        Assert.True(first.Kills > 0);
+        Assert.True(Fight(true, false).WeaponDps.Mean > first.WeaponDps.Mean, "the whole shot");
+        Assert.True(Fight(false, true).WeaponDps.Mean > first.WeaponDps.Mean, "the crit");
+    }
+
+    [Fact]
+    public void ASkillMarkedAsideStepsAsideInFightsWithSkills()
+    {
+        // ADR 0022: a skill the pack marks as playing no part in a fight is never used, so a fight with skills runs without it rather
+        // than refusing the build, and a use condition on its slot is dropped. A skill with a rule beside it still fights.
+        var committed = CommittedPack();
+        var rules = committed.Pack with
+        {
+            Simulation = committed.Pack.Simulation with { SkillsAside = [new() { Skill = "skill_striker_drone", Why = "it waits on a rate" }] }
+        };
+        var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+        var build = BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", "skill_striker_drone");
+        var context = Context.Add("enemy_target", "1").Add("enemy_difficulty", "1");
+        var later = ImmutableDictionary<string, SkillUseCondition>.Empty.Add("skill_slot_1", new() { When = SkillUseCondition.AfterSeconds, Seconds = 2 });
+        DummyFightResult Run(BuildSnapshot fighting, DummyFightOptions options) => DummyWeaponSimulator.RunAgainstTargets(pack, fighting, context, options,
+            cancellationToken: TestContext.Current.CancellationToken);
+        var alone = Run(build, new() { Duration = 5, IncludeSkills = true, SkillUse = later });
+        Assert.Equal(Run(build, new() { Duration = 5 }).TotalDps, alone.TotalDps);
+        Assert.DoesNotContain(alone.FirstFightEvents, e => e.Kind is DummyEventKind.SkillImpact or DummyEventKind.SkillTick);
+        Assert.Contains("Run without skills that play no part in fights: Striker Drone (it waits on a rate). Use conditions dropped for: skill_slot_1",
+            alone.Limitations);
+        // Beside a turret, which has a rule, the turret fights and its own condition stays.
+        var paired = build.WithActiveSkillSelection("skill_slot_2", "skill_assault_turret");
+        var turret = Run(paired, new() { Duration = 5, IncludeSkills = true, SkillUse = later.Add("skill_slot_2", new() { When = SkillUseCondition.AfterSeconds, Seconds = 1 }) });
+        Assert.True(turret.SkillDps!.Total.Mean > 0);
+        Assert.Contains(turret.Limitations, note => note.StartsWith("Assumed skill use: skill_slot_2 after 1 s.", StringComparison.Ordinal));
+        // With only that skill, a talent reacting to a skill's kill never does, and the fight says so.
+        var preserving = Run(WithTalent(rules, build, "weapon_talent_perfect_preservation"), new()
+        {
+            Duration = 5,
+            Mode = SimulationMode.Random,
+            Iterations = 1,
+            Seed = 1,
+            DriveSimpleBuffs = true,
+            IncludeIncoming = true,
+            IncludeSkills = true
+        });
+        Assert.Contains(preserving.Limitations, note => note.StartsWith("No skill in this fight deals damage, so these never react to a skill's hit or kill", StringComparison.Ordinal) &&
+            note.Contains("Perfect Preservation", StringComparison.Ordinal));
+        Assert.DoesNotContain(turret.Limitations, note => note.StartsWith("No skill in this fight deals damage", StringComparison.Ordinal));
+        // Without the mark the build is still refused, as before.
+        Assert.Equal("skill-rule-required", Assert.Throws<SimulationException>(() => DummyWeaponSimulator.RunAgainstTargets(committed, BuildSnapshot.Create(committed.Pack)
+            .WithEquipment("primary_weapon", "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", "skill_striker_drone"), context,
+            new() { Duration = 5, IncludeSkills = true }, cancellationToken: TestContext.Current.CancellationToken)).Code);
+    }
+
+    [Fact]
+    public void AGatedSkillStepsAsideUntilItsSettingIsOn()
+    {
+        // ADR 0027: a skill rule gated on a setting (as the Firefly's "Target has a weakpoint or is a mech" is) steps aside while the
+        // setting is off, so the build runs, and fights as an ungated rule does once it's on. Shown here on the Sticky Bomb with a test gate.
+        var committed = CommittedPack();
+        const string Gate = "target_has_weakpoint";
+        var rules = committed.Pack with
+        {
+            Selectors = [.. committed.Pack.Selectors, new() { ID = Gate, Name = "Target has a weakpoint", Values = ["true"], Section = "Enemy target" }],
+            Simulation = committed.Pack.Simulation with
+            {
+                Skills = [.. committed.Pack.Simulation.Skills.Select(rule => rule.Skill != "skill_explosive_sticky_bomb" ? rule :
+                    rule with { RequiresContext = ImmutableDictionary<string, string>.Empty.Add(Gate, "true") })]
+            }
+        };
+        var pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(rules).Compiled);
+        var build = BuildSnapshot.Create(rules).WithEquipment("primary_weapon", "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", "skill_explosive_sticky_bomb");
+        var context = Context.Add("enemy_target", "1").Add("enemy_difficulty", "1");
+        var later = ImmutableDictionary<string, SkillUseCondition>.Empty.Add("skill_slot_1", new() { When = SkillUseCondition.AfterSeconds, Seconds = 2 });
+        DummyFightResult Run(CompiledPackExpressions fighting, ImmutableDictionary<string, string> at, DummyFightOptions options) =>
+            DummyWeaponSimulator.RunAgainstTargets(fighting, build, at, options, cancellationToken: TestContext.Current.CancellationToken);
+        var off = Run(pack, context, new() { Duration = 10, IncludeSkills = true, SkillUse = later });
+        Assert.Equal(Run(pack, context, new() { Duration = 10 }).TotalDps, off.TotalDps);
+        Assert.Contains("Run without skills whose setting is off: Explosive Sticky Bomb (needs Target has a weakpoint set). Use conditions dropped for: skill_slot_1",
+            off.Limitations);
+        Assert.DoesNotContain(off.Limitations, note => note.StartsWith("Run without skills that play no part", StringComparison.Ordinal));
+        // On, it fights exactly as without the gate.
+        var on = Run(pack, context.Add(Gate, "true"), new() { Duration = 10, IncludeSkills = true });
+        Assert.True(on.SkillDps!.Total.Mean > 0);
+        Assert.Equal(Run(committed, context, new() { Duration = 10, IncludeSkills = true }).TotalDps, on.TotalDps);
+        Assert.DoesNotContain(on.Limitations, note => note.StartsWith("Run without skills", StringComparison.Ordinal));
+        // In a group with a spacing, a gated-off area skill reaches nobody: the fight is the one without skills, and no area note.
+        var group = new DummyFightOptions { Duration = 10, Mode = SimulationMode.Random, Iterations = 1, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, EnemiesAtOnce = 3, EnemySpacing = 3 };
+        var grouped = Run(pack, context, group with { IncludeSkills = true });
+        Assert.Equal(Run(pack, context, group).TotalDps, grouped.TotalDps);
+        Assert.DoesNotContain(grouped.Limitations, note => note.StartsWith("Skills with an area", StringComparison.Ordinal));
+        Assert.Contains(Run(pack, context.Add(Gate, "true"), group with { IncludeSkills = true }).Limitations,
+            note => note.StartsWith("Skills with an area", StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("skill_scanner_pulse")]
+    [InlineData("skill_remote_pulse")]
+    [InlineData("skill_tactician_drone")]
+    public void CommittedMarkingSkillsStepAsideBesideATurret(string skill)
+    {
+        // R128 (r128.candidate.1): these only mark enemies, which the "Target is pulsed" input covers, so a fight with skills runs
+        // without them where it refused the build. Beside an Assault Turret the fight is the turret's alone, as ShadeTech's figures show.
+        var pack = CommittedPack();
+        var why = pack.Pack.Simulation.SkillsAside.Single(entry => entry.Skill == skill).Why;
+        var context = Context.Add("practical_hit_rate", "90").Add("practical_headshot_share", "30").Add("enemy_target", "3").Add("enemy_difficulty", "1").Add("enemy_hit_rate", "0");
+        var turret = Equip(pack.Pack, "primary_weapon_acr").WithActiveSkillSelection("skill_slot_1", "skill_assault_turret");
+        DummyFightResult Fight(BuildSnapshot build) => DummyWeaponSimulator.RunAgainstTargets(pack, build, context,
+            new() { Duration = 30, Mode = SimulationMode.Random, Iterations = 2, Seed = 1, DriveSimpleBuffs = true, IncludeIncoming = true, IncludeSkills = true },
+            cancellationToken: TestContext.Current.CancellationToken);
+        var alone = Fight(turret);
+        var paired = Fight(turret.WithActiveSkillSelection("skill_slot_2", skill));
+        Assert.True(paired.SkillDps!.Total.Mean > 0);
+        Assert.Equal(alone.SkillDps!.Total.Mean, paired.SkillDps.Total.Mean);
+        Assert.Equal(alone.WeaponDps.Mean, paired.WeaponDps.Mean);
+        Assert.Equal(alone.Kills, paired.Kills);
+        Assert.Contains(paired.Limitations, note => note.StartsWith("Run without skills that play no part in fights: ", StringComparison.Ordinal)
+            && note.Contains("(" + why + ")", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -2067,8 +2956,14 @@ public sealed partial class DummyWeaponSimulatorTests
         Assert.Equal(close.Select(shot => shot * (1 - 0.5 * (1 - 0.518838))), middle, (a, b) => Math.Abs(a - b) < 1e-6 * Math.Max(1, a));
         // Past the ACR's maximum range (105 m) nothing lands.
         Assert.All(beyond, shot => Assert.Equal(0, shot));
-        // The Cooler has no source identity, so its floor is the default 1: it fights at range without falloff.
-        Assert.Equal(Shots("primary_weapon_cooler", 0), Shots("primary_weapon_cooler", 300));
+        // A weapon with no ranges and no floor of its own has the default 1: it fights at range without falloff. The pack's last such
+        // weapons got their ranges in R168, so here the ACR loses its own.
+        pack = Assert.IsType<CompiledPackExpressions>(PackExpressionCompiler.Compile(pack.Pack with
+        {
+            Items = [.. pack.Pack.Items.Select(item => item.ID != "primary_weapon_acr" ? item
+                : item with { Weapon = [.. item.Weapon.Where(stat => stat.Stat is not ("weapon_long_range" or "weapon_max_range" or "weapon_falloff_floor"))] })]
+        }).Compiled);
+        Assert.Equal(close, Shots("primary_weapon_acr", 300));
     }
 
     [Fact]

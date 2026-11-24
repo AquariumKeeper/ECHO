@@ -279,9 +279,10 @@ public sealed class SkillDamageTests
                         found = true;
                         CloseTo(o.Value, @base * (1 + (.2 * Math.Min(6, Math.Max(0, Math.Floor(tier))))) * 1.4 * 1.25, 1e-6);
                         CloseTo(o.Inputs.GetValueOrDefault("effective_repair_skills"), .4, 1e-12);
+                        // From R149 these two are named per second, as R148 read their unit.
                         if (id == "skill_fixer_drone" || channel == "repair_over_time")
                         {
-                            Assert.True(o.Name.Contains("unit unspecified", StringComparison.Ordinal), o.Name);
+                            Assert.True(o.Name.Contains("(armor/s)", StringComparison.Ordinal), o.Name);
                         }
                     }
                     Assert.True(found, $"missing {id}/{channel} at tier {tier}");

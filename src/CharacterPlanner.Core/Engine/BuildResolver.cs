@@ -50,7 +50,7 @@ public static class BuildResolver
         }
 
         var equipment = EquipmentEffectSelection.Select(pack, build, loadout, assumptions);
-        var upgrades = UpgradeEffectSelection.Select(pack, build, loadout, assumptions.Explicit);
+        var upgrades = UpgradeEffectSelection.Select(pack, build, loadout, assumptions.Effective);
         var prototypes = PrototypeEffectSelection.Select(pack, build, loadout, assumptions);
         diagnostics.AddRange(upgrades.AccountDiagnostics);
         diagnostics.AddRange(prototypes.Diagnostics);
@@ -61,7 +61,7 @@ public static class BuildResolver
         batches.AddRange(prototypes.Batches);
         batches.AddRange(upgrades.EquipmentBatches);
         batches.AddRange(equipment.Batches);
-        batches.AddRange(TalentCopySelection.Select(pack, build, loadout, assumptions.Explicit));
+        batches.AddRange(TalentCopySelection.Select(pack, build, loadout, assumptions.Effective));
         var sets = SetBonusSelection.Resolve(pack, equippedItemIds.ToImmutable(), equipment.SelectedTalents);
         batches.AddRange(sets.Batches);
         var activeSkillsSelection = ActiveSkillSelection.Select(pack, build);
@@ -80,7 +80,7 @@ public static class BuildResolver
             SelectedTalents = equipment.SelectedTalents,
             ContextValues = assumptions.Numeric
         };
-        var calculation = StatResolver.Resolve(compiled, batches.ToImmutable(), scope, assumptions.Explicit);
+        var calculation = StatResolver.Resolve(compiled, batches.ToImmutable(), scope, assumptions.Effective);
         diagnostics.AddRange(calculation.Diagnostics);
         var previews = SkillPreviewResolver.Resolve(compiled, build, activeSkillsSelection, scope with { Stats = calculation.Stats });
         diagnostics.AddRange(previews.Diagnostics);
@@ -128,6 +128,8 @@ public static class BuildResolver
         // A selected talent's fight rule that requires a selector (Calculated: in_cover) reads it, so the user sees what turns it on.
         reads.UnionWith(pack.Simulation.Triggers.Where(rule => rule.RequiresContext is not null && talents.Contains(rule.Talent)).SelectMany(rule => rule.RequiresContext!.Keys));
         reads.Remove(GamePack.WeaponSlotSelector);
+        // Fights set it; nobody else can (ADR 0023).
+        reads.Remove(GamePack.FightContextSelector);
         return reads.ToImmutable();
     }
 }
